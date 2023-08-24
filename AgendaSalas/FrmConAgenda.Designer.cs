@@ -28,179 +28,212 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.DgvListaAgenda = new System.Windows.Forms.DataGridView();
-            this.Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DataInicio = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DataFim = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Descricao = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PermitirLigar = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.PermitirChamar = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.button1 = new System.Windows.Forms.Button();
-            this.panel1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvListaAgenda)).BeginInit();
-            this.SuspendLayout();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            panel1 = new System.Windows.Forms.Panel();
+            BtnExcluir = new System.Windows.Forms.Button();
+            groupBox1 = new System.Windows.Forms.GroupBox();
+            DgvListaAgenda = new System.Windows.Forms.DataGridView();
+            groupBox2 = new System.Windows.Forms.GroupBox();
+            CbxSelecionarSala = new System.Windows.Forms.ComboBox();
+            IdDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            DataInicioDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            DataFimDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            DescricaoDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            PermitirLigarDgv = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            PermitirChamarDgv = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            SalaIdDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            SalaDescricaoDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            panel1.SuspendLayout();
+            groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)DgvListaAgenda).BeginInit();
+            groupBox2.SuspendLayout();
+            SuspendLayout();
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.button1);
-            this.panel1.Controls.Add(this.groupBox1);
-            this.panel1.Controls.Add(this.groupBox2);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(892, 548);
-            this.panel1.TabIndex = 0;
+            panel1.Controls.Add(BtnExcluir);
+            panel1.Controls.Add(groupBox1);
+            panel1.Controls.Add(groupBox2);
+            panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            panel1.Location = new System.Drawing.Point(0, 0);
+            panel1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            panel1.Name = "panel1";
+            panel1.Size = new System.Drawing.Size(1041, 632);
+            panel1.TabIndex = 0;
             // 
-            // groupBox2
+            // BtnExcluir
             // 
-            this.groupBox2.Controls.Add(this.comboBox2);
-            this.groupBox2.Location = new System.Drawing.Point(12, 12);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(196, 51);
-            this.groupBox2.TabIndex = 1;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Selecionar Sala";
-            // 
-            // comboBox2
-            // 
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(6, 19);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(177, 21);
-            this.comboBox2.TabIndex = 0;
+            BtnExcluir.Location = new System.Drawing.Point(878, 14);
+            BtnExcluir.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            BtnExcluir.Name = "BtnExcluir";
+            BtnExcluir.Size = new System.Drawing.Size(149, 58);
+            BtnExcluir.TabIndex = 3;
+            BtnExcluir.Text = "&Excluir";
+            BtnExcluir.UseVisualStyleBackColor = true;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.DgvListaAgenda);
-            this.groupBox1.Location = new System.Drawing.Point(12, 84);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(869, 452);
-            this.groupBox1.TabIndex = 2;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Lista de Agenda";
+            groupBox1.Controls.Add(DgvListaAgenda);
+            groupBox1.Location = new System.Drawing.Point(14, 97);
+            groupBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox1.Size = new System.Drawing.Size(1014, 522);
+            groupBox1.TabIndex = 2;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Lista de Agenda";
             // 
             // DgvListaAgenda
             // 
-            this.DgvListaAgenda.AllowUserToAddRows = false;
-            this.DgvListaAgenda.AllowUserToDeleteRows = false;
-            this.DgvListaAgenda.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.DgvListaAgenda.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.DgvListaAgenda.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DgvListaAgenda.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Id,
-            this.DataInicio,
-            this.DataFim,
-            this.Descricao,
-            this.PermitirLigar,
-            this.PermitirChamar});
-            this.DgvListaAgenda.Location = new System.Drawing.Point(6, 19);
-            this.DgvListaAgenda.MultiSelect = false;
-            this.DgvListaAgenda.Name = "DgvListaAgenda";
-            this.DgvListaAgenda.ReadOnly = true;
-            this.DgvListaAgenda.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DgvListaAgenda.Size = new System.Drawing.Size(857, 427);
-            this.DgvListaAgenda.TabIndex = 0;
+            DgvListaAgenda.AllowUserToAddRows = false;
+            DgvListaAgenda.AllowUserToDeleteRows = false;
+            DgvListaAgenda.BackgroundColor = System.Drawing.SystemColors.Control;
+            DgvListaAgenda.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            DgvListaAgenda.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            DgvListaAgenda.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { IdDgv, DataInicioDgv, DataFimDgv, DescricaoDgv, PermitirLigarDgv, PermitirChamarDgv, SalaIdDgv, SalaDescricaoDgv });
+            DgvListaAgenda.Location = new System.Drawing.Point(7, 22);
+            DgvListaAgenda.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            DgvListaAgenda.MultiSelect = false;
+            DgvListaAgenda.Name = "DgvListaAgenda";
+            DgvListaAgenda.ReadOnly = true;
+            DgvListaAgenda.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            DgvListaAgenda.Size = new System.Drawing.Size(1000, 493);
+            DgvListaAgenda.TabIndex = 0;
+            DgvListaAgenda.CellClick += DgvListaAgenda_CellClick;
+            DgvListaAgenda.CellDoubleClick += DgvListaAgenda_CellDoubleClick;
             // 
-            // Id
+            // groupBox2
             // 
-            this.Id.HeaderText = "Id";
-            this.Id.Name = "Id";
-            this.Id.ReadOnly = true;
+            groupBox2.Controls.Add(CbxSelecionarSala);
+            groupBox2.Location = new System.Drawing.Point(14, 14);
+            groupBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox2.Size = new System.Drawing.Size(229, 59);
+            groupBox2.TabIndex = 1;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Selecionar Sala";
             // 
-            // DataInicio
+            // CbxSelecionarSala
             // 
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle5.Format = "g";
-            dataGridViewCellStyle5.NullValue = null;
-            this.DataInicio.DefaultCellStyle = dataGridViewCellStyle5;
-            this.DataInicio.HeaderText = "Data Inicio";
-            this.DataInicio.Name = "DataInicio";
-            this.DataInicio.ReadOnly = true;
+            CbxSelecionarSala.DisplayMember = "SalaReuniao";
+            CbxSelecionarSala.FormattingEnabled = true;
+            CbxSelecionarSala.Location = new System.Drawing.Point(7, 22);
+            CbxSelecionarSala.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            CbxSelecionarSala.Name = "CbxSelecionarSala";
+            CbxSelecionarSala.Size = new System.Drawing.Size(206, 23);
+            CbxSelecionarSala.TabIndex = 0;
+            CbxSelecionarSala.ValueMember = "Id";
+            CbxSelecionarSala.SelectedIndexChanged += CbxSelecionarSala_SelectedIndexChanged;
             // 
-            // DataFim
+            // IdDgv
             // 
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle6.Format = "g";
-            dataGridViewCellStyle6.NullValue = null;
-            this.DataFim.DefaultCellStyle = dataGridViewCellStyle6;
-            this.DataFim.HeaderText = "Data Fim";
-            this.DataFim.Name = "DataFim";
-            this.DataFim.ReadOnly = true;
+            IdDgv.DataPropertyName = "Id";
+            IdDgv.HeaderText = "Id";
+            IdDgv.Name = "IdDgv";
+            IdDgv.ReadOnly = true;
             // 
-            // Descricao
+            // DataInicioDgv
             // 
-            this.Descricao.HeaderText = "Descrição";
-            this.Descricao.Name = "Descricao";
-            this.Descricao.ReadOnly = true;
+            DataInicioDgv.DataPropertyName = "DataInicio";
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle1.Format = "g";
+            dataGridViewCellStyle1.NullValue = null;
+            DataInicioDgv.DefaultCellStyle = dataGridViewCellStyle1;
+            DataInicioDgv.HeaderText = "Data Inicio";
+            DataInicioDgv.Name = "DataInicioDgv";
+            DataInicioDgv.ReadOnly = true;
             // 
-            // PermitirLigar
+            // DataFimDgv
             // 
-            this.PermitirLigar.HeaderText = "Permitir Ligar";
-            this.PermitirLigar.Name = "PermitirLigar";
-            this.PermitirLigar.ReadOnly = true;
-            this.PermitirLigar.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.PermitirLigar.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            DataFimDgv.DataPropertyName = "DataFim";
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle2.Format = "g";
+            dataGridViewCellStyle2.NullValue = null;
+            DataFimDgv.DefaultCellStyle = dataGridViewCellStyle2;
+            DataFimDgv.HeaderText = "Data Fim";
+            DataFimDgv.Name = "DataFimDgv";
+            DataFimDgv.ReadOnly = true;
             // 
-            // PermitirChamar
+            // DescricaoDgv
             // 
-            this.PermitirChamar.HeaderText = "Permitir Chamar";
-            this.PermitirChamar.Name = "PermitirChamar";
-            this.PermitirChamar.ReadOnly = true;
-            this.PermitirChamar.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.PermitirChamar.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            DescricaoDgv.DataPropertyName = "Descricao";
+            DescricaoDgv.HeaderText = "Descrição";
+            DescricaoDgv.Name = "DescricaoDgv";
+            DescricaoDgv.ReadOnly = true;
             // 
-            // button1
+            // PermitirLigarDgv
             // 
-            this.button1.Location = new System.Drawing.Point(753, 12);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(128, 50);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "&Excluir";
-            this.button1.UseVisualStyleBackColor = true;
+            PermitirLigarDgv.DataPropertyName = "PermitirLigar";
+            PermitirLigarDgv.HeaderText = "Permitir Ligar";
+            PermitirLigarDgv.Name = "PermitirLigarDgv";
+            PermitirLigarDgv.ReadOnly = true;
+            PermitirLigarDgv.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            PermitirLigarDgv.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // PermitirChamarDgv
+            // 
+            PermitirChamarDgv.DataPropertyName = "PermitirChamar";
+            PermitirChamarDgv.HeaderText = "Permitir Chamar";
+            PermitirChamarDgv.Name = "PermitirChamarDgv";
+            PermitirChamarDgv.ReadOnly = true;
+            PermitirChamarDgv.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            PermitirChamarDgv.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // SalaIdDgv
+            // 
+            SalaIdDgv.DataPropertyName = "SalaId";
+            SalaIdDgv.HeaderText = "Sala Id";
+            SalaIdDgv.Name = "SalaIdDgv";
+            SalaIdDgv.ReadOnly = true;
+            SalaIdDgv.Visible = false;
+            // 
+            // SalaDescricaoDgv
+            // 
+            SalaDescricaoDgv.DataPropertyName = "Sala";
+            SalaDescricaoDgv.HeaderText = "Sala Descrição";
+            SalaDescricaoDgv.Name = "SalaDescricaoDgv";
+            SalaDescricaoDgv.ReadOnly = true;
             // 
             // FrmConAgenda
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(892, 548);
-            this.Controls.Add(this.panel1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "FrmConAgenda";
-            this.ShowIcon = false;
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Consulta Agenda";
-            this.panel1.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.DgvListaAgenda)).EndInit();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(1041, 632);
+            Controls.Add(panel1);
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "FrmConAgenda";
+            ShowIcon = false;
+            ShowInTaskbar = false;
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            Text = "Consulta Agenda";
+            Load += FrmConAgenda_Load;
+            panel1.ResumeLayout(false);
+            groupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)DgvListaAgenda).EndInit();
+            groupBox2.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion
 
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.ComboBox CbxSelecionarSala;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.DataGridView DgvListaAgenda;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DataInicio;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DataFim;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Descricao;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn PermitirLigar;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn PermitirChamar;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button BtnExcluir;
+        private System.Windows.Forms.DataGridViewTextBoxColumn IdDgv;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DataInicioDgv;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DataFimDgv;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DescricaoDgv;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn PermitirLigarDgv;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn PermitirChamarDgv;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SalaIdDgv;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SalaDescricaoDgv;
     }
 }

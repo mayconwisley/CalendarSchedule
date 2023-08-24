@@ -46,7 +46,7 @@ namespace AgendaSalas.Migrations
 
                     b.HasIndex("SalaId");
 
-                    b.ToTable("Reunioes");
+                    b.ToTable("Reunioes", (string)null);
                 });
 
             modelBuilder.Entity("AgendaSalas.Models.Sala", b =>
@@ -66,7 +66,7 @@ namespace AgendaSalas.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Salas");
+                    b.ToTable("Salas", (string)null);
                 });
 
             modelBuilder.Entity("AgendaSalas.Models.Reuniao", b =>

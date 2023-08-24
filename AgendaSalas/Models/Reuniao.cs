@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,6 +19,6 @@ namespace AgendaSalas.Models
         public bool PermitirLigar { get; set; }
         public bool PermitirChamar { get; set; }
         public int SalaId { get; set; }
-        public Sala Sala { get; set; }
+        public virtual Sala Sala { get; set; }
     }
 }

@@ -11,5 +11,5 @@ namespace AgendaSalas.Models
         public string Ramal { get; set; }
         [Column(TypeName = "VARCHAR(1000)")]
         public string Descricao { get; set; }
-    }
+ }
 }

@@ -112,6 +112,7 @@
             BtnConsultarAgenda.TabIndex = 1;
             BtnConsultarAgenda.Text = "Consultar";
             BtnConsultarAgenda.UseVisualStyleBackColor = true;
+            BtnConsultarAgenda.Click += BtnConsultarAgenda_Click;
             // 
             // BtnNovaAgenda
             // 
@@ -127,6 +128,7 @@
             BtnNovaAgenda.TabIndex = 0;
             BtnNovaAgenda.Text = "Nova Agenda";
             BtnNovaAgenda.UseVisualStyleBackColor = true;
+            BtnNovaAgenda.Click += BtnNovaAgenda_Click;
             // 
             // panel2
             // 
