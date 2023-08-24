@@ -31,7 +31,6 @@
             components = new System.ComponentModel.Container();
             panel1 = new System.Windows.Forms.Panel();
             BtnNovaSala = new System.Windows.Forms.Button();
-            BtnListarRelatorio = new System.Windows.Forms.Button();
             BtnConsultarAgenda = new System.Windows.Forms.Button();
             BtnNovaAgenda = new System.Windows.Forms.Button();
             panel2 = new System.Windows.Forms.Panel();
@@ -62,7 +61,6 @@
             // 
             panel1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             panel1.Controls.Add(BtnNovaSala);
-            panel1.Controls.Add(BtnListarRelatorio);
             panel1.Controls.Add(BtnConsultarAgenda);
             panel1.Controls.Add(BtnNovaAgenda);
             panel1.Location = new System.Drawing.Point(14, 14);
@@ -77,7 +75,7 @@
             BtnNovaSala.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(128, 255, 128);
             BtnNovaSala.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             BtnNovaSala.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            BtnNovaSala.Location = new System.Drawing.Point(157, 8);
+            BtnNovaSala.Location = new System.Drawing.Point(288, 8);
             BtnNovaSala.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BtnNovaSala.Name = "BtnNovaSala";
             BtnNovaSala.Size = new System.Drawing.Size(253, 72);
@@ -86,29 +84,14 @@
             BtnNovaSala.UseVisualStyleBackColor = true;
             BtnNovaSala.Click += BtnNovaSala_Click;
             // 
-            // BtnListarRelatorio
-            // 
-            BtnListarRelatorio.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            BtnListarRelatorio.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(0, 192, 0);
-            BtnListarRelatorio.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(128, 255, 128);
-            BtnListarRelatorio.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            BtnListarRelatorio.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            BtnListarRelatorio.Location = new System.Drawing.Point(940, 8);
-            BtnListarRelatorio.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            BtnListarRelatorio.Name = "BtnListarRelatorio";
-            BtnListarRelatorio.Size = new System.Drawing.Size(253, 72);
-            BtnListarRelatorio.TabIndex = 3;
-            BtnListarRelatorio.Text = "Listar Relatório";
-            BtnListarRelatorio.UseVisualStyleBackColor = true;
-            // 
             // BtnConsultarAgenda
             // 
-            BtnConsultarAgenda.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            BtnConsultarAgenda.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             BtnConsultarAgenda.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(0, 192, 0);
             BtnConsultarAgenda.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(128, 255, 128);
             BtnConsultarAgenda.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             BtnConsultarAgenda.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            BtnConsultarAgenda.Location = new System.Drawing.Point(679, 8);
+            BtnConsultarAgenda.Location = new System.Drawing.Point(810, 8);
             BtnConsultarAgenda.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BtnConsultarAgenda.Name = "BtnConsultarAgenda";
             BtnConsultarAgenda.Size = new System.Drawing.Size(253, 72);
@@ -124,7 +107,7 @@
             BtnNovaAgenda.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(128, 255, 128);
             BtnNovaAgenda.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             BtnNovaAgenda.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            BtnNovaAgenda.Location = new System.Drawing.Point(418, 8);
+            BtnNovaAgenda.Location = new System.Drawing.Point(549, 8);
             BtnNovaAgenda.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BtnNovaAgenda.Name = "BtnNovaAgenda";
             BtnNovaAgenda.Size = new System.Drawing.Size(253, 72);
@@ -279,6 +262,7 @@
             // 
             // LkLblAtualizar
             // 
+            LkLblAtualizar.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             LkLblAtualizar.AutoSize = true;
             LkLblAtualizar.Location = new System.Drawing.Point(1305, 151);
             LkLblAtualizar.Name = "LkLblAtualizar";
@@ -320,7 +304,6 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button BtnNovaAgenda;
         private System.Windows.Forms.Button BtnConsultarAgenda;
-        private System.Windows.Forms.Button BtnListarRelatorio;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.DataGridView DgvListaAgendaAtual;

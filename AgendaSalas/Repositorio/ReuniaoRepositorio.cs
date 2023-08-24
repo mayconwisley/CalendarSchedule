@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AgendaSalas.Repositorio
@@ -33,7 +32,7 @@ namespace AgendaSalas.Repositorio
         {
             var listaPorSala = await agendaContext.Reunioes
                     .Include(i => i.Sala)
-                    .Where(w => w.DataInicio >= dataAtual)
+                    .Where(w => w.DataFim >= dataAtual)
                     .OrderBy(or => or.Descricao)
                     .ToListAsync();
             return listaPorSala;
