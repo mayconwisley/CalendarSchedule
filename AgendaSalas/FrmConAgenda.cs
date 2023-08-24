@@ -29,7 +29,6 @@ namespace AgendaSalas
             {
                 var listaSalas = await salaRepositorio.ListarTudo();
 
-                CbxSelecionarSala.Items.Add("Listar Todos");
                 CbxSelecionarSala.DataSource = listaSalas;
             }
             catch (Exception ex)
@@ -38,20 +37,30 @@ namespace AgendaSalas
             }
         }
 
-        private async void CbxSelecionarSala_SelectedIndexChanged(object sender, EventArgs e)
+        private async void ListarAgenda(int idSala)
+        {
+            var listaAgenda = await reuniaoRepositorio.ListarPorSala(idSala);
+
+
+            DgvListaAgenda.DataSource = listaAgenda.Select(s => new
+            {
+                s.Id,
+                s.DataInicio,
+                s.DataFim,
+                s.Descricao,
+                s.PermitirChamar,
+                s.PermitirLigar,
+                DescSala = s.Sala.Descricao
+            }).ToList();
+        }
+
+        private void CbxSelecionarSala_SelectedIndexChanged(object sender, EventArgs e)
         {
             salaId = int.Parse(CbxSelecionarSala.SelectedValue.ToString());
 
             try
             {
-                if (salaId == 0)
-                {
-                    DgvListaAgenda.DataSource = await reuniaoRepositorio.ListarTudo();
-                }
-                else
-                {
-                    DgvListaAgenda.DataSource = await reuniaoRepositorio.ListarPorSala(salaId);
-                }
+                ListarAgenda(salaId);
             }
             catch (Exception ex)
             {
@@ -74,6 +83,12 @@ namespace AgendaSalas
         private void DgvListaAgenda_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             reuniaoId = int.Parse(DgvListaAgenda.Rows[e.RowIndex].Cells["IdDgv"].Value.ToString());
+        }
+
+        private async void BtnExcluir_Click(object sender, EventArgs e)
+        {
+            await reuniaoRepositorio.Excluir(reuniaoId);
+            ListarAgenda(salaId);
         }
     }
 }

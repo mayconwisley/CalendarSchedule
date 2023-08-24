@@ -1,13 +1,6 @@
 ﻿using AgendaSalas.Models;
 using AgendaSalas.Repositorio;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AgendaSalas
@@ -27,9 +20,10 @@ namespace AgendaSalas
         public FrmCadAgenda(int idReuniao, bool alterarReuniao)
         {
             InitializeComponent();
-            
+
             reuniaoId = idReuniao;
             alterar = alterarReuniao;
+            BtnSalvar.Text = "&Alterar";
             
             ListarDados(reuniaoId);
         }
@@ -58,12 +52,18 @@ namespace AgendaSalas
             RTxtDescricao.Text = listaAgenda.Descricao.ToString();
             CbPermitirLigar.Checked = listaAgenda.PermitirLigar;
             CbPermitirChamar.Checked = listaAgenda.PermitirChamar;
+        }
 
+        private void IniciarDatas()
+        {
+            MktDataInicio.Text = DateTime.Now.ToString();
+            MktDataFim.Text = DateTime.Now.AddHours(1).ToString();
         }
 
         private void FrmCadAgenda_Load(object sender, EventArgs e)
         {
             ListarSalas();
+            IniciarDatas();
         }
 
         private void CbxSelecionarSala_SelectedIndexChanged(object sender, EventArgs e)
@@ -101,6 +101,23 @@ namespace AgendaSalas
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void MktDataFim_Leave(object sender, EventArgs e)
+        {
+            DateTime dtInicio = DateTime.Parse(MktDataInicio.Text);
+            DateTime dtFim = DateTime.Parse(MktDataFim.Text);
+
+            if (dtFim < dtInicio)
+            {
+                MessageBox.Show("Data fim menor que a data inicio. Verifique.", "Aviso");
+                return;
+            }
+
+            TimeSpan tempoDeReuniao = dtFim - dtInicio;
+
+            LblInfo.Text = $"Tempo de Reunião {tempoDeReuniao.Hours:00}:{tempoDeReuniao.Minutes:00}";
+
         }
     }
 }

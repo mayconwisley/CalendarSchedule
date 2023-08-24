@@ -101,13 +101,13 @@
             groupBox7.Name = "groupBox7";
             groupBox7.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBox7.Size = new System.Drawing.Size(541, 220);
-            groupBox7.TabIndex = 4;
+            groupBox7.TabIndex = 3;
             groupBox7.TabStop = false;
             groupBox7.Text = "Descrição";
             // 
             // RTxtDescricao
             // 
-            RTxtDescricao.Location = new System.Drawing.Point(7, 22);
+            RTxtDescricao.Location = new System.Drawing.Point(7, 15);
             RTxtDescricao.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             RTxtDescricao.MaxLength = 1000;
             RTxtDescricao.Name = "RTxtDescricao";
@@ -123,18 +123,18 @@
             groupBox6.Name = "groupBox6";
             groupBox6.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBox6.Size = new System.Drawing.Size(233, 60);
-            groupBox6.TabIndex = 3;
+            groupBox6.TabIndex = 4;
             groupBox6.TabStop = false;
             groupBox6.Text = "Informações";
             // 
             // LblInfo
             // 
             LblInfo.AutoSize = true;
-            LblInfo.Location = new System.Drawing.Point(7, 25);
+            LblInfo.Location = new System.Drawing.Point(7, 23);
             LblInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             LblInfo.Name = "LblInfo";
             LblInfo.Size = new System.Drawing.Size(37, 15);
-            LblInfo.TabIndex = 1;
+            LblInfo.TabIndex = 0;
             LblInfo.Text = "info...";
             // 
             // groupBox5
@@ -157,7 +157,7 @@
             CbPermitirChamar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             CbPermitirChamar.Name = "CbPermitirChamar";
             CbPermitirChamar.Size = new System.Drawing.Size(198, 19);
-            CbPermitirChamar.TabIndex = 0;
+            CbPermitirChamar.TabIndex = 1;
             CbPermitirChamar.Text = "Permitir chamar alguém na sala?";
             CbPermitirChamar.UseVisualStyleBackColor = true;
             // 
@@ -180,18 +180,19 @@
             groupBox4.Name = "groupBox4";
             groupBox4.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBox4.Size = new System.Drawing.Size(147, 60);
-            groupBox4.TabIndex = 0;
+            groupBox4.TabIndex = 1;
             groupBox4.TabStop = false;
             groupBox4.Text = "Fim";
             // 
             // MktDataFim
             // 
-            MktDataFim.Location = new System.Drawing.Point(7, 22);
+            MktDataFim.Location = new System.Drawing.Point(8, 19);
             MktDataFim.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             MktDataFim.Mask = "00/00/0000 00:00";
             MktDataFim.Name = "MktDataFim";
             MktDataFim.Size = new System.Drawing.Size(130, 23);
             MktDataFim.TabIndex = 0;
+            MktDataFim.Leave += MktDataFim_Leave;
             // 
             // groupBox3
             // 
@@ -207,7 +208,7 @@
             // 
             // MktDataInicio
             // 
-            MktDataInicio.Location = new System.Drawing.Point(7, 22);
+            MktDataInicio.Location = new System.Drawing.Point(8, 19);
             MktDataInicio.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             MktDataInicio.Mask = "00/00/0000 00:00";
             MktDataInicio.Name = "MktDataInicio";
@@ -230,7 +231,7 @@
             // 
             CbxSelecionarSala.DisplayMember = "SalaReuniao";
             CbxSelecionarSala.FormattingEnabled = true;
-            CbxSelecionarSala.Location = new System.Drawing.Point(7, 22);
+            CbxSelecionarSala.Location = new System.Drawing.Point(11, 18);
             CbxSelecionarSala.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             CbxSelecionarSala.Name = "CbxSelecionarSala";
             CbxSelecionarSala.Size = new System.Drawing.Size(206, 23);

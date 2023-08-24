@@ -29,6 +29,16 @@ namespace AgendaSalas.Repositorio
             return listaPorSala;
         }
 
+        public async Task<IEnumerable<Reuniao>> ListarAgendadas(DateTime dataAtual)
+        {
+            var listaPorSala = await agendaContext.Reunioes
+                    .Include(i => i.Sala)
+                    .Where(w => w.DataInicio >= dataAtual)
+                    .OrderBy(or => or.Descricao)
+                    .ToListAsync();
+            return listaPorSala;
+        }
+
         public async Task<Reuniao> BuscarPorId(int id)
         {
             var reuniao = await agendaContext.Reunioes

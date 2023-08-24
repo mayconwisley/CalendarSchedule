@@ -124,7 +124,7 @@
             DgvListaSalas.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             DgvListaSalas.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             DgvListaSalas.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { IdDgv, SalaDgv, RamalDgv, DescricaoDgv });
-            DgvListaSalas.Location = new System.Drawing.Point(7, 22);
+            DgvListaSalas.Location = new System.Drawing.Point(7, 15);
             DgvListaSalas.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             DgvListaSalas.MultiSelect = false;
             DgvListaSalas.Name = "DgvListaSalas";
@@ -180,7 +180,7 @@
             // 
             // TxtRamal
             // 
-            TxtRamal.Location = new System.Drawing.Point(7, 22);
+            TxtRamal.Location = new System.Drawing.Point(10, 19);
             TxtRamal.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             TxtRamal.MaxLength = 5;
             TxtRamal.Name = "TxtRamal";
@@ -201,7 +201,7 @@
             // 
             // TxtDescricao
             // 
-            TxtDescricao.Location = new System.Drawing.Point(7, 22);
+            TxtDescricao.Location = new System.Drawing.Point(10, 19);
             TxtDescricao.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             TxtDescricao.MaxLength = 1000;
             TxtDescricao.Name = "TxtDescricao";
@@ -222,7 +222,7 @@
             // 
             // TxtSala
             // 
-            TxtSala.Location = new System.Drawing.Point(7, 22);
+            TxtSala.Location = new System.Drawing.Point(8, 19);
             TxtSala.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             TxtSala.MaxLength = 500;
             TxtSala.Name = "TxtSala";

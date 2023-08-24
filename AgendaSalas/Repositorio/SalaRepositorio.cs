@@ -15,7 +15,7 @@ namespace AgendaSalas.Repositorio
         public async Task<IEnumerable<Sala>> ListarTudo()
         {
             return await agendaContext.Salas
-                .OrderBy(or => or.Descricao)
+                .OrderBy(or => or.SalaReuniao)
                 .ToListAsync();
         }
         

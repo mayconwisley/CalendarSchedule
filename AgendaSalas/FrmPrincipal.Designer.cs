@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             panel1 = new System.Windows.Forms.Panel();
             BtnNovaSala = new System.Windows.Forms.Button();
             BtnListarRelatorio = new System.Windows.Forms.Button();
@@ -47,6 +48,8 @@
             label2 = new System.Windows.Forms.Label();
             panel4 = new System.Windows.Forms.Panel();
             LblDataAtual = new System.Windows.Forms.Label();
+            TimerDataHoraAtual = new System.Windows.Forms.Timer(components);
+            LkLblAtualizar = new System.Windows.Forms.LinkLabel();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             groupBox1.SuspendLayout();
@@ -78,7 +81,7 @@
             BtnNovaSala.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BtnNovaSala.Name = "BtnNovaSala";
             BtnNovaSala.Size = new System.Drawing.Size(253, 72);
-            BtnNovaSala.TabIndex = 3;
+            BtnNovaSala.TabIndex = 0;
             BtnNovaSala.Text = "Nova Sala";
             BtnNovaSala.UseVisualStyleBackColor = true;
             BtnNovaSala.Click += BtnNovaSala_Click;
@@ -94,7 +97,7 @@
             BtnListarRelatorio.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BtnListarRelatorio.Name = "BtnListarRelatorio";
             BtnListarRelatorio.Size = new System.Drawing.Size(253, 72);
-            BtnListarRelatorio.TabIndex = 2;
+            BtnListarRelatorio.TabIndex = 3;
             BtnListarRelatorio.Text = "Listar Relatório";
             BtnListarRelatorio.UseVisualStyleBackColor = true;
             // 
@@ -109,7 +112,7 @@
             BtnConsultarAgenda.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BtnConsultarAgenda.Name = "BtnConsultarAgenda";
             BtnConsultarAgenda.Size = new System.Drawing.Size(253, 72);
-            BtnConsultarAgenda.TabIndex = 1;
+            BtnConsultarAgenda.TabIndex = 2;
             BtnConsultarAgenda.Text = "Consultar";
             BtnConsultarAgenda.UseVisualStyleBackColor = true;
             BtnConsultarAgenda.Click += BtnConsultarAgenda_Click;
@@ -125,7 +128,7 @@
             BtnNovaAgenda.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BtnNovaAgenda.Name = "BtnNovaAgenda";
             BtnNovaAgenda.Size = new System.Drawing.Size(253, 72);
-            BtnNovaAgenda.TabIndex = 0;
+            BtnNovaAgenda.TabIndex = 1;
             BtnNovaAgenda.Text = "Nova Agenda";
             BtnNovaAgenda.UseVisualStyleBackColor = true;
             BtnNovaAgenda.Click += BtnNovaAgenda_Click;
@@ -158,11 +161,12 @@
             DgvListaAgendaAtual.AllowUserToAddRows = false;
             DgvListaAgendaAtual.AllowUserToDeleteRows = false;
             DgvListaAgendaAtual.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            DgvListaAgendaAtual.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
             DgvListaAgendaAtual.BackgroundColor = System.Drawing.SystemColors.Control;
             DgvListaAgendaAtual.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             DgvListaAgendaAtual.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             DgvListaAgendaAtual.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { IdDgv, SalaDgv, DataInicioDgv, DataFimDgv, DescricaoDgv, PermitirLigarDgv, PermitirChamarDgv });
-            DgvListaAgendaAtual.Location = new System.Drawing.Point(4, 22);
+            DgvListaAgendaAtual.Location = new System.Drawing.Point(5, 14);
             DgvListaAgendaAtual.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             DgvListaAgendaAtual.MultiSelect = false;
             DgvListaAgendaAtual.Name = "DgvListaAgendaAtual";
@@ -173,45 +177,59 @@
             // 
             // IdDgv
             // 
+            IdDgv.DataPropertyName = "Id";
             IdDgv.HeaderText = "Id";
             IdDgv.Name = "IdDgv";
             IdDgv.ReadOnly = true;
+            IdDgv.Width = 42;
             // 
             // SalaDgv
             // 
+            SalaDgv.DataPropertyName = "SalaReuniao";
             SalaDgv.HeaderText = "Sala";
             SalaDgv.Name = "SalaDgv";
             SalaDgv.ReadOnly = true;
+            SalaDgv.Width = 53;
             // 
             // DataInicioDgv
             // 
+            DataInicioDgv.DataPropertyName = "DataInicio";
             DataInicioDgv.HeaderText = "Data Inicio";
             DataInicioDgv.Name = "DataInicioDgv";
             DataInicioDgv.ReadOnly = true;
+            DataInicioDgv.Width = 81;
             // 
             // DataFimDgv
             // 
+            DataFimDgv.DataPropertyName = "DataFim";
             DataFimDgv.HeaderText = "Data Fim";
             DataFimDgv.Name = "DataFimDgv";
             DataFimDgv.ReadOnly = true;
+            DataFimDgv.Width = 73;
             // 
             // DescricaoDgv
             // 
+            DescricaoDgv.DataPropertyName = "Descricao";
             DescricaoDgv.HeaderText = "Descrição";
             DescricaoDgv.Name = "DescricaoDgv";
             DescricaoDgv.ReadOnly = true;
+            DescricaoDgv.Width = 83;
             // 
             // PermitirLigarDgv
             // 
+            PermitirLigarDgv.DataPropertyName = "PermitirLigar";
             PermitirLigarDgv.HeaderText = "Permitir Ligar";
             PermitirLigarDgv.Name = "PermitirLigarDgv";
             PermitirLigarDgv.ReadOnly = true;
+            PermitirLigarDgv.Width = 76;
             // 
             // PermitirChamarDgv
             // 
+            PermitirChamarDgv.DataPropertyName = "PermitirChamar";
             PermitirChamarDgv.HeaderText = "Permitir Chamar";
             PermitirChamarDgv.Name = "PermitirChamarDgv";
             PermitirChamarDgv.ReadOnly = true;
+            PermitirChamarDgv.Width = 90;
             // 
             // panel3
             // 
@@ -253,11 +271,29 @@
             LblDataAtual.TabIndex = 0;
             LblDataAtual.Text = "DataAtual";
             // 
+            // TimerDataHoraAtual
+            // 
+            TimerDataHoraAtual.Enabled = true;
+            TimerDataHoraAtual.Interval = 1000;
+            TimerDataHoraAtual.Tick += TimerDataHoraAtual_Tick;
+            // 
+            // LkLblAtualizar
+            // 
+            LkLblAtualizar.AutoSize = true;
+            LkLblAtualizar.Location = new System.Drawing.Point(1305, 151);
+            LkLblAtualizar.Name = "LkLblAtualizar";
+            LkLblAtualizar.Size = new System.Drawing.Size(53, 15);
+            LkLblAtualizar.TabIndex = 4;
+            LkLblAtualizar.TabStop = true;
+            LkLblAtualizar.Text = "Atualizar";
+            LkLblAtualizar.LinkClicked += LkLblAtualizar_LinkClicked;
+            // 
             // FrmPrincipal
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(1379, 748);
+            Controls.Add(LkLblAtualizar);
             Controls.Add(panel4);
             Controls.Add(panel3);
             Controls.Add(panel2);
@@ -266,6 +302,7 @@
             Name = "FrmPrincipal";
             StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             Text = "Agendar Salas";
+            Load += FrmPrincipal_Load;
             panel1.ResumeLayout(false);
             panel2.ResumeLayout(false);
             groupBox1.ResumeLayout(false);
@@ -275,6 +312,7 @@
             panel4.ResumeLayout(false);
             panel4.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -290,6 +328,8 @@
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Label LblDataAtual;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button BtnNovaSala;
+        private System.Windows.Forms.Timer TimerDataHoraAtual;
         private System.Windows.Forms.DataGridViewTextBoxColumn IdDgv;
         private System.Windows.Forms.DataGridViewTextBoxColumn SalaDgv;
         private System.Windows.Forms.DataGridViewTextBoxColumn DataInicioDgv;
@@ -297,7 +337,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn DescricaoDgv;
         private System.Windows.Forms.DataGridViewCheckBoxColumn PermitirLigarDgv;
         private System.Windows.Forms.DataGridViewCheckBoxColumn PermitirChamarDgv;
-        private System.Windows.Forms.Button BtnNovaSala;
+        private System.Windows.Forms.LinkLabel LkLblAtualizar;
     }
 }
 
