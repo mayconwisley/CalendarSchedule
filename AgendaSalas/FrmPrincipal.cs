@@ -4,72 +4,71 @@ using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace AgendaSalas
+namespace AgendaSalas;
+
+public partial class FrmPrincipal : Form
 {
-    public partial class FrmPrincipal : Form
+    readonly ReuniaoRepositorio reuniaoRepositorio = new();
+
+    public FrmPrincipal()
     {
-        readonly ReuniaoRepositorio reuniaoRepositorio = new();
+        InitializeComponent();
+    }
 
-        public FrmPrincipal()
+    private async void ListarAgenda()
+    {
+        try
         {
-            InitializeComponent();
-        }
+            var listaAgenda = await reuniaoRepositorio.ListarAgendadas(DateTime.Now);
 
-        private async void ListarAgenda()
-        {
-            try
+            DgvListaAgendaAtual.DataSource = listaAgenda.Select(s => new
             {
-                var listaAgenda = await reuniaoRepositorio.ListarAgendadas(DateTime.Now);
-
-                DgvListaAgendaAtual.DataSource = listaAgenda.Select(s => new
-                {
-                    s.Id,
-                    s.DataInicio,
-                    s.DataFim,
-                    s.Descricao,
-                    s.PermitirChamar,
-                    s.PermitirLigar,
-                    s.Sala.SalaReuniao
-                }).ToList();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+                s.Id,
+                s.DataInicio,
+                s.DataFim,
+                s.Descricao,
+                s.PermitirChamar,
+                s.PermitirLigar,
+                s.Sala.SalaReuniao
+            }).ToList();
         }
-
-
-        private void BtnNovaSala_Click(object sender, EventArgs e)
+        catch (Exception ex)
         {
-            FrmCadSala frmCadSala = new();
-            frmCadSala.ShowDialog();
+            MessageBox.Show(ex.Message);
         }
+    }
 
-        private void BtnNovaAgenda_Click(object sender, EventArgs e)
-        {
-            FrmCadAgenda frmCadAgenda = new();
-            frmCadAgenda.ShowDialog();
-        }
 
-        private void BtnConsultarAgenda_Click(object sender, EventArgs e)
-        {
-            FrmConAgenda frmConAgenda = new();
-            frmConAgenda.ShowDialog();
-        }
+    private void BtnNovaSala_Click(object sender, EventArgs e)
+    {
+        FrmCadSala frmCadSala = new();
+        frmCadSala.ShowDialog();
+    }
 
-        private void TimerDataHoraAtual_Tick(object sender, EventArgs e)
-        {
-            LblDataAtual.Text = $"Data: {DateTime.Now.ToShortDateString()} - {DateTime.Now.ToShortTimeString()}";
-        }
+    private void BtnNovaAgenda_Click(object sender, EventArgs e)
+    {
+        FrmCadAgenda frmCadAgenda = new();
+        frmCadAgenda.ShowDialog();
+    }
 
-        private void FrmPrincipal_Load(object sender, EventArgs e)
-        {
-            ListarAgenda();
-        }
+    private void BtnConsultarAgenda_Click(object sender, EventArgs e)
+    {
+        FrmConAgenda frmConAgenda = new();
+        frmConAgenda.ShowDialog();
+    }
 
-        private void LkLblAtualizar_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ListarAgenda();
-        }
+    private void TimerDataHoraAtual_Tick(object sender, EventArgs e)
+    {
+        LblDataAtual.Text = $"Data: {DateTime.Now.ToShortDateString()} - {DateTime.Now.ToShortTimeString()}";
+    }
+
+    private void FrmPrincipal_Load(object sender, EventArgs e)
+    {
+        ListarAgenda();
+    }
+
+    private void LkLblAtualizar_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+    {
+        ListarAgenda();
     }
 }

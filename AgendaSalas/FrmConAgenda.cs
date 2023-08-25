@@ -4,38 +4,39 @@ using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace AgendaSalas
+namespace AgendaSalas;
+
+public partial class FrmConAgenda : Form
 {
-    public partial class FrmConAgenda : Form
+    readonly SalaRepositorio salaRepositorio = new();
+    readonly ReuniaoRepositorio reuniaoRepositorio = new();
+
+    int salaId = 0, reuniaoId = 0;
+
+    public FrmConAgenda()
     {
-        readonly SalaRepositorio salaRepositorio = new();
-        readonly ReuniaoRepositorio reuniaoRepositorio = new();
+        InitializeComponent();
+    }
 
-        int salaId = 0, reuniaoId = 0;
-
-        public FrmConAgenda()
+    private async void ListarSalas()
+    {
+        try
         {
-            InitializeComponent();
-        }
+            var listaSalas = await salaRepositorio.ListarTudo();
 
-        private async void ListarSalas()
+            CbxSelecionarSala.DataSource = listaSalas;
+        }
+        catch (Exception ex)
         {
-            try
-            {
-                var listaSalas = await salaRepositorio.ListarTudo();
-
-                CbxSelecionarSala.DataSource = listaSalas;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            MessageBox.Show($"Erro:\n\n{ex.Message}");
         }
+    }
 
-        private async void ListarAgenda(int idSala)
+    private async void ListarAgenda(int idSala)
+    {
+        try
         {
             var listaAgenda = await reuniaoRepositorio.ListarPorSala(idSala);
-
 
             DgvListaAgenda.DataSource = listaAgenda.Select(s => new
             {
@@ -48,42 +49,58 @@ namespace AgendaSalas
                 DescSala = s.Sala.Descricao
             }).ToList();
         }
-
-        private void CbxSelecionarSala_SelectedIndexChanged(object sender, EventArgs e)
+        catch (Exception ex)
         {
-            salaId = int.Parse(CbxSelecionarSala.SelectedValue.ToString());
+            MessageBox.Show($"Erro:\n\n{ex.Message}");
+        }
+    }
 
-            try
+    private void CbxSelecionarSala_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        salaId = int.Parse(CbxSelecionarSala.SelectedValue.ToString());
+
+        try
+        {
+            ListarAgenda(salaId);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
+        }
+    }
+
+    private void FrmConAgenda_Load(object sender, EventArgs e)
+    {
+        ListarSalas();
+    }
+
+    private void DgvListaAgenda_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+    {
+        reuniaoId = int.Parse(DgvListaAgenda.Rows[e.RowIndex].Cells["IdDgv"].Value.ToString());
+        FrmCadAgenda frmCadAgenda = new(reuniaoId, true);
+        frmCadAgenda.ShowDialog();
+    }
+
+    private void DgvListaAgenda_CellClick(object sender, DataGridViewCellEventArgs e)
+    {
+        reuniaoId = int.Parse(DgvListaAgenda.Rows[e.RowIndex].Cells["IdDgv"].Value.ToString());
+    }
+
+    private async void BtnExcluir_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            if (reuniaoId == 0)
             {
-                ListarAgenda(salaId);
+                MessageBox.Show("Selecione um item para excluir", "Aviso");
+                return;
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void FrmConAgenda_Load(object sender, EventArgs e)
-        {
-            ListarSalas();
-        }
-
-        private void DgvListaAgenda_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            reuniaoId = int.Parse(DgvListaAgenda.Rows[e.RowIndex].Cells["IdDgv"].Value.ToString());
-            FrmCadAgenda frmCadAgenda = new(reuniaoId, true);
-            frmCadAgenda.ShowDialog();
-        }
-
-        private void DgvListaAgenda_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            reuniaoId = int.Parse(DgvListaAgenda.Rows[e.RowIndex].Cells["IdDgv"].Value.ToString());
-        }
-
-        private async void BtnExcluir_Click(object sender, EventArgs e)
-        {
             await reuniaoRepositorio.Excluir(reuniaoId);
             ListarAgenda(salaId);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Erro:\n\n{ex.Message}");
         }
     }
 }

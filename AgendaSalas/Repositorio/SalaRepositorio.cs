@@ -6,74 +6,73 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AgendaSalas.Repositorio
+namespace AgendaSalas.Repositorio;
+
+public class SalaRepositorio
 {
-    public class SalaRepositorio
+    readonly AgendaContext agendaContext = new();
+
+    public async Task<IEnumerable<Sala>> ListarTudo()
     {
-        readonly AgendaContext agendaContext = new();
+        return await agendaContext.Salas
+            .OrderBy(or => or.SalaReuniao)
+            .ToListAsync();
+    }
 
-        public async Task<IEnumerable<Sala>> ListarTudo()
+    public async Task<Sala> BuscarPorId(int id)
+    {
+        var sala = await agendaContext.Salas
+            .Where(w => w.Id == id)
+            .FirstOrDefaultAsync();
+
+        if (sala is not null)
         {
-            return await agendaContext.Salas
-                .OrderBy(or => or.SalaReuniao)
-                .ToListAsync();
+            return sala;
         }
+        return new Sala();
+    }
 
-        public async Task<Sala> BuscarPorId(int id)
+    public async Task Adicionar(Sala sala)
+    {
+        try
         {
-            var sala = await agendaContext.Salas
-                .Where(w => w.Id == id)
-                .FirstOrDefaultAsync();
-
-            if (sala is not null)
-            {
-                return sala;
-            }
-            return new Sala();
+            agendaContext.Salas.Add(sala);
+            await agendaContext.SaveChangesAsync();
         }
-
-        public async Task Adicionar(Sala sala)
+        catch (Exception)
         {
-            try
+            throw;
+        }
+    }
+
+    public async Task Alterar(Sala sala)
+    {
+        try
+        {
+            Sala sala1 = await BuscarPorId(sala.Id);
+            if (sala1 is not null)
             {
-                agendaContext.Salas.Add(sala);
+                agendaContext.Salas.Entry(sala1).CurrentValues.SetValues(sala);
                 await agendaContext.SaveChangesAsync();
             }
-            catch (Exception)
-            {
-                throw;
-            }
         }
-
-        public async Task Alterar(Sala sala)
+        catch (Exception)
         {
-            try
-            {
-                Sala sala1 = await BuscarPorId(sala.Id);
-                if (sala1 is not null)
-                {
-                    agendaContext.Salas.Entry(sala1).CurrentValues.SetValues(sala);
-                    await agendaContext.SaveChangesAsync();
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            throw;
         }
+    }
 
-        public async Task Excluir(int id)
+    public async Task Excluir(int id)
+    {
+        Sala sala = await BuscarPorId(id);
+        try
         {
-            Sala sala = await BuscarPorId(id);
-            try
-            {
-                agendaContext.Remove(sala);
-                await agendaContext.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            agendaContext.Remove(sala);
+            await agendaContext.SaveChangesAsync();
+        }
+        catch (Exception)
+        {
+            throw;
         }
     }
 }
