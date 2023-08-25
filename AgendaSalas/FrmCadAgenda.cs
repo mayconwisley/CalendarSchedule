@@ -25,7 +25,7 @@ namespace AgendaSalas
             alterar = alterarReuniao;
             BtnSalvar.Text = "&Alterar";
 
-            ListarDados(reuniaoId);
+           
         }
 
         private async void ListarSalas()
@@ -64,6 +64,8 @@ namespace AgendaSalas
         {
             ListarSalas();
             IniciarDatas();
+            ListarDados(reuniaoId);
+            Informacao();
         }
 
         private void CbxSelecionarSala_SelectedIndexChanged(object sender, EventArgs e)
@@ -103,6 +105,16 @@ namespace AgendaSalas
             }
         }
 
+        private void Informacao()
+        {
+            DateTime dtInicio = DateTime.Parse(MktDataInicio.Text);
+            DateTime dtFim = DateTime.Parse(MktDataFim.Text);
+
+            TimeSpan tempoDeReuniao = dtFim - dtInicio;
+
+            LblInfo.Text = $"Tempo de Reunião {tempoDeReuniao.Hours:00}:{tempoDeReuniao.Minutes:00}";
+        }
+
         private void MktDataFim_Leave(object sender, EventArgs e)
         {
             DateTime dtInicio = DateTime.Parse(MktDataInicio.Text);
@@ -114,9 +126,7 @@ namespace AgendaSalas
                 return;
             }
 
-            TimeSpan tempoDeReuniao = dtFim - dtInicio;
-
-            LblInfo.Text = $"Tempo de Reunião {tempoDeReuniao.Hours:00}:{tempoDeReuniao.Minutes:00}";
+            Informacao();
 
         }
     }

@@ -66,7 +66,7 @@
             panel1.Location = new System.Drawing.Point(14, 14);
             panel1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             panel1.Name = "panel1";
-            panel1.Size = new System.Drawing.Size(1351, 88);
+            panel1.Size = new System.Drawing.Size(980, 88);
             panel1.TabIndex = 0;
             // 
             // BtnNovaSala
@@ -75,7 +75,7 @@
             BtnNovaSala.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(128, 255, 128);
             BtnNovaSala.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             BtnNovaSala.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            BtnNovaSala.Location = new System.Drawing.Point(288, 8);
+            BtnNovaSala.Location = new System.Drawing.Point(95, 8);
             BtnNovaSala.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BtnNovaSala.Name = "BtnNovaSala";
             BtnNovaSala.Size = new System.Drawing.Size(253, 72);
@@ -91,7 +91,7 @@
             BtnConsultarAgenda.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(128, 255, 128);
             BtnConsultarAgenda.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             BtnConsultarAgenda.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            BtnConsultarAgenda.Location = new System.Drawing.Point(810, 8);
+            BtnConsultarAgenda.Location = new System.Drawing.Point(632, 8);
             BtnConsultarAgenda.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BtnConsultarAgenda.Name = "BtnConsultarAgenda";
             BtnConsultarAgenda.Size = new System.Drawing.Size(253, 72);
@@ -107,7 +107,7 @@
             BtnNovaAgenda.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(128, 255, 128);
             BtnNovaAgenda.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             BtnNovaAgenda.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            BtnNovaAgenda.Location = new System.Drawing.Point(549, 8);
+            BtnNovaAgenda.Location = new System.Drawing.Point(364, 8);
             BtnNovaAgenda.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BtnNovaAgenda.Name = "BtnNovaAgenda";
             BtnNovaAgenda.Size = new System.Drawing.Size(253, 72);
@@ -123,7 +123,7 @@
             panel2.Location = new System.Drawing.Point(14, 183);
             panel2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             panel2.Name = "panel2";
-            panel2.Size = new System.Drawing.Size(1351, 505);
+            panel2.Size = new System.Drawing.Size(980, 271);
             panel2.TabIndex = 2;
             // 
             // groupBox1
@@ -134,7 +134,7 @@
             groupBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox1.Size = new System.Drawing.Size(1344, 498);
+            groupBox1.Size = new System.Drawing.Size(973, 264);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "Salas Agendadas Atualmente";
@@ -155,7 +155,7 @@
             DgvListaAgendaAtual.Name = "DgvListaAgendaAtual";
             DgvListaAgendaAtual.ReadOnly = true;
             DgvListaAgendaAtual.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            DgvListaAgendaAtual.Size = new System.Drawing.Size(1334, 470);
+            DgvListaAgendaAtual.Size = new System.Drawing.Size(963, 236);
             DgvListaAgendaAtual.TabIndex = 0;
             // 
             // IdDgv
@@ -218,7 +218,7 @@
             // 
             panel3.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             panel3.Controls.Add(label2);
-            panel3.Location = new System.Drawing.Point(14, 696);
+            panel3.Location = new System.Drawing.Point(14, 462);
             panel3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             panel3.Name = "panel3";
             panel3.Size = new System.Drawing.Size(322, 38);
@@ -264,7 +264,7 @@
             // 
             LkLblAtualizar.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             LkLblAtualizar.AutoSize = true;
-            LkLblAtualizar.Location = new System.Drawing.Point(1305, 151);
+            LkLblAtualizar.Location = new System.Drawing.Point(934, 151);
             LkLblAtualizar.Name = "LkLblAtualizar";
             LkLblAtualizar.Size = new System.Drawing.Size(53, 15);
             LkLblAtualizar.TabIndex = 4;
@@ -276,7 +276,7 @@
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(1379, 748);
+            ClientSize = new System.Drawing.Size(1008, 514);
             Controls.Add(LkLblAtualizar);
             Controls.Add(panel4);
             Controls.Add(panel3);
