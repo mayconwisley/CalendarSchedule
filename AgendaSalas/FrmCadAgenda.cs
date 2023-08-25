@@ -9,8 +9,9 @@ namespace AgendaSalas
     {
         readonly SalaRepositorio salaRepositorio = new();
         readonly ReuniaoRepositorio reuniaoRepositorio = new();
-        int salaId = 0, reuniaoId = 0;
-        bool alterar;
+        private int salaId = 0;
+        private readonly int reuniaoId = 0;
+        readonly bool alterar;
 
         public FrmCadAgenda()
         {

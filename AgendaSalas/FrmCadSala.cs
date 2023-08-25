@@ -7,7 +7,7 @@ namespace AgendaSalas
 {
     public partial class FrmCadSala : Form
     {
-        private SalaRepositorio salaRepositorio = new();
+        private readonly SalaRepositorio salaRepositorio = new();
         private int idSala = 0;
 
         public FrmCadSala()
