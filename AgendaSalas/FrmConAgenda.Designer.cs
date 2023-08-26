@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             panel1 = new System.Windows.Forms.Panel();
             BtnExcluir = new System.Windows.Forms.Button();
             groupBox1 = new System.Windows.Forms.GroupBox();
@@ -59,12 +59,12 @@
             panel1.Location = new System.Drawing.Point(0, 0);
             panel1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             panel1.Name = "panel1";
-            panel1.Size = new System.Drawing.Size(1041, 632);
+            panel1.Size = new System.Drawing.Size(946, 530);
             panel1.TabIndex = 0;
             // 
             // BtnExcluir
             // 
-            BtnExcluir.Location = new System.Drawing.Point(878, 14);
+            BtnExcluir.Location = new System.Drawing.Point(784, 15);
             BtnExcluir.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BtnExcluir.Name = "BtnExcluir";
             BtnExcluir.Size = new System.Drawing.Size(149, 58);
@@ -80,7 +80,7 @@
             groupBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox1.Size = new System.Drawing.Size(1014, 522);
+            groupBox1.Size = new System.Drawing.Size(919, 391);
             groupBox1.TabIndex = 2;
             groupBox1.TabStop = false;
             groupBox1.Text = "Lista de Agenda";
@@ -100,7 +100,7 @@
             DgvListaAgenda.Name = "DgvListaAgenda";
             DgvListaAgenda.ReadOnly = true;
             DgvListaAgenda.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            DgvListaAgenda.Size = new System.Drawing.Size(1000, 493);
+            DgvListaAgenda.Size = new System.Drawing.Size(904, 369);
             DgvListaAgenda.TabIndex = 0;
             DgvListaAgenda.CellClick += DgvListaAgenda_CellClick;
             DgvListaAgenda.CellDoubleClick += DgvListaAgenda_CellDoubleClick;
@@ -116,10 +116,10 @@
             // DataInicioDgv
             // 
             DataInicioDgv.DataPropertyName = "DataInicio";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle3.Format = "g";
-            dataGridViewCellStyle3.NullValue = null;
-            DataInicioDgv.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle1.Format = "g";
+            dataGridViewCellStyle1.NullValue = null;
+            DataInicioDgv.DefaultCellStyle = dataGridViewCellStyle1;
             DataInicioDgv.HeaderText = "Data Inicio";
             DataInicioDgv.Name = "DataInicioDgv";
             DataInicioDgv.ReadOnly = true;
@@ -128,10 +128,10 @@
             // DataFimDgv
             // 
             DataFimDgv.DataPropertyName = "DataFim";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle4.Format = "g";
-            dataGridViewCellStyle4.NullValue = null;
-            DataFimDgv.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle2.Format = "g";
+            dataGridViewCellStyle2.NullValue = null;
+            DataFimDgv.DefaultCellStyle = dataGridViewCellStyle2;
             DataFimDgv.HeaderText = "Data Fim";
             DataFimDgv.Name = "DataFimDgv";
             DataFimDgv.ReadOnly = true;
@@ -209,7 +209,7 @@
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(1041, 632);
+            ClientSize = new System.Drawing.Size(946, 530);
             Controls.Add(panel1);
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
