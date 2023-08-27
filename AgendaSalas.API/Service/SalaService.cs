@@ -40,7 +40,7 @@ public class SalaService : ISalaService
         return salaEntity.ConverterSalaParaDto();
     }
 
-    public async Task<int> TotalSala(string search)
+    public async Task<int> TotalSalas(string search)
     {
         var totalSala = await _salaRepository.TotalSalas(search);
         return totalSala;

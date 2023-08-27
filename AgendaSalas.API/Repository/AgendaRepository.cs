@@ -91,6 +91,16 @@ namespace AgendaSalas.API.Repository
             }
         }
 
+        public async Task<int> TotalAgendas(string search)
+        {
+            var totalAgendas = await _agendaContext.Agendas
+                 .Where(w => w.Descricao == search)
+                 .CountAsync();
+
+            return totalAgendas;
+
+        }
+
         public async Task<Agenda> Update(Agenda agenda)
         {
             try

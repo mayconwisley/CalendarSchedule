@@ -9,5 +9,5 @@ public interface ISalaService
     Task Create(SalaDto salaDto);
     Task Update(SalaDto salaDto);
     Task Delete(int id);
-    Task<int> TotalSala(string search);
+    Task<int> TotalSalas(string search);
 }

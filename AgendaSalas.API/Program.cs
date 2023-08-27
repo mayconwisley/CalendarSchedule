@@ -28,6 +28,7 @@ var strDataBase = builder.Configuration.GetConnectionString("AgendaConect");
 builder.Services.AddDbContext<AgendaContext>(cd => cd.UseSqlServer(strDataBase));
 builder.Services.AddScoped<ISalaRepository, SalaRespository>();
 builder.Services.AddScoped<IAgendaRepository, AgendaRepository>();
+builder.Services.AddScoped<IAgendaService, AgendaService>();
 builder.Services.AddScoped<ISalaService, SalaService>();
 
 

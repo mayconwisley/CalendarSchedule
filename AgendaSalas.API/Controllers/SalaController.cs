@@ -1,8 +1,6 @@
 ﻿using AgendaSalas.API.Service.Interface;
 using AgendaSalas.Models.Dtos;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.RegularExpressions;
 
 namespace AgendaSalas.API.Controllers
 {
@@ -22,7 +20,7 @@ namespace AgendaSalas.API.Controllers
         public async Task<ActionResult<IEnumerable<SalaDto>>> GetAll([FromQuery] int page = 1, [FromQuery] int size = 25, [FromQuery] string search = "")
         {
             var salaDto = await _salaService.GetAll(page, size, search);
-            decimal totalDados = (decimal)await _salaService.TotalSala(search);
+            decimal totalDados = (decimal)await _salaService.TotalSalas(search);
             decimal totalPage = (totalDados / size) <= 0 ? 1 : Math.Ceiling((totalDados / size));
 
             if (size == 1)
@@ -30,7 +28,7 @@ namespace AgendaSalas.API.Controllers
                 totalPage = totalDados;
             }
 
-            if (salaDto.Count() <= 0)
+            if (!salaDto.Any())
             {
                 return NotFound("Sem dados");
             }
