@@ -1,9 +1,12 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgendaSalas", "AgendaSalas\AgendaSalas.csproj", "{3B0DF753-2A69-42B2-8F96-F1597C2D5AEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgendaSalas.Desktop", "AgendaSalas\AgendaSalas.Desktop.csproj", "{3B0DF753-2A69-42B2-8F96-F1597C2D5AEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgendaSalas.API", "AgendaSalas.API\AgendaSalas.API.csproj", "{0A49DF11-D3B6-400D-BFB3-43A6441CCDA4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgendaSalas.Models", "AgendaSalas.Models\AgendaSalas.Models.csproj", "{6F175E27-D214-40B4-8498-E22187C660E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +18,14 @@ Global
 		{3B0DF753-2A69-42B2-8F96-F1597C2D5AEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B0DF753-2A69-42B2-8F96-F1597C2D5AEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B0DF753-2A69-42B2-8F96-F1597C2D5AEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A49DF11-D3B6-400D-BFB3-43A6441CCDA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A49DF11-D3B6-400D-BFB3-43A6441CCDA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A49DF11-D3B6-400D-BFB3-43A6441CCDA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A49DF11-D3B6-400D-BFB3-43A6441CCDA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F175E27-D214-40B4-8498-E22187C660E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F175E27-D214-40B4-8498-E22187C660E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F175E27-D214-40B4-8498-E22187C660E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F175E27-D214-40B4-8498-E22187C660E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

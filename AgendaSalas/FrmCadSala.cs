@@ -44,8 +44,16 @@ public partial class FrmCadSala : Form
             Descricao = TxtDescricao.Text.Trim()
         };
 
+        if (string.IsNullOrWhiteSpace(TxtSala.Text))
+        {
+            MessageBox.Show("Preencher o nome da Sala.", "Aviso");
+            return;
+        }
+
         try
         {
+
+
             await salaRepositorio.Adicionar(sala);
             ListarSalas();
             LimparCampos();
@@ -68,6 +76,11 @@ public partial class FrmCadSala : Form
             Ramal = TxtRamal.Text.Trim(),
             Descricao = TxtDescricao.Text.Trim()
         };
+        if (string.IsNullOrWhiteSpace(TxtSala.Text))
+        {
+            MessageBox.Show("Preencher o nome da Sala.", "Aviso");
+            return;
+        }
 
         try
         {

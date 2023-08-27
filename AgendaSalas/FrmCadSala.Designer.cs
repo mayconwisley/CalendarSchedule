@@ -119,10 +119,9 @@
             // 
             DgvListaSalas.AllowUserToAddRows = false;
             DgvListaSalas.AllowUserToDeleteRows = false;
-            DgvListaSalas.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            DgvListaSalas.AllowUserToOrderColumns = true;
             DgvListaSalas.BackgroundColor = System.Drawing.SystemColors.Control;
             DgvListaSalas.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            DgvListaSalas.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             DgvListaSalas.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { IdDgv, SalaDgv, RamalDgv, DescricaoDgv });
             DgvListaSalas.Location = new System.Drawing.Point(7, 15);
             DgvListaSalas.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);

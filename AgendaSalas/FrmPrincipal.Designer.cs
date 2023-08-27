@@ -34,7 +34,7 @@
             BtnConsultarAgenda = new System.Windows.Forms.Button();
             BtnNovaAgenda = new System.Windows.Forms.Button();
             panel2 = new System.Windows.Forms.Panel();
-            groupBox1 = new System.Windows.Forms.GroupBox();
+            GbListaSalasAgenda = new System.Windows.Forms.GroupBox();
             DgvListaAgendaAtual = new System.Windows.Forms.DataGridView();
             IdDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
             SalaDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -51,7 +51,7 @@
             LkLblAtualizar = new System.Windows.Forms.LinkLabel();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
-            groupBox1.SuspendLayout();
+            GbListaSalasAgenda.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)DgvListaAgendaAtual).BeginInit();
             panel3.SuspendLayout();
             panel4.SuspendLayout();
@@ -119,25 +119,25 @@
             // panel2
             // 
             panel2.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            panel2.Controls.Add(groupBox1);
+            panel2.Controls.Add(GbListaSalasAgenda);
             panel2.Location = new System.Drawing.Point(14, 183);
             panel2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             panel2.Name = "panel2";
             panel2.Size = new System.Drawing.Size(980, 271);
             panel2.TabIndex = 2;
             // 
-            // groupBox1
+            // GbListaSalasAgenda
             // 
-            groupBox1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            groupBox1.Controls.Add(DgvListaAgendaAtual);
-            groupBox1.Location = new System.Drawing.Point(4, 3);
-            groupBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox1.Size = new System.Drawing.Size(973, 264);
-            groupBox1.TabIndex = 0;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Salas Agendadas Atualmente";
+            GbListaSalasAgenda.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            GbListaSalasAgenda.Controls.Add(DgvListaAgendaAtual);
+            GbListaSalasAgenda.Location = new System.Drawing.Point(4, 3);
+            GbListaSalasAgenda.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GbListaSalasAgenda.Name = "GbListaSalasAgenda";
+            GbListaSalasAgenda.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GbListaSalasAgenda.Size = new System.Drawing.Size(973, 264);
+            GbListaSalasAgenda.TabIndex = 0;
+            GbListaSalasAgenda.TabStop = false;
+            GbListaSalasAgenda.Text = "Salas Agendadas Atualmente";
             // 
             // DgvListaAgendaAtual
             // 
@@ -289,7 +289,7 @@
             Load += FrmPrincipal_Load;
             panel1.ResumeLayout(false);
             panel2.ResumeLayout(false);
-            groupBox1.ResumeLayout(false);
+            GbListaSalasAgenda.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)DgvListaAgendaAtual).EndInit();
             panel3.ResumeLayout(false);
             panel3.PerformLayout();
@@ -305,7 +305,7 @@
         private System.Windows.Forms.Button BtnNovaAgenda;
         private System.Windows.Forms.Button BtnConsultarAgenda;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox GbListaSalasAgenda;
         private System.Windows.Forms.DataGridView DgvListaAgendaAtual;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel4;

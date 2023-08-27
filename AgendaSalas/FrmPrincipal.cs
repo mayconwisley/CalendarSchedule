@@ -15,7 +15,7 @@ public partial class FrmPrincipal : Form
         InitializeComponent();
     }
 
-    private async void ListarAgenda()
+    public async void ListarAgenda()
     {
         try
         {
@@ -31,13 +31,16 @@ public partial class FrmPrincipal : Form
                 s.PermitirLigar,
                 s.Sala.SalaReuniao
             }).ToList();
+
+            int totalLista = DgvListaAgendaAtual.RowCount;
+            GbListaSalasAgenda.Text = $"Salas Agendadas Atualmente {totalLista:00}";
+
         }
         catch (Exception ex)
         {
             MessageBox.Show(ex.Message);
         }
     }
-
 
     private void BtnNovaSala_Click(object sender, EventArgs e)
     {
@@ -47,13 +50,13 @@ public partial class FrmPrincipal : Form
 
     private void BtnNovaAgenda_Click(object sender, EventArgs e)
     {
-        FrmCadAgenda frmCadAgenda = new();
+        FrmCadAgenda frmCadAgenda = new(this);
         frmCadAgenda.ShowDialog();
     }
 
     private void BtnConsultarAgenda_Click(object sender, EventArgs e)
     {
-        FrmConAgenda frmConAgenda = new();
+        FrmConAgenda frmConAgenda = new(this);
         frmConAgenda.ShowDialog();
     }
 

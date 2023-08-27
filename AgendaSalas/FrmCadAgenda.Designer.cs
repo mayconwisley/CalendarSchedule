@@ -254,6 +254,7 @@
             ShowInTaskbar = false;
             StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             Text = "Cadastro Agenda";
+            FormClosing += FrmCadAgenda_FormClosing;
             Load += FrmCadAgenda_Load;
             panel1.ResumeLayout(false);
             groupBox2.ResumeLayout(false);

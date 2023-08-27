@@ -12,16 +12,19 @@ public partial class FrmCadAgenda : Form
     private int salaId = 0;
     private readonly int reuniaoId = 0;
     readonly bool alterar;
-
+    FrmPrincipal _form;
     public FrmCadAgenda()
     {
         InitializeComponent();
     }
 
-    public FrmCadAgenda(int idReuniao, bool alterarReuniao)
+    public FrmCadAgenda(FrmPrincipal form) : this()
     {
-        InitializeComponent();
+        _form = form;
+    }
 
+    public FrmCadAgenda(int idReuniao, bool alterarReuniao) : this()
+    {
         reuniaoId = idReuniao;
         alterar = alterarReuniao;
         BtnSalvar.Text = "&Alterar";
@@ -34,8 +37,7 @@ public partial class FrmCadAgenda : Form
 
     private void LimparCampos()
     {
-        MktDataInicio.Clear();
-        MktDataFim.Clear();
+        IniciarDatas();
         RTxtDescricao.Clear();
         CbPermitirLigar.Checked = false;
         CbPermitirChamar.Checked = false;
@@ -95,7 +97,11 @@ public partial class FrmCadAgenda : Form
             PermitirChamar = CbPermitirChamar.Checked,
             SalaId = salaId
         };
-
+        if (string.IsNullOrWhiteSpace(RTxtDescricao.Text))
+        {
+            MessageBox.Show("É necessário informar uma descrição", "Aviso");
+            return;
+        }
         try
         {
             if (alterar)
@@ -138,5 +144,14 @@ public partial class FrmCadAgenda : Form
 
         Informacao();
 
+    }
+
+    private void FrmCadAgenda_FormClosing(object sender, FormClosingEventArgs e)
+    {
+        if (_form is null)
+        {
+            return;
+        }
+        _form.ListarAgenda();
     }
 }

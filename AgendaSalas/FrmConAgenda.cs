@@ -13,11 +13,16 @@ public partial class FrmConAgenda : Form
 
     int salaId = 0, reuniaoId = 0;
 
+    FrmPrincipal _form;
+
     public FrmConAgenda()
     {
         InitializeComponent();
     }
-
+    public FrmConAgenda(FrmPrincipal form) : this()
+    {
+        _form = form;
+    }
     private async void ListarSalas()
     {
         try
@@ -48,6 +53,9 @@ public partial class FrmConAgenda : Form
                 s.PermitirLigar,
                 DescSala = s.Sala.Descricao
             }).ToList();
+
+            int totalAgenda = DgvListaAgenda.RowCount;
+            GbListaAgencia.Text = $"Lista de Agenda {totalAgenda:00}";
         }
         catch (Exception ex)
         {
@@ -102,5 +110,14 @@ public partial class FrmConAgenda : Form
         {
             MessageBox.Show($"Erro:\n\n{ex.Message}");
         }
+    }
+
+    private void FrmConAgenda_FormClosing(object sender, FormClosingEventArgs e)
+    {
+        if (_form is null)
+        {
+            return;
+        }
+        _form.ListarAgenda();
     }
 }

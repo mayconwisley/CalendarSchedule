@@ -31,8 +31,10 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             panel1 = new System.Windows.Forms.Panel();
+            label2 = new System.Windows.Forms.Label();
+            label1 = new System.Windows.Forms.Label();
             BtnExcluir = new System.Windows.Forms.Button();
-            groupBox1 = new System.Windows.Forms.GroupBox();
+            GbListaAgencia = new System.Windows.Forms.GroupBox();
             DgvListaAgenda = new System.Windows.Forms.DataGridView();
             IdDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
             DataInicioDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -45,15 +47,17 @@
             groupBox2 = new System.Windows.Forms.GroupBox();
             CbxSelecionarSala = new System.Windows.Forms.ComboBox();
             panel1.SuspendLayout();
-            groupBox1.SuspendLayout();
+            GbListaAgencia.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)DgvListaAgenda).BeginInit();
             groupBox2.SuspendLayout();
             SuspendLayout();
             // 
             // panel1
             // 
+            panel1.Controls.Add(label2);
+            panel1.Controls.Add(label1);
             panel1.Controls.Add(BtnExcluir);
-            panel1.Controls.Add(groupBox1);
+            panel1.Controls.Add(GbListaAgencia);
             panel1.Controls.Add(groupBox2);
             panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             panel1.Location = new System.Drawing.Point(0, 0);
@@ -61,6 +65,24 @@
             panel1.Name = "panel1";
             panel1.Size = new System.Drawing.Size(946, 530);
             panel1.TabIndex = 0;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(12, 506);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(159, 15);
+            label2.TabIndex = 4;
+            label2.Text = "Dois cliques para ATUALIZAR";
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(12, 491);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(135, 15);
+            label1.TabIndex = 4;
+            label1.Text = "Um clique para EXCLUIR";
             // 
             // BtnExcluir
             // 
@@ -73,17 +95,17 @@
             BtnExcluir.UseVisualStyleBackColor = true;
             BtnExcluir.Click += BtnExcluir_Click;
             // 
-            // groupBox1
+            // GbListaAgencia
             // 
-            groupBox1.Controls.Add(DgvListaAgenda);
-            groupBox1.Location = new System.Drawing.Point(14, 97);
-            groupBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox1.Size = new System.Drawing.Size(919, 391);
-            groupBox1.TabIndex = 2;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Lista de Agenda";
+            GbListaAgencia.Controls.Add(DgvListaAgenda);
+            GbListaAgencia.Location = new System.Drawing.Point(14, 97);
+            GbListaAgencia.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GbListaAgencia.Name = "GbListaAgencia";
+            GbListaAgencia.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            GbListaAgencia.Size = new System.Drawing.Size(919, 391);
+            GbListaAgencia.TabIndex = 2;
+            GbListaAgencia.TabStop = false;
+            GbListaAgencia.Text = "Lista de Agenda";
             // 
             // DgvListaAgenda
             // 
@@ -220,9 +242,11 @@
             ShowInTaskbar = false;
             StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             Text = "Consulta Agenda";
+            FormClosing += FrmConAgenda_FormClosing;
             Load += FrmConAgenda_Load;
             panel1.ResumeLayout(false);
-            groupBox1.ResumeLayout(false);
+            panel1.PerformLayout();
+            GbListaAgencia.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)DgvListaAgenda).EndInit();
             groupBox2.ResumeLayout(false);
             ResumeLayout(false);
@@ -233,7 +257,7 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.ComboBox CbxSelecionarSala;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox GbListaAgencia;
         private System.Windows.Forms.DataGridView DgvListaAgenda;
         private System.Windows.Forms.Button BtnExcluir;
         private System.Windows.Forms.DataGridViewTextBoxColumn IdDgv;
@@ -244,5 +268,7 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn PermitirChamarDgv;
         private System.Windows.Forms.DataGridViewTextBoxColumn SalaIdDgv;
         private System.Windows.Forms.DataGridViewTextBoxColumn SalaDescricaoDgv;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
     }
 }
