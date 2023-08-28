@@ -47,7 +47,12 @@
 
 .dia-atual {
     background: #15f65f;
+    word-break: break-word;
 }
+
+    .dia-atual a {
+        display: inline-block;
+    }
 
 .vazio {
     border: none;
