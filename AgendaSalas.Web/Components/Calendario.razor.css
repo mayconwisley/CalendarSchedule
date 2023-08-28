@@ -44,3 +44,11 @@
         border: 1px solid #000;
         border-radius: 5px;
     }
+
+.dia-atual {
+    background: #15f65f;
+}
+
+.vazio {
+    border: none;
+}
