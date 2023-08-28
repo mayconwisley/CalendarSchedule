@@ -1,7 +1,5 @@
-﻿
-
-<div>
-    <span>@mesAtual</span>
+﻿<div>
+    <span>@dataInicioMes.Date.ToString("MM/yyyy")</span>
 </div>
 <div class="calendario">
     <div class="dia-semana">
@@ -14,21 +12,93 @@
         <span>Sábado</span>
     </div>
     <div class="dia-mes">
-        @for (int i = 1; i <= 31; i++)
+        @for (int i = 0; i < ultimoDiaMes; i++)
         {
-            <span>@i</span>
+            int numSemama = ((int)dataInicioMes.AddDays(i).DayOfWeek);
+
+            @switch (numSemama)
+            {
+                case 0:
+                    <span>@dataInicioMes.AddDays(i).Day</span>
+                    break;
+                case 1:
+                    if (@dataInicioMes.AddDays(i).Day == 1)
+                    {
+                        <span></span>
+                    }
+                    <span>@dataInicioMes.AddDays(i).Day</span>
+                    break;
+                case 2:
+                    if (@dataInicioMes.AddDays(i).Day == 1)
+                    {
+                        <span></span>
+                        <span></span>
+                    }
+                    <span>@dataInicioMes.AddDays(i).Day</span>
+                    break;
+                case 3:
+                    if (@dataInicioMes.AddDays(i).Day == 1)
+                    {
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    }
+                    <span>@dataInicioMes.AddDays(i).Day</span>
+                    break;
+                case 4:
+                    if (@dataInicioMes.AddDays(i).Day == 1)
+                    {
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    }
+                    <span>@dataInicioMes.AddDays(i).Day</span>
+                    break;
+                case 5:
+                    if (@dataInicioMes.AddDays(i).Day == 1)
+                    {
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    }
+                    <span>@dataInicioMes.AddDays(i).Day</span>
+                    break;
+                case 6:
+                    if (@dataInicioMes.AddDays(i).Day == 1)
+                    {
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    }
+                    <span>@dataInicioMes.AddDays(i).Day</span>
+                    break;
+                default:
+                    break;
+            }
         }
     </div>
 
 </div>
 
 @code {
+    DateTime dataInicioMes = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+    DateTime dataFimMes = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
 
-    private DateTime dataAtual = DateTime.Now;
-    string mesAtual;
+    // DateTime dataInicioMes = new DateTime(2023, 09, 1);
+    // DateTime dataFimMes = new DateTime(2023, 09, 30);
+
+
+    int ultimoDiaMes;
+
     private void teste()
     {
-        mesAtual = dataAtual.ToString("MM/yyyy");
+        ultimoDiaMes = dataFimMes.Day;
     }
 
     protected override void OnInitialized()
