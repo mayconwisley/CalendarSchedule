@@ -1,0 +1,64 @@
+﻿<div>
+    <span>@dataInicioMes.ToString("MM/yyyy")</span>
+</div>
+<div class="calendario">
+    <div class="dia-semana">
+        @foreach (var dayOfWeek in Enum.GetValues(typeof(DayOfWeek)))
+        {
+            <span>@dayOfWeek</span>
+        }
+    </div>
+    <div class="dia-mes">
+        @for (int i = 0; i < ultimoDiaMes; i++)
+        {
+            var currentDate = dataInicioMes.AddDays(i);
+            int numSemana = (int)currentDate.DayOfWeek;
+
+            <span class="@(numSemana == 0 ? "domingo" : (numSemana == 6 ? "sabado" : ""))">
+                @if (currentDate == DateTime.Now.Date)
+                {
+                    <span class="dia-atual">
+                        @currentDate.Day
+                        @for (int y = 0; y < quantidadeSalas; y++)
+                        {
+                            <a href="#">@informacaoAgendaDia</a>
+                        }
+                    </span>
+                }
+                else if (numSemana > 0)
+                {
+                    <span>@currentDate.Day</span>
+                }
+                else
+                {
+                    <span class="vazio"></span>
+                }
+            </span>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public int quantidadeSalas { get; set; }
+
+    DateTime dataInicioMes = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+    int ultimoDiaMes;
+    string? informacaoAgendaDia;
+
+    private void InitializeCalendar()
+    {
+        ultimoDiaMes = DateTime.DaysInMonth(dataInicioMes.Year, dataInicioMes.Month);
+    }
+
+    private void SetAgendaInfo(int codigoSala)
+    {
+        informacaoAgendaDia = "Sala";
+    }
+
+    protected override void OnInitialized()
+    {
+        InitializeCalendar();
+        SetAgendaInfo(1);
+        base.OnInitialized();
+    }
+}

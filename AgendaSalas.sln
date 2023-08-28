@@ -8,7 +8,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgendaSalas.API", "AgendaSa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgendaSalas.Models", "AgendaSalas.Models\AgendaSalas.Models.csproj", "{6F175E27-D214-40B4-8498-E22187C660E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgendaSalas.Web", "AgendaSalas.Web\AgendaSalas.Web.csproj", "{C2C4ED9E-108A-4C19-AEB5-3E0BF5E385B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgendaSalas.Web", "AgendaSalas.Web\AgendaSalas.Web.csproj", "{C2C4ED9E-108A-4C19-AEB5-3E0BF5E385B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
