@@ -1,0 +1,47 @@
+﻿* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+.calendario {
+    max-width: 900px;
+    margin: 10px auto;
+    background-color: #FFF;
+    padding: 40px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.dia-semana {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    padding: 10px 0;
+    border-bottom:1px solid #000;
+}
+
+    .dia-semana span {
+        display: inline-block;
+        font-weight:bold;
+        width: calc(100% / 7);
+        color: black;
+       
+    }
+
+.dia-mes {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    text-align: left;
+    justify-content:start;
+}
+
+    .dia-mes span {
+        display: inline-block;
+        width: calc(100% / 7);
+        color: #000;
+        margin: 60px 0;
+        
+       
+    }

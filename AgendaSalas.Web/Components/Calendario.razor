@@ -1,0 +1,39 @@
+﻿
+
+<div>
+    <span>@mesAtual</span>
+</div>
+<div class="calendario">
+    <div class="dia-semana">
+        <span>Domingo</span>
+        <span>Segunda-feira</span>
+        <span>Terça-feira</span>
+        <span>Quarta-feira</span>
+        <span>Quinta-feira</span>
+        <span>Sexta-feira</span>
+        <span>Sábado</span>
+    </div>
+    <div class="dia-mes">
+        @for (int i = 1; i <= 31; i++)
+        {
+            <span>@i</span>
+        }
+    </div>
+
+</div>
+
+@code {
+
+    private DateTime dataAtual = DateTime.Now;
+    string mesAtual;
+    private void teste()
+    {
+        mesAtual = dataAtual.ToString("MM/yyyy");
+    }
+
+    protected override void OnInitialized()
+    {
+        teste();
+        base.OnInitialized();
+    }
+}

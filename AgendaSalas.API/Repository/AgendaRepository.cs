@@ -3,120 +3,119 @@ using AgendaSalas.API.Model;
 using AgendaSalas.API.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
 
-namespace AgendaSalas.API.Repository
+namespace AgendaSalas.API.Repository;
+
+public class AgendaRepository : IAgendaRepository
 {
-    public class AgendaRepository : IAgendaRepository
+    private readonly AgendaContext _agendaContext;
+
+    public AgendaRepository(AgendaContext agendaContext)
     {
-        private readonly AgendaContext _agendaContext;
+        _agendaContext = agendaContext;
+    }
 
-        public AgendaRepository(AgendaContext agendaContext)
+    public async Task<Agenda> Create(Agenda agenda)
+    {
+        try
         {
-            _agendaContext = agendaContext;
+            if (agenda is not null)
+            {
+                _agendaContext.Agendas.Add(agenda);
+                await _agendaContext.SaveChangesAsync();
+                return agenda;
+            }
+            return new();
         }
-
-        public async Task<Agenda> Create(Agenda agenda)
+        catch (Exception)
         {
-            try
-            {
-                if (agenda is not null)
-                {
-                    _agendaContext.Agendas.Add(agenda);
-                    await _agendaContext.SaveChangesAsync();
-                    return agenda;
-                }
-                return new();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            throw;
         }
+    }
 
-        public async Task<Agenda> Delete(int id)
+    public async Task<Agenda> Delete(int id)
+    {
+        try
         {
-            try
-            {
-                var agenda = await GetById(id);
+            var agenda = await GetById(id);
 
-                if (agenda is not null)
-                {
-                    _agendaContext.Remove(agenda);
-                    await _agendaContext.SaveChangesAsync();
-                    return agenda;
-                }
-                return new();
-            }
-            catch (Exception)
+            if (agenda is not null)
             {
-                throw;
+                _agendaContext.Remove(agenda);
+                await _agendaContext.SaveChangesAsync();
+                return agenda;
             }
+            return new();
         }
-
-        public async Task<IEnumerable<Agenda>> GetAll(int page, int size, string search)
+        catch (Exception)
         {
-            try
-            {
-                var salas = await _agendaContext.Agendas
-                    .Include(i => i.Sala)
-                    .Skip((page - 1) * size)
-                    .Take(size)
-                    .OrderBy(o => o.DataInicio)
-                    .ToListAsync();
-
-                return salas;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            throw;
         }
+    }
 
-        public async Task<Agenda> GetById(int id)
+    public async Task<IEnumerable<Agenda>> GetAll(int page, int size, string search)
+    {
+        try
         {
-            try
-            {
-                var agenda = await _agendaContext.Agendas
-                    .Where(w => w.Id == id)
-                    .FirstOrDefaultAsync();
+            var salas = await _agendaContext.Agendas
+                .Include(i => i.Sala)
+                .Skip((page - 1) * size)
+                .Take(size)
+                .OrderBy(o => o.DataInicio)
+                .ToListAsync();
 
-                if (agenda is not null)
-                {
-                    return agenda;
-                }
-                return new();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            return salas;
         }
-
-        public async Task<int> TotalAgendas(string search)
+        catch (Exception)
         {
-            var totalAgendas = await _agendaContext.Agendas
-                 .Where(w => w.Descricao == search)
-                 .CountAsync();
-
-            return totalAgendas;
-
+            throw;
         }
+    }
 
-        public async Task<Agenda> Update(Agenda agenda)
+    public async Task<Agenda> GetById(int id)
+    {
+        try
         {
-            try
+            var agenda = await _agendaContext.Agendas
+                .Where(w => w.Id == id)
+                .FirstOrDefaultAsync();
+
+            if (agenda is not null)
             {
-                if (agenda is not null)
-                {
-                    _agendaContext.Agendas.Entry(agenda).State = EntityState.Modified;
-                    await _agendaContext.SaveChangesAsync();
-                    return agenda;
-                }
-                return new();
+                return agenda;
             }
-            catch (Exception)
+            return new();
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public async Task<int> TotalAgendas(string search)
+    {
+        var totalAgendas = await _agendaContext.Agendas
+            .Where(w => w!.Descricao!.Contains(search))
+            .CountAsync();
+
+        return totalAgendas;
+
+    }
+
+    public async Task<Agenda> Update(Agenda agenda)
+    {
+        try
+        {
+            if (agenda is not null)
             {
-                throw;
+                _agendaContext.Agendas.Entry(agenda).State = EntityState.Modified;
+                await _agendaContext.SaveChangesAsync();
+                return agenda;
             }
+            return new();
+        }
+        catch (Exception)
+        {
+            throw;
         }
     }
 }
