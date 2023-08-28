@@ -1,0 +1,70 @@
+﻿* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+.calendario {
+    max-width: 1000px;
+    margin: 10px auto;
+    background-color: #FFF;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.dia-semana {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    padding: 10px 0;
+    border-bottom: 1px solid #000;
+}
+
+    .dia-semana span {
+        display: inline-block;
+        font-weight: bold;
+        width: calc(99% / 7);
+        color: black;
+        text-align: center;
+    }
+
+.dia-mes {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+    .dia-mes span {
+        display: inline-block;
+        width: calc(98% / 7);
+        height: 100px;
+        margin: 1px;
+        color: #000;
+        border: 1px solid #000;
+        border-radius: 5px;
+        overflow: auto;
+    }
+
+.vazio {
+    background: #ff0000;
+}
+
+.dia-atual {
+    background: #15f65f;
+    word-break: break-word;
+}
+
+    .dia-atual > a {
+        display: block;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+.domingo {
+    background-color: rgba(255,0,0,0.3);
+}
+
+.sabado {
+    background-color: rgba(206,206,206,0.3);
+}
