@@ -43,17 +43,28 @@
         color: #000;
         border: 1px solid #000;
         border-radius: 5px;
+        overflow: auto;
     }
+
+.vazio {
+    background: #ff0000;
+}
 
 .dia-atual {
     background: #15f65f;
     word-break: break-word;
 }
 
-    .dia-atual a {
-        display: inline-block;
+    .dia-atual > a {
+        display: block;
+        font-weight: bold;
+        text-decoration: none;
     }
 
-.vazio {
-    border: none;
+.domingo {
+    background-color: rgba(255,0,0,0.3);
+}
+
+.sabado {
+    background-color: rgba(206,206,206,0.3);
 }

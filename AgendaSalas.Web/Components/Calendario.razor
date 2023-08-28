@@ -19,7 +19,7 @@
             @switch (numSemama)
             {
                 case 0:
-                    <span>@dataInicioMes.AddDays(i).Day</span>
+                    <span class="domingo">@dataInicioMes.AddDays(i).Day</span>
                     break;
                 case 1:
                     if (@dataInicioMes.AddDays(i).Day == 1)
@@ -31,9 +31,9 @@
                         <span class="dia-atual">
                             @dataInicioMes.AddDays(i).Day
 
-                            @for (int y = 0; y < 2; y++)
+                            @for (int y = 0; y < quantidadeSalas; y++)
                             {
-                                <a href="#">@informacaoAgendaDia</a>
+                                <a href="#">@informacaoAgendaDia - @y.ToString("00")</a>
                             }
 
                         </span>
@@ -54,7 +54,7 @@
                     {
                         <span class="dia-atual">
                             @dataInicioMes.AddDays(i).Day
-                            @for (int y = 0; y < 2; y++)
+                            @for (int y = 0; y < quantidadeSalas; y++)
                             {
                                 <a href="#">@informacaoAgendaDia</a>
                             }
@@ -76,7 +76,7 @@
                     {
                         <span class="dia-atual">
                             @dataInicioMes.AddDays(i).Day
-                            @for (int y = 0; y < 2; y++)
+                            @for (int y = 0; y < quantidadeSalas; y++)
                             {
                                 <a href="#">@informacaoAgendaDia</a>
                             }
@@ -99,7 +99,7 @@
                     {
                         <span class="dia-atual">
                             @dataInicioMes.AddDays(i).Day
-                            @for (int y = 0; y < 2; y++)
+                            @for (int y = 0; y < quantidadeSalas; y++)
                             {
                                 <a href="#">@informacaoAgendaDia</a>
                             }
@@ -123,7 +123,7 @@
                     {
                         <span class="dia-atual">
                             @dataInicioMes.AddDays(i).Day
-                            @for (int y = 0; y < 2; y++)
+                            @for (int y = 0; y < quantidadeSalas; y++)
                             {
                                 <a href="#">@informacaoAgendaDia</a>
                             }
@@ -148,7 +148,7 @@
                     {
                         <span class="dia-atual">
                             @dataInicioMes.AddDays(i).Day
-                            @for (int y = 0; y < 2; y++)
+                            @for (int y = 0; y < quantidadeSalas; y++)
                             {
                                 <a href="#">@informacaoAgendaDia</a>
                             }
@@ -156,7 +156,7 @@
                     }
                     else
                     {
-                        <span>@dataInicioMes.AddDays(i).Day</span>
+                        <span class="sabado">@dataInicioMes.AddDays(i).Day</span>
                     }
                     break;
                 default:
@@ -168,6 +168,10 @@
 </div>
 
 @code {
+
+    [Parameter]
+    public int quantidadeSalas { get; set; }
+
     DateTime dataInicioMes = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
     DateTime dataFimMes = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
 
@@ -185,7 +189,7 @@
 
     private void AgendaSala(int codigoSala)
     {
-        informacaoAgendaDia = "Sala 01";
+        informacaoAgendaDia = "Sala";
     }
 
     protected override void OnInitialized()
