@@ -6,6 +6,7 @@
 
 .calendario {
     max-width: 1000px;
+    max-height: 500px;
     margin: 10px auto;
     background-color: #FFF;
     padding: 10px;
@@ -19,12 +20,13 @@
     flex-wrap: wrap;
     padding: 10px 0;
     border-bottom: 1px solid #000;
+   
 }
 
     .dia-semana span {
         display: inline-block;
         font-weight: bold;
-        width: calc(99% / 7);
+        width: calc(95% / 7);
         color: black;
         text-align: center;
     }
@@ -37,22 +39,25 @@
 
     .dia-mes span {
         display: inline-block;
-        width: calc(98% / 7);
-        height: 100px;
+        width: calc(95% / 7);
+        height: 70%;
         margin: 1px;
         color: #000;
-        border: 1px solid #000;
-        border-radius: 5px;
-        overflow: auto;
     }
 
+.dia {
+    border: 1px solid #000;
+    border-radius: 5px;
+    overflow: auto;
+}
+
 .vazio {
-    background: #ff0000;
+    border: none;
 }
 
 .dia-atual {
     background: #15f65f;
-    word-break: break-word;
+    
 }
 
     .dia-atual > a {

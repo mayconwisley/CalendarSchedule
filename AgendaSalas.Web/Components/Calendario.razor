@@ -1,6 +1,15 @@
-﻿<div>
-    <span>@dataInicioMes.Date.ToString("MM/yyyy")</span>
-</div>
+﻿@{
+
+    DateTime dataInicioMes = new DateTime(competencia.Mes.Year, competencia.Mes.Month, 1);
+    DateTime dataFimMes = new DateTime(competencia.Mes.Year, competencia.Mes.Month, DateTime.DaysInMonth(competencia.Mes.Year, competencia.Mes.Month));
+
+}
+
+
+<EditForm Model="@competencia">
+    <InputDate @bind-Value="@competencia.Mes" />
+    <span>@competencia.Mes.Date.ToString("MM/yyyy")</span>
+</EditForm>
 <div class="calendario">
     <div class="dia-semana">
         <span>Domingo</span>
@@ -12,23 +21,23 @@
         <span>Sábado</span>
     </div>
     <div class="dia-mes">
-        @for (int i = 0; i < ultimoDiaMes; i++)
+        @for (int i = 0; i < dataFimMes.Day; i++)
         {
             int numSemama = ((int)dataInicioMes.AddDays(i).DayOfWeek);
 
             @switch (numSemama)
             {
                 case 0:
-                    <span class="domingo">@dataInicioMes.AddDays(i).Day</span>
+                    <span class="domingo dia">@dataInicioMes.AddDays(i).Day</span>
                     break;
                 case 1:
                     if (@dataInicioMes.AddDays(i).Day == 1)
                     {
                         <span class="vazio"></span>
                     }
-                    if (@dataInicioMes.AddDays(i).Day == DateTime.Now.Day)
+                    if (@dataInicioMes.AddDays(i).Date == DateTime.Now.Date)
                     {
-                        <span class="dia-atual">
+                        <span class="dia-atual dia">
                             @dataInicioMes.AddDays(i).Day
 
                             @for (int y = 0; y < quantidadeSalas; y++)
@@ -40,7 +49,7 @@
                     }
                     else
                     {
-                        <span>@dataInicioMes.AddDays(i).Day</span>
+                        <span class="dia">@dataInicioMes.AddDays(i).Day</span>
                     }
 
                     break;
@@ -50,19 +59,19 @@
                         <span class="vazio"></span>
                         <span class="vazio"></span>
                     }
-                    if (@dataInicioMes.AddDays(i).Day == DateTime.Now.Day)
+                    if (@dataInicioMes.AddDays(i).Date == DateTime.Now.Date)
                     {
-                        <span class="dia-atual">
+                        <span class="dia-atual dia">
                             @dataInicioMes.AddDays(i).Day
                             @for (int y = 0; y < quantidadeSalas; y++)
                             {
-                                <a href="#">@informacaoAgendaDia</a>
+                                <a href="#">@informacaoAgendaDia - @y.ToString("00")</a>
                             }
                         </span>
                     }
                     else
                     {
-                        <span>@dataInicioMes.AddDays(i).Day</span>
+                        <span class="dia">@dataInicioMes.AddDays(i).Day</span>
                     }
                     break;
                 case 3:
@@ -72,19 +81,19 @@
                         <span class="vazio"></span>
                         <span class="vazio"></span>
                     }
-                    if (@dataInicioMes.AddDays(i).Day == DateTime.Now.Day)
+                    if (@dataInicioMes.AddDays(i).Date == DateTime.Now.Date)
                     {
-                        <span class="dia-atual">
+                        <span class="dia-atual dia">
                             @dataInicioMes.AddDays(i).Day
                             @for (int y = 0; y < quantidadeSalas; y++)
                             {
-                                <a href="#">@informacaoAgendaDia</a>
+                                <a href="#">@informacaoAgendaDia - @y.ToString("00")</a>
                             }
                         </span>
                     }
                     else
                     {
-                        <span>@dataInicioMes.AddDays(i).Day</span>
+                        <span class="dia">@dataInicioMes.AddDays(i).Day</span>
                     }
                     break;
                 case 4:
@@ -95,19 +104,19 @@
                         <span class="vazio"></span>
                         <span class="vazio"></span>
                     }
-                    if (@dataInicioMes.AddDays(i).Day == DateTime.Now.Day)
+                    if (@dataInicioMes.AddDays(i).Date == DateTime.Now.Date)
                     {
-                        <span class="dia-atual">
+                        <span class="dia-atual dia">
                             @dataInicioMes.AddDays(i).Day
                             @for (int y = 0; y < quantidadeSalas; y++)
                             {
-                                <a href="#">@informacaoAgendaDia</a>
+                                <a href="#">@informacaoAgendaDia - @y.ToString("00")</a>
                             }
                         </span>
                     }
                     else
                     {
-                        <span>@dataInicioMes.AddDays(i).Day</span>
+                        <span class="dia">@dataInicioMes.AddDays(i).Day</span>
                     }
                     break;
                 case 5:
@@ -119,19 +128,19 @@
                         <span class="vazio"></span>
                         <span class="vazio"></span>
                     }
-                    if (@dataInicioMes.AddDays(i).Day == DateTime.Now.Day)
+                    if (@dataInicioMes.AddDays(i).Date == DateTime.Now.Date)
                     {
-                        <span class="dia-atual">
+                        <span class="dia-atual dia">
                             @dataInicioMes.AddDays(i).Day
                             @for (int y = 0; y < quantidadeSalas; y++)
                             {
-                                <a href="#">@informacaoAgendaDia</a>
+                                <a href="#">@informacaoAgendaDia - @y.ToString("00")</a>
                             }
                         </span>
                     }
                     else
                     {
-                        <span>@dataInicioMes.AddDays(i).Day</span>
+                        <span class="dia">@dataInicioMes.AddDays(i).Day</span>
                     }
                     break;
                 case 6:
@@ -144,19 +153,19 @@
                         <span class="vazio"></span>
                         <span class="vazio"></span>
                     }
-                    if (@dataInicioMes.AddDays(i).Day == DateTime.Now.Day)
+                    if (@dataInicioMes.AddDays(i).Date == DateTime.Now.Date)
                     {
-                        <span class="dia-atual">
+                        <span class="dia-atual dia">
                             @dataInicioMes.AddDays(i).Day
                             @for (int y = 0; y < quantidadeSalas; y++)
                             {
-                                <a href="#">@informacaoAgendaDia</a>
+                                <a href="#">@informacaoAgendaDia - @y.ToString("00")</a>
                             }
                         </span>
                     }
                     else
                     {
-                        <span class="sabado">@dataInicioMes.AddDays(i).Day</span>
+                        <span class="sabado dia">@dataInicioMes.AddDays(i).Day</span>
                     }
                     break;
                 default:
@@ -171,21 +180,12 @@
 
     [Parameter]
     public int quantidadeSalas { get; set; }
-
-    DateTime dataInicioMes = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-    DateTime dataFimMes = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
-
-    // DateTime dataInicioMes = new DateTime(2023, 09, 1);
-    // DateTime dataFimMes = new DateTime(2023, 09, 30);
+    private Competencia competencia = new();
 
 
     int ultimoDiaMes;
     string? informacaoAgendaDia;
-    private void teste()
-    {
-        ultimoDiaMes = dataFimMes.Day;
 
-    }
 
     private void AgendaSala(int codigoSala)
     {
@@ -194,8 +194,13 @@
 
     protected override void OnInitialized()
     {
-        teste();
+
         AgendaSala(1);
         base.OnInitialized();
+    }
+
+    private class Competencia
+    {
+        public DateTime Mes { get; set; } = DateTime.Now.Date;
     }
 }

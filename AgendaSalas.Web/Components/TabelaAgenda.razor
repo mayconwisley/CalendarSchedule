@@ -1,0 +1,49 @@
+﻿<div class="border">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Descrição</th>
+                <th>Data Inicio</th>
+                <th>Data Fim</th>
+                <th>Permitir Ligar</th>
+                <th>Permitir Chamar</th>
+                <th>Sala</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (agendaView is not null)
+            {
+                var agendas = agendaView.Agendas;
+
+                if (agendas is not null)
+                {
+                    @foreach (var agenda in agendas)
+                    {
+                        <tr>
+                            <td>@agenda.Id</td>
+                            <td>@agenda.Descricao</td>
+                            <td>@agenda.DataInicio</td>
+                            <td>@agenda.DataFinal</td>
+                            <td>@agenda.PermitirLigar</td>
+                            <td>@agenda.PermitirChamar</td>
+                            <td>@agenda.Sala</td>
+                            <td>
+                                <a href="#">Editar</a> |
+                                <a href="#">Excluir</a>
+                            </td>
+                        </tr>
+                    }
+                }
+
+            }
+
+        </tbody>
+    </table>
+</div>
+
+@code {
+    [Parameter]
+    public AgendaView? agendaView { get; set; }
+}

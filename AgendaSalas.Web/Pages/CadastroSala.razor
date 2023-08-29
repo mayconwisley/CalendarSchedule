@@ -1,0 +1,30 @@
+﻿@page "/Sala"
+
+@inject ISalaService salaService
+
+<h3>Cadastro Sala</h3>
+<a href="NovaSala" class="btn btn-info">Nova Sala</a>
+
+@if (salaView is null)
+{
+    <p>Carregando...</p>
+}
+else
+{
+    <TabelaUsuario salaView="salaView" />
+
+}
+
+
+@code {
+    private SalaView? salaView;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        salaView = await salaService.GetAll();
+
+        await base.OnInitializedAsync();
+    }
+
+}

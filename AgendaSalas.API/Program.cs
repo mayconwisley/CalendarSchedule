@@ -4,6 +4,7 @@ using AgendaSalas.API.Repository.Interface;
 using AgendaSalas.API.Service;
 using AgendaSalas.API.Service.Interface;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
 using System;
 using System.Text.Json.Serialization;
 
@@ -23,6 +24,7 @@ builder.Services.AddControllers().AddJsonOptions(x =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors();
 
 var strDataBase = builder.Configuration.GetConnectionString("AgendaConect");
 builder.Services.AddDbContext<AgendaContext>(cd => cd.UseSqlServer(strDataBase));
@@ -36,6 +38,12 @@ builder.Services.AddScoped<ISalaService, SalaService>();
 
 var app = builder.Build();
 
+app.UseCors(policy => policy.WithOrigins("https://localhost:7296", "http://localhost:5006")
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .WithHeaders(HeaderNames.ContentType)
+);
+;
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

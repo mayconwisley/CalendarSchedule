@@ -19,7 +19,7 @@ public class SalaController : ControllerBase
     [Route("Todas")]
     public async Task<ActionResult<IEnumerable<SalaDto>>> GetAll([FromQuery] int page = 1, [FromQuery] int size = 25, [FromQuery] string search = "")
     {
-        var salaDto = await _salaService.GetAll(page, size, search);
+        var salasDto = await _salaService.GetAll(page, size, search);
         decimal totalDados = (decimal)await _salaService.TotalSalas(search);
         decimal totalPage = (totalDados / size) <= 0 ? 1 : Math.Ceiling((totalDados / size));
 
@@ -28,7 +28,7 @@ public class SalaController : ControllerBase
             totalPage = totalDados;
         }
 
-        if (!salaDto.Any())
+        if (!salasDto.Any())
         {
             return NotFound("Sem dados");
         }
@@ -38,7 +38,7 @@ public class SalaController : ControllerBase
             page,
             totalPage,
             size,
-            salaDto
+            salasDto
         });
 
     }
