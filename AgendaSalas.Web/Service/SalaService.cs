@@ -1,5 +1,6 @@
 ﻿using AgendaSalas.Models.Dtos;
 using AgendaSalas.Web.Models;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -34,14 +35,23 @@ namespace AgendaSalas.Web.Service
         {
             try
             {
-                var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-                var salaView = await httpClient.GetFromJsonAsync<SalaView>($"{apiEndPoint}?page={page}&size={size}&search={search}");
+                using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+                using var response = await httpClient.GetAsync($"{apiEndPoint}?page={page}&size={size}&search={search}");
 
-                if (salaView is not null)
+
+                if (response.IsSuccessStatusCode)
                 {
-                    return salaView;
+                    var salaView = await response.Content.ReadFromJsonAsync<SalaView>(_serializerOptions);
+                    return salaView ?? new();
                 }
-
+                else
+                {
+                    if (response.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        return new();
+                    }
+                    response.EnsureSuccessStatusCode();
+                }
                 return new();
             }
             catch (Exception)
