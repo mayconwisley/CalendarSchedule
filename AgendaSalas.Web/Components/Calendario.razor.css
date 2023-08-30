@@ -7,9 +7,9 @@
 .calendario {
     max-width: 1000px;
     max-height: 500px;
-    margin: 10px auto;
+    margin: 5px auto;
     background-color: #FFF;
-    padding: 10px;
+    padding: 5px;
     display: flex;
     flex-wrap: wrap;
 }
@@ -20,7 +20,6 @@
     flex-wrap: wrap;
     padding: 10px 0;
     border-bottom: 1px solid #000;
-   
 }
 
     .dia-semana span {
@@ -40,7 +39,7 @@
     .dia-mes span {
         display: inline-block;
         width: calc(95% / 7);
-        height: 70%;
+        height: 60%;
         margin: 1px;
         color: #000;
     }
@@ -57,7 +56,6 @@
 
 .dia-atual {
     background: #15f65f;
-    
 }
 
     .dia-atual > a {
@@ -73,3 +71,14 @@
 .sabado {
     background-color: rgba(206,206,206,0.3);
 }
+
+.desc-mes {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+    .desc-mes > div > p {
+        font-size: 25px;
+        display: inline-block;
+    }

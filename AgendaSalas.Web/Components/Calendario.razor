@@ -1,16 +1,16 @@
 ﻿@{
-
-    DateTime dataInicioMes = new DateTime(competencia.Mes.Year, competencia.Mes.Month, 1);
-    DateTime dataFimMes = new DateTime(competencia.Mes.Year, competencia.Mes.Month, DateTime.DaysInMonth(competencia.Mes.Year, competencia.Mes.Month));
-
+    DateTime dataInicioMes = new DateTime(competencia.Year, competencia.Month, 1);
+    DateTime dataFimMes = new DateTime(competencia.Year, competencia.Month, DateTime.DaysInMonth(competencia.Year, competencia.Month));
 }
 
-
-<EditForm Model="@competencia">
-    <InputDate @bind-Value="@competencia.Mes" />
-    <span>@competencia.Mes.Date.ToString("MM/yyyy")</span>
-</EditForm>
 <div class="calendario">
+    <div class="desc-mes">
+        <div>
+            <button @onclick="AnteriorMes">&lt;</button>
+            <p>@competencia.ToString("MMMM/yyyy")</p>
+            <button @onclick="ProximoMes">&gt;</button>
+        </div>
+    </div>
     <div class="dia-semana">
         <span>Domingo</span>
         <span>Segunda-feira</span>
@@ -180,7 +180,7 @@
 
     [Parameter]
     public int quantidadeSalas { get; set; }
-    private Competencia competencia = new();
+    DateTime competencia = DateTime.Now.Date;
 
 
     int ultimoDiaMes;
@@ -199,8 +199,15 @@
         base.OnInitialized();
     }
 
-    private class Competencia
+    private void ProximoMes()
     {
-        public DateTime Mes { get; set; } = DateTime.Now.Date;
+        DateTime competenciaAdd = competencia.AddMonths(1);
+        competencia = competenciaAdd;
+
+    }
+    private void AnteriorMes()
+    {
+        DateTime competenciaRemove = competencia.AddMonths(-1);
+        competencia = competenciaRemove;
     }
 }
