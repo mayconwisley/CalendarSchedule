@@ -5,11 +5,27 @@
 
 <div class="calendario">
     <div class="desc-mes">
-        <div>
+
+        <nav>
+            <ul class="pagination">
+                <li class="page-item">
+                    <button class="page-link" @onclick="AnteriorMes">
+                        <span aria-hidden="true">&laquo;</span>
+                    </button>
+                </li>
+                <li class="page-item"> <p class="page-link">@competencia.ToString("MMMM/yyyy")</p></li>
+                <li class="page-item">
+                    <button class="page-link" @onclick="ProximoMes">
+                        <span aria-hidden="true">&raquo;</span>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+        @* <div>
             <button @onclick="AnteriorMes">&lt;</button>
             <p>@competencia.ToString("MMMM/yyyy")</p>
             <button @onclick="ProximoMes">&gt;</button>
-        </div>
+        </div> *@
     </div>
     <div class="dia-semana">
         <span>Domingo</span>

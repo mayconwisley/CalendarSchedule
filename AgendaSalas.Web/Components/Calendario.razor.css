@@ -78,7 +78,7 @@
     justify-content: center;
 }
 
-    .desc-mes > div > p {
+    .desc-mes > nav > ul > li > p, button {
         font-size: 25px;
         display: inline-block;
     }
