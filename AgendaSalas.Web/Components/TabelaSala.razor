@@ -45,6 +45,8 @@
 
     private async Task Delete(int id)
     {
-        await salaService.Delete(id);
+        var isDelete = await salaService.Delete(id);
+        
+        salaView = await salaService.GetAll();
     }
 }
