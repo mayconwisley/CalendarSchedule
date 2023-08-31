@@ -1,4 +1,6 @@
-﻿<div class="border">
+﻿@inject ISalaService salaService
+
+<div class="border">
     <table class="table table-striped">
         <thead>
             <tr>
@@ -24,8 +26,8 @@
                             <td>@sala.Ramal</td>
                             <td>@sala.Descricao</td>
                             <td>
-                                <a href="#">Editar</a> |
-                                <a href="#">Excluir</a>
+                                <a href="/Sala/@sala.Id">Editar</a> |
+                                <button @onclick="@(p => Delete(sala.Id))">Excluir</button>
                             </td>
                         </tr>
                     }
@@ -40,4 +42,9 @@
 @code {
     [Parameter]
     public SalaView? salaView { get; set; }
+
+    private async Task Delete(int id)
+    {
+        await salaService.Delete(id);
+    }
 }

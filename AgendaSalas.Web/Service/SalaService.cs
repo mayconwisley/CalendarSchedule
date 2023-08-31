@@ -3,6 +3,7 @@ using AgendaSalas.Web.Models;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
 
 namespace AgendaSalas.Web.Service
@@ -11,7 +12,7 @@ namespace AgendaSalas.Web.Service
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly JsonSerializerOptions _serializerOptions;
-        private const string? apiEndPoint = "api/Sala/Todas";
+        private const string? apiEndPoint = "api/Sala";
         private readonly SalaDto salaDto = new();
         private readonly SalaView salaView = new();
 
@@ -21,14 +22,54 @@ namespace AgendaSalas.Web.Service
             _serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         }
 
-        public Task<SalaDto> Create(SalaDto salaDto)
+        public async Task<SalaDto> Create(SalaDto salaDto)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+
+                StringContent stringContent = new(JsonSerializer.Serialize(salaDto), Encoding.UTF8, "application/json");
+
+                using (var response = await httpClient.PostAsync(apiEndPoint, stringContent))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        using Stream resApi = await response.Content.ReadAsStreamAsync();
+                        var sala = await JsonSerializer.DeserializeAsync<SalaDto>(resApi, _serializerOptions);
+                        if (sala is not null)
+                        {
+                            return sala;
+                        }
+                    }
+                }
+                return new();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
-        public Task<bool> Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+                using (var response = await httpClient.DeleteAsync($"{apiEndPoint}/{id}"))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return true;
+                    }
+                }
+                return new();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public async Task<SalaView> GetAll(int page = 1, int size = 25, string search = "")
@@ -36,7 +77,7 @@ namespace AgendaSalas.Web.Service
             try
             {
                 using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-                using var response = await httpClient.GetAsync($"{apiEndPoint}?page={page}&size={size}&search={search}");
+                using var response = await httpClient.GetAsync($"{apiEndPoint}/Todas?page={page}&size={size}&search={search}");
 
 
                 if (response.IsSuccessStatusCode)
