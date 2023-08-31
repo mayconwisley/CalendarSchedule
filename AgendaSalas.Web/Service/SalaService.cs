@@ -1,5 +1,6 @@
 ﻿using AgendaSalas.Models.Dtos;
 using AgendaSalas.Web.Models;
+using System.Drawing;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -101,9 +102,32 @@ namespace AgendaSalas.Web.Service
             }
         }
 
-        public Task<SalaDto> GetById(int id)
+        public async Task<SalaDto> GetById(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+                using var response = await httpClient.GetAsync($"{apiEndPoint}/{id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var salaDto = await response.Content.ReadFromJsonAsync<SalaDto>(_serializerOptions);
+                    return salaDto ?? new();
+                }
+                else
+                {
+                    if (response.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        return new();
+                    }
+                    response.EnsureSuccessStatusCode();
+                }
+                return new();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public Task<SalaDto> Update(SalaDto salaDto)

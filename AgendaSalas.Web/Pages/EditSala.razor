@@ -1,0 +1,33 @@
+﻿@page "/EditSala/{Id:int}"
+@inject ISalaService salaService
+@inject NavigationManager NavigationManager
+<h3>Cadastro de Sala</h3>
+
+<EditForm Model="@salaDto" OnSubmit="@Edit">
+    <InputNumber hidden @bind-Value="salaDto!.Id" />
+    <InputText @bind-Value="salaDto!.Nome" placeholder="Nome" />
+    <InputText @bind-Value="salaDto!.Ramal" placeholder="Ramal" />
+    <InputText @bind-Value="salaDto!.Descricao" placeholder="Descrição" />
+    <button type="submit">Salvar</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private SalaDto? salaDto { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        salaDto = await salaService.GetById(Id);
+
+        await base.OnInitializedAsync();
+    }
+
+    private async Task Edit()
+    {
+        await salaService.Update(salaDto!);
+        NavigationManager.NavigateTo("/Sala");
+
+    }
+}

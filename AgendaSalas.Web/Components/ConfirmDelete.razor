@@ -1,0 +1,24 @@
+﻿<div class="modal">
+    <div class="modal-content">
+        <p>@Mensagem</p>
+        <button @onclick="Confirmar">Confirmar</button>
+        <button @onclick="Cancelar">Cancelar</button>
+    </div>
+
+</div>
+
+@code {
+    [Parameter]
+    public string? Mensagem { get; set; }
+    [Parameter]
+    public EventCallback<bool> OnConfirm { get; set; }
+
+    private async Task Confirmar()
+    {
+        await OnConfirm.InvokeAsync(true);
+    }
+    private async Task Cancelar()
+    {
+        await OnConfirm.InvokeAsync(false);
+    }
+}

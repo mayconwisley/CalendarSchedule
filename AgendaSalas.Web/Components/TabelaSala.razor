@@ -26,11 +26,12 @@
                             <td>@sala.Ramal</td>
                             <td>@sala.Descricao</td>
                             <td>
-                                <a href="/Sala/@sala.Id">Editar</a> |
+                                <a href="/EditSala/@sala.Id">Editar</a> |
                                 <button @onclick="@(p => Delete(sala.Id))">Excluir</button>
                             </td>
                         </tr>
                     }
+                    @* <ConfirmDelete @ref="confirmDelete" Mensagem="Deseja excluir este item?" OnConfirm="Delete" ></ConfirmDelete> *@
                 }
 
             }
@@ -42,11 +43,23 @@
 @code {
     [Parameter]
     public SalaView? salaView { get; set; }
+    ConfirmDelete? confirmDelete;
 
     private async Task Delete(int id)
     {
         var isDelete = await salaService.Delete(id);
-        
+
         salaView = await salaService.GetAll();
+        StateHasChanged();
     }
+
+    // private async Task MostrarConfirmacao(int id)
+    // {
+    //     var result = await confirmDelete.ShowAsync();
+
+    //     if(result)
+    //     {
+    //         await Delete(id);
+    //     }
+    // }
 }
