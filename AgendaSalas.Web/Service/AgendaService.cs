@@ -151,5 +151,10 @@ namespace AgendaSalas.Web.Service
                 throw;
             }
         }
+
+        public Task<IEnumerable<AgendaDto>> GetByDate(DateTime dateTime)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
