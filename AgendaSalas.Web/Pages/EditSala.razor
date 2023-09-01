@@ -1,7 +1,7 @@
 ﻿@page "/EditSala/{Id:int}"
 @inject ISalaService salaService
 @inject NavigationManager NavigationManager
-<h3>Cadastro de Sala</h3>
+<h3>Editar Sala</h3>
 
 <EditForm Model="@salaDto" OnSubmit="@Edit">
     <InputNumber hidden @bind-Value="salaDto!.Id" />
@@ -15,13 +15,12 @@
     [Parameter]
     public int Id { get; set; }
 
-    private SalaDto? salaDto { get; set; }
+    private SalaDto? salaDto { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
         salaDto = await salaService.GetById(Id);
 
-        await base.OnInitializedAsync();
     }
 
     private async Task Edit()

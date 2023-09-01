@@ -14,11 +14,11 @@
 
     private SalaDto? salaDto { get; set; }
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         salaDto ??= new();
 
-        return base.OnInitializedAsync();
+        await base.OnInitializedAsync();
     }
 
 

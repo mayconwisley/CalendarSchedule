@@ -130,9 +130,33 @@ namespace AgendaSalas.Web.Service
             }
         }
 
-        public Task<SalaDto> Update(SalaDto salaDto)
+        public async Task<SalaDto> Update(SalaDto salaDto)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+
+                StringContent stringContent = new(JsonSerializer.Serialize(salaDto), Encoding.UTF8, "application/json");
+
+                using (var response = await httpClient.PutAsync($"{apiEndPoint}/{salaDto.Id}", stringContent))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        using Stream resApi = await response.Content.ReadAsStreamAsync();
+                        var sala = await JsonSerializer.DeserializeAsync<SalaDto>(resApi, _serializerOptions);
+                        if (sala is not null)
+                        {
+                            return sala;
+                        }
+                    }
+                }
+                return new();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }
