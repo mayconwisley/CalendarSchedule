@@ -8,9 +8,9 @@ public class AgendaDto
     [Required]
     public string? Descricao { get; set; }
     [Required]
-    public DateTime DataInicio { get; set; }
+    public DateTime DataInicio { get; set; } = DateTime.Now;
     [Required]
-    public DateTime DataFinal { get; set; }
+    public DateTime DataFinal { get; set; } = DateTime.Now.AddHours(1);
     public bool PermitirLigar { get; set; } = false;
     public bool PermitirChamar { get; set; } = false;
     [Required]

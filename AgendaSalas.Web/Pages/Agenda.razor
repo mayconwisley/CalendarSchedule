@@ -1,5 +1,5 @@
 ﻿@page "/Agenda"
-
+@inject IAgendaService agendaService
 <h3>Cadastro Agenda</h3>
 <a href="InsertAgenda" class="btn btn-info">Nova Agenda</a>
 @if (agendaView is null)
@@ -14,8 +14,9 @@ else
 @code {
     private AgendaView? agendaView;
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        return base.OnInitializedAsync();
+        agendaView = await agendaService.GetAll();
+        await base.OnInitializedAsync();
     }
 }

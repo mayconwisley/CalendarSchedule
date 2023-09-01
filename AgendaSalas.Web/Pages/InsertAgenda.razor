@@ -1,6 +1,47 @@
 ﻿@page "/InsertAgenda"
-<h3>Insert Agenda</h3>
+@inject IAgendaService agendaService
+@inject ISalaService salaService
+@inject NavigationManager NavigationManager
+<h3>Cadastro de Agenda</h3>
+
+<EditForm Model="@agendaDto" OnSubmit="@Create">
+
+    <InputSelect @bind-Value="agendaDto!.SalaId">
+        @if (salaView?.SalasDto is not null)
+        {
+            <option value="0">Selecione uma Opção</option>
+            @foreach (var sala in salaView.SalasDto)
+            {
+                <option value="@sala.Id"> @sala.Nome</option>
+            }
+        }
+    </InputSelect>
+
+    <InputText @bind-Value="agendaDto!.Descricao" placeholder="Descrição" />
+    <InputDate Type="InputDateType.DateTimeLocal" @bind-Value="agendaDto.DataInicio" />
+    <InputDate Type="InputDateType.DateTimeLocal" @bind-Value="agendaDto.DataFinal" />
+    <InputCheckbox @bind-Value="agendaDto.PermitirLigar" /> Ligar
+    <InputCheckbox @bind-Value="agendaDto.PermitirChamar" /> Chamar
+
+    <button type="submit">Salvar</button>
+</EditForm>
 
 @code {
+    private AgendaDto? agendaDto { get; set; } = new();
+    private SalaView? salaView { get; set; } = new();
 
+    protected override async Task OnInitializedAsync()
+    {
+        salaView = await salaService.GetAll();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task Create()
+    {
+        if (agendaDto is not null)
+        {
+            var agenda = await agendaService.Create(agendaDto);
+        }
+        NavigationManager.NavigateTo("/Agenda");
+    }
 }

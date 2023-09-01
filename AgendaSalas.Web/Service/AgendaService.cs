@@ -1,43 +1,41 @@
 ﻿using AgendaSalas.Models.Dtos;
 using AgendaSalas.Web.Models;
-using System.Drawing;
-using System.Net;
-using System.Net.Http;
 using System.Net.Http.Json;
+using System.Net;
 using System.Text;
 using System.Text.Json;
 
 namespace AgendaSalas.Web.Service
 {
-    public class SalaService : ISalaService
+    public class AgendaService : IAgendaService
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly JsonSerializerOptions _serializerOptions;
-        private const string? apiEndPoint = "api/Sala";
-       
-        public SalaService(IHttpClientFactory httpClientFactory)
+        private const string? apiEndPoint = "api/Agenda";
+
+        public AgendaService(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
             _serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         }
 
-        public async Task<SalaDto> Create(SalaDto salaDto)
+        public async Task<AgendaDto> Create(AgendaDto agendaDto)
         {
             try
             {
                 using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
 
-                StringContent stringContent = new(JsonSerializer.Serialize(salaDto), Encoding.UTF8, "application/json");
+                StringContent stringContent = new(JsonSerializer.Serialize(agendaDto), Encoding.UTF8, "application/json");
 
                 using (var response = await httpClient.PostAsync(apiEndPoint, stringContent))
                 {
                     if (response.IsSuccessStatusCode)
                     {
                         using Stream resApi = await response.Content.ReadAsStreamAsync();
-                        var sala = await JsonSerializer.DeserializeAsync<SalaDto>(resApi, _serializerOptions);
-                        if (sala is not null)
+                        var agenda = await JsonSerializer.DeserializeAsync<AgendaDto>(resApi, _serializerOptions);
+                        if (agenda is not null)
                         {
-                            return sala;
+                            return agenda;
                         }
                     }
                 }
@@ -45,7 +43,6 @@ namespace AgendaSalas.Web.Service
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -66,12 +63,11 @@ namespace AgendaSalas.Web.Service
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
 
-        public async Task<SalaView> GetAll(int page = 1, int size = 25, string search = "")
+        public async Task<AgendaView> GetAll(int page = 1, int size = 25, string search = "")
         {
             try
             {
@@ -81,8 +77,8 @@ namespace AgendaSalas.Web.Service
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var salaView = await response.Content.ReadFromJsonAsync<SalaView>(_serializerOptions);
-                    return salaView ?? new();
+                    var agendaView = await response.Content.ReadFromJsonAsync<AgendaView>(_serializerOptions);
+                    return agendaView ?? new();
                 }
                 else
                 {
@@ -100,7 +96,7 @@ namespace AgendaSalas.Web.Service
             }
         }
 
-        public async Task<SalaDto> GetById(int id)
+        public async Task<AgendaDto> GetById(int id)
         {
             try
             {
@@ -109,8 +105,8 @@ namespace AgendaSalas.Web.Service
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var salaDto = await response.Content.ReadFromJsonAsync<SalaDto>(_serializerOptions);
-                    return salaDto ?? new();
+                    var agendaDto = await response.Content.ReadFromJsonAsync<AgendaDto>(_serializerOptions);
+                    return agendaDto ?? new();
                 }
                 else
                 {
@@ -128,23 +124,23 @@ namespace AgendaSalas.Web.Service
             }
         }
 
-        public async Task<SalaDto> Update(SalaDto salaDto)
+        public async Task<AgendaDto> Update(AgendaDto agendaDto)
         {
             try
             {
                 using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
 
-                StringContent stringContent = new(JsonSerializer.Serialize(salaDto), Encoding.UTF8, "application/json");
+                StringContent stringContent = new(JsonSerializer.Serialize(agendaDto), Encoding.UTF8, "application/json");
 
-                using (var response = await httpClient.PutAsync($"{apiEndPoint}/{salaDto.Id}", stringContent))
+                using (var response = await httpClient.PutAsync($"{apiEndPoint}/{agendaDto.Id}", stringContent))
                 {
                     if (response.IsSuccessStatusCode)
                     {
                         using Stream resApi = await response.Content.ReadAsStreamAsync();
-                        var sala = await JsonSerializer.DeserializeAsync<SalaDto>(resApi, _serializerOptions);
-                        if (sala is not null)
+                        var agenda = await JsonSerializer.DeserializeAsync<AgendaDto>(resApi, _serializerOptions);
+                        if (agenda is not null)
                         {
-                            return sala;
+                            return agenda;
                         }
                     }
                 }
@@ -152,7 +148,6 @@ namespace AgendaSalas.Web.Service
             }
             catch (Exception)
             {
-
                 throw;
             }
         }

@@ -15,6 +15,7 @@ builder.Services.AddHttpClient("ConexaoApi", con =>
 });
 
 builder.Services.AddScoped<ISalaService, SalaService>();
+builder.Services.AddScoped<IAgendaService, AgendaService>();
 
 
 await builder.Build().RunAsync();

@@ -2,6 +2,7 @@
 using AgendaSalas.API.Model;
 using AgendaSalas.API.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing;
 
 namespace AgendaSalas.API.Repository;
 
@@ -56,14 +57,32 @@ public class AgendaRepository : IAgendaRepository
     {
         try
         {
-            var salas = await _agendaContext.Agendas
+            var agendas = await _agendaContext.Agendas
                 .Include(i => i.Sala)
                 .Skip((page - 1) * size)
                 .Take(size)
                 .OrderBy(o => o.DataInicio)
                 .ToListAsync();
 
-            return salas;
+            return agendas;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public async Task<IEnumerable<Agenda>> GetByDate(DateTime dateTime)
+    {
+        try
+        {
+            var agendas = await _agendaContext.Agendas
+                .Include(i => i.Sala)
+                .Where(w => w.DataFinal >= dateTime)
+                .OrderBy(o => o.DataInicio)
+                .ToListAsync();
+
+            return agendas;
         }
         catch (Exception)
         {

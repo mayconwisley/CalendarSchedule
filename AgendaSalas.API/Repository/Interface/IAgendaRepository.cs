@@ -5,6 +5,7 @@ namespace AgendaSalas.API.Repository.Interface;
 public interface IAgendaRepository
 {
     Task<IEnumerable<Agenda>> GetAll(int page, int size, string search);
+    Task<IEnumerable<Agenda>> GetByDate(DateTime dateTime);
     Task<Agenda> GetById(int id);
     Task<Agenda> Create(Agenda agenda);
     Task<Agenda> Update(Agenda agenda);

@@ -2,6 +2,7 @@
 using AgendaSalas.Models.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace AgendaSalas.API.Controllers;
 
@@ -20,7 +21,7 @@ public class AgendaController : ControllerBase
     [Route("Todas")]
     public async Task<ActionResult<IEnumerable<AgendaDto>>> GetAll([FromQuery] int page = 1, [FromQuery] int size = 25, [FromQuery] string search = "")
     {
-        var agendaDto = await _agendaService.GetAll(page, size, search);
+        var agendasDto = await _agendaService.GetAll(page, size, search);
         decimal totalDados = (decimal)await _agendaService.TotalAgendas(search);
         decimal totalPage = (totalDados / size) <= 0 ? 1 : Math.Ceiling((totalDados / size));
 
@@ -29,7 +30,7 @@ public class AgendaController : ControllerBase
             totalPage = totalDados;
         }
 
-        if (!agendaDto.Any())
+        if (!agendasDto.Any())
         {
             return NotFound("Sem dados");
         }
@@ -39,9 +40,20 @@ public class AgendaController : ControllerBase
             page,
             totalPage,
             size,
-            agendaDto
+            agendasDto
         });
 
+    }
+    [HttpGet("Data")]
+    public async Task<ActionResult<IEnumerable<AgendaDto>>> GetByDate([FromQuery][Required] DateTime dataHora)
+    {
+        var agendasDto = await _agendaService.GetByDate(dataHora);
+
+        if (!agendasDto.Any())
+        {
+            return NotFound("Sem dados");
+        }
+        return Ok(agendasDto);
     }
     [HttpGet("{id:int}", Name = "GetAgenda")]
     public async Task<ActionResult<AgendaDto>> GetById(int id)
