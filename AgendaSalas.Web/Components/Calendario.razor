@@ -50,11 +50,26 @@
                 </a>
                 @if (agendaDto is not null)
                 {
-                    @foreach (var item in agendaDto)
+                    var salaAgenda = agendaDto
+                    .GroupBy(g => new
+                    {
+                        g.SalaId,
+                        g.Sala,
+                        g.DataFinal.Date
+                    })
+                    .Select(s => new AgendaDto
+                    {
+                        SalaId = s.Key.SalaId,
+                        Sala = s.Key.Sala,
+                        DataFinal = s.Key.Date
+                    })
+                    .ToList();
+
+                    @foreach (var item in salaAgenda)
                     {
                         if (item.DataFinal.Date == dataInicioMes.AddDays(i).Date)
                         {
-                            <a href="">@item.Sala</a>
+                            <a href="#InforcaoAgenda/@(item.SalaId)/@(dataInicioMes.AddDays(i).Date.ToString("dd-MM-yyyy"))">@item.Sala</a>
                         }
                     }
                 }
@@ -75,11 +90,6 @@
     int ultimoDiaMes;
     string? informacaoAgendaDia;
 
-
-    private void AgendaSala(int codigoSala)
-    {
-        informacaoAgendaDia = "Sala";
-    }
 
     protected override async Task OnInitializedAsync()
     {

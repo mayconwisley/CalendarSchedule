@@ -59,24 +59,12 @@
     border: none;
 }
 
-.dia-atual {
-    background: #15f65f;
-}
-
-
 a {
     display: block;
     font-weight: bold;
     text-decoration: none;
 }
 
-.domingo {
-    background-color: rgba(255,0,0,0.3);
-}
-
-.sabado {
-    background-color: rgba(206,206,206,0.3);
-}
 
 .desc-mes {
     display: flex;
@@ -88,3 +76,15 @@ a {
         font-size: 25px;
         display: inline-block;
     }
+
+.domingo {
+    background-color: rgba(255,0,0,0.3);
+}
+
+.sabado {
+    background-color: rgba(206,206,206,0.3);
+}
+
+.dia-atual {
+    background: #15f65f;
+}
