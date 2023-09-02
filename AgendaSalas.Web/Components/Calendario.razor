@@ -14,7 +14,7 @@
                         <span aria-hidden="true">&laquo;</span>
                     </button>
                 </li>
-                <li class="page-item"> <p class="page-link">@competencia.ToString("MMMM/yyyy")</p></li>
+                <li class="page-item nome-mes"> <p class="page-link">@competencia.ToString("MMMM/yyyy")</p></li>
                 <li class="page-item">
                     <button class="page-link" @onclick="ProximoMes">
                         <span aria-hidden="true">&raquo;</span>
@@ -43,12 +43,25 @@
                     <span class="vazio"></span>
                 }
             }
-            <span class="@(numSemana == 0 ? "domingo dia" : (numSemana == 6 ? "sabado dia" : "dia"))">
-                <a href="#InsertAgenda/@(dataInicioMes.AddDays(i).Date.ToShortDateString())" >
+            <span class="@(numSemana == 0 ? "domingo dia" : (numSemana == 6 ? "sabado dia" : (dataInicioMes.AddDays(i).Date == DateTime.Now.Date ? "dia-atual dia" : "dia" )))">
+                <a href="#InsertAgenda/@(dataInicioMes.AddDays(i).Date.ToString("dd-MM-yyyy"))">
                     @dataInicioMes.AddDays(i).Day
                 </a>
-            </span>
+                @if (agendaDto is not null)
+                {
+                    @foreach (var item in agendaDto)
+                    {
+                        if (item.DataFinal.Date == dataInicioMes.AddDays(i).Date)
+                        {
+                            <a href="">@item.Sala</a>
+                        }
 
+
+                    }
+                }
+
+
+            </span>
         }
     </div>
 
@@ -60,7 +73,8 @@
     public int quantidadeSalas { get; set; }
     DateTime competencia = DateTime.Now.Date;
 
-    
+    public IEnumerable<AgendaDto>? agendaDto { get; set; } = new List<AgendaDto>();
+
     int ultimoDiaMes;
     string? informacaoAgendaDia;
 
@@ -70,11 +84,11 @@
         informacaoAgendaDia = "Sala";
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
+        agendaDto = await agendaService.GetByDate();
 
-        AgendaSala(1);
-        base.OnInitialized();
+        await base.OnInitializedAsync();
     }
 
     private void ProximoMes()

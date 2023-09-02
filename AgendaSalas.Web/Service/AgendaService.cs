@@ -4,6 +4,7 @@ using System.Net.Http.Json;
 using System.Net;
 using System.Text;
 using System.Text.Json;
+using System.Drawing;
 
 namespace AgendaSalas.Web.Service
 {
@@ -152,9 +153,33 @@ namespace AgendaSalas.Web.Service
             }
         }
 
-        public Task<IEnumerable<AgendaDto>> GetByDate(DateTime dateTime)
+        public async Task<IEnumerable<AgendaDto>> GetByDate()
         {
-            throw new NotImplementedException();
+            try
+            {
+                using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+                using var response = await httpClient.GetAsync($"{apiEndPoint}/Data");
+
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var agendaDto = await response.Content.ReadFromJsonAsync<IEnumerable<AgendaDto>>(_serializerOptions);
+                    return agendaDto ??= new List<AgendaDto>();
+                }
+                else
+                {
+                    if (response.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        return new List<AgendaDto>();
+                    }
+                    response.EnsureSuccessStatusCode();
+                }
+                return new List<AgendaDto>();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

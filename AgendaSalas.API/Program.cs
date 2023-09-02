@@ -26,15 +26,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
 
-var strDataBase = builder.Configuration.GetConnectionString("AgendaConect");
+var senhaBanco = Environment.GetEnvironmentVariable("SQLSenha", EnvironmentVariableTarget.Machine);
+
+var strDataBase = builder.Configuration.GetConnectionString("AgendaConect")!.Replace("{{senha}}", senhaBanco);
 builder.Services.AddDbContext<AgendaContext>(cd => cd.UseSqlServer(strDataBase));
 builder.Services.AddScoped<ISalaRepository, SalaRespository>();
 builder.Services.AddScoped<IAgendaRepository, AgendaRepository>();
 builder.Services.AddScoped<IAgendaService, AgendaService>();
 builder.Services.AddScoped<ISalaService, SalaService>();
-
-
-
 
 var app = builder.Build();
 

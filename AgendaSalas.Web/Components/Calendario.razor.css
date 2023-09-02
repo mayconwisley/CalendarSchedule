@@ -39,10 +39,15 @@
     .dia-mes span {
         display: inline-block;
         width: calc(95% / 7);
-        height: 60%;
+        height: 120px;
         margin: 1px;
         color: #000;
     }
+
+.nome-mes > p {
+    width: 350px;
+    text-align: center;
+}
 
 .dia {
     border: 1px solid #000;
@@ -58,11 +63,12 @@
     background: #15f65f;
 }
 
-    .dia-atual > a {
-        display: block;
-        font-weight: bold;
-        text-decoration: none;
-    }
+
+a {
+    display: block;
+    font-weight: bold;
+    text-decoration: none;
+}
 
 .domingo {
     background-color: rgba(255,0,0,0.3);

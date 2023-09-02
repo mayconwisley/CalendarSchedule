@@ -72,13 +72,13 @@ public class AgendaRepository : IAgendaRepository
         }
     }
 
-    public async Task<IEnumerable<Agenda>> GetByDate(DateTime dateTime)
+    public async Task<IEnumerable<Agenda>> GetByDate()
     {
         try
         {
             var agendas = await _agendaContext.Agendas
                 .Include(i => i.Sala)
-                .Where(w => w.DataFinal >= dateTime)
+                .Where(w => w.DataFinal >= DateTime.Now)
                 .OrderBy(o => o.DataInicio)
                 .ToListAsync();
 

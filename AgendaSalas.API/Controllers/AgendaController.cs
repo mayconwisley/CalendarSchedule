@@ -45,9 +45,9 @@ public class AgendaController : ControllerBase
 
     }
     [HttpGet("Data")]
-    public async Task<ActionResult<IEnumerable<AgendaDto>>> GetByDate([FromQuery][Required] DateTime dataHora)
+    public async Task<ActionResult<IEnumerable<AgendaDto>>> GetByDate()
     {
-        var agendasDto = await _agendaService.GetByDate(dataHora);
+        var agendasDto = await _agendaService.GetByDate();
 
         if (!agendasDto.Any())
         {

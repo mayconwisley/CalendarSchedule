@@ -34,9 +34,9 @@ public class AgendaService : IAgendaService
         return agendaEntity.ConverterAgendasParaDto();
     }
 
-    public async Task<IEnumerable<AgendaDto>> GetByDate(DateTime dateTime)
+    public async Task<IEnumerable<AgendaDto>> GetByDate()
     {
-        var agendaEntity = await _agendaRepository.GetByDate(dateTime);
+        var agendaEntity = await _agendaRepository.GetByDate();
         return agendaEntity.ConverterAgendasParaDto();
     }
 
