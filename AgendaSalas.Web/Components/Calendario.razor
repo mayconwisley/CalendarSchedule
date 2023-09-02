@@ -6,7 +6,6 @@
 
 <div class="calendario">
     <div class="desc-mes">
-
         <nav>
             <ul class="pagination">
                 <li class="page-item">
@@ -32,51 +31,58 @@
         <span>Sexta-feira</span>
         <span>Sábado</span>
     </div>
+    <div class="centro-mes">
 
-    <div class="dia-mes">
-        @for (int i = 0; i < dataFimMes.Day; i++)
-        {
-            int numSemana = ((int)dataInicioMes.AddDays(i).DayOfWeek);
-            @if (@dataInicioMes.AddDays(i).Day == 1)
+
+        <div class="dia-mes">
+            @for (int i = 0; i < dataFimMes.Day; i++)
             {
-                @for (int y = 0; y < numSemana; y++)
+                int numSemana = ((int)dataInicioMes.AddDays(i).DayOfWeek);
+                @if (@dataInicioMes.AddDays(i).Day == 1)
                 {
-                    <span class="vazio"></span>
-                }
-            }
-            <span class="@(numSemana == 0 ? "domingo dia" : (numSemana == 6 ? "sabado dia" : (dataInicioMes.AddDays(i).Date == DateTime.Now.Date ? "dia-atual dia" : "dia" )))">
-                <a href="#InsertAgenda/@(dataInicioMes.AddDays(i).Date.ToString("dd-MM-yyyy"))">
-                    @dataInicioMes.AddDays(i).Day
-                </a>
-                @if (agendaDto is not null)
-                {
-                    var salaAgenda = agendaDto
-                    .GroupBy(g => new
+                    @for (int y = 0; y < numSemana; y++)
                     {
-                        g.SalaId,
-                        g.Sala,
-                        g.DataFinal.Date
-                    })
-                    .Select(s => new AgendaDto
+                        <span class="vazio"></span>
+                    }
+                }
+                <span class="@(numSemana == 0 ? "domingo dia" : (numSemana == 6 ? "sabado dia" : (dataInicioMes.AddDays(i).Date == DateTime.Now.Date ? "dia-atual dia" : "dia" )))">
+                    <a href="#InsertAgenda/@(dataInicioMes.AddDays(i).Date.ToString("dd-MM-yyyy"))">
+                        @dataInicioMes.AddDays(i).Day
+                    </a>
+
+                    @if (agendaDto is null)
+                    {
+                        <em>Carregando...</em>
+                    }
+                    else
+                    {
+                        var salaAgenda = agendaDto
+                        .GroupBy(g => new
+                        {
+                            g.SalaId,
+                            g.Sala,
+                            g.DataFinal.Date
+                        })
+                        .Select(s => new AgendaDto
                     {
                         SalaId = s.Key.SalaId,
                         Sala = s.Key.Sala,
                         DataFinal = s.Key.Date
                     })
-                    .ToList();
+                        .ToList();
 
-                    @foreach (var item in salaAgenda)
-                    {
-                        if (item.DataFinal.Date == dataInicioMes.AddDays(i).Date)
+                        @foreach (var item in salaAgenda)
                         {
-                            <a href="#InforcaoAgenda/@(item.SalaId)/@(dataInicioMes.AddDays(i).Date.ToString("dd-MM-yyyy"))">@item.Sala</a>
+                            if (item.DataFinal.Date == dataInicioMes.AddDays(i).Date)
+                            {
+                                <a href="#InforcaoAgenda/@(item.SalaId)/@(dataInicioMes.AddDays(i).Date.ToString("dd-MM-yyyy"))">@item.Sala</a>
+                            }
                         }
                     }
-                }
-            </span>
-        }
+                </span>
+            }
+        </div>
     </div>
-
 </div>
 
 @code {
@@ -89,7 +95,6 @@
 
     int ultimoDiaMes;
     string? informacaoAgendaDia;
-
 
     protected override async Task OnInitializedAsync()
     {
