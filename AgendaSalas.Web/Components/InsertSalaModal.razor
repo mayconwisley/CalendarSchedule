@@ -1,25 +1,25 @@
 ﻿@inject ISalaService salaService
 @inject NavigationManager NavigationManager
 
+
 <div class="modal fade" id="novaSala" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Castrato de Sala</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <EditForm Model="@salaDto" OnValidSubmit="@Create">
+            <EditForm Model="@salaDto" OnValidSubmit="@Create">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Castrato de Sala</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
                     <InputText @bind-Value="salaDto!.Nome" placeholder="Nome" />
                     <InputText @bind-Value="salaDto!.Ramal" placeholder="Ramal" />
                     <InputText @bind-Value="salaDto!.Descricao" placeholder="Descrição" />
-                    <button type="submit">Salvar</button>
-                </EditForm>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Understood</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" @onclick="@UpdateDados" class="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
+                </div>
+            </EditForm>
         </div>
     </div>
 </div>
@@ -28,22 +28,33 @@
 
     [Parameter]
     public SalaDto? salaDto { get; set; }
-  
+
+    [Parameter]
+    public Action? DataAtualizados { get; set; }
+
+    private SalaView? salaView;
+
     protected override async Task OnInitializedAsync()
     {
         salaDto ??= new();
 
         await base.OnInitializedAsync();
     }
-
-
     private async Task Create()
     {
         if (salaDto is not null)
         {
             var sala = await salaService.Create(salaDto);
-            NavigationManager.NavigateTo("/Sala");
+            StateHasChanged();
+
+            // NavigationManager.NavigateTo("/Sala");
         }
 
+    }
+
+    private async Task UpdateDados()
+    {
+        salaView = await salaService.GetAll();
+        DataAtualizados?.Invoke();
     }
 }
