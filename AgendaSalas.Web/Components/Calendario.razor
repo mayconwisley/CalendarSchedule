@@ -75,7 +75,7 @@
                         {
                             if (item.DataFinal.Date == dataInicioMes.AddDays(i).Date)
                             {
-                                <a href="#InforcaoAgenda/@(item.SalaId)/@(dataInicioMes.AddDays(i).Date.ToString("dd-MM-yyyy"))">@item.Sala</a>
+                                <a href="#InformacaoAgenda/@(item.SalaId)/@(dataInicioMes.AddDays(i).Date.ToString("dd-MM-yyyy"))">@item.Sala</a>
                             }
                         }
                     }
@@ -91,7 +91,7 @@
     public int quantidadeSalas { get; set; }
     DateTime competencia = DateTime.Now.Date;
 
-    public IEnumerable<AgendaDto>? agendaDto { get; set; } = new List<AgendaDto>();
+    public IEnumerable<AgendaDto>? agendaDto { get; set; }
 
     int ultimoDiaMes;
     string? informacaoAgendaDia;

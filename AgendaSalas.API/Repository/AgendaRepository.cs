@@ -61,7 +61,7 @@ public class AgendaRepository : IAgendaRepository
                 .Include(i => i.Sala)
                 .Skip((page - 1) * size)
                 .Take(size)
-                .OrderBy(o => o.DataInicio)
+                .OrderByDescending(o => o.DataInicio)
                 .ToListAsync();
 
             return agendas;
@@ -95,6 +95,7 @@ public class AgendaRepository : IAgendaRepository
         try
         {
             var agenda = await _agendaContext.Agendas
+                .Include(i => i.Sala)
                 .Where(w => w.Id == id)
                 .FirstOrDefaultAsync();
 

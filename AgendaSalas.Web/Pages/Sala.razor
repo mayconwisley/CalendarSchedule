@@ -4,6 +4,9 @@
 
 <h3>Cadastro Sala</h3>
 <a href="InsertSala" class="btn btn-info">Nova Sala</a>
+<button data-bs-toggle="modal" data-bs-target="#novaSala" class="btn btn-info">
+    Nova Sala 1
+</button>
 
 @if (salaView is null)
 {
@@ -12,13 +15,14 @@
 else
 {
     <TabelaSala salaView="salaView" />
+    <InsertSalaModal salaDto="salaDto" />
 
 }
 
 
 @code {
     private SalaView? salaView;
-
+    private SalaDto? salaDto;
 
     protected override async Task OnInitializedAsync()
     {
@@ -27,4 +31,9 @@ else
         await base.OnInitializedAsync();
     }
 
+    private void IniciarInsertSalaModal()
+    {
+        salaDto = new();
+
+    }
 }
