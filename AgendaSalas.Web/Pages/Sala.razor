@@ -14,9 +14,8 @@
 }
 else
 {
-    <TabelaSala salaView="salaView" />
-    <InsertSalaModal DataAtualizados="@(()=> DadosAtualzados() )" salaDto="salaDto" />
-            
+    <TabelaSala salaView="@salaView" />
+    <InsertSalaModal DataAtualizados="@(()=> DadosAtualzados() )" salaDto="@salaDto" />
 }
 
 
@@ -27,10 +26,9 @@ else
     protected override async Task OnInitializedAsync()
     {
         salaView = await salaService.GetAll();
-        await base.OnInitializedAsync();
     }
 
-    private async Task DadosAtualzados()
+    private async void DadosAtualzados()
     {
         salaView = await salaService.GetAll();
         StateHasChanged();

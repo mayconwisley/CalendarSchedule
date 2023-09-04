@@ -31,7 +31,6 @@
                             </td>
                         </tr>
                     }
-                    @* <ConfirmDelete @ref="confirmDelete" Mensagem="Deseja excluir este item?" OnConfirm="Delete" ></ConfirmDelete> *@
                 }
             }
 
@@ -51,14 +50,4 @@
         salaView = await salaService.GetAll();
         StateHasChanged();
     }
-
-    // private async Task MostrarConfirmacao(int id)
-    // {
-    //     var result = await confirmDelete.ShowAsync();
-
-    //     if(result)
-    //     {
-    //         await Delete(id);
-    //     }
-    // }
 }

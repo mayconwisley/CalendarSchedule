@@ -53,12 +53,10 @@ namespace AgendaSalas.Web.Service
             try
             {
                 using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-                using (var response = await httpClient.DeleteAsync($"{apiEndPoint}/{id}"))
+                using var response = await httpClient.DeleteAsync($"{apiEndPoint}/{id}");
+                if (response.IsSuccessStatusCode)
                 {
-                    if (response.IsSuccessStatusCode)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
                 return new();
             }
