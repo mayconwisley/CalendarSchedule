@@ -14,16 +14,14 @@
 else
 {
     <TabelaSala salaView="@salaView" />
-    <InsertSalaModal DataAtualizados="@(()=> DadosAtualzados())" salaDto="@salaDto" />
+    <InsertSalaModal DataAtualizados="@(()=> DadosAtualzados())" />
 }
 
 @code {
     private SalaView? salaView;
-    private SalaDto? salaDto;
 
     protected override async Task OnInitializedAsync()
     {
-        salaDto ??= new();
         salaView = await salaService.GetAll();
     }
 

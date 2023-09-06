@@ -44,10 +44,21 @@ public class AgendaController : ControllerBase
         });
 
     }
-    [HttpGet("Data")]
-    public async Task<ActionResult<IEnumerable<AgendaDto>>> GetByDate()
+    [HttpGet("AgendaAtiva")]
+    public async Task<ActionResult<IEnumerable<AgendaDto>>> GetByAgendaActive()
     {
-        var agendasDto = await _agendaService.GetByDate();
+        var agendasDto = await _agendaService.GetByAgendaActive();
+
+        if (!agendasDto.Any())
+        {
+            return NotFound("Sem dados");
+        }
+        return Ok(agendasDto);
+    }
+    [HttpGet("AgendaAtivaSalaId/{salaId:int}")]
+    public async Task<ActionResult<IEnumerable<AgendaDto>>> GetByAgendaActiveSalaId(int salaId)
+    {
+        var agendasDto = await _agendaService.GetByAgendaActiveSalaId(salaId);
 
         if (!agendasDto.Any())
         {

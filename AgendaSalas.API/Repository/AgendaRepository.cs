@@ -72,13 +72,32 @@ public class AgendaRepository : IAgendaRepository
         }
     }
 
-    public async Task<IEnumerable<Agenda>> GetByDate()
+    public async Task<IEnumerable<Agenda>> GetByAgendaActive()
     {
         try
         {
             var agendas = await _agendaContext.Agendas
                 .Include(i => i.Sala)
                 .Where(w => w.DataFinal >= DateTime.Now)
+                .OrderBy(o => o.DataInicio)
+                .ToListAsync();
+
+            return agendas;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public async Task<IEnumerable<Agenda>> GetByAgendaActiveSalaId(int salaId)
+    {
+        try
+        {
+            var agendas = await _agendaContext.Agendas
+                .Include(i => i.Sala)
+                .Where(w => w.DataFinal >= DateTime.Now &&
+                            w.SalaId == salaId)
                 .OrderBy(o => o.DataInicio)
                 .ToListAsync();
 

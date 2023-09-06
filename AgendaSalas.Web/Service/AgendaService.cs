@@ -151,12 +151,12 @@ namespace AgendaSalas.Web.Service
             }
         }
 
-        public async Task<IEnumerable<AgendaDto>> GetByDate()
+        public async Task<IEnumerable<AgendaDto>> GetByAgendaActive()
         {
             try
             {
                 using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-                using var response = await httpClient.GetAsync($"{apiEndPoint}/Data");
+                using var response = await httpClient.GetAsync($"{apiEndPoint}/AgendaAtiva");
 
 
                 if (response.IsSuccessStatusCode)

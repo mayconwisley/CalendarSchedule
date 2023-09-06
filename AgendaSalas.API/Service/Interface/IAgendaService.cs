@@ -5,7 +5,8 @@ namespace AgendaSalas.API.Service.Interface;
 public interface IAgendaService
 {
     Task<IEnumerable<AgendaDto>> GetAll(int page, int size, string search);
-    Task<IEnumerable<AgendaDto>> GetByDate();
+    Task<IEnumerable<AgendaDto>> GetByAgendaActive();
+    Task<IEnumerable<AgendaDto>> GetByAgendaActiveSalaId(int salaId);
     Task<AgendaDto> GetById(int id);
     Task Create(AgendaDto agendaDto);
     Task Update(AgendaDto agendaDto);

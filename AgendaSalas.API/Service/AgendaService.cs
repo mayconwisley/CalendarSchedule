@@ -34,9 +34,15 @@ public class AgendaService : IAgendaService
         return agendaEntity.ConverterAgendasParaDto();
     }
 
-    public async Task<IEnumerable<AgendaDto>> GetByDate()
+    public async Task<IEnumerable<AgendaDto>> GetByAgendaActive()
     {
-        var agendaEntity = await _agendaRepository.GetByDate();
+        var agendaEntity = await _agendaRepository.GetByAgendaActive();
+        return agendaEntity.ConverterAgendasParaDto();
+    }
+
+    public async Task<IEnumerable<AgendaDto>> GetByAgendaActiveSalaId(int salaId)
+    {
+        var agendaEntity = await _agendaRepository.GetByAgendaActiveSalaId(salaId);
         return agendaEntity.ConverterAgendasParaDto();
     }
 

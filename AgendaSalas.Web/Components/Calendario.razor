@@ -98,7 +98,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        agendaDto = await agendaService.GetByDate();
+        agendaDto = await agendaService.GetByAgendaActive();
 
         await base.OnInitializedAsync();
     }
