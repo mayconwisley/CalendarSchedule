@@ -90,13 +90,14 @@ public class AgendaRepository : IAgendaRepository
         }
     }
 
-    public async Task<IEnumerable<Agenda>> GetByAgendaActiveSalaId(int salaId)
+    public async Task<IEnumerable<Agenda>> GetByAgendaActiveSalaId(int salaId, DateTime dataSelecionada)
     {
         try
         {
             var agendas = await _agendaContext.Agendas
                 .Include(i => i.Sala)
                 .Where(w => w.DataFinal >= DateTime.Now &&
+                            w.DataFinal.Date == dataSelecionada.Date &&
                             w.SalaId == salaId)
                 .OrderBy(o => o.DataInicio)
                 .ToListAsync();

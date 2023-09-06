@@ -55,10 +55,12 @@ public class AgendaController : ControllerBase
         }
         return Ok(agendasDto);
     }
-    [HttpGet("AgendaAtivaSalaId/{salaId:int}")]
-    public async Task<ActionResult<IEnumerable<AgendaDto>>> GetByAgendaActiveSalaId(int salaId)
+    [HttpGet("AgendaAtivaSalaId/{salaId:int}/{strDataSelecionada}")]
+    public async Task<ActionResult<IEnumerable<AgendaDto>>> GetByAgendaActiveSalaId(int salaId, string strDataSelecionada)
     {
-        var agendasDto = await _agendaService.GetByAgendaActiveSalaId(salaId);
+        DateTime dataSelecionada = DateTime.Parse(strDataSelecionada.Replace("%2F","/"));
+
+        var agendasDto = await _agendaService.GetByAgendaActiveSalaId(salaId, dataSelecionada);
 
         if (!agendasDto.Any())
         {
