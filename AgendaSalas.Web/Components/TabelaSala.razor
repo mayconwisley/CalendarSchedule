@@ -1,6 +1,6 @@
 ﻿@inject ISalaService salaService
 
-<div class="border">
+<div class="border mt-2">
     <table class="table table-striped">
         <thead>
             <tr>
@@ -41,7 +41,6 @@
 @code {
     [Parameter]
     public SalaView? salaView { get; set; }
-    ConfirmDelete? confirmDelete;
 
     private async Task Delete(int id)
     {

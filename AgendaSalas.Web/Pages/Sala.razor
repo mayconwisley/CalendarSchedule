@@ -3,21 +3,19 @@
 @inject ISalaService salaService
 
 <h3>Cadastro Sala</h3>
-<a href="InsertSala" class="btn btn-info">Nova Sala</a>
 <button data-bs-toggle="modal" data-bs-target="#novaSala" class="btn btn-info">
-    Nova Sala 1
+    Nova Sala
 </button>
 
 @if (salaView is null)
 {
-    <p>Carregando...</p>
+    <p><em>Carregando...</em></p>
 }
 else
 {
     <TabelaSala salaView="@salaView" />
-    <InsertSalaModal DataAtualizados="@(()=> DadosAtualzados() )" salaDto="@salaDto" />
+    <InsertSalaModal DataAtualizados="@(()=> DadosAtualzados())" salaDto="@salaDto" />
 }
-
 
 @code {
     private SalaView? salaView;
@@ -25,6 +23,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        salaDto ??= new();
         salaView = await salaService.GetAll();
     }
 
@@ -33,5 +32,4 @@ else
         salaView = await salaService.GetAll();
         StateHasChanged();
     }
-
 }
