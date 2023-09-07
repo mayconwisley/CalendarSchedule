@@ -179,5 +179,34 @@ namespace AgendaSalas.Web.Service
                 throw;
             }
         }
+
+        public async Task<IEnumerable<AgendaDto>> GetByAgendaActiveSalaId(int salaId, DateTime dataSelecionada)
+        {
+            try
+            {
+                using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+                using var response = await httpClient.GetAsync($"{apiEndPoint}/AgendaAtivaSalaId/{salaId}/{dataSelecionada.ToString("dd/MM/yyyy").Replace("/", "%2F")}");
+
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var agendaView = await response.Content.ReadFromJsonAsync<IEnumerable<AgendaDto>>(_serializerOptions);
+                    return agendaView ??= new List<AgendaDto>();
+                }
+                else
+                {
+                    if (response.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        return new List<AgendaDto>();
+                    }
+                    response.EnsureSuccessStatusCode();
+                }
+                return new List<AgendaDto>();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

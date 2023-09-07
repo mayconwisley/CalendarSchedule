@@ -75,7 +75,11 @@
                         {
                             if (item.DataFinal.Date == dataInicioMes.AddDays(i).Date)
                             {
-                                <a href="#InformacaoAgenda/@(item.SalaId)/@(dataInicioMes.AddDays(i).Date)">@item.Sala</a>
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#tabalaAgenda-@item.SalaId-@dataInicioMes.AddDays(i).Date.ToString("ddMMyyyy")">
+                                    @item.Sala
+                                </a>
+
+                                <TabelaAgendaModal SalaId="@item.SalaId" DataSelecionada="@dataInicioMes.AddDays(i).Date" />
                             }
                         }
                     }
@@ -85,6 +89,8 @@
     </div>
 </div>
 
+
+
 @code {
 
     [Parameter]
@@ -92,6 +98,8 @@
     DateTime competencia = DateTime.Now.Date;
 
     public IEnumerable<AgendaDto>? agendaDto { get; set; }
+
+    private AgendaView? agendaView { get; set; }
 
     int ultimoDiaMes;
     string? informacaoAgendaDia;
@@ -114,4 +122,6 @@
         DateTime competenciaRemove = competencia.AddMonths(-1);
         competencia = competenciaRemove;
     }
+
+
 }

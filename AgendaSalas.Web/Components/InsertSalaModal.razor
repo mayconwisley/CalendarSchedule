@@ -1,29 +1,39 @@
 ﻿@inject ISalaService salaService
-@inject NavigationManager NavigationManager
-
 
 <div class="modal fade" id="novaSala" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <EditForm Model="@salaDto" OnValidSubmit="@Create" class="row g-3">
+            <EditForm Model="@salaDto" OnSubmit="@Create">
+                <DataAnnotationsValidator />
+
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Castrato de Sala</h1>
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Cadastro de Sala</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="col-12">
-                        <label for="inNome" class="form-label">Nome</label>
-                        <InputText class="form-control" id="inNome" @bind-Value="salaDto!.Nome" placeholder="Nome" />
-                        <label for="inRamal" class="form-label">Ramal</label>
-                        <InputText class="form-control" id="inRamal" @bind-Value="salaDto!.Ramal" placeholder="Ramal" />
+
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <label for="inNome" class="form-label">Nome</label>
+                            <InputText class="form-control" id="inNome" @bind-Value="salaDto!.Nome" placeholder="Nome" />
+                            <ValidationMessage For="@(() => salaDto.Nome)" />
+
+                        </div>
+                        <div class="col-6">
+
+                            <label for="inRamal" class="form-label">Ramal</label>
+                            <InputText class="form-control" id="inRamal" @bind-Value="salaDto!.Ramal" placeholder="Ramal" />
+                        </div>
+                        <div class="col-12">
+                            <label for="inDescricao" class="form-label">Descrição</label>
+                            <InputText class="form-control" id="inDescricao" @bind-Value="salaDto!.Descricao" placeholder="Descrição" />
+                        </div>
                     </div>
-                    <div class="col-12">
-                        <label for="inDescricao" class="form-label">Descrição</label>
-                        <InputText class="form-control" id="inDescricao" @bind-Value="salaDto!.Descricao" placeholder="Descrição" />
-                    </div>
+
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" @onclick="@UpdateDados" class="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
                 </div>
             </EditForm>
         </div>
@@ -48,12 +58,13 @@
         if (salaDto is not null)
         {
             var sala = await salaService.Create(salaDto);
+            UpdateDados();
         }
     }
 
-    private async Task UpdateDados()
+    private void UpdateDados()
     {
-        salaView = await salaService.GetAll();
+
         DataAtualizados?.Invoke();
     }
 }
