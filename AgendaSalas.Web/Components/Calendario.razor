@@ -101,9 +101,6 @@
 
     private AgendaView? agendaView { get; set; }
 
-    int ultimoDiaMes;
-    string? informacaoAgendaDia;
-
     protected override async Task OnInitializedAsync()
     {
         agendaDto = await agendaService.GetByAgendaActive();

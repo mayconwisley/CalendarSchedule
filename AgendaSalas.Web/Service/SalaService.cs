@@ -78,7 +78,7 @@ public class SalaService : ISalaService
             if (response.IsSuccessStatusCode)
             {
                 SalaView? salaView = await response.Content.ReadFromJsonAsync<SalaView>(_serializerOptions);
-                return salaView;
+                return salaView ??= new();
             }
             else
             {
@@ -89,7 +89,7 @@ public class SalaService : ISalaService
                 response.EnsureSuccessStatusCode();
                 return new();
             }
-            //return new();
+           
         }
         catch (Exception)
         {
