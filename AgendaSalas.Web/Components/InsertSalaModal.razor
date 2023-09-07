@@ -46,22 +46,13 @@
 
     private SalaDto? salaDto { get; set; }
 
-    private bool IsModalVisible { get; set; } = false;
-
+   
     protected override async Task OnInitializedAsync()
     {
         salaDto ??= new();
         await base.OnInitializedAsync();
     }
-    protected override void OnAfterRender(bool firstRender)
-    {
-        if (firstRender)
-        {
-            // Após o modal ter sido renderizado, redefina IsModalVisible
-            IsModalVisible = false;
-            StateHasChanged();
-        }
-    }
+  
     private async Task Create()
     {
         if (salaDto is not null)
@@ -69,7 +60,7 @@
             var sala = await salaService.Create(salaDto);
             UpdateDados();
             salaDto = new();
-            IsModalVisible = false;
+           
         }
     }
 
