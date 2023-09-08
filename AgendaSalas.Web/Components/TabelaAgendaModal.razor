@@ -13,8 +13,8 @@
                             <tr>
                                 <th>Id</th>
                                 <th>Descrição</th>
-                                <th>Data Inicio</th>
-                                <th>Data Fim</th>
+                                <th>Data/Hora Inicio</th>
+                                <th>Data/Hora Fim</th>
                                 <th>Permitir Ligar</th>
                                 <th>Permitir Chamar</th>
                                 <th>Sala</th>
@@ -34,15 +34,13 @@
                                             <td>@agenda.Descricao</td>
                                             <td>@agenda.DataInicio</td>
                                             <td>@agenda.DataFinal</td>
-                                            <td>@agenda.PermitirLigar</td>
-                                            <td>@agenda.PermitirChamar</td>
+                                            <td>@(agenda.PermitirLigar ? "Sim" : "Não")</td>
+                                            <td>@(agenda.PermitirChamar ? "Sim" : "Não")</td>
                                             <td>@agenda.Sala</td>
-
                                         </tr>
                                     }
                                 }
                             }
-
                         </tbody>
                     </table>
                 </div>
@@ -53,6 +51,7 @@
         </div>
     </div>
 </div>
+
 
 @code {
 
@@ -67,7 +66,6 @@
     protected override async Task OnInitializedAsync()
     {
         agendaView = await agendaService.GetByAgendaActiveSalaId(SalaId, DataSelecionada);
-
         StateHasChanged();
     }
 }

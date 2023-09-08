@@ -14,6 +14,10 @@
 else
 {
     <TabelaSala salaView="@salaView" />
+    <PaginationTable PageCurrent="@ReceberPagina"
+                     TotalData="@salaView.TotalDados"
+                     Page="@salaView.Page"
+                     TotalPage="@salaView.TotalPage" />
     <InsertSalaModal DataAtualizados="@(() => DadosAtualzados())" />
 }
 
@@ -29,5 +33,9 @@ else
     {
         salaView = await salaService.GetAll();
         StateHasChanged();
+    }
+    private async Task ReceberPagina(int paginaAtual)
+    {
+        salaView = await salaService.GetAll(paginaAtual);
     }
 }

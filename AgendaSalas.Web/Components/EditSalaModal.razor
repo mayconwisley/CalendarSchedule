@@ -1,13 +1,14 @@
 ﻿@inject ISalaService salaService
 
-<div class="modal fade" id="novaSala" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="editarSala-@SalaId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <EditForm Model="@salaDto" OnValidSubmit="@Create">
+            <EditForm Model="@salaDto" OnValidSubmit="@Edit">
+                <InputNumber hidden @bind-Value="salaDto!.Id" />
                 <DataAnnotationsValidator />
 
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Cadastro de Sala</h1>
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Editar Sala</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -43,23 +44,23 @@
     [Parameter]
     public Action? DataAtualizados { get; set; }
 
-    private SalaDto? salaDto { get; set; }
+    private SalaDto? salaDto { get; set; } = new();
+
+    [Parameter]
+    public int SalaId { get; set; }
 
 
     protected override async Task OnInitializedAsync()
     {
-        salaDto ??= new();
-        await base.OnInitializedAsync();
+        salaDto = await salaService.GetById(SalaId);
     }
 
-    private async Task Create()
+    private async Task Edit()
     {
         if (salaDto is not null)
         {
-            var sala = await salaService.Create(salaDto);
+            var sala = await salaService.Update(salaDto);
             UpdateDados();
-            salaDto = new();
-
         }
     }
 

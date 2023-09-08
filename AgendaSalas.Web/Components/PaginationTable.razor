@@ -1,0 +1,43 @@
+﻿<p>Total de Dados Cadastrado: @TotalData @(TotalData == 1 ? "Item" : "Itens")</p>
+
+<nav aria-label="...">
+    <ul class="pagination">
+        @{
+            int page = Page;
+            int totalPages = TotalPage;
+            int linksByPage = 10; // número de links exibidos por página
+            int pageInitial = Math.Max(page - (linksByPage / 2), 1);
+            int pageFinal = Math.Min(pageInitial + linksByPage - 1, totalPages);
+        }
+        <li class="page-item @(page == 1 ? "disabled" : "")">
+            <button class="page-link" @onclick="@(p => ChangePage(page - 1))" tabindex="-1">Anterior</button>
+        </li>
+        @for (int i = pageInitial; i <= pageFinal; i++)
+        {
+            int pageCurrent = i;
+
+            <li class="page-item @(i == page ? "active" : "")">
+                <button class="page-link" @onclick="@(p => ChangePage(pageCurrent))">@i<span class="sr-only"></span></button>
+            </li>
+        }
+        <li class="page-item @(page == totalPages ? "disabled" : "")">
+            <button class="page-link" @onclick="@(p => ChangePage(page + 1))">Próximo</button>
+        </li>
+    </ul>
+</nav>
+
+@code {
+    [Parameter]
+    public int TotalData { get; set; }
+    [Parameter]
+    public int Page { get; set; }
+    [Parameter]
+    public int TotalPage { get; set; }
+    [Parameter]
+    public EventCallback<int> PageCurrent { get; set; }
+
+    private async Task ChangePage(int pageCurrent)
+    {
+        await PageCurrent.InvokeAsync(pageCurrent);
+    }
+}

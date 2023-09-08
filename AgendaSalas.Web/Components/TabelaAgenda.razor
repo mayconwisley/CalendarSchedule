@@ -1,11 +1,13 @@
-﻿<div class="border">
+﻿@inject IAgendaService agendaService
+
+<div class="border mt-2">
     <table class="table table-striped">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Descrição</th>
-                <th>Data Inicio</th>
-                <th>Data Fim</th>
+                <th>Data/Hora Inicio</th>
+                <th>Data/Hora Fim</th>
                 <th>Permitir Ligar</th>
                 <th>Permitir Chamar</th>
                 <th>Sala</th>
@@ -26,12 +28,18 @@
                             <td>@agenda.Descricao</td>
                             <td>@agenda.DataInicio</td>
                             <td>@agenda.DataFinal</td>
-                            <td>@agenda.PermitirLigar</td>
-                            <td>@agenda.PermitirChamar</td>
+                            <td>@(agenda.PermitirLigar ? "Sim" : "Não")</td>
+                            <td>@(agenda.PermitirChamar ? "Sim" : "Não")</td>
                             <td>@agenda.Sala</td>
                             <td>
-                                <a href="EditAgenda/@(agenda.Id)">Editar</a> |
-                                <a href="#">Excluir</a>
+                                <button data-bs-toggle="modal" data-bs-target="#editarAgenda-@agenda.Id" class="btn btn-info">
+                                    Editar
+                                </button>
+                                <EditAgendaModal AgendaId="@agenda.Id" DataAtualizados="@(() => DadosAtualzados())" />
+                                <button data-bs-toggle="modal" data-bs-target="#deletarSala-@agenda.Id" class="btn btn-danger">
+                                    Excluir
+                                </button>
+                                <DeleteAgendaModal AgendaId="@agenda.Id" DataAtualizados="@(() => DadosAtualzados())" />
                             </td>
                         </tr>
                     }
@@ -46,4 +54,9 @@
 @code {
     [Parameter]
     public AgendaView? agendaView { get; set; }
+    private async void DadosAtualzados()
+    {
+        agendaView = await agendaService.GetAll();
+        StateHasChanged();
+    }
 }

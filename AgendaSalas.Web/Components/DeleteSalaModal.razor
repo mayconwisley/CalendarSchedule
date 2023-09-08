@@ -1,0 +1,60 @@
+﻿@inject ISalaService salaService
+
+<div class="modal fade" id="deletarSala-@SalaId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <EditForm Model="@salaDto" OnValidSubmit="@Delete">
+                <InputNumber hidden @bind-Value="salaDto!.Id" />
+                <DataAnnotationsValidator />
+
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Excluir Sala</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <p>Sala: @salaDto.Nome</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Excluir</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Action? DataAtualizados { get; set; }
+
+    private SalaDto? salaDto { get; set; } = new();
+
+    [Parameter]
+    public int SalaId { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        salaDto = await salaService.GetById(SalaId);
+        await base.OnInitializedAsync();
+    }
+
+    private async Task Delete()
+    {
+        if (salaDto is not null)
+        {
+            var sala = await salaService.Delete(SalaId);
+            UpdateDados();
+        }
+    }
+
+    private void UpdateDados()
+    {
+        DataAtualizados?.Invoke();
+    }
+}
