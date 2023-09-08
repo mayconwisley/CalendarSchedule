@@ -20,7 +20,7 @@
     flex-wrap: wrap;
     padding: 10px 0;
     border-bottom: 1px solid #000;
-    justify-content: center;
+   
 }
 
     .dia-semana span {
@@ -28,14 +28,14 @@
         font-weight: bold;
         width: 13.5%;
         color: black;
-        text-align: center;
+       
         margin: 1px;
     }
 
 .centro-mes {
-    display: flex;
+    display:flex;
     width: 100%;
-    height: 500px;
+    height:600px;
 }
 
 .dia-mes {
@@ -44,7 +44,7 @@
 
     .dia-mes span {
         display: inline-block;
-        width: 14%;
+        width: 13%;
         height: 18%;
         margin: 1px;
         color: #000;

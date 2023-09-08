@@ -1,8 +1,6 @@
 ﻿using AgendaSalas.API.Service.Interface;
 using AgendaSalas.Models.Dtos;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 
 namespace AgendaSalas.API.Controllers;
 
@@ -19,7 +17,7 @@ public class AgendaController : ControllerBase
 
     [HttpGet]
     [Route("Todas")]
-    public async Task<ActionResult<IEnumerable<AgendaDto>>> GetAll([FromQuery] int page = 1, [FromQuery] int size = 25, [FromQuery] string search = "")
+    public async Task<ActionResult<IEnumerable<AgendaDto>>> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
     {
         var agendasDto = await _agendaService.GetAll(page, size, search);
         decimal totalDados = (decimal)await _agendaService.TotalAgendas(search);
@@ -58,7 +56,7 @@ public class AgendaController : ControllerBase
     [HttpGet("AgendaAtivaSalaId/{salaId:int}/{strDataSelecionada}")]
     public async Task<ActionResult<IEnumerable<AgendaDto>>> GetByAgendaActiveSalaId(int salaId, string strDataSelecionada)
     {
-        DateTime dataSelecionada = DateTime.Parse(strDataSelecionada.Replace("%2F","/"));
+        DateTime dataSelecionada = DateTime.Parse(strDataSelecionada.Replace("%2F", "/"));
 
         var agendasDto = await _agendaService.GetByAgendaActiveSalaId(salaId, dataSelecionada);
 

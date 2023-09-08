@@ -2,7 +2,6 @@
 using AgendaSalas.API.Model;
 using AgendaSalas.API.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
-using System.Drawing;
 
 namespace AgendaSalas.API.Repository;
 

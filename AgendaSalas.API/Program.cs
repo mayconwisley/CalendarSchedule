@@ -5,7 +5,6 @@ using AgendaSalas.API.Service;
 using AgendaSalas.API.Service.Interface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
-using System;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);

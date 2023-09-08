@@ -17,7 +17,7 @@ public class SalaController : ControllerBase
 
     [HttpGet]
     [Route("Todas")]
-    public async Task<ActionResult<IEnumerable<SalaDto>>> GetAll([FromQuery] int page = 1, [FromQuery] int size = 25, [FromQuery] string search = "")
+    public async Task<ActionResult<IEnumerable<SalaDto>>> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
     {
         var salasDto = await _salaService.GetAll(page, size, search);
         decimal totalDados = (decimal)await _salaService.TotalSalas(search);
