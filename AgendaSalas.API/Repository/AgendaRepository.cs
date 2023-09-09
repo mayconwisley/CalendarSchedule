@@ -20,6 +20,19 @@ public class AgendaRepository : IAgendaRepository
         {
             if (agenda is not null)
             {
+
+                // Verifique se existe uma agenda que se sobrepõe na mesma sala
+                var overlappingAgendas = await _agendaContext.Agendas
+                    .Where(a => a.SalaId == agenda.SalaId &&
+                                a.DataInicio < agenda.DataFinal &&
+                                a.DataFinal > agenda.DataInicio)
+                    .ToListAsync();
+
+                if (overlappingAgendas.Count > 0)
+                {
+                    // Existe sobreposição, faça algo aqui, como lançar uma exceção.
+                    throw new Exception("Já existe uma agenda para esta sala no mesmo período.");
+                }
                 _agendaContext.Agendas.Add(agenda);
                 await _agendaContext.SaveChangesAsync();
                 return agenda;
@@ -146,6 +159,21 @@ public class AgendaRepository : IAgendaRepository
         {
             if (agenda is not null)
             {
+
+                // Verifique se existe uma agenda que se sobrepõe na mesma sala
+                var overlappingAgendas = await _agendaContext.Agendas
+                    .Where(a => a.SalaId == agenda.SalaId &&
+                                a.Id != agenda.Id && // Exclua a própria agenda da verificação
+                                a.DataInicio < agenda.DataFinal &&
+                                a.DataFinal > agenda.DataInicio)
+                    .ToListAsync();
+
+                if (overlappingAgendas.Count > 0)
+                {
+                    // Existe sobreposição, faça algo aqui, como lançar uma exceção.
+                    throw new Exception("A atualização resultaria em uma sobreposição de datas para esta sala.");
+                }
+
                 _agendaContext.Agendas.Entry(agenda).State = EntityState.Modified;
                 await _agendaContext.SaveChangesAsync();
                 return agenda;
