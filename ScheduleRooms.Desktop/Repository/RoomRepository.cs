@@ -6,22 +6,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ScheduleRooms.Repositorio;
+namespace ScheduleRooms.Repository;
 
-public class SalaRepositorio
+public class RoomRepository
 {
-    readonly AgendaContext scheduleContext = new();
+    readonly ScheduleContext scheduleContext = new();
 
-    public async Task<IEnumerable<Room>> ListarTudo()
+    public async Task<IEnumerable<Room>> GetAll()
     {
-        return await scheduleContext.Salas
-            .OrderBy(or => or.SalaReuniao)
+        return await scheduleContext.Rooms
+            .OrderBy(or => or.Name)
             .ToListAsync();
     }
 
-    public async Task<Room> BuscarPorId(int id)
+    public async Task<Room> GetById(int id)
     {
-        var room = await scheduleContext.Salas
+        var room = await scheduleContext.Rooms
             .Where(w => w.Id == id)
             .FirstOrDefaultAsync();
 
@@ -32,11 +32,11 @@ public class SalaRepositorio
         return new Room();
     }
 
-    public async Task Adicionar(Room room)
+    public async Task Create(Room room)
     {
         try
         {
-            scheduleContext.Salas.Add(room);
+            scheduleContext.Rooms.Add(room);
             await scheduleContext.SaveChangesAsync();
         }
         catch (Exception)
@@ -45,14 +45,14 @@ public class SalaRepositorio
         }
     }
 
-    public async Task Alterar(Room room)
+    public async Task Update(Room room)
     {
         try
         {
-            Room sala1 = await BuscarPorId(room.Id);
+            Room sala1 = await GetById(room.Id);
             if (sala1 is not null)
             {
-                scheduleContext.Salas.Entry(sala1).CurrentValues.SetValues(room);
+                scheduleContext.Rooms.Entry(sala1).CurrentValues.SetValues(room);
                 await scheduleContext.SaveChangesAsync();
             }
         }
@@ -62,9 +62,9 @@ public class SalaRepositorio
         }
     }
 
-    public async Task Excluir(int id)
+    public async Task Delete(int id)
     {
-        Room room = await BuscarPorId(id);
+        Room room = await GetById(id);
         try
         {
             scheduleContext.Remove(room);

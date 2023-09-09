@@ -1,4 +1,4 @@
-﻿using ScheduleRooms.Repositorio;
+﻿using ScheduleRooms.Repository;
 using System;
 using System.Data;
 using System.Linq;
@@ -8,12 +8,12 @@ namespace ScheduleRooms;
 
 public partial class FrmConAgenda : Form
 {
-    readonly SalaRepositorio salaRepositorio = new();
-    readonly ReuniaoRepositorio reuniaoRepositorio = new();
+    readonly RoomRepository roomRepository = new();
+    readonly ScheduleRepository scheduleRepository = new();
 
-    int roomId = 0, reuniaoId = 0;
+    int roomId = 0, scheduleId = 0;
 
-    FrmPrincipal _form;
+    readonly FrmPrincipal _form;
 
     public FrmConAgenda()
     {
@@ -23,11 +23,11 @@ public partial class FrmConAgenda : Form
     {
         _form = form;
     }
-    private async void ListarSalas()
+    private async void GetRooms()
     {
         try
         {
-            var listaSalas = await salaRepositorio.ListarTudo();
+            var listaSalas = await roomRepository.GetAll();
 
             CbxSelecionarSala.DataSource = listaSalas;
         }
@@ -37,11 +37,11 @@ public partial class FrmConAgenda : Form
         }
     }
 
-    private async void ListarAgenda(int idSala)
+    private async void ListScheduleByIdRoom(int idSala)
     {
         try
         {
-            var listaAgenda = await reuniaoRepositorio.ListarPorSala(idSala);
+            var listaAgenda = await scheduleRepository.GetByRoomId(idSala);
 
             DgvListaAgenda.DataSource = listaAgenda.Select(s => new
             {
@@ -69,7 +69,7 @@ public partial class FrmConAgenda : Form
 
         try
         {
-            ListarAgenda(roomId);
+            ListScheduleByIdRoom(roomId);
         }
         catch (Exception ex)
         {
@@ -79,32 +79,32 @@ public partial class FrmConAgenda : Form
 
     private void FrmConAgenda_Load(object sender, EventArgs e)
     {
-        ListarSalas();
+        GetRooms();
     }
 
     private void DgvListaAgenda_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
     {
-        reuniaoId = int.Parse(DgvListaAgenda.Rows[e.RowIndex].Cells["IdDgv"].Value.ToString());
-        FrmCadAgenda frmCadAgenda = new(reuniaoId, true);
+        scheduleId = int.Parse(DgvListaAgenda.Rows[e.RowIndex].Cells["IdDgv"].Value.ToString());
+        FrmCadAgenda frmCadAgenda = new(scheduleId, true);
         frmCadAgenda.ShowDialog();
     }
 
     private void DgvListaAgenda_CellClick(object sender, DataGridViewCellEventArgs e)
     {
-        reuniaoId = int.Parse(DgvListaAgenda.Rows[e.RowIndex].Cells["IdDgv"].Value.ToString());
+        scheduleId = int.Parse(DgvListaAgenda.Rows[e.RowIndex].Cells["IdDgv"].Value.ToString());
     }
 
     private async void BtnExcluir_Click(object sender, EventArgs e)
     {
         try
         {
-            if (reuniaoId == 0)
+            if (scheduleId == 0)
             {
                 MessageBox.Show("Selecione um item para excluir", "Aviso");
                 return;
             }
-            await reuniaoRepositorio.Excluir(reuniaoId);
-            ListarAgenda(roomId);
+            await scheduleRepository.Delete(scheduleId);
+            ListScheduleByIdRoom(roomId);
         }
         catch (Exception ex)
         {
@@ -118,6 +118,6 @@ public partial class FrmConAgenda : Form
         {
             return;
         }
-        _form.ListarAgenda();
+        _form.ListSchedule();
     }
 }

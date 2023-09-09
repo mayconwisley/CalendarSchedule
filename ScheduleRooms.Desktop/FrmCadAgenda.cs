@@ -1,5 +1,5 @@
 ﻿using ScheduleRooms.Models;
-using ScheduleRooms.Repositorio;
+using ScheduleRooms.Repository;
 using System;
 using System.Windows.Forms;
 
@@ -7,12 +7,12 @@ namespace ScheduleRooms;
 
 public partial class FrmCadAgenda : Form
 {
-    readonly SalaRepositorio salaRepositorio = new();
-    readonly ReuniaoRepositorio reuniaoRepositorio = new();
+    readonly RoomRepository roomRepository = new();
+    readonly ScheduleRepository scheduleRepository = new();
     private int roomId = 0;
-    private readonly int reuniaoId = 0;
-    readonly bool alterar;
-    FrmPrincipal _form;
+    private readonly int _scheduleId = 0;
+    readonly bool isModify;
+    readonly FrmPrincipal _form;
     public FrmCadAgenda()
     {
         InitializeComponent();
@@ -23,19 +23,19 @@ public partial class FrmCadAgenda : Form
         _form = form;
     }
 
-    public FrmCadAgenda(int idReuniao, bool alterarReuniao) : this()
+    public FrmCadAgenda(int scheduleId, bool modifySchedule) : this()
     {
-        reuniaoId = idReuniao;
-        alterar = alterarReuniao;
-        BtnSalvar.Text = "&Alterar";
+        _scheduleId = scheduleId;
+        isModify = modifySchedule;
+        BtnSalvar.Text = "&Update";
     }
 
-    private async void ListarSalas()
+    private async void GetRooms()
     {
-        CbxSelecionarSala.DataSource = await salaRepositorio.ListarTudo();
+        CbxSelecionarSala.DataSource = await roomRepository.GetAll();
     }
 
-    private void LimparCampos()
+    private void ClearFields()
     {
         IniciarDatas();
         RTxtDescricao.Clear();
@@ -44,11 +44,11 @@ public partial class FrmCadAgenda : Form
         LblInfo.Text = "";
     }
 
-    private async void ListarDados(int idReuniao)
+    private async void GetData(int scheduleId)
     {
         try
         {
-            var listaAgenda = await reuniaoRepositorio.BuscarPorId(idReuniao);
+            var listaAgenda = await scheduleRepository.GetById(scheduleId);
 
             MktDataInicio.Text = listaAgenda.DateStart.ToString();
             MktDataFim.Text = listaAgenda.DataFim.ToString();
@@ -70,14 +70,14 @@ public partial class FrmCadAgenda : Form
 
     private void FrmCadAgenda_Load(object sender, EventArgs e)
     {
-        ListarSalas();
+        GetRooms();
         IniciarDatas();
 
-        if (alterar)
+        if (isModify)
         {
-            ListarDados(reuniaoId);
+            GetData(_scheduleId);
         }
-        Informacao();
+        Information();
     }
 
     private void CbxSelecionarSala_SelectedIndexChanged(object sender, EventArgs e)
@@ -87,9 +87,9 @@ public partial class FrmCadAgenda : Form
 
     private async void BtnSalvar_Click(object sender, EventArgs e)
     {
-        Reuniao reuniao = new()
+        Schedule schedule = new()
         {
-            Id = reuniaoId,
+            Id = _scheduleId,
             DateStart = DateTime.Parse(MktDataInicio.Text),
             DataFim = DateTime.Parse(MktDataFim.Text),
             Description = RTxtDescricao.Text.Trim(),
@@ -104,16 +104,16 @@ public partial class FrmCadAgenda : Form
         }
         try
         {
-            if (alterar)
+            if (isModify)
             {
-                await reuniaoRepositorio.Alterar(reuniao);
+                await scheduleRepository.Update(schedule);
             }
             else
             {
-                await reuniaoRepositorio.Adicionar(reuniao);
+                await scheduleRepository.Create(schedule);
             }
 
-            LimparCampos();
+            ClearFields();
         }
         catch (Exception ex)
         {
@@ -121,28 +121,28 @@ public partial class FrmCadAgenda : Form
         }
     }
 
-    private void Informacao()
+    private void Information()
     {
-        DateTime dtInicio = DateTime.Parse(MktDataInicio.Text);
-        DateTime dtFim = DateTime.Parse(MktDataFim.Text);
+        DateTime dateStart = DateTime.Parse(MktDataInicio.Text);
+        DateTime dateEnd = DateTime.Parse(MktDataFim.Text);
 
-        TimeSpan tempoDeReuniao = dtFim - dtInicio;
+        TimeSpan timeSchedule = dateEnd - dateStart;
 
-        LblInfo.Text = $"Tempo de Reunião {tempoDeReuniao.Hours:00}:{tempoDeReuniao.Minutes:00}";
+        LblInfo.Text = $"Tempo de Reunião {timeSchedule.Hours:00}:{timeSchedule.Minutes:00}";
     }
 
     private void MktDataFim_Leave(object sender, EventArgs e)
     {
-        DateTime dtInicio = DateTime.Parse(MktDataInicio.Text);
-        DateTime dtFim = DateTime.Parse(MktDataFim.Text);
+        DateTime dateStart = DateTime.Parse(MktDataInicio.Text);
+        DateTime dateEnd = DateTime.Parse(MktDataFim.Text);
 
-        if (dtFim < dtInicio)
+        if (dateEnd < dateStart)
         {
             MessageBox.Show("Data fim menor que a data inicio. Verifique.", "Aviso");
             return;
         }
 
-        Informacao();
+        Information();
 
     }
 
@@ -152,6 +152,6 @@ public partial class FrmCadAgenda : Form
         {
             return;
         }
-        _form.ListarAgenda();
+        _form.ListSchedule();
     }
 }

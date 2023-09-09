@@ -1,4 +1,4 @@
-﻿using ScheduleRooms.Repositorio;
+﻿using ScheduleRooms.Repository;
 using System;
 using System.Data;
 using System.Linq;
@@ -8,20 +8,20 @@ namespace ScheduleRooms;
 
 public partial class FrmPrincipal : Form
 {
-    readonly ReuniaoRepositorio reuniaoRepositorio = new();
+    readonly ScheduleRepository scheduleRepository = new();
 
     public FrmPrincipal()
     {
         InitializeComponent();
     }
 
-    public async void ListarAgenda()
+    public async void ListSchedule()
     {
         try
         {
-            var listaAgenda = await reuniaoRepositorio.ListarAgendadas(DateTime.Now);
+            var listSchedule = await scheduleRepository.GetScheduleDateCurrent(DateTime.Now);
 
-            DgvListaAgendaAtual.DataSource = listaAgenda.Select(s => new
+            DgvListaAgendaAtual.DataSource = listSchedule.Select(s => new
             {
                 s.Id,
                 s.DateStart,
@@ -29,11 +29,11 @@ public partial class FrmPrincipal : Form
                 s.Description,
                 s.AllowChat,
                 s.AllowCall,
-                s.Room.SalaReuniao
+                s.Room.Name
             }).ToList();
 
-            int totalLista = DgvListaAgendaAtual.RowCount;
-            GbListaSalasAgenda.Text = $"Salas Agendadas Atualmente {totalLista:00}";
+            int totalList = DgvListaAgendaAtual.RowCount;
+            GbListaSalasAgenda.Text = $"Salas Agendadas Atualmente {totalList:00}";
 
         }
         catch (Exception ex)
@@ -67,11 +67,11 @@ public partial class FrmPrincipal : Form
 
     private void FrmPrincipal_Load(object sender, EventArgs e)
     {
-        ListarAgenda();
+        ListSchedule();
     }
 
     private void LkLblAtualizar_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
     {
-        ListarAgenda();
+        ListSchedule();
     }
 }

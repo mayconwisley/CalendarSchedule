@@ -1,5 +1,5 @@
 ﻿using ScheduleRooms.Models;
-using ScheduleRooms.Repositorio;
+using ScheduleRooms.Repository;
 using System;
 using System.Windows.Forms;
 
@@ -7,24 +7,24 @@ namespace ScheduleRooms;
 
 public partial class FrmCadSala : Form
 {
-    private readonly SalaRepositorio salaRepositorio = new();
-    private int idSala = 0;
+    private readonly RoomRepository roomRepository = new();
+    private int roomId = 0;
 
     public FrmCadSala()
     {
         InitializeComponent();
     }
 
-    private async void ListarSalas()
+    private async void GetRooms()
     {
 
-        DgvListaSalas.DataSource = await salaRepositorio.ListarTudo();
-        int countSalas = DgvListaSalas.RowCount;
+        DgvListaSalas.DataSource = await roomRepository.GetAll();
+        int countRooms = DgvListaSalas.RowCount;
 
-        GbListasSalas.Text = $"Listas de Salas - {countSalas:00}";
+        GbListasSalas.Text = $"Listas de Salas - {countRooms:00}";
     }
 
-    private void LimparCampos()
+    private void ClearFields()
     {
         TxtDescricao.Clear();
         TxtRamal.Clear();
@@ -33,13 +33,13 @@ public partial class FrmCadSala : Form
 
     private void FrmCadSala_Load(object sender, EventArgs e)
     {
-        ListarSalas();
+        GetRooms();
     }
     private async void BtnSalvar_Click(object sender, EventArgs e)
     {
         Room room = new()
         {
-            SalaReuniao = TxtSala.Text.Trim(),
+            Name = TxtSala.Text.Trim(),
             Ramal = TxtRamal.Text.Trim(),
             Description = TxtDescricao.Text.Trim()
         };
@@ -54,9 +54,9 @@ public partial class FrmCadSala : Form
         {
 
 
-            await salaRepositorio.Adicionar(room);
-            ListarSalas();
-            LimparCampos();
+            await roomRepository.Create(room);
+            GetRooms();
+            ClearFields();
             BtnAlterar.Enabled = false;
             BtnExcluir.Enabled = false;
             BtnSalvar.Enabled = true;
@@ -71,8 +71,8 @@ public partial class FrmCadSala : Form
     {
         Room room = new()
         {
-            Id = idSala,
-            SalaReuniao = TxtSala.Text.Trim(),
+            Id = roomId,
+            Name = TxtSala.Text.Trim(),
             Ramal = TxtRamal.Text.Trim(),
             Description = TxtDescricao.Text.Trim()
         };
@@ -84,9 +84,9 @@ public partial class FrmCadSala : Form
 
         try
         {
-            await salaRepositorio.Alterar(room);
-            ListarSalas();
-            LimparCampos();
+            await roomRepository.Update(room);
+            GetRooms();
+            ClearFields();
             BtnAlterar.Enabled = false;
             BtnExcluir.Enabled = false;
             BtnSalvar.Enabled = true;
@@ -101,9 +101,9 @@ public partial class FrmCadSala : Form
     {
         try
         {
-            await salaRepositorio.Excluir(idSala);
-            ListarSalas();
-            LimparCampos();
+            await roomRepository.Delete(roomId);
+            GetRooms();
+            ClearFields();
             BtnAlterar.Enabled = false;
             BtnExcluir.Enabled = false;
             BtnSalvar.Enabled = true;
@@ -118,7 +118,7 @@ public partial class FrmCadSala : Form
     {
         try
         {
-            idSala = int.Parse(DgvListaSalas.Rows[e.RowIndex].Cells["IdDgv"].Value.ToString());
+            roomId = int.Parse(DgvListaSalas.Rows[e.RowIndex].Cells["IdDgv"].Value.ToString());
             TxtSala.Text = DgvListaSalas.Rows[e.RowIndex].Cells["SalaDgv"].Value.ToString();
             TxtRamal.Text = DgvListaSalas.Rows[e.RowIndex].Cells["RamalDgv"].Value.ToString();
             TxtDescricao.Text = DgvListaSalas.Rows[e.RowIndex].Cells["DescricaoDgv"].Value.ToString();

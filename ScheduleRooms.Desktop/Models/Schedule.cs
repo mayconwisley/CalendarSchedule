@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ScheduleRooms.Models;
 
-public class Reuniao
+public class Schedule
 {
     public int Id { get; set; }
     [Column(TypeName = "VARCHAR(1000)")]

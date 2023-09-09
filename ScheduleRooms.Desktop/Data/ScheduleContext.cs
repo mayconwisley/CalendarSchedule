@@ -3,14 +3,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ScheduleRooms.Data;
 
-public class AgendaContext : DbContext
+public class ScheduleContext : DbContext
 {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlite("Data Source = Banco\\Agenda.db");
+        optionsBuilder.UseSqlite("Data Source = Banco\\Schedule.db");
         base.OnConfiguring(optionsBuilder);
     }
 
-    public DbSet<Room> Salas { get; set; }
-    public DbSet<Reuniao> Reunioes { get; set; }
+    public DbSet<Room> Rooms { get; set; }
+    public DbSet<Schedule> Schedules { get; set; }
 }
