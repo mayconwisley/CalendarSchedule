@@ -1,23 +1,23 @@
 ﻿<div class="modal">
     <div class="modal-content">
-        <p>@Mensagem</p>
-        <button @onclick="Confirmar">Confirmar</button>
-        <button @onclick="Cancelar">Cancelar</button>
+        <p>@Mensage</p>
+        <button @onclick="Confirm">Confirm</button>
+        <button @onclick="Cancel">Cancel</button>
     </div>
 
 </div>
 
 @code {
     [Parameter]
-    public string? Mensagem { get; set; }
+    public string? Mensage { get; set; }
     [Parameter]
     public EventCallback<bool> OnConfirm { get; set; }
 
-    private async Task Confirmar()
+    private async Task Confirm()
     {
         await OnConfirm.InvokeAsync(true);
     }
-    private async Task Cancelar()
+    private async Task Cancel()
     {
         await OnConfirm.InvokeAsync(false);
     }

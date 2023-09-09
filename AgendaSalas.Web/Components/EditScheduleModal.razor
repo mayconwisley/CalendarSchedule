@@ -1,0 +1,100 @@
+﻿@inject IScheduleService scheduleService
+@inject IRoomService roomService
+
+<div class="modal fade" id="editSchedule-@ScheduleId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <EditForm Model="@ScheduleDto" OnValidSubmit="@Edit">
+                <InputNumber hidden @bind-Value="ScheduleDto!.Id" />
+                <DataAnnotationsValidator />
+
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Editar Agenda</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row g-3">
+
+                        <div class="col-6">
+
+                            <label for="inDataInicio" class="form-label">Data/Hora Inicio</label>
+                            <InputDate class="form-control" Type="InputDateType.DateTimeLocal" id="inDataInicio" @bind-Value="ScheduleDto!.DateStart" />
+                        </div>
+                        <div class="col-6">
+                            <label for="inDataFinal" class="form-label">Data/Hora Final</label>
+                            <InputDate class="form-control" Type="InputDateType.DateTimeLocal" id="inDataFinal" @bind-Value="ScheduleDto.DateStart" />
+                        </div>
+                        <div class="col-12">
+                            <label for="inDescricao" class="form-label">Descrição</label>
+                            <InputText class="form-control" @bind-Value="ScheduleDto!.Description" id="inDescricao" placeholder="Descrição" />
+                            <ValidationMessage For="@(() => ScheduleDto.Description)" />
+
+                        </div>
+                        <div class="col-6">
+                            <label for="inSala" class="form-label">Room</label>
+                            <InputSelect class="form-select" id="inSala" @bind-Value="ScheduleDto!.RoomId">
+                                @if (RoomView?.RoomsDto is not null)
+                                {
+                                    <option value="0">Selecione uma Opção</option>
+                                    @foreach (var room in RoomView.RoomsDto)
+                                    {
+                                        <option value="@room.Id"> @room.Name</option>
+                                    }
+                                }
+                            </InputSelect>
+
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Opções</label>
+                            <div class="form-check">
+                                <InputCheckbox class="form-check-input" @bind-Value="ScheduleDto.AllowCall" id="inPermiteLigar" />
+                                <label for="inPermiteLigar" class="form-check-label">Permite Ligar?</label>
+                            </div>
+                            <div class="form-check">
+                                <InputCheckbox class="form-check-input" @bind-Value="ScheduleDto.AllowChat" id="inPermiteChamar" />
+                                <label for="inPermiteChamar" class="form-check-label">Permite Chamar?</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Action? DataUpdated { get; set; }
+
+    private ScheduleDto? ScheduleDto { get; set; } = new();
+    private RoomView? RoomView { get; set; } = new();
+
+    [Parameter]
+    public int ScheduleId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ScheduleDto = await scheduleService.GetById(ScheduleId);
+        RoomView = await roomService.GetAll();
+    }
+
+    private async Task Edit()
+    {
+        if (ScheduleDto is not null)
+        {
+            var room = await scheduleService.Update(ScheduleDto);
+            UpdateData();
+            ScheduleDto = new();
+
+        }
+    }
+
+    private void UpdateData()
+    {
+        DataUpdated?.Invoke();
+    }
+}

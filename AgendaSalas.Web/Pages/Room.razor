@@ -1,0 +1,42 @@
+﻿@page "/Room"
+
+@inject IRoomService roomService
+
+<h3>Cadastro Room</h3>
+<button data-bs-toggle="modal" data-bs-target="#newRoom" class="btn btn-info">
+    Nova Sala
+</button>
+
+@if (roomView is null)
+{
+    <p><em>Carregando...</em></p>
+}
+else
+{
+    <TableRoom RoomView="@roomView" />
+    <PaginationTable PageCurrent="@ReceberPagina"
+                     TotalData="@roomView.TotalData"
+                     Page="@roomView.Page"
+                     TotalPage="@roomView.TotalPage" />
+    <InsertRoomModal DataUpdated="@(() => DataUpdated())" />
+}
+
+@code {
+    private RoomView? roomView;
+
+    protected override async Task OnInitializedAsync()
+    {
+        roomView = await roomService.GetAll();
+    }
+
+    private async void DataUpdated()
+    {
+        roomView = await roomService.GetAll();
+        StateHasChanged();
+    }
+    private async Task ReceberPagina(int pageCurrent)
+    {
+        roomView = await roomService.GetAll(pageCurrent);
+
+    }
+}

@@ -1,116 +1,115 @@
-﻿using AgendaSalas.API.Model;
-using AgendaSalas.Models.Dtos;
+﻿using ScheduleRooms.API.Model;
+using ScheduleRooms.Models.Dtos;
 
-namespace AgendaSalas.API.MappingDto
+namespace ScheduleRooms.API.MappingDto;
+
+public static class MappingDtos
 {
-    public static class MappingDtos
+    public static IEnumerable<RoomDto> ConverterSalasParaDto(this IEnumerable<Room> rooms)
     {
-        public static IEnumerable<SalaDto> ConverterSalasParaDto(this IEnumerable<Sala> salas)
-        {
-            return (from sala in salas
-                    select new SalaDto
-                    {
-                        Id = sala.Id,
-                        Nome = sala.Nome,
-                        Descricao = sala.Descricao,
-                        Ramal = sala.Ramal
-                    }).ToList();
-        }
-
-        public static IEnumerable<AgendaDto> ConverterAgendasParaDto(this IEnumerable<Agenda> agendas)
-        {
-            return (from agenda in agendas
-                    select new AgendaDto
-                    {
-                        Id = agenda.Id,
-                        Descricao = agenda.Descricao,
-                        DataInicio = agenda.DataInicio,
-                        DataFinal = agenda.DataFinal,
-                        PermitirLigar = agenda.PermitirLigar,
-                        PermitirChamar = agenda.PermitirLigar,
-                        Sala = agenda?.Sala?.Nome,
-                        SalaId = agenda!.Sala!.Id
-
-                    }).ToList();
-        }
-
-        public static IEnumerable<Sala> ConverterDtoParaSalas(this IEnumerable<SalaDto> salasDto)
-        {
-            return (from sala in salasDto
-                    select new Sala
-                    {
-                        Id = sala.Id,
-                        Nome = sala.Nome,
-                        Descricao = sala.Descricao,
-                        Ramal = sala.Ramal
-
-                    }).ToList();
-        }
-
-        public static IEnumerable<Agenda> ConverterAgendasParaDto(this IEnumerable<AgendaDto> agendasDto)
-        {
-            return (from agenda in agendasDto
-                    select new Agenda
-                    {
-                        Id = agenda.Id,
-                        Descricao = agenda.Descricao,
-                        DataInicio = agenda.DataInicio,
-                        DataFinal = agenda.DataFinal,
-                        PermitirLigar = agenda.PermitirLigar,
-                        PermitirChamar = agenda.PermitirLigar,
-                        SalaId = agenda!.SalaId
-
-                    }).ToList();
-        }
-
-        public static SalaDto ConverterSalaParaDto(this Sala sala)
-        {
-            return new SalaDto
-            {
-                Id = sala.Id,
-                Nome = sala.Nome,
-                Descricao = sala.Descricao,
-                Ramal = sala.Ramal
-            };
-        }
-        public static AgendaDto ConverterAgendaParaDto(this Agenda agenda)
-        {
-            return new AgendaDto
-            {
-                Id = agenda.Id,
-                Descricao = agenda.Descricao,
-                DataInicio = agenda.DataInicio,
-                DataFinal = agenda.DataFinal,
-                PermitirChamar = agenda.PermitirChamar,
-                PermitirLigar = agenda.PermitirLigar,
-                Sala = agenda?.Sala?.Nome,
-                SalaId = agenda!.Sala!.Id
-            };
-        }
-        public static Sala ConverterDtoParaSala(this SalaDto salaDto)
-        {
-            return new Sala
-            {
-                Id = salaDto.Id,
-                Nome = salaDto.Nome,
-                Descricao = salaDto.Descricao,
-                Ramal = salaDto.Ramal
-
-            };
-        }
-        public static Agenda ConverterDtoParaAgenda(this AgendaDto agendaDto)
-        {
-            return new Agenda
-            {
-                Id = agendaDto.Id,
-                Descricao = agendaDto.Descricao,
-                DataInicio = agendaDto.DataInicio,
-                DataFinal = agendaDto.DataFinal,
-                PermitirChamar = agendaDto.PermitirChamar,
-                PermitirLigar = agendaDto.PermitirLigar,
-                SalaId = agendaDto!.SalaId
-            };
-        }
-
+        return (from room in rooms
+                select new RoomDto
+                {
+                    Id = room.Id,
+                    Name = room.Name,
+                    Description = room.Description,
+                    Ramal = room.Ramal
+                }).ToList();
     }
+
+    public static IEnumerable<ScheduleDto> ConverterAgendasParaDto(this IEnumerable<Schedule> schedules)
+    {
+        return (from schedule in schedules
+                select new ScheduleDto
+                {
+                    Id = schedule.Id,
+                    Description = schedule.Description,
+                    DateStart = schedule.DateStart,
+                    DateFinal = schedule.DateFinal,
+                    AllowCall = schedule.AllowCall,
+                    AllowChat = schedule.AllowChat,
+                    Room = schedule?.Room?.Name,
+                    RoomId = schedule!.Room!.Id
+
+                }).ToList();
+    }
+
+    public static IEnumerable<Room> ConverterDtoParaSalas(this IEnumerable<RoomDto> roomsDto)
+    {
+        return (from room in roomsDto
+                select new Room
+                {
+                    Id = room.Id,
+                    Name = room.Name,
+                    Description = room.Description,
+                    Ramal = room.Ramal
+
+                }).ToList();
+    }
+
+    public static IEnumerable<Schedule> ConverterAgendasParaDto(this IEnumerable<ScheduleDto> scheduleDto)
+    {
+        return (from schedule in scheduleDto
+                select new Schedule
+                {
+                    Id = schedule.Id,
+                    Description = schedule.Description,
+                    DateStart = schedule.DateStart,
+                    DateFinal = schedule.DateStart,
+                    AllowCall = schedule.AllowCall,
+                    AllowChat = schedule.AllowCall,
+                    RoomId = schedule!.RoomId
+
+                }).ToList();
+    }
+
+    public static RoomDto ConverterSalaParaDto(this Room room)
+    {
+        return new RoomDto
+        {
+            Id = room.Id,
+            Name = room.Name,
+            Description = room.Description,
+            Ramal = room.Ramal
+        };
+    }
+    public static ScheduleDto ConverterAgendaParaDto(this Schedule schedule)
+    {
+        return new ScheduleDto
+        {
+            Id = schedule.Id,
+            Description = schedule.Description,
+            DateStart = schedule.DateStart,
+            DateFinal = schedule.DateFinal,
+            AllowChat = schedule.AllowChat,
+            AllowCall = schedule.AllowCall,
+            Room = schedule?.Room?.Name,
+            RoomId = schedule!.Room!.Id
+        };
+    }
+    public static Room ConverterDtoParaSala(this RoomDto roomDto)
+    {
+        return new Room
+        {
+            Id = roomDto.Id,
+            Name = roomDto.Name,
+            Description = roomDto.Description,
+            Ramal = roomDto.Ramal
+
+        };
+    }
+    public static Schedule ConverterDtoParaAgenda(this ScheduleDto scheduleDto)
+    {
+        return new Schedule
+        {
+            Id = scheduleDto.Id,
+            Description = scheduleDto.Description,
+            DateStart = scheduleDto.DateStart,
+            DateFinal = scheduleDto.DateStart,
+            AllowChat = scheduleDto.AllowChat,
+            AllowCall = scheduleDto.AllowCall,
+            RoomId = scheduleDto!.RoomId
+        };
+    }
+
 }

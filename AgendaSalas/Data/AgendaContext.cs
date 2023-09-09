@@ -1,7 +1,7 @@
-﻿using AgendaSalas.Models;
+﻿using ScheduleRooms.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace AgendaSalas.Data;
+namespace ScheduleRooms.Data;
 
 public class AgendaContext : DbContext
 {
@@ -11,6 +11,6 @@ public class AgendaContext : DbContext
         base.OnConfiguring(optionsBuilder);
     }
 
-    public DbSet<Sala> Salas { get; set; }
+    public DbSet<Room> Salas { get; set; }
     public DbSet<Reuniao> Reunioes { get; set; }
 }

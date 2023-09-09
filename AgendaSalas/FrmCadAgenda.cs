@@ -1,15 +1,15 @@
-﻿using AgendaSalas.Models;
-using AgendaSalas.Repositorio;
+﻿using ScheduleRooms.Models;
+using ScheduleRooms.Repositorio;
 using System;
 using System.Windows.Forms;
 
-namespace AgendaSalas;
+namespace ScheduleRooms;
 
 public partial class FrmCadAgenda : Form
 {
     readonly SalaRepositorio salaRepositorio = new();
     readonly ReuniaoRepositorio reuniaoRepositorio = new();
-    private int salaId = 0;
+    private int roomId = 0;
     private readonly int reuniaoId = 0;
     readonly bool alterar;
     FrmPrincipal _form;
@@ -50,11 +50,11 @@ public partial class FrmCadAgenda : Form
         {
             var listaAgenda = await reuniaoRepositorio.BuscarPorId(idReuniao);
 
-            MktDataInicio.Text = listaAgenda.DataInicio.ToString();
+            MktDataInicio.Text = listaAgenda.DateStart.ToString();
             MktDataFim.Text = listaAgenda.DataFim.ToString();
-            RTxtDescricao.Text = listaAgenda.Descricao.ToString();
-            CbPermitirLigar.Checked = listaAgenda.PermitirLigar;
-            CbPermitirChamar.Checked = listaAgenda.PermitirChamar;
+            RTxtDescricao.Text = listaAgenda.Description.ToString();
+            CbPermitirLigar.Checked = listaAgenda.AllowCall;
+            CbPermitirChamar.Checked = listaAgenda.AllowChat;
         }
         catch (Exception ex)
         {
@@ -82,7 +82,7 @@ public partial class FrmCadAgenda : Form
 
     private void CbxSelecionarSala_SelectedIndexChanged(object sender, EventArgs e)
     {
-        salaId = int.Parse(CbxSelecionarSala.SelectedValue.ToString());
+        roomId = int.Parse(CbxSelecionarSala.SelectedValue.ToString());
     }
 
     private async void BtnSalvar_Click(object sender, EventArgs e)
@@ -90,12 +90,12 @@ public partial class FrmCadAgenda : Form
         Reuniao reuniao = new()
         {
             Id = reuniaoId,
-            DataInicio = DateTime.Parse(MktDataInicio.Text),
+            DateStart = DateTime.Parse(MktDataInicio.Text),
             DataFim = DateTime.Parse(MktDataFim.Text),
-            Descricao = RTxtDescricao.Text.Trim(),
-            PermitirLigar = CbPermitirLigar.Checked,
-            PermitirChamar = CbPermitirChamar.Checked,
-            SalaId = salaId
+            Description = RTxtDescricao.Text.Trim(),
+            AllowCall = CbPermitirLigar.Checked,
+            AllowChat = CbPermitirChamar.Checked,
+            RoomId = roomId
         };
         if (string.IsNullOrWhiteSpace(RTxtDescricao.Text))
         {

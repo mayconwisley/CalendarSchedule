@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace AgendaSalas;
+namespace ScheduleRooms;
 
 internal static class Program
 {

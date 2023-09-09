@@ -1,4 +1,4 @@
-﻿namespace AgendaSalas
+﻿namespace ScheduleRooms
 {
     partial class FrmConAgenda
     {
@@ -137,7 +137,7 @@
             // 
             // DataInicioDgv
             // 
-            DataInicioDgv.DataPropertyName = "DataInicio";
+            DataInicioDgv.DataPropertyName = "DateStart";
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
             dataGridViewCellStyle1.Format = "g";
             dataGridViewCellStyle1.NullValue = null;
@@ -161,7 +161,7 @@
             // 
             // DescricaoDgv
             // 
-            DescricaoDgv.DataPropertyName = "Descricao";
+            DescricaoDgv.DataPropertyName = "Description";
             DescricaoDgv.HeaderText = "Descrição";
             DescricaoDgv.Name = "DescricaoDgv";
             DescricaoDgv.ReadOnly = true;
@@ -169,7 +169,7 @@
             // 
             // PermitirLigarDgv
             // 
-            PermitirLigarDgv.DataPropertyName = "PermitirLigar";
+            PermitirLigarDgv.DataPropertyName = "AllowCall";
             PermitirLigarDgv.HeaderText = "Permitir Ligar";
             PermitirLigarDgv.Name = "PermitirLigarDgv";
             PermitirLigarDgv.ReadOnly = true;
@@ -179,7 +179,7 @@
             // 
             // PermitirChamarDgv
             // 
-            PermitirChamarDgv.DataPropertyName = "PermitirChamar";
+            PermitirChamarDgv.DataPropertyName = "AllowChat";
             PermitirChamarDgv.HeaderText = "Permitir Chamar";
             PermitirChamarDgv.Name = "PermitirChamarDgv";
             PermitirChamarDgv.ReadOnly = true;
@@ -189,8 +189,8 @@
             // 
             // SalaIdDgv
             // 
-            SalaIdDgv.DataPropertyName = "SalaId";
-            SalaIdDgv.HeaderText = "Sala Id";
+            SalaIdDgv.DataPropertyName = "RoomId";
+            SalaIdDgv.HeaderText = "Room Id";
             SalaIdDgv.Name = "SalaIdDgv";
             SalaIdDgv.ReadOnly = true;
             SalaIdDgv.Visible = false;
@@ -198,7 +198,7 @@
             // SalaDescricaoDgv
             // 
             SalaDescricaoDgv.DataPropertyName = "DescSala";
-            SalaDescricaoDgv.HeaderText = "Sala Descrição";
+            SalaDescricaoDgv.HeaderText = "Room Descrição";
             SalaDescricaoDgv.Name = "SalaDescricaoDgv";
             SalaDescricaoDgv.ReadOnly = true;
             SalaDescricaoDgv.Width = 98;
@@ -213,7 +213,7 @@
             groupBox2.Size = new System.Drawing.Size(229, 59);
             groupBox2.TabIndex = 1;
             groupBox2.TabStop = false;
-            groupBox2.Text = "Selecionar Sala";
+            groupBox2.Text = "Selecionar Room";
             // 
             // CbxSelecionarSala
             // 

@@ -1,0 +1,56 @@
+﻿@inject IRoomService roomService
+
+<div class="border mt-2">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Ramal</th>
+                <th>Descrição</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (RoomView is not null)
+            {
+                var rooms = RoomView.RoomsDto;
+
+                if (rooms is not null)
+                {
+                    @foreach (var room in rooms)
+                    {
+                        <tr>
+                            <td>@room.Id</td>
+                            <td>@room.Name</td>
+                            <td>@room.Ramal</td>
+                            <td>@room.Description</td>
+                            <td>
+                                <button data-bs-toggle="modal" data-bs-target="#editRoom-@room.Id" class="btn btn-info">
+                                    Editar
+                                </button>
+                                <EditRoomModal RoomId="@room.Id" DataAtualizados="@(() => DataUpdated())" />
+                                <button data-bs-toggle="modal" data-bs-target="#deletarSala-@room.Id" class="btn btn-danger">
+                                    Excluir
+                                </button>
+                                <DeleteSalaModal RoomId="@room.Id" DataAtualizados="@(() => DataUpdated())" />
+                            </td>
+                        </tr>
+
+                    }
+                }
+            }
+
+        </tbody>
+    </table>
+</div>
+
+@code {
+    [Parameter]
+    public RoomView? RoomView { get; set; }
+    private async void DataUpdated()
+    {
+        RoomView = await roomService.GetAll();
+        StateHasChanged();
+    }
+}

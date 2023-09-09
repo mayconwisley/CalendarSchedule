@@ -1,10 +1,10 @@
-﻿using AgendaSalas.Repositorio;
+﻿using ScheduleRooms.Repositorio;
 using System;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace AgendaSalas;
+namespace ScheduleRooms;
 
 public partial class FrmPrincipal : Form
 {
@@ -24,12 +24,12 @@ public partial class FrmPrincipal : Form
             DgvListaAgendaAtual.DataSource = listaAgenda.Select(s => new
             {
                 s.Id,
-                s.DataInicio,
+                s.DateStart,
                 s.DataFim,
-                s.Descricao,
-                s.PermitirChamar,
-                s.PermitirLigar,
-                s.Sala.SalaReuniao
+                s.Description,
+                s.AllowChat,
+                s.AllowCall,
+                s.Room.SalaReuniao
             }).ToList();
 
             int totalLista = DgvListaAgendaAtual.RowCount;

@@ -1,46 +1,46 @@
-﻿using AgendaSalas.Data;
-using AgendaSalas.Models;
+﻿using ScheduleRooms.Data;
+using ScheduleRooms.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AgendaSalas.Repositorio;
+namespace ScheduleRooms.Repositorio;
 
 public class ReuniaoRepositorio
 {
-    readonly AgendaContext agendaContext = new();
+    readonly AgendaContext scheduleContext = new();
 
     public async Task<IEnumerable<Reuniao>> ListarTudo()
     {
-        return await agendaContext.Reunioes
-            .OrderBy(or => or.Descricao)
+        return await scheduleContext.Reunioes
+            .OrderBy(or => or.Description)
             .ToListAsync();
     }
-    public async Task<IEnumerable<Reuniao>> ListarPorSala(int salaId)
+    public async Task<IEnumerable<Reuniao>> ListarPorSala(int roomId)
     {
-        var listaPorSala = await agendaContext.Reunioes
-                .Include(i => i.Sala)
-                .Where(w => w.SalaId == salaId)
-                .OrderBy(or => or.Descricao)
+        var listaPorSala = await scheduleContext.Reunioes
+                .Include(i => i.Room)
+                .Where(w => w.RoomId == roomId)
+                .OrderBy(or => or.Description)
                 .ToListAsync();
         return listaPorSala;
     }
 
     public async Task<IEnumerable<Reuniao>> ListarAgendadas(DateTime dataAtual)
     {
-        var listaPorSala = await agendaContext.Reunioes
-                .Include(i => i.Sala)
+        var listaPorSala = await scheduleContext.Reunioes
+                .Include(i => i.Room)
                 .Where(w => w.DataFim >= dataAtual)
-                .OrderBy(or => or.Descricao)
+                .OrderBy(or => or.Description)
                 .ToListAsync();
         return listaPorSala;
     }
 
     public async Task<Reuniao> BuscarPorId(int id)
     {
-        var reuniao = await agendaContext.Reunioes
+        var reuniao = await scheduleContext.Reunioes
             .Where(w => w.Id == id)
             .FirstOrDefaultAsync();
 
@@ -55,8 +55,8 @@ public class ReuniaoRepositorio
     {
         try
         {
-            agendaContext.Reunioes.Add(reuniao);
-            await agendaContext.SaveChangesAsync();
+            scheduleContext.Reunioes.Add(reuniao);
+            await scheduleContext.SaveChangesAsync();
         }
         catch (Exception)
         {
@@ -71,8 +71,8 @@ public class ReuniaoRepositorio
             Reuniao reuniao1 = await BuscarPorId(reuniao.Id);
             if (reuniao1 is not null)
             {
-                agendaContext.Reunioes.Entry(reuniao1).CurrentValues.SetValues(reuniao);
-                await agendaContext.SaveChangesAsync();
+                scheduleContext.Reunioes.Entry(reuniao1).CurrentValues.SetValues(reuniao);
+                await scheduleContext.SaveChangesAsync();
             }
         }
         catch (Exception)
@@ -86,8 +86,8 @@ public class ReuniaoRepositorio
         Reuniao reuniao = await BuscarPorId(id);
         try
         {
-            agendaContext.Reunioes.Remove(reuniao);
-            await agendaContext.SaveChangesAsync();
+            scheduleContext.Reunioes.Remove(reuniao);
+            await scheduleContext.SaveChangesAsync();
         }
         catch (Exception)
         {

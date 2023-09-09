@@ -1,5 +1,5 @@
-using AgendaSalas.Web;
-using AgendaSalas.Web.Service;
+using ScheduleRooms.Web;
+using ScheduleRooms.Web.Service;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -14,8 +14,8 @@ builder.Services.AddHttpClient("ConexaoApi", con =>
     con.BaseAddress = new Uri(baseUrl);
 });
 
-builder.Services.AddScoped<ISalaService, SalaService>();
-builder.Services.AddScoped<IAgendaService, AgendaService>();
+builder.Services.AddScoped<IRoomService, RoomService>();
+builder.Services.AddScoped<IScheduleService, ScheduleService>();
 
 
 await builder.Build().RunAsync();

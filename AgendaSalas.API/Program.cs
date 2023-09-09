@@ -1,8 +1,8 @@
-using AgendaSalas.API.Data;
-using AgendaSalas.API.Repository;
-using AgendaSalas.API.Repository.Interface;
-using AgendaSalas.API.Service;
-using AgendaSalas.API.Service.Interface;
+using ScheduleRooms.API.Data;
+using ScheduleRooms.API.Repository;
+using ScheduleRooms.API.Repository.Interface;
+using ScheduleRooms.API.Service;
+using ScheduleRooms.API.Service.Interface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using System.Text.Json.Serialization;
@@ -25,14 +25,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
 
-var senhaBanco = Environment.GetEnvironmentVariable("SQLSenha", EnvironmentVariableTarget.Machine);
+var passDatabase = Environment.GetEnvironmentVariable("SQLSenha", EnvironmentVariableTarget.Machine);
 
-var strDataBase = builder.Configuration.GetConnectionString("AgendaConect")!.Replace("{{senha}}", senhaBanco);
-builder.Services.AddDbContext<AgendaContext>(cd => cd.UseSqlServer(strDataBase));
-builder.Services.AddScoped<ISalaRepository, SalaRespository>();
-builder.Services.AddScoped<IAgendaRepository, AgendaRepository>();
-builder.Services.AddScoped<IAgendaService, AgendaService>();
-builder.Services.AddScoped<ISalaService, SalaService>();
+var strDataBase = builder.Configuration.GetConnectionString("ScheduleConect")!.Replace("{{pass}}", passDatabase);
+builder.Services.AddDbContext<ScheduleContext>(cd => cd.UseSqlServer(strDataBase));
+builder.Services.AddScoped<IRoomRepository, RoomRespository>();
+builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
+builder.Services.AddScoped<IScheduleService, ScheduleService>();
+builder.Services.AddScoped<IRoomService, RoomService>();
 
 var app = builder.Build();
 

@@ -1,17 +1,17 @@
-﻿using AgendaSalas.Repositorio;
+﻿using ScheduleRooms.Repositorio;
 using System;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace AgendaSalas;
+namespace ScheduleRooms;
 
 public partial class FrmConAgenda : Form
 {
     readonly SalaRepositorio salaRepositorio = new();
     readonly ReuniaoRepositorio reuniaoRepositorio = new();
 
-    int salaId = 0, reuniaoId = 0;
+    int roomId = 0, reuniaoId = 0;
 
     FrmPrincipal _form;
 
@@ -46,12 +46,12 @@ public partial class FrmConAgenda : Form
             DgvListaAgenda.DataSource = listaAgenda.Select(s => new
             {
                 s.Id,
-                s.DataInicio,
+                s.DateStart,
                 s.DataFim,
-                s.Descricao,
-                s.PermitirChamar,
-                s.PermitirLigar,
-                DescSala = s.Sala.Descricao
+                s.Description,
+                s.AllowChat,
+                s.AllowCall,
+                DescSala = s.Room.Description
             }).ToList();
 
             int totalAgenda = DgvListaAgenda.RowCount;
@@ -65,11 +65,11 @@ public partial class FrmConAgenda : Form
 
     private void CbxSelecionarSala_SelectedIndexChanged(object sender, EventArgs e)
     {
-        salaId = int.Parse(CbxSelecionarSala.SelectedValue.ToString());
+        roomId = int.Parse(CbxSelecionarSala.SelectedValue.ToString());
 
         try
         {
-            ListarAgenda(salaId);
+            ListarAgenda(roomId);
         }
         catch (Exception ex)
         {
@@ -104,7 +104,7 @@ public partial class FrmConAgenda : Form
                 return;
             }
             await reuniaoRepositorio.Excluir(reuniaoId);
-            ListarAgenda(salaId);
+            ListarAgenda(roomId);
         }
         catch (Exception ex)
         {

@@ -1,4 +1,4 @@
-﻿namespace AgendaSalas
+﻿namespace ScheduleRooms
 {
     partial class FrmCadSala
     {
@@ -144,7 +144,7 @@
             // SalaDgv
             // 
             SalaDgv.DataPropertyName = "SalaReuniao";
-            SalaDgv.HeaderText = "Sala";
+            SalaDgv.HeaderText = "Room";
             SalaDgv.Name = "SalaDgv";
             SalaDgv.ReadOnly = true;
             SalaDgv.Width = 53;
@@ -159,7 +159,7 @@
             // 
             // DescricaoDgv
             // 
-            DescricaoDgv.DataPropertyName = "Descricao";
+            DescricaoDgv.DataPropertyName = "Description";
             DescricaoDgv.HeaderText = "Descrição";
             DescricaoDgv.Name = "DescricaoDgv";
             DescricaoDgv.ReadOnly = true;
@@ -217,7 +217,7 @@
             groupBox1.Size = new System.Drawing.Size(306, 61);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
-            groupBox1.Text = "Sala";
+            groupBox1.Text = "Room";
             // 
             // TxtSala
             // 
@@ -242,7 +242,7 @@
             ShowIcon = false;
             ShowInTaskbar = false;
             StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            Text = "Cadastro Sala";
+            Text = "Cadastro Room";
             Load += FrmCadSala_Load;
             panel1.ResumeLayout(false);
             GbListasSalas.ResumeLayout(false);

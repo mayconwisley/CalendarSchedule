@@ -1,4 +1,4 @@
-﻿namespace AgendaSalas
+﻿namespace ScheduleRooms
 {
     partial class FrmPrincipal
     {
@@ -80,7 +80,7 @@
             BtnNovaSala.Name = "BtnNovaSala";
             BtnNovaSala.Size = new System.Drawing.Size(253, 72);
             BtnNovaSala.TabIndex = 0;
-            BtnNovaSala.Text = "Nova Sala";
+            BtnNovaSala.Text = "Nova Room";
             BtnNovaSala.UseVisualStyleBackColor = true;
             BtnNovaSala.Click += BtnNovaSala_Click;
             // 
@@ -169,14 +169,14 @@
             // SalaDgv
             // 
             SalaDgv.DataPropertyName = "SalaReuniao";
-            SalaDgv.HeaderText = "Sala";
+            SalaDgv.HeaderText = "Room";
             SalaDgv.Name = "SalaDgv";
             SalaDgv.ReadOnly = true;
             SalaDgv.Width = 53;
             // 
             // DataInicioDgv
             // 
-            DataInicioDgv.DataPropertyName = "DataInicio";
+            DataInicioDgv.DataPropertyName = "DateStart";
             DataInicioDgv.HeaderText = "Data Inicio";
             DataInicioDgv.Name = "DataInicioDgv";
             DataInicioDgv.ReadOnly = true;
@@ -192,7 +192,7 @@
             // 
             // DescricaoDgv
             // 
-            DescricaoDgv.DataPropertyName = "Descricao";
+            DescricaoDgv.DataPropertyName = "Description";
             DescricaoDgv.HeaderText = "Descrição";
             DescricaoDgv.Name = "DescricaoDgv";
             DescricaoDgv.ReadOnly = true;
@@ -200,7 +200,7 @@
             // 
             // PermitirLigarDgv
             // 
-            PermitirLigarDgv.DataPropertyName = "PermitirLigar";
+            PermitirLigarDgv.DataPropertyName = "AllowCall";
             PermitirLigarDgv.HeaderText = "Permitir Ligar";
             PermitirLigarDgv.Name = "PermitirLigarDgv";
             PermitirLigarDgv.ReadOnly = true;
@@ -208,7 +208,7 @@
             // 
             // PermitirChamarDgv
             // 
-            PermitirChamarDgv.DataPropertyName = "PermitirChamar";
+            PermitirChamarDgv.DataPropertyName = "AllowChat";
             PermitirChamarDgv.HeaderText = "Permitir Chamar";
             PermitirChamarDgv.Name = "PermitirChamarDgv";
             PermitirChamarDgv.ReadOnly = true;

@@ -1,13 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace AgendaSalas.API.Model.ConfigurationEntityType
+namespace ScheduleRooms.API.Model.ConfigurationEntityType
 {
-    public class AgendaConfiguration : IEntityTypeConfiguration<Agenda>
+    public class AgendaConfiguration : IEntityTypeConfiguration<Schedule>
     {
-        public void Configure(EntityTypeBuilder<Agenda> builder)
+        public void Configure(EntityTypeBuilder<Schedule> builder)
         {
-            builder.Property(p => p.Descricao)
+            builder.Property(p => p.Description)
                 .HasColumnType("VARCHAR(500)")
                 .IsRequired();
         }

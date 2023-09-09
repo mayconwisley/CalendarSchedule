@@ -1,43 +1,43 @@
-﻿using AgendaSalas.Data;
-using AgendaSalas.Models;
+﻿using ScheduleRooms.Data;
+using ScheduleRooms.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AgendaSalas.Repositorio;
+namespace ScheduleRooms.Repositorio;
 
 public class SalaRepositorio
 {
-    readonly AgendaContext agendaContext = new();
+    readonly AgendaContext scheduleContext = new();
 
-    public async Task<IEnumerable<Sala>> ListarTudo()
+    public async Task<IEnumerable<Room>> ListarTudo()
     {
-        return await agendaContext.Salas
+        return await scheduleContext.Salas
             .OrderBy(or => or.SalaReuniao)
             .ToListAsync();
     }
 
-    public async Task<Sala> BuscarPorId(int id)
+    public async Task<Room> BuscarPorId(int id)
     {
-        var sala = await agendaContext.Salas
+        var room = await scheduleContext.Salas
             .Where(w => w.Id == id)
             .FirstOrDefaultAsync();
 
-        if (sala is not null)
+        if (room is not null)
         {
-            return sala;
+            return room;
         }
-        return new Sala();
+        return new Room();
     }
 
-    public async Task Adicionar(Sala sala)
+    public async Task Adicionar(Room room)
     {
         try
         {
-            agendaContext.Salas.Add(sala);
-            await agendaContext.SaveChangesAsync();
+            scheduleContext.Salas.Add(room);
+            await scheduleContext.SaveChangesAsync();
         }
         catch (Exception)
         {
@@ -45,15 +45,15 @@ public class SalaRepositorio
         }
     }
 
-    public async Task Alterar(Sala sala)
+    public async Task Alterar(Room room)
     {
         try
         {
-            Sala sala1 = await BuscarPorId(sala.Id);
+            Room sala1 = await BuscarPorId(room.Id);
             if (sala1 is not null)
             {
-                agendaContext.Salas.Entry(sala1).CurrentValues.SetValues(sala);
-                await agendaContext.SaveChangesAsync();
+                scheduleContext.Salas.Entry(sala1).CurrentValues.SetValues(room);
+                await scheduleContext.SaveChangesAsync();
             }
         }
         catch (Exception)
@@ -64,11 +64,11 @@ public class SalaRepositorio
 
     public async Task Excluir(int id)
     {
-        Sala sala = await BuscarPorId(id);
+        Room room = await BuscarPorId(id);
         try
         {
-            agendaContext.Remove(sala);
-            await agendaContext.SaveChangesAsync();
+            scheduleContext.Remove(room);
+            await scheduleContext.SaveChangesAsync();
         }
         catch (Exception)
         {

@@ -1,0 +1,62 @@
+﻿@inject IScheduleService scheduleService
+
+<div class="border mt-2">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Descrição</th>
+                <th>Data/Hora Inicio</th>
+                <th>Data/Hora Fim</th>
+                <th>Permitir Ligar</th>
+                <th>Permitir Chamar</th>
+                <th>Room</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (ScheduleView is not null)
+            {
+                var schedules = ScheduleView.SchedulesDto;
+
+                if (schedules is not null)
+                {
+                    @foreach (var schedule in schedules)
+                    {
+                        <tr>
+                            <td>@schedule.Id</td>
+                            <td>@schedule.Description</td>
+                            <td>@schedule.DateStart</td>
+                            <td>@schedule.DateStart</td>
+                            <td>@(schedule.AllowCall ? "Sim" : "Não")</td>
+                            <td>@(schedule.AllowChat ? "Sim" : "Não")</td>
+                            <td>@schedule.Room</td>
+                            <td>
+                                <button data-bs-toggle="modal" data-bs-target="#editSchedule-@schedule.Id" class="btn btn-info">
+                                    Editar
+                                </button>
+                                <EditScheduleModal ScheduleId="@schedule.Id" DataUpdated="@(() => DataUpdated())" />
+                                <button data-bs-toggle="modal" data-bs-target="#deletarSala-@schedule.Id" class="btn btn-danger">
+                                    Excluir
+                                </button>
+                                <DeleteScheduleModal ScheduleId="@schedule.Id" DataUpdated="@(() => DataUpdated())" />
+                            </td>
+                        </tr>
+                    }
+                }
+
+            }
+
+        </tbody>
+    </table>
+</div>
+
+@code {
+    [Parameter]
+    public ScheduleView? ScheduleView { get; set; }
+    private async void DataUpdated()
+    {
+        ScheduleView = await scheduleService.GetAll();
+        StateHasChanged();
+    }
+}

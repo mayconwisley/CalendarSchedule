@@ -1,9 +1,9 @@
-﻿using AgendaSalas.Models;
-using AgendaSalas.Repositorio;
+﻿using ScheduleRooms.Models;
+using ScheduleRooms.Repositorio;
 using System;
 using System.Windows.Forms;
 
-namespace AgendaSalas;
+namespace ScheduleRooms;
 
 public partial class FrmCadSala : Form
 {
@@ -37,16 +37,16 @@ public partial class FrmCadSala : Form
     }
     private async void BtnSalvar_Click(object sender, EventArgs e)
     {
-        Sala sala = new()
+        Room room = new()
         {
             SalaReuniao = TxtSala.Text.Trim(),
             Ramal = TxtRamal.Text.Trim(),
-            Descricao = TxtDescricao.Text.Trim()
+            Description = TxtDescricao.Text.Trim()
         };
 
         if (string.IsNullOrWhiteSpace(TxtSala.Text))
         {
-            MessageBox.Show("Preencher o nome da Sala.", "Aviso");
+            MessageBox.Show("Preencher o nome da Room.", "Aviso");
             return;
         }
 
@@ -54,7 +54,7 @@ public partial class FrmCadSala : Form
         {
 
 
-            await salaRepositorio.Adicionar(sala);
+            await salaRepositorio.Adicionar(room);
             ListarSalas();
             LimparCampos();
             BtnAlterar.Enabled = false;
@@ -69,22 +69,22 @@ public partial class FrmCadSala : Form
 
     private async void BtnAlterar_Click(object sender, EventArgs e)
     {
-        Sala sala = new()
+        Room room = new()
         {
             Id = idSala,
             SalaReuniao = TxtSala.Text.Trim(),
             Ramal = TxtRamal.Text.Trim(),
-            Descricao = TxtDescricao.Text.Trim()
+            Description = TxtDescricao.Text.Trim()
         };
         if (string.IsNullOrWhiteSpace(TxtSala.Text))
         {
-            MessageBox.Show("Preencher o nome da Sala.", "Aviso");
+            MessageBox.Show("Preencher o nome da Room.", "Aviso");
             return;
         }
 
         try
         {
-            await salaRepositorio.Alterar(sala);
+            await salaRepositorio.Alterar(room);
             ListarSalas();
             LimparCampos();
             BtnAlterar.Enabled = false;

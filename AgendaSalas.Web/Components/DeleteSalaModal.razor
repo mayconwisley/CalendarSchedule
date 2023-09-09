@@ -1,21 +1,21 @@
-﻿@inject ISalaService salaService
+﻿@inject IRoomService roomService
 
-<div class="modal fade" id="deletarSala-@SalaId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="deletarSala-@RoomId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <EditForm Model="@salaDto" OnValidSubmit="@Delete">
-                <InputNumber hidden @bind-Value="salaDto!.Id" />
+            <EditForm Model="@RoomDto" OnValidSubmit="@Delete">
+                <InputNumber hidden @bind-Value="RoomDto!.Id" />
                 <DataAnnotationsValidator />
 
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Excluir Sala</h1>
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Excluir Room</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
 
                     <div class="row g-3">
                         <div class="col-12">
-                            <p>Sala: @salaDto.Nome</p>
+                            <p>Room: @RoomDto.Name</p>
                         </div>
                     </div>
                 </div>
@@ -30,31 +30,31 @@
 
 @code {
     [Parameter]
-    public Action? DataAtualizados { get; set; }
+    public Action? DataUpdated { get; set; }
 
-    private SalaDto? salaDto { get; set; } = new();
+    private RoomDto? RoomDto { get; set; } = new();
 
     [Parameter]
-    public int SalaId { get; set; }
+    public int RoomId { get; set; }
 
 
     protected override async Task OnInitializedAsync()
     {
-        salaDto = await salaService.GetById(SalaId);
+        RoomDto = await roomService.GetById(RoomId);
         await base.OnInitializedAsync();
     }
 
     private async Task Delete()
     {
-        if (salaDto is not null)
+        if (RoomDto is not null)
         {
-            var sala = await salaService.Delete(SalaId);
-            UpdateDados();
+            var room = await roomService.Delete(RoomId);
+            UpdateData();
         }
     }
 
-    private void UpdateDados()
+    private void UpdateData()
     {
-        DataAtualizados?.Invoke();
+        DataUpdated?.Invoke();
     }
 }

@@ -3,7 +3,7 @@ using System;
 
 #nullable disable
 
-namespace AgendaSalas.Migrations
+namespace ScheduleRooms.Migrations
 {
     /// <inheritdoc />
     public partial class TabelasInciais : Migration
@@ -19,7 +19,7 @@ namespace AgendaSalas.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     SalaReuniao = table.Column<string>(type: "VARCHAR(500)", nullable: true),
                     Ramal = table.Column<string>(type: "VARCHAR(5)", nullable: true),
-                    Descricao = table.Column<string>(type: "VARCHAR(1000)", nullable: true)
+                    Description = table.Column<string>(type: "VARCHAR(1000)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -32,19 +32,19 @@ namespace AgendaSalas.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Descricao = table.Column<string>(type: "VARCHAR(1000)", nullable: false),
-                    DataInicio = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "VARCHAR(1000)", nullable: false),
+                    DateStart = table.Column<DateTime>(type: "TEXT", nullable: false),
                     DataFim = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    PermitirLigar = table.Column<bool>(type: "INTEGER", nullable: false),
-                    PermitirChamar = table.Column<bool>(type: "INTEGER", nullable: false),
-                    SalaId = table.Column<int>(type: "INTEGER", nullable: false)
+                    AllowCall = table.Column<bool>(type: "INTEGER", nullable: false),
+                    AllowChat = table.Column<bool>(type: "INTEGER", nullable: false),
+                    RoomId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Reunioes", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Reunioes_Salas_SalaId",
-                        column: x => x.SalaId,
+                        column: x => x.RoomId,
                         principalTable: "Salas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -53,7 +53,7 @@ namespace AgendaSalas.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Reunioes_SalaId",
                 table: "Reunioes",
-                column: "SalaId");
+                column: "RoomId");
         }
 
         /// <inheritdoc />

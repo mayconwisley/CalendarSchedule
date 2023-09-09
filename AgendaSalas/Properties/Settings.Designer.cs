@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AgendaSalas.Properties
+namespace ScheduleRooms.Properties
 {
 
 
