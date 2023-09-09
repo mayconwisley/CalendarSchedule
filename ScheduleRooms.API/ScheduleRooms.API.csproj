@@ -18,11 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AgendaSalas.Models\ScheduleRooms.Models.csproj" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
+    <ProjectReference Include="..\ScheduleRooms.Models\ScheduleRooms.Models.csproj" />
   </ItemGroup>
 
 </Project>

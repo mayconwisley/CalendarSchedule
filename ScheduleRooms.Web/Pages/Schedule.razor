@@ -26,7 +26,6 @@ else
     protected override async Task OnInitializedAsync()
     {
         scheduleView = await scheduleService.GetAll();
-        await base.OnInitializedAsync();
     }
     private async void DataUpdated()
     {

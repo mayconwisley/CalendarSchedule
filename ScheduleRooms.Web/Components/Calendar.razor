@@ -50,13 +50,13 @@
                         @dateStartMonth.AddDays(i).Day
                     </a>
 
-                    @if (scheduleDto is null)
+                    @if (ScheduleDto is null)
                     {
                         <em>Carregando...</em>
                     }
                     else
                     {
-                        var salaAgenda = scheduleDto
+                        var salaAgenda = ScheduleDto
                         .GroupBy(g => new
                         {
                             g.RoomId,
@@ -79,7 +79,7 @@
                                     @item.Room
                                 </a>
 
-                                <TableScheduleModal  RoomId="@item.RoomId" DateSelected="@dateStartMonth.AddDays(i).Date" />
+                                <TableScheduleModal RoomId="@item.RoomId" DateSelected="@dateStartMonth.AddDays(i).Date" />
                             }
                         }
                     }
@@ -93,17 +93,13 @@
 
 @code {
 
-    [Parameter]
-    public int quantityRooms { get; set; }
     DateTime competence = DateTime.Now.Date;
 
-    public IEnumerable<ScheduleDto>? scheduleDto { get; set; }
-
-    private ScheduleView? scheduleView { get; set; }
+    public IEnumerable<ScheduleDto>? ScheduleDto { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        scheduleDto = await scheduleService.GetByAgendaActive();
+        ScheduleDto = await scheduleService.GetByAgendaActive();
 
         await base.OnInitializedAsync();
     }

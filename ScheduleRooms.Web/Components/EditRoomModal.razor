@@ -42,7 +42,7 @@
 
 @code {
     [Parameter]
-    public Action? DataAtualizados { get; set; }
+    public Action? DataUpdated { get; set; }
 
     private RoomDto? RoomDto { get; set; } = new();
 
@@ -66,6 +66,6 @@
 
     private void UpdateData()
     {
-        DataAtualizados?.Invoke();
+        DataUpdated?.Invoke();
     }
 }

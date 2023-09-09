@@ -7,16 +7,16 @@ namespace ScheduleRooms.API.Service;
 
 public class ScheduleService : IScheduleService
 {
-    private readonly IScheduleRepository _agendaRepository;
+    private readonly IScheduleRepository _scheduleRepository;
 
-    public ScheduleService(IScheduleRepository agendaRepository)
+    public ScheduleService(IScheduleRepository scheduleRepository)
     {
-        _agendaRepository = agendaRepository;
+        _scheduleRepository = scheduleRepository;
     }
 
     public async Task Create(ScheduleDto scheduleDto)
     {
-        await _agendaRepository.Create(scheduleDto.ConverterDtoParaAgenda());
+        await _scheduleRepository.Create(scheduleDto.ConverterDtoParaAgenda());
     }
 
     public async Task Delete(int id)
@@ -24,42 +24,42 @@ public class ScheduleService : IScheduleService
         var agendaEntity = await GetById(id);
         if (agendaEntity is not null)
         {
-            await _agendaRepository.Delete(agendaEntity.Id);
+            await _scheduleRepository.Delete(agendaEntity.Id);
         }
     }
 
     public async Task<IEnumerable<ScheduleDto>> GetAll(int page, int size, string search)
     {
-        var agendaEntity = await _agendaRepository.GetAll(page, size, search);
+        var agendaEntity = await _scheduleRepository.GetAll(page, size, search);
         return agendaEntity.ConverterAgendasParaDto();
     }
 
     public async Task<IEnumerable<ScheduleDto>> GetByAgendaActive()
     {
-        var agendaEntity = await _agendaRepository.GetByAgendaActive();
+        var agendaEntity = await _scheduleRepository.GetByAgendaActive();
         return agendaEntity.ConverterAgendasParaDto();
     }
 
     public async Task<IEnumerable<ScheduleDto>> GetByAgendaActiveSalaId(int roomId, DateTime dateSalected)
     {
-        var agendaEntity = await _agendaRepository.GetByAgendaActiveSalaId(roomId, dateSalected);
+        var agendaEntity = await _scheduleRepository.GetByAgendaActiveSalaId(roomId, dateSalected);
         return agendaEntity.ConverterAgendasParaDto();
     }
 
     public async Task<ScheduleDto> GetById(int id)
     {
-        var agendaEntity = await _agendaRepository.GetById(id);
+        var agendaEntity = await _scheduleRepository.GetById(id);
         return agendaEntity.ConverterAgendaParaDto();
     }
 
     public async Task<int> TotalAgendas(string search)
     {
-        var totalAgenda = await _agendaRepository.TotalSchedules(search);
+        var totalAgenda = await _scheduleRepository.TotalSchedules(search);
         return totalAgenda;
     }
 
     public async Task Update(ScheduleDto scheduleDto)
     {
-        await _agendaRepository.Update(scheduleDto.ConverterDtoParaAgenda());
+        await _scheduleRepository.Update(scheduleDto.ConverterDtoParaAgenda());
     }
 }

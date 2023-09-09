@@ -55,9 +55,9 @@ public static class MappingDtos
                     Id = schedule.Id,
                     Description = schedule.Description,
                     DateStart = schedule.DateStart,
-                    DateFinal = schedule.DateStart,
+                    DateFinal = schedule.DateFinal,
                     AllowCall = schedule.AllowCall,
-                    AllowChat = schedule.AllowCall,
+                    AllowChat = schedule.AllowChat,
                     RoomId = schedule!.RoomId
 
                 }).ToList();
@@ -105,7 +105,7 @@ public static class MappingDtos
             Id = scheduleDto.Id,
             Description = scheduleDto.Description,
             DateStart = scheduleDto.DateStart,
-            DateFinal = scheduleDto.DateStart,
+            DateFinal = scheduleDto.DateFinal,
             AllowChat = scheduleDto.AllowChat,
             AllowCall = scheduleDto.AllowCall,
             RoomId = scheduleDto!.RoomId

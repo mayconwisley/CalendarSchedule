@@ -4,6 +4,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,11 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AgendaSalas.Models\ScheduleRooms.Models.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\sample-data\" />
+    <ProjectReference Include="..\ScheduleRooms.Models\ScheduleRooms.Models.csproj" />
   </ItemGroup>
 
 </Project>

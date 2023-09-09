@@ -19,7 +19,7 @@ public class ScheduleController : ControllerBase
     [Route("All")]
     public async Task<ActionResult<IEnumerable<ScheduleDto>>> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
     {
-        var scheduleDto = await _scheduleService.GetAll(page, size, search);
+        var schedulesDto = await _scheduleService.GetAll(page, size, search);
         decimal totalData = (decimal)await _scheduleService.TotalAgendas(search);
         decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
 
@@ -28,7 +28,7 @@ public class ScheduleController : ControllerBase
             totalPage = totalData;
         }
 
-        if (!scheduleDto.Any())
+        if (!schedulesDto.Any())
         {
             return NotFound("Sem dados");
         }
@@ -38,7 +38,7 @@ public class ScheduleController : ControllerBase
             page,
             totalPage,
             size,
-            scheduleDto
+            schedulesDto
         });
 
     }
