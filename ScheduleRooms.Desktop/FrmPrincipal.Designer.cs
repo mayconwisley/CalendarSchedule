@@ -36,6 +36,12 @@
             panel2 = new System.Windows.Forms.Panel();
             GbListaSalasAgenda = new System.Windows.Forms.GroupBox();
             DgvListaAgendaAtual = new System.Windows.Forms.DataGridView();
+            panel3 = new System.Windows.Forms.Panel();
+            label2 = new System.Windows.Forms.Label();
+            panel4 = new System.Windows.Forms.Panel();
+            LblDataAtual = new System.Windows.Forms.Label();
+            TimerDataHoraAtual = new System.Windows.Forms.Timer(components);
+            LkLblAtualizar = new System.Windows.Forms.LinkLabel();
             IdDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
             SalaDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
             DataInicioDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -43,12 +49,6 @@
             DescricaoDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
             PermitirLigarDgv = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             PermitirChamarDgv = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            panel3 = new System.Windows.Forms.Panel();
-            label2 = new System.Windows.Forms.Label();
-            panel4 = new System.Windows.Forms.Panel();
-            LblDataAtual = new System.Windows.Forms.Label();
-            TimerDataHoraAtual = new System.Windows.Forms.Timer(components);
-            LkLblAtualizar = new System.Windows.Forms.LinkLabel();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             GbListaSalasAgenda.SuspendLayout();
@@ -80,7 +80,7 @@
             BtnNovaSala.Name = "BtnNovaSala";
             BtnNovaSala.Size = new System.Drawing.Size(253, 72);
             BtnNovaSala.TabIndex = 0;
-            BtnNovaSala.Text = "Nova Room";
+            BtnNovaSala.Text = "Nova Sala";
             BtnNovaSala.UseVisualStyleBackColor = true;
             BtnNovaSala.Click += BtnNovaSala_Click;
             // 
@@ -158,62 +158,6 @@
             DgvListaAgendaAtual.Size = new System.Drawing.Size(963, 236);
             DgvListaAgendaAtual.TabIndex = 0;
             // 
-            // IdDgv
-            // 
-            IdDgv.DataPropertyName = "Id";
-            IdDgv.HeaderText = "Id";
-            IdDgv.Name = "IdDgv";
-            IdDgv.ReadOnly = true;
-            IdDgv.Width = 42;
-            // 
-            // SalaDgv
-            // 
-            SalaDgv.DataPropertyName = "SalaReuniao";
-            SalaDgv.HeaderText = "Room";
-            SalaDgv.Name = "SalaDgv";
-            SalaDgv.ReadOnly = true;
-            SalaDgv.Width = 53;
-            // 
-            // DataInicioDgv
-            // 
-            DataInicioDgv.DataPropertyName = "DateStart";
-            DataInicioDgv.HeaderText = "Data Inicio";
-            DataInicioDgv.Name = "DataInicioDgv";
-            DataInicioDgv.ReadOnly = true;
-            DataInicioDgv.Width = 81;
-            // 
-            // DataFimDgv
-            // 
-            DataFimDgv.DataPropertyName = "DataFim";
-            DataFimDgv.HeaderText = "Data Fim";
-            DataFimDgv.Name = "DataFimDgv";
-            DataFimDgv.ReadOnly = true;
-            DataFimDgv.Width = 73;
-            // 
-            // DescricaoDgv
-            // 
-            DescricaoDgv.DataPropertyName = "Description";
-            DescricaoDgv.HeaderText = "Descrição";
-            DescricaoDgv.Name = "DescricaoDgv";
-            DescricaoDgv.ReadOnly = true;
-            DescricaoDgv.Width = 83;
-            // 
-            // PermitirLigarDgv
-            // 
-            PermitirLigarDgv.DataPropertyName = "AllowCall";
-            PermitirLigarDgv.HeaderText = "Permitir Ligar";
-            PermitirLigarDgv.Name = "PermitirLigarDgv";
-            PermitirLigarDgv.ReadOnly = true;
-            PermitirLigarDgv.Width = 76;
-            // 
-            // PermitirChamarDgv
-            // 
-            PermitirChamarDgv.DataPropertyName = "AllowChat";
-            PermitirChamarDgv.HeaderText = "Permitir Chamar";
-            PermitirChamarDgv.Name = "PermitirChamarDgv";
-            PermitirChamarDgv.ReadOnly = true;
-            PermitirChamarDgv.Width = 90;
-            // 
             // panel3
             // 
             panel3.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
@@ -272,6 +216,62 @@
             LkLblAtualizar.Text = "Atualizar";
             LkLblAtualizar.LinkClicked += LkLblAtualizar_LinkClicked;
             // 
+            // IdDgv
+            // 
+            IdDgv.DataPropertyName = "Id";
+            IdDgv.HeaderText = "Id";
+            IdDgv.Name = "IdDgv";
+            IdDgv.ReadOnly = true;
+            IdDgv.Width = 42;
+            // 
+            // SalaDgv
+            // 
+            SalaDgv.DataPropertyName = "Name";
+            SalaDgv.HeaderText = "Sala";
+            SalaDgv.Name = "SalaDgv";
+            SalaDgv.ReadOnly = true;
+            SalaDgv.Width = 53;
+            // 
+            // DataInicioDgv
+            // 
+            DataInicioDgv.DataPropertyName = "DateStart";
+            DataInicioDgv.HeaderText = "Data Inicio";
+            DataInicioDgv.Name = "DataInicioDgv";
+            DataInicioDgv.ReadOnly = true;
+            DataInicioDgv.Width = 88;
+            // 
+            // DataFimDgv
+            // 
+            DataFimDgv.DataPropertyName = "DataFim";
+            DataFimDgv.HeaderText = "Data Fim";
+            DataFimDgv.Name = "DataFimDgv";
+            DataFimDgv.ReadOnly = true;
+            DataFimDgv.Width = 79;
+            // 
+            // DescricaoDgv
+            // 
+            DescricaoDgv.DataPropertyName = "Description";
+            DescricaoDgv.HeaderText = "Descrição";
+            DescricaoDgv.Name = "DescricaoDgv";
+            DescricaoDgv.ReadOnly = true;
+            DescricaoDgv.Width = 83;
+            // 
+            // PermitirLigarDgv
+            // 
+            PermitirLigarDgv.DataPropertyName = "AllowCall";
+            PermitirLigarDgv.HeaderText = "Permitir Ligar";
+            PermitirLigarDgv.Name = "PermitirLigarDgv";
+            PermitirLigarDgv.ReadOnly = true;
+            PermitirLigarDgv.Width = 84;
+            // 
+            // PermitirChamarDgv
+            // 
+            PermitirChamarDgv.DataPropertyName = "AllowChat";
+            PermitirChamarDgv.HeaderText = "Permitir Chamar";
+            PermitirChamarDgv.Name = "PermitirChamarDgv";
+            PermitirChamarDgv.ReadOnly = true;
+            PermitirChamarDgv.Width = 90;
+            // 
             // FrmPrincipal
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -313,6 +313,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button BtnNovaSala;
         private System.Windows.Forms.Timer TimerDataHoraAtual;
+        private System.Windows.Forms.LinkLabel LkLblAtualizar;
         private System.Windows.Forms.DataGridViewTextBoxColumn IdDgv;
         private System.Windows.Forms.DataGridViewTextBoxColumn SalaDgv;
         private System.Windows.Forms.DataGridViewTextBoxColumn DataInicioDgv;
@@ -320,7 +321,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn DescricaoDgv;
         private System.Windows.Forms.DataGridViewCheckBoxColumn PermitirLigarDgv;
         private System.Windows.Forms.DataGridViewCheckBoxColumn PermitirChamarDgv;
-        private System.Windows.Forms.LinkLabel LkLblAtualizar;
     }
 }
 

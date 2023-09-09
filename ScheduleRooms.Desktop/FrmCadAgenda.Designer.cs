@@ -156,7 +156,7 @@
             CbPermitirChamar.Location = new System.Drawing.Point(298, 22);
             CbPermitirChamar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             CbPermitirChamar.Name = "CbPermitirChamar";
-            CbPermitirChamar.Size = new System.Drawing.Size(198, 19);
+            CbPermitirChamar.Size = new System.Drawing.Size(207, 19);
             CbPermitirChamar.TabIndex = 1;
             CbPermitirChamar.Text = "Permitir chamar alguém na room?";
             CbPermitirChamar.UseVisualStyleBackColor = true;
@@ -167,7 +167,7 @@
             CbPermitirLigar.Location = new System.Drawing.Point(7, 22);
             CbPermitirLigar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             CbPermitirLigar.Name = "CbPermitirLigar";
-            CbPermitirLigar.Size = new System.Drawing.Size(248, 19);
+            CbPermitirLigar.Size = new System.Drawing.Size(257, 19);
             CbPermitirLigar.TabIndex = 0;
             CbPermitirLigar.Text = "Permitir ligar no ramal do room de reunião?";
             CbPermitirLigar.UseVisualStyleBackColor = true;
@@ -229,7 +229,7 @@
             // 
             // CbxSelecionarSala
             // 
-            CbxSelecionarSala.DisplayMember = "SalaReuniao";
+            CbxSelecionarSala.DisplayMember = "Name";
             CbxSelecionarSala.FormattingEnabled = true;
             CbxSelecionarSala.Location = new System.Drawing.Point(11, 18);
             CbxSelecionarSala.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);

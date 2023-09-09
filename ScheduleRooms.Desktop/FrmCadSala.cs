@@ -17,11 +17,19 @@ public partial class FrmCadSala : Form
 
     private async void GetRooms()
     {
+        try
+        {
 
-        DgvListaSalas.DataSource = await roomRepository.GetAll();
-        int countRooms = DgvListaSalas.RowCount;
+            DgvListaSalas.DataSource = await roomRepository.GetAll();
+            int countRooms = DgvListaSalas.RowCount;
 
-        GbListasSalas.Text = $"Listas de Salas - {countRooms:00}";
+            GbListasSalas.Text = $"Listas de Salas - {countRooms:00}";
+        }
+        catch (Exception ex)
+        {
+
+            MessageBox.Show(ex.Message);
+        }
     }
 
     private void ClearFields()

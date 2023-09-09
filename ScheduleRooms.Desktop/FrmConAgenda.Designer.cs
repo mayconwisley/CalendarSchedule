@@ -201,7 +201,7 @@
             SalaDescricaoDgv.HeaderText = "Room Descrição";
             SalaDescricaoDgv.Name = "SalaDescricaoDgv";
             SalaDescricaoDgv.ReadOnly = true;
-            SalaDescricaoDgv.Width = 98;
+            SalaDescricaoDgv.Width = 108;
             // 
             // groupBox2
             // 
@@ -217,7 +217,7 @@
             // 
             // CbxSelecionarSala
             // 
-            CbxSelecionarSala.DisplayMember = "SalaReuniao";
+            CbxSelecionarSala.DisplayMember = "Name";
             CbxSelecionarSala.FormattingEnabled = true;
             CbxSelecionarSala.Location = new System.Drawing.Point(11, 18);
             CbxSelecionarSala.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
