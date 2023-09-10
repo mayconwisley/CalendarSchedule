@@ -46,9 +46,9 @@
                     }
                 }
                 <span class="@(numWeek == 0 ? "domingo dia" : (numWeek == 6 ? "sabado dia" : (dateStartMonth.AddDays(i).Date == DateTime.Now.Date ? "dia-atual dia" : "dia" )))">
-                    <a href="#InsertAgenda/@(dateStartMonth.AddDays(i).Date.ToString("dd-MM-yyyy"))">
+                    <b>
                         @dateStartMonth.AddDays(i).Day
-                    </a>
+                    </b>
 
                     @if (ScheduleDto is null)
                     {
