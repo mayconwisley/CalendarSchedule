@@ -86,8 +86,17 @@ public class ScheduleController : ControllerBase
     {
         if (scheduleDto is not null)
         {
-            await _scheduleService.Create(scheduleDto);
-            return new CreatedAtRouteResult("GetSchedule", new { id = scheduleDto.Id }, scheduleDto);
+
+            try
+            {
+                await _scheduleService.Create(scheduleDto);
+                return new CreatedAtRouteResult("GetSchedule", new { id = scheduleDto.Id }, scheduleDto);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
         return BadRequest("Dados inválidos");
     }

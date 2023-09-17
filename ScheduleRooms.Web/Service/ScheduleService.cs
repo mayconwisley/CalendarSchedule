@@ -39,6 +39,10 @@ namespace ScheduleRooms.Web.Service
                             return schedule;
                         }
                     }
+                    if (response.StatusCode == HttpStatusCode.InternalServerError)
+                    {
+
+                    }
                 }
                 return new();
             }

@@ -2,12 +2,15 @@
 using ScheduleRooms.API.Model;
 using ScheduleRooms.API.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace ScheduleRooms.API.Repository;
 
 public class ScheduleRepository : IScheduleRepository
 {
     private readonly ScheduleContext _scheduleContext;
+
+    private HttpStatusCode httpStatusCode = HttpStatusCode.OK;
 
     public ScheduleRepository(ScheduleContext scheduleContext)
     {
@@ -30,7 +33,9 @@ public class ScheduleRepository : IScheduleRepository
 
                 if (overlappingAgendas.Count > 0)
                 {
+
                     // Existe sobreposição, faça algo aqui, como lançar uma exceção.
+                    httpStatusCode = HttpStatusCode.Conflict;
                     throw new Exception("Já existe uma schedule para esta room no mesmo período.");
                 }
                 _scheduleContext.Schedules.Add(schedule);
@@ -41,6 +46,7 @@ public class ScheduleRepository : IScheduleRepository
         }
         catch (Exception)
         {
+            httpStatusCode = HttpStatusCode.InternalServerError;
             throw;
         }
     }

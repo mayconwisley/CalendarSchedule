@@ -81,9 +81,18 @@
     {
         if (ScheduleDto is not null)
         {
-            var room = await scheduleService.Create(ScheduleDto);
-            UpdateData();
-            ScheduleDto = new();
+            try
+            {
+                var room = await scheduleService.Create(ScheduleDto);
+                UpdateData();
+                ScheduleDto = new();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
 
         }
     }
