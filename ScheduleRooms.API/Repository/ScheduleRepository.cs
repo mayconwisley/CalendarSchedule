@@ -10,8 +10,6 @@ public class ScheduleRepository : IScheduleRepository
 {
     private readonly ScheduleContext _scheduleContext;
 
-    private HttpStatusCode httpStatusCode = HttpStatusCode.OK;
-
     public ScheduleRepository(ScheduleContext scheduleContext)
     {
         _scheduleContext = scheduleContext;
@@ -33,10 +31,8 @@ public class ScheduleRepository : IScheduleRepository
 
                 if (overlappingAgendas.Count > 0)
                 {
-
                     // Existe sobreposição, faça algo aqui, como lançar uma exceção.
-                    httpStatusCode = HttpStatusCode.Conflict;
-                    throw new Exception("Já existe uma schedule para esta room no mesmo período.");
+                    throw new Exception("409");
                 }
                 _scheduleContext.Schedules.Add(schedule);
                 await _scheduleContext.SaveChangesAsync();
@@ -46,7 +42,6 @@ public class ScheduleRepository : IScheduleRepository
         }
         catch (Exception)
         {
-            httpStatusCode = HttpStatusCode.InternalServerError;
             throw;
         }
     }

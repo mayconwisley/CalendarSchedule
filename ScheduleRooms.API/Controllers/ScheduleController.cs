@@ -90,12 +90,15 @@ public class ScheduleController : ControllerBase
             try
             {
                 await _scheduleService.Create(scheduleDto);
+
                 return new CreatedAtRouteResult("GetSchedule", new { id = scheduleDto.Id }, scheduleDto);
             }
             catch (Exception ex)
             {
-
-                throw;
+                if (ex.Message == "409")
+                {
+                    return Conflict("O cadastro da Agenda resultaria em uma sobreposição de datas para esta sala.");
+                }
             }
         }
         return BadRequest("Dados inválidos");

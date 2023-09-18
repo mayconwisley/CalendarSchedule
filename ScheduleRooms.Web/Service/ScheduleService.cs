@@ -39,9 +39,9 @@ namespace ScheduleRooms.Web.Service
                             return schedule;
                         }
                     }
-                    if (response.StatusCode == HttpStatusCode.InternalServerError)
+                    if (response.StatusCode == HttpStatusCode.Conflict)
                     {
-
+                        Console.Out.WriteLine("Erro");
                     }
                 }
                 return new();
