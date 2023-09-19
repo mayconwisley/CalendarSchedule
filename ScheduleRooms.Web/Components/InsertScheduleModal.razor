@@ -56,6 +56,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <p>Aviso: @ErroRetornado</p>
                     <button type="submit" class="btn btn-primary">Salvar</button>
                 </div>
             </EditForm>
@@ -69,6 +70,7 @@
 
     private ScheduleDto? ScheduleDto { get; set; } = new();
     private RoomView? RoomView { get; set; } = new();
+    private string? ErroRetornado { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -89,8 +91,7 @@
             }
             catch (Exception ex)
             {
-
-                throw;
+                ErroRetornado = ex.Message;
             }
 
 
