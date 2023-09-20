@@ -58,7 +58,9 @@
     width: 350px;
     text-align: center;
 }
-
+.pn-mes{
+    width:90px;
+}
 .dia {
     border: 1px solid #000;
     border-radius: 5px;

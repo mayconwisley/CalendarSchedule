@@ -1,7 +1,7 @@
 ﻿@inject IScheduleService scheduleService
 
 <div class="border mt-2">
-    <table class="table table-striped">
+    <table class="table table-striped align-middle">
         <thead>
             <tr>
                 <th>Id</th>
@@ -28,8 +28,8 @@
                             <td>@schedule.Description</td>
                             <td>@schedule.DateStart</td>
                             <td>@schedule.DateFinal</td>
-                            <td>@(schedule.AllowCall ? "Sim" : "Não")</td>
-                            <td>@(schedule.AllowChat ? "Sim" : "Não")</td>
+                            <td class="text-center">@(schedule.AllowCall ? "Sim" : "Não")</td>
+                            <td class="text-center">@(schedule.AllowChat ? "Sim" : "Não")</td>
                             <td>@schedule.Room</td>
                             <td>
                                 <button data-bs-toggle="modal" data-bs-target="#editSchedule-@schedule.Id" class="btn btn-info">

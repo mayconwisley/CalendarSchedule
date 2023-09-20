@@ -9,13 +9,15 @@
         <nav>
             <ul class="pagination">
                 <li class="page-item">
-                    <button class="page-link" @onclick="PreviousMonth">
+                    <button class="page-link pn-mes" @onclick="PreviousMonth">
                         <span aria-hidden="true">&laquo;</span>
                     </button>
                 </li>
-                <li class="page-item nome-mes"> <p class="page-link">@competence.ToString("MMMM/yyyy")</p></li>
+                <li class="page-item nome-mes">
+                    <p class="page-link">@competence.ToString("MMMM/yyyy")</p>
+                </li>
                 <li class="page-item">
-                    <button class="page-link" @onclick="NextMonth">
+                    <button class="page-link pn-mes" @onclick="NextMonth">
                         <span aria-hidden="true">&raquo;</span>
                     </button>
                 </li>
@@ -52,7 +54,9 @@
 
                     @if (ScheduleDto is null)
                     {
-                        <em>Carregando...</em>
+                        <span class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </span>
                     }
                     else
                     {
