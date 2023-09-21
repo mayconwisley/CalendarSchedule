@@ -34,16 +34,16 @@
             BtnSalvar = new System.Windows.Forms.Button();
             GbListasSalas = new System.Windows.Forms.GroupBox();
             DgvListaSalas = new System.Windows.Forms.DataGridView();
+            IdDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            SalaDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            RamalDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            DescricaoDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
             groupBox2 = new System.Windows.Forms.GroupBox();
             TxtRamal = new System.Windows.Forms.TextBox();
             groupBox3 = new System.Windows.Forms.GroupBox();
             TxtDescricao = new System.Windows.Forms.TextBox();
             groupBox1 = new System.Windows.Forms.GroupBox();
             TxtSala = new System.Windows.Forms.TextBox();
-            IdDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            SalaDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            RamalDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            DescricaoDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
             panel1.SuspendLayout();
             GbListasSalas.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)DgvListaSalas).BeginInit();
@@ -133,6 +133,38 @@
             DgvListaSalas.TabIndex = 0;
             DgvListaSalas.CellDoubleClick += DgvListaSalas_CellDoubleClick;
             // 
+            // IdDgv
+            // 
+            IdDgv.DataPropertyName = "Id";
+            IdDgv.HeaderText = "Id";
+            IdDgv.Name = "IdDgv";
+            IdDgv.ReadOnly = true;
+            IdDgv.Width = 42;
+            // 
+            // SalaDgv
+            // 
+            SalaDgv.DataPropertyName = "Name";
+            SalaDgv.HeaderText = "Sala";
+            SalaDgv.Name = "SalaDgv";
+            SalaDgv.ReadOnly = true;
+            SalaDgv.Width = 53;
+            // 
+            // RamalDgv
+            // 
+            RamalDgv.DataPropertyName = "Ramal";
+            RamalDgv.HeaderText = "Ramal";
+            RamalDgv.Name = "RamalDgv";
+            RamalDgv.ReadOnly = true;
+            RamalDgv.Width = 65;
+            // 
+            // DescricaoDgv
+            // 
+            DescricaoDgv.DataPropertyName = "Description";
+            DescricaoDgv.HeaderText = "Descrição";
+            DescricaoDgv.Name = "DescricaoDgv";
+            DescricaoDgv.ReadOnly = true;
+            DescricaoDgv.Width = 83;
+            // 
             // groupBox2
             // 
             groupBox2.Controls.Add(TxtRamal);
@@ -185,7 +217,7 @@
             groupBox1.Size = new System.Drawing.Size(306, 61);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
-            groupBox1.Text = "Room";
+            groupBox1.Text = "Sala";
             // 
             // TxtSala
             // 
@@ -195,38 +227,6 @@
             TxtSala.Name = "TxtSala";
             TxtSala.Size = new System.Drawing.Size(291, 23);
             TxtSala.TabIndex = 0;
-            // 
-            // IdDgv
-            // 
-            IdDgv.DataPropertyName = "Id";
-            IdDgv.HeaderText = "Id";
-            IdDgv.Name = "IdDgv";
-            IdDgv.ReadOnly = true;
-            IdDgv.Width = 42;
-            // 
-            // SalaDgv
-            // 
-            SalaDgv.DataPropertyName = "Name";
-            SalaDgv.HeaderText = "Sala";
-            SalaDgv.Name = "SalaDgv";
-            SalaDgv.ReadOnly = true;
-            SalaDgv.Width = 53;
-            // 
-            // RamalDgv
-            // 
-            RamalDgv.DataPropertyName = "Ramal";
-            RamalDgv.HeaderText = "Ramal";
-            RamalDgv.Name = "RamalDgv";
-            RamalDgv.ReadOnly = true;
-            RamalDgv.Width = 65;
-            // 
-            // DescricaoDgv
-            // 
-            DescricaoDgv.DataPropertyName = "Description";
-            DescricaoDgv.HeaderText = "Descrição";
-            DescricaoDgv.Name = "DescricaoDgv";
-            DescricaoDgv.ReadOnly = true;
-            DescricaoDgv.Width = 83;
             // 
             // FrmCadSala
             // 
@@ -242,7 +242,7 @@
             ShowIcon = false;
             ShowInTaskbar = false;
             StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            Text = "Cadastro Room";
+            Text = "Cadastro de Sala";
             Load += FrmCadSala_Load;
             panel1.ResumeLayout(false);
             GbListasSalas.ResumeLayout(false);
