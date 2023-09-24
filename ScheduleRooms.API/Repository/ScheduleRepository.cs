@@ -72,9 +72,9 @@ public class ScheduleRepository : IScheduleRepository
         {
             var schedules = await _scheduleContext.Schedules
                 .Include(i => i.Room)
+                .OrderByDescending(o => o.DateFinal)
                 .Skip((page - 1) * size)
                 .Take(size)
-                .OrderByDescending(o => o.DateStart)
                 .ToListAsync();
 
             return schedules;
@@ -92,7 +92,7 @@ public class ScheduleRepository : IScheduleRepository
             var schedules = await _scheduleContext.Schedules
                 .Include(i => i.Room)
                 .Where(w => w.DateFinal >= DateTime.Now)
-                .OrderBy(o => o.DateStart)
+                .OrderBy(o => o.DateFinal)
                 .ToListAsync();
 
             return schedules;

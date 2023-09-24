@@ -9,7 +9,7 @@
 
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">Cadastro de Agenda</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button @onclick="@(() => {ErroRetornado = ""; ScheduleDto = new(); })" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <MensageError Message="@ErroRetornado" />
@@ -68,13 +68,13 @@
     [Parameter]
     public Action? DataUpdated { get; set; }
 
-    private ScheduleDto? ScheduleDto { get; set; } = new();
+    private ScheduleDto? ScheduleDto { get; set; }
     private RoomView? RoomView { get; set; } = new();
     private string? ErroRetornado { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        ScheduleDto ??= new();
+        ScheduleDto = new();
         RoomView = await roomService.GetAll();
         await base.OnInitializedAsync();
     }
