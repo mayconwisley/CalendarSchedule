@@ -9,6 +9,9 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 var baseUrl = "https://localhost:7244";
 
+//var baseUrl = "http://192.168.0.102:5050";
+
+
 builder.Services.AddHttpClient("ConexaoApi", con =>
 {
     con.BaseAddress = new Uri(baseUrl);

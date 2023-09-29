@@ -36,7 +36,7 @@ builder.Services.AddScoped<IRoomService, RoomService>();
 
 var app = builder.Build();
 
-app.UseCors(policy => policy.WithOrigins("https://localhost:7296", "http://localhost:5006")
+app.UseCors(policy => policy.WithOrigins("https://localhost:7296", "http://192.168.0.102:5051", "http://localhost:5051")
     .AllowAnyMethod()
     .AllowAnyHeader()
     .WithHeaders(HeaderNames.ContentType)
