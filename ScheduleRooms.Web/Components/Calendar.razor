@@ -3,6 +3,7 @@
     DateTime dateEndMonth = new DateTime(competence.Year, competence.Month, DateTime.DaysInMonth(competence.Year, competence.Month));
 }
 @inject IScheduleService scheduleService
+@attribute [StreamRendering(true)]
 
 <div class="calendario">
     <div class="desc-mes">
