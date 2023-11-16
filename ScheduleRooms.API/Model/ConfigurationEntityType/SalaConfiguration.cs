@@ -9,7 +9,6 @@ public class SalaConfiguration : IEntityTypeConfiguration<Room>
     {
         builder.Property(p => p.Name)
             .HasColumnType("VARCHAR(15)")
-
             .IsRequired();
         builder.Property(p => p.Ramal)
             .HasColumnType("VARCHAR(5)");
