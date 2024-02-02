@@ -5,7 +5,11 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+    <ApplicationIcon>AgendaSalas.ico</ApplicationIcon>
   </PropertyGroup>
+  <ItemGroup>
+    <Content Include="AgendaSalas.ico" />
+  </ItemGroup>
   <ItemGroup>
     <Folder Include="Banco\" />
     <Folder Include="Migrations\" />

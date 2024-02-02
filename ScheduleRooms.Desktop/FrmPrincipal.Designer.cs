@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmPrincipal));
             panel1 = new System.Windows.Forms.Panel();
             BtnNovaSala = new System.Windows.Forms.Button();
             BtnConsultarAgenda = new System.Windows.Forms.Button();
@@ -282,6 +283,7 @@
             Controls.Add(panel3);
             Controls.Add(panel2);
             Controls.Add(panel1);
+            Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
             Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Name = "FrmPrincipal";
             StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
