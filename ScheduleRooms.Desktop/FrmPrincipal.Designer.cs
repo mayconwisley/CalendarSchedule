@@ -36,12 +36,6 @@
             panel2 = new System.Windows.Forms.Panel();
             GbListaSalasAgenda = new System.Windows.Forms.GroupBox();
             DgvListaAgendaAtual = new System.Windows.Forms.DataGridView();
-            panel3 = new System.Windows.Forms.Panel();
-            label2 = new System.Windows.Forms.Label();
-            panel4 = new System.Windows.Forms.Panel();
-            LblDataAtual = new System.Windows.Forms.Label();
-            TimerDataHoraAtual = new System.Windows.Forms.Timer(components);
-            LkLblAtualizar = new System.Windows.Forms.LinkLabel();
             IdDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
             SalaDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
             DataInicioDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -49,6 +43,12 @@
             DescricaoDgv = new System.Windows.Forms.DataGridViewTextBoxColumn();
             PermitirLigarDgv = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             PermitirChamarDgv = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            panel3 = new System.Windows.Forms.Panel();
+            label2 = new System.Windows.Forms.Label();
+            panel4 = new System.Windows.Forms.Panel();
+            LblDataAtual = new System.Windows.Forms.Label();
+            TimerDataHoraAtual = new System.Windows.Forms.Timer(components);
+            LkLblAtualizar = new System.Windows.Forms.LinkLabel();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             GbListaSalasAgenda.SuspendLayout();
@@ -74,7 +74,7 @@
             BtnNovaSala.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(0, 192, 0);
             BtnNovaSala.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(128, 255, 128);
             BtnNovaSala.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            BtnNovaSala.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            BtnNovaSala.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold);
             BtnNovaSala.Location = new System.Drawing.Point(95, 8);
             BtnNovaSala.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BtnNovaSala.Name = "BtnNovaSala";
@@ -90,7 +90,7 @@
             BtnConsultarAgenda.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(0, 192, 0);
             BtnConsultarAgenda.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(128, 255, 128);
             BtnConsultarAgenda.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            BtnConsultarAgenda.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            BtnConsultarAgenda.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold);
             BtnConsultarAgenda.Location = new System.Drawing.Point(632, 8);
             BtnConsultarAgenda.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BtnConsultarAgenda.Name = "BtnConsultarAgenda";
@@ -106,7 +106,7 @@
             BtnNovaAgenda.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(0, 192, 0);
             BtnNovaAgenda.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(128, 255, 128);
             BtnNovaAgenda.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            BtnNovaAgenda.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            BtnNovaAgenda.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold);
             BtnNovaAgenda.Location = new System.Drawing.Point(364, 8);
             BtnNovaAgenda.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             BtnNovaAgenda.Name = "BtnNovaAgenda";
@@ -149,14 +149,70 @@
             DgvListaAgendaAtual.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             DgvListaAgendaAtual.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             DgvListaAgendaAtual.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { IdDgv, SalaDgv, DataInicioDgv, DataFimDgv, DescricaoDgv, PermitirLigarDgv, PermitirChamarDgv });
-            DgvListaAgendaAtual.Location = new System.Drawing.Point(5, 14);
+            DgvListaAgendaAtual.Location = new System.Drawing.Point(8, 22);
             DgvListaAgendaAtual.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             DgvListaAgendaAtual.MultiSelect = false;
             DgvListaAgendaAtual.Name = "DgvListaAgendaAtual";
             DgvListaAgendaAtual.ReadOnly = true;
             DgvListaAgendaAtual.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            DgvListaAgendaAtual.Size = new System.Drawing.Size(963, 236);
+            DgvListaAgendaAtual.Size = new System.Drawing.Size(957, 236);
             DgvListaAgendaAtual.TabIndex = 0;
+            // 
+            // IdDgv
+            // 
+            IdDgv.DataPropertyName = "Id";
+            IdDgv.HeaderText = "Id";
+            IdDgv.Name = "IdDgv";
+            IdDgv.ReadOnly = true;
+            IdDgv.Width = 42;
+            // 
+            // SalaDgv
+            // 
+            SalaDgv.DataPropertyName = "Name";
+            SalaDgv.HeaderText = "Sala";
+            SalaDgv.Name = "SalaDgv";
+            SalaDgv.ReadOnly = true;
+            SalaDgv.Width = 53;
+            // 
+            // DataInicioDgv
+            // 
+            DataInicioDgv.DataPropertyName = "DateStart";
+            DataInicioDgv.HeaderText = "Data Inicio";
+            DataInicioDgv.Name = "DataInicioDgv";
+            DataInicioDgv.ReadOnly = true;
+            DataInicioDgv.Width = 81;
+            // 
+            // DataFimDgv
+            // 
+            DataFimDgv.DataPropertyName = "DataFim";
+            DataFimDgv.HeaderText = "Data Fim";
+            DataFimDgv.Name = "DataFimDgv";
+            DataFimDgv.ReadOnly = true;
+            DataFimDgv.Width = 73;
+            // 
+            // DescricaoDgv
+            // 
+            DescricaoDgv.DataPropertyName = "Description";
+            DescricaoDgv.HeaderText = "Descrição";
+            DescricaoDgv.Name = "DescricaoDgv";
+            DescricaoDgv.ReadOnly = true;
+            DescricaoDgv.Width = 83;
+            // 
+            // PermitirLigarDgv
+            // 
+            PermitirLigarDgv.DataPropertyName = "AllowCall";
+            PermitirLigarDgv.HeaderText = "Permitir Ligar";
+            PermitirLigarDgv.Name = "PermitirLigarDgv";
+            PermitirLigarDgv.ReadOnly = true;
+            PermitirLigarDgv.Width = 76;
+            // 
+            // PermitirChamarDgv
+            // 
+            PermitirChamarDgv.DataPropertyName = "AllowChat";
+            PermitirChamarDgv.HeaderText = "Permitir Chamar";
+            PermitirChamarDgv.Name = "PermitirChamarDgv";
+            PermitirChamarDgv.ReadOnly = true;
+            PermitirChamarDgv.Width = 90;
             // 
             // panel3
             // 
@@ -190,7 +246,7 @@
             // LblDataAtual
             // 
             LblDataAtual.AutoSize = true;
-            LblDataAtual.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            LblDataAtual.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             LblDataAtual.Location = new System.Drawing.Point(4, 20);
             LblDataAtual.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             LblDataAtual.Name = "LblDataAtual";
@@ -215,62 +271,6 @@
             LkLblAtualizar.TabStop = true;
             LkLblAtualizar.Text = "Atualizar";
             LkLblAtualizar.LinkClicked += LkLblAtualizar_LinkClicked;
-            // 
-            // IdDgv
-            // 
-            IdDgv.DataPropertyName = "Id";
-            IdDgv.HeaderText = "Id";
-            IdDgv.Name = "IdDgv";
-            IdDgv.ReadOnly = true;
-            IdDgv.Width = 42;
-            // 
-            // SalaDgv
-            // 
-            SalaDgv.DataPropertyName = "Name";
-            SalaDgv.HeaderText = "Sala";
-            SalaDgv.Name = "SalaDgv";
-            SalaDgv.ReadOnly = true;
-            SalaDgv.Width = 53;
-            // 
-            // DataInicioDgv
-            // 
-            DataInicioDgv.DataPropertyName = "DateStart";
-            DataInicioDgv.HeaderText = "Data Inicio";
-            DataInicioDgv.Name = "DataInicioDgv";
-            DataInicioDgv.ReadOnly = true;
-            DataInicioDgv.Width = 88;
-            // 
-            // DataFimDgv
-            // 
-            DataFimDgv.DataPropertyName = "DataFim";
-            DataFimDgv.HeaderText = "Data Fim";
-            DataFimDgv.Name = "DataFimDgv";
-            DataFimDgv.ReadOnly = true;
-            DataFimDgv.Width = 79;
-            // 
-            // DescricaoDgv
-            // 
-            DescricaoDgv.DataPropertyName = "Description";
-            DescricaoDgv.HeaderText = "Descrição";
-            DescricaoDgv.Name = "DescricaoDgv";
-            DescricaoDgv.ReadOnly = true;
-            DescricaoDgv.Width = 83;
-            // 
-            // PermitirLigarDgv
-            // 
-            PermitirLigarDgv.DataPropertyName = "AllowCall";
-            PermitirLigarDgv.HeaderText = "Permitir Ligar";
-            PermitirLigarDgv.Name = "PermitirLigarDgv";
-            PermitirLigarDgv.ReadOnly = true;
-            PermitirLigarDgv.Width = 84;
-            // 
-            // PermitirChamarDgv
-            // 
-            PermitirChamarDgv.DataPropertyName = "AllowChat";
-            PermitirChamarDgv.HeaderText = "Permitir Chamar";
-            PermitirChamarDgv.Name = "PermitirChamarDgv";
-            PermitirChamarDgv.ReadOnly = true;
-            PermitirChamarDgv.Width = 90;
             // 
             // FrmPrincipal
             // 

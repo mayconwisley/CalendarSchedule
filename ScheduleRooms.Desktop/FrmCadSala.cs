@@ -54,7 +54,7 @@ public partial class FrmCadSala : Form
 
         if (string.IsNullOrWhiteSpace(TxtSala.Text))
         {
-            MessageBox.Show("Preencher o nome da Room.", "Aviso");
+            MessageBox.Show("Preencher o nome da sala.", "Aviso");
             return;
         }
 
@@ -86,7 +86,7 @@ public partial class FrmCadSala : Form
         };
         if (string.IsNullOrWhiteSpace(TxtSala.Text))
         {
-            MessageBox.Show("Preencher o nome da Room.", "Aviso");
+            MessageBox.Show("Preencher o nome da sala.", "Aviso");
             return;
         }
 
