@@ -166,17 +166,17 @@ public class ScheduleService : IScheduleService
             if (response.IsSuccessStatusCode)
             {
                 var scheduleDto = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleDto>>(_serializerOptions);
-                return scheduleDto ??= new List<ScheduleDto>();
+                return scheduleDto ??= [];
             }
             else
             {
                 if (response.StatusCode == HttpStatusCode.NotFound)
                 {
-                    return new List<ScheduleDto>();
+                    return [];
                 }
                 response.EnsureSuccessStatusCode();
             }
-            return new List<ScheduleDto>();
+            return [];
         }
         catch (Exception)
         {

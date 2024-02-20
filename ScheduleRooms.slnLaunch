@@ -1,0 +1,17 @@
+[
+  {
+    "Name": "ProjetoWeb",
+    "Projects": [
+      {
+        "Name": "ScheduleRooms.API\\ScheduleRooms.API.csproj",
+        "Action": "Start",
+        "DebugTarget": "https"
+      },
+      {
+        "Name": "ScheduleRooms.Web\\ScheduleRooms.Web.csproj",
+        "Action": "Start",
+        "DebugTarget": "https"
+      }
+    ]
+  }
+]
