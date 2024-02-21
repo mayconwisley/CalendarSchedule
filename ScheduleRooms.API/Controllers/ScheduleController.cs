@@ -118,7 +118,6 @@ public class ScheduleController : ControllerBase
         await _scheduleService.Update(scheduleDto);
         return Ok(scheduleDto);
     }
-
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<ScheduleDto>> Delete(int id)
     {
