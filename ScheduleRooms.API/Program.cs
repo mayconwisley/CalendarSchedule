@@ -1,10 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
 using ScheduleRooms.API.Data;
 using ScheduleRooms.API.Repository;
 using ScheduleRooms.API.Repository.Interface;
 using ScheduleRooms.API.Service;
 using ScheduleRooms.API.Service.Interface;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Net.Http.Headers;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,9 +37,9 @@ builder.Services.AddScoped<IRoomService, RoomService>();
 var app = builder.Build();
 
 app.UseCors(policy => policy.WithOrigins("https://localhost:7296",
-                                                "https://192.168.10.149:7296", 
-                                                "http://192.168.0.102:5051", 
-                                                "http://192.168.10.149:5051", 
+                                                "https://192.168.10.149:7296",
+                                                "http://192.168.0.102:5051",
+                                                "http://192.168.10.149:5051",
                                                 "http://localhost:5051")
     .AllowAnyMethod()
     .AllowAnyHeader()

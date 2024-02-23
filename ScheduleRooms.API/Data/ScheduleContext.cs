@@ -1,5 +1,5 @@
-﻿using ScheduleRooms.API.Model;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using ScheduleRooms.API.Model;
 using System.Reflection;
 
 namespace ScheduleRooms.API.Data;

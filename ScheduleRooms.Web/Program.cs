@@ -1,7 +1,7 @@
-using ScheduleRooms.Web;
-using ScheduleRooms.Web.Service;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using ScheduleRooms.Web;
+using ScheduleRooms.Web.Service;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");

@@ -1,7 +1,7 @@
-﻿using ScheduleRooms.API.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using ScheduleRooms.API.Data;
 using ScheduleRooms.API.Model;
 using ScheduleRooms.API.Repository.Interface;
-using Microsoft.EntityFrameworkCore;
 
 namespace ScheduleRooms.API.Repository;
 

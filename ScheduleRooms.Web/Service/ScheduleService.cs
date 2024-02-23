@@ -1,10 +1,9 @@
 ﻿using ScheduleRooms.Models.Dtos;
 using ScheduleRooms.Web.Models;
-using System.Net.Http.Json;
 using System.Net;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
-using System.Drawing;
 
 namespace ScheduleRooms.Web.Service;
 

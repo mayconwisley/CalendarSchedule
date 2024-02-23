@@ -1,5 +1,5 @@
-﻿using ScheduleRooms.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using ScheduleRooms.Models;
 
 namespace ScheduleRooms.Data;
 

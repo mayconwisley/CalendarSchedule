@@ -1,6 +1,6 @@
-﻿using ScheduleRooms.API.Service.Interface;
+﻿using Microsoft.AspNetCore.Mvc;
+using ScheduleRooms.API.Service.Interface;
 using ScheduleRooms.Models.Dtos;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ScheduleRooms.API.Controllers;
 
