@@ -17,7 +17,7 @@ public static class MappingDtos
                 }).ToList();
     }
 
-    public static IEnumerable<ScheduleDto> ConverterAgendasParaDto(this IEnumerable<Schedule> schedules)
+    public static IEnumerable<ScheduleDto> ConverterAgendasParaDto(this IEnumerable<ScheduleRoom> schedules)
     {
         return (from schedule in schedules
                 select new ScheduleDto
@@ -47,10 +47,10 @@ public static class MappingDtos
                 }).ToList();
     }
 
-    public static IEnumerable<Schedule> ConverterAgendasParaDto(this IEnumerable<ScheduleDto> scheduleDto)
+    public static IEnumerable<ScheduleRoom> ConverterAgendasParaDto(this IEnumerable<ScheduleDto> scheduleDto)
     {
         return (from schedule in scheduleDto
-                select new Schedule
+                select new ScheduleRoom
                 {
                     Id = schedule.Id,
                     Description = schedule.Description,
@@ -73,7 +73,7 @@ public static class MappingDtos
             Ramal = room.Ramal
         };
     }
-    public static ScheduleDto ConverterAgendaParaDto(this Schedule schedule)
+    public static ScheduleDto ConverterAgendaParaDto(this ScheduleRoom schedule)
     {
         return new ScheduleDto
         {
@@ -98,9 +98,9 @@ public static class MappingDtos
 
         };
     }
-    public static Schedule ConverterDtoParaAgenda(this ScheduleDto scheduleDto)
+    public static ScheduleRoom ConverterDtoParaAgenda(this ScheduleDto scheduleDto)
     {
-        return new Schedule
+        return new ScheduleRoom
         {
             Id = scheduleDto.Id,
             Description = scheduleDto.Description,

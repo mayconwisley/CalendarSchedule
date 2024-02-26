@@ -1,6 +1,6 @@
 ﻿namespace ScheduleRooms.API.Model;
 
-public class Schedule
+public class ScheduleUser
 {
     public int Id { get; set; }
     public string? Description { get; set; }
@@ -8,6 +8,8 @@ public class Schedule
     public DateTime DateFinal { get; set; }
     public bool AllowCall { get; set; }
     public bool AllowChat { get; set; }
-    public int RoomId { get; set; }
-    public virtual Room? Room { get; set; }
+    public int ClientId { get; set; }
+    public virtual Client? Client { get; set; }
+    public int UserId { get; set; }
+    public virtual User? User { get; set; }
 }

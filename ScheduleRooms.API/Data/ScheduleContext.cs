@@ -14,5 +14,5 @@ public class ScheduleContext : DbContext
     }
 
     public DbSet<Room> Rooms { get; set; }
-    public DbSet<Schedule> Schedules { get; set; }
+    public DbSet<ScheduleRoom> Schedules { get; set; }
 }

@@ -4,12 +4,12 @@ namespace ScheduleRooms.API.Repository.Interface;
 
 public interface IScheduleRepository
 {
-    Task<IEnumerable<Schedule>> GetAll(int page, int size, string search);
-    Task<IEnumerable<Schedule>> GetByAgendaActive();
-    Task<IEnumerable<Schedule>> GetByAgendaActiveSalaId(int roomId, DateTime dateSalected);
-    Task<Schedule> GetById(int id);
-    Task<Schedule> Create(Schedule schedule);
-    Task<Schedule> Update(Schedule schedule);
-    Task<Schedule> Delete(int id);
+    Task<IEnumerable<ScheduleRoom>> GetAll(int page, int size, string search);
+    Task<IEnumerable<ScheduleRoom>> GetByAgendaActive();
+    Task<IEnumerable<ScheduleRoom>> GetByAgendaActiveSalaId(int roomId, DateTime dateSalected);
+    Task<ScheduleRoom> GetById(int id);
+    Task<ScheduleRoom> Create(ScheduleRoom schedule);
+    Task<ScheduleRoom> Update(ScheduleRoom schedule);
+    Task<ScheduleRoom> Delete(int id);
     Task<int> TotalSchedules(string search);
 }

@@ -14,7 +14,7 @@ public class ScheduleRepository : IScheduleRepository
         _scheduleContext = scheduleContext;
     }
 
-    public async Task<Schedule> Create(Schedule schedule)
+    public async Task<ScheduleRoom> Create(ScheduleRoom schedule)
     {
         try
         {
@@ -45,7 +45,7 @@ public class ScheduleRepository : IScheduleRepository
         }
     }
 
-    public async Task<Schedule> Delete(int id)
+    public async Task<ScheduleRoom> Delete(int id)
     {
         try
         {
@@ -65,7 +65,7 @@ public class ScheduleRepository : IScheduleRepository
         }
     }
 
-    public async Task<IEnumerable<Schedule>> GetAll(int page, int size, string search)
+    public async Task<IEnumerable<ScheduleRoom>> GetAll(int page, int size, string search)
     {
         try
         {
@@ -84,7 +84,7 @@ public class ScheduleRepository : IScheduleRepository
         }
     }
 
-    public async Task<IEnumerable<Schedule>> GetByAgendaActive()
+    public async Task<IEnumerable<ScheduleRoom>> GetByAgendaActive()
     {
         try
         {
@@ -102,7 +102,7 @@ public class ScheduleRepository : IScheduleRepository
         }
     }
 
-    public async Task<IEnumerable<Schedule>> GetByAgendaActiveSalaId(int roomId, DateTime dateSalected)
+    public async Task<IEnumerable<ScheduleRoom>> GetByAgendaActiveSalaId(int roomId, DateTime dateSalected)
     {
         try
         {
@@ -122,7 +122,7 @@ public class ScheduleRepository : IScheduleRepository
         }
     }
 
-    public async Task<Schedule> GetById(int id)
+    public async Task<ScheduleRoom> GetById(int id)
     {
         try
         {
@@ -153,7 +153,7 @@ public class ScheduleRepository : IScheduleRepository
 
     }
 
-    public async Task<Schedule> Update(Schedule schedule)
+    public async Task<ScheduleRoom> Update(ScheduleRoom schedule)
     {
         try
         {

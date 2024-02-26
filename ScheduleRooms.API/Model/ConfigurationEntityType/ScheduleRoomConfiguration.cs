@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ScheduleRooms.API.Model.ConfigurationEntityType
 {
-    public class AgendaConfiguration : IEntityTypeConfiguration<Schedule>
+    public class ScheduleRoomConfiguration : IEntityTypeConfiguration<ScheduleRoom>
     {
-        public void Configure(EntityTypeBuilder<Schedule> builder)
+        public void Configure(EntityTypeBuilder<ScheduleRoom> builder)
         {
             builder.Property(p => p.Description)
                 .HasColumnType("VARCHAR(500)")
