@@ -12,6 +12,7 @@ public static class ClientMappingDto
                 {
                     Id = client.Id,
                     Name = client.Name,
+                    Responsible = client.Responsible,
                     Telephone = client.Telephone,
                     Description = client.Description,
                     Active = client.Active
@@ -25,6 +26,7 @@ public static class ClientMappingDto
                 {
                     Id = client.Id,
                     Name = client.Name,
+                    Responsible = client.Responsible,
                     Telephone = client.Telephone,
                     Description = client.Description,
                     Active = client.Active
@@ -36,6 +38,7 @@ public static class ClientMappingDto
         {
             Id = client.Id,
             Name = client.Name,
+            Responsible = client.Responsible,
             Telephone = client.Telephone,
             Description = client.Description,
             Active = client.Active
@@ -48,6 +51,7 @@ public static class ClientMappingDto
         {
             Id = clientDto.Id,
             Name = clientDto.Name,
+            Responsible = clientDto.Responsible,
             Telephone = clientDto.Telephone,
             Description = clientDto.Description,
             Active = clientDto.Active

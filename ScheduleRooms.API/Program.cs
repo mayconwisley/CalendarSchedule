@@ -32,6 +32,8 @@ builder.Services.AddDbContext<ScheduleContext>(cd => cd.UseSqlServer(strDataBase
 builder.Services.AddScoped<IRoomRepository, RoomRespository>();
 builder.Services.AddScoped<IScheduleRoomRepository, ScheduleRoomRepository>();
 builder.Services.AddScoped<IScheduleRoomService, ScheduleRoomService>();
+builder.Services.AddScoped<IScheduleUserRepository, ScheduleUserRepository>();
+builder.Services.AddScoped<IScheduleUserService, ScheduleUserService>();
 builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
