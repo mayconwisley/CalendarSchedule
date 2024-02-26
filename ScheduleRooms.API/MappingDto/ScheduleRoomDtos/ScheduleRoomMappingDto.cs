@@ -5,7 +5,7 @@ namespace ScheduleRooms.API.MappingDto.ScheduleRoomDtos;
 
 public static class ScheduleRoomMappingDto
 {
-    public static IEnumerable<ScheduleRoomDto> ConverterAgendasParaDto(this IEnumerable<ScheduleRoom> schedules)
+    public static IEnumerable<ScheduleRoomDto> ConvertScheduleRoomsToDto(this IEnumerable<ScheduleRoom> schedules)
     {
         return (from schedule in schedules
                 select new ScheduleRoomDto
@@ -21,7 +21,7 @@ public static class ScheduleRoomMappingDto
 
                 }).ToList();
     }
-    public static IEnumerable<ScheduleRoom> ConverterAgendasParaDto(this IEnumerable<ScheduleRoomDto> scheduleDto)
+    public static IEnumerable<ScheduleRoom> ConvertDtoToScheduleRooms(this IEnumerable<ScheduleRoomDto> scheduleDto)
     {
         return (from schedule in scheduleDto
                 select new ScheduleRoom
@@ -36,7 +36,7 @@ public static class ScheduleRoomMappingDto
 
                 }).ToList();
     }
-    public static ScheduleRoomDto ConverterAgendaParaDto(this ScheduleRoom schedule)
+    public static ScheduleRoomDto ConvertScheduleRoomDto(this ScheduleRoom schedule)
     {
         return new ScheduleRoomDto
         {
@@ -50,7 +50,7 @@ public static class ScheduleRoomMappingDto
             RoomId = schedule!.Room!.Id
         };
     }
-    public static ScheduleRoom ConverterDtoParaAgenda(this ScheduleRoomDto scheduleDto)
+    public static ScheduleRoom ConvertDtoToScheduleRoom(this ScheduleRoomDto scheduleDto)
     {
         return new ScheduleRoom
         {

@@ -5,7 +5,7 @@ namespace ScheduleRooms.API.MappingDto.RoomDtos;
 
 public static class RoomMappingDto
 {
-    public static IEnumerable<RoomDto> ConverterSalasParaDto(this IEnumerable<Room> rooms)
+    public static IEnumerable<RoomDto> ConvertRoomsToDto(this IEnumerable<Room> rooms)
     {
         return (from room in rooms
                 select new RoomDto
@@ -16,7 +16,7 @@ public static class RoomMappingDto
                     Ramal = room.Ramal
                 }).ToList();
     }
-    public static IEnumerable<Room> ConverterDtoParaSalas(this IEnumerable<RoomDto> roomsDto)
+    public static IEnumerable<Room> ConvertDtoToRooms(this IEnumerable<RoomDto> roomsDto)
     {
         return (from room in roomsDto
                 select new Room
@@ -28,7 +28,7 @@ public static class RoomMappingDto
 
                 }).ToList();
     }
-    public static RoomDto ConverterSalaParaDto(this Room room)
+    public static RoomDto ConvertRoomToDto(this Room room)
     {
         return new RoomDto
         {
@@ -38,7 +38,7 @@ public static class RoomMappingDto
             Ramal = room.Ramal
         };
     }
-    public static Room ConverterDtoParaSala(this RoomDto roomDto)
+    public static Room ConvertDtoToRoom(this RoomDto roomDto)
     {
         return new Room
         {

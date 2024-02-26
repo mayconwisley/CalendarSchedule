@@ -17,7 +17,7 @@ public class RoomService : IRoomService
 
     public async Task Create(RoomDto roomDto)
     {
-        await _salaRepository.Create(roomDto.ConverterDtoParaSala());
+        await _salaRepository.Create(roomDto.ConvertDtoToRoom());
     }
 
     public async Task Delete(int id)
@@ -32,13 +32,13 @@ public class RoomService : IRoomService
     public async Task<IEnumerable<RoomDto>> GetAll(int page, int size, string search)
     {
         var salaEntity = await _salaRepository.GetAll(page, size, search);
-        return salaEntity.ConverterSalasParaDto();
+        return salaEntity.ConvertRoomsToDto();
     }
 
     public async Task<RoomDto> GetById(int id)
     {
         var salaEntity = await _salaRepository.GetById(id);
-        return salaEntity.ConverterSalaParaDto();
+        return salaEntity.ConvertRoomToDto();
     }
 
     public async Task<int> TotalSalas(string search)
@@ -49,6 +49,6 @@ public class RoomService : IRoomService
 
     public async Task Update(RoomDto roomDto)
     {
-        await _salaRepository.Update(roomDto.ConverterDtoParaSala());
+        await _salaRepository.Update(roomDto.ConvertDtoToRoom());
     }
 }
