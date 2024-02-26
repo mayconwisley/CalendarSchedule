@@ -74,7 +74,8 @@
                         Room = s.Key.Room,
                         DateStart = s.Key.Date
                     })
-                        .ToList();
+                        .ToList()
+                        .OrderBy(o => o.Room);
 
                         @foreach (var item in salaAgenda)
                         {
@@ -84,7 +85,7 @@
                                     @item.Room
                                 </a>
 
-                                <TableScheduleModal RoomId="@item.RoomId" DateSelected="@dateStartMonth.AddDays(i).Date" />
+                                <TableScheduleRoomModal RoomId="@item.RoomId" DateSelected="@dateStartMonth.AddDays(i).Date" />
                             }
                         }
                     }
