@@ -7,19 +7,19 @@ using System.Text.Json;
 
 namespace ScheduleRooms.Web.Service;
 
-public class ScheduleService : IScheduleService
+public class ScheduleRoomService : IScheduleRoomService
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly JsonSerializerOptions _serializerOptions;
-    private const string? apiEndPoint = "api/Schedule";
+    private const string? apiEndPoint = "api/ScheduleRoom";
 
-    public ScheduleService(IHttpClientFactory httpClientFactory)
+    public ScheduleRoomService(IHttpClientFactory httpClientFactory)
     {
         _httpClientFactory = httpClientFactory;
         _serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
     }
 
-    public async Task<ScheduleDto> Create(ScheduleDto scheduleDto)
+    public async Task<ScheduleRoomDto> Create(ScheduleRoomDto scheduleDto)
     {
         try
         {
@@ -32,7 +32,7 @@ public class ScheduleService : IScheduleService
                 if (response.IsSuccessStatusCode)
                 {
                     using Stream resApi = await response.Content.ReadAsStreamAsync();
-                    var schedule = await JsonSerializer.DeserializeAsync<ScheduleDto>(resApi, _serializerOptions);
+                    var schedule = await JsonSerializer.DeserializeAsync<ScheduleRoomDto>(resApi, _serializerOptions);
                     if (schedule is not null)
                     {
                         return schedule;
@@ -69,7 +69,7 @@ public class ScheduleService : IScheduleService
         }
     }
 
-    public async Task<ScheduleView> GetAll(int page = 1, int size = 10, string search = "")
+    public async Task<ScheduleRoomView> GetAll(int page = 1, int size = 10, string search = "")
     {
         try
         {
@@ -79,7 +79,7 @@ public class ScheduleService : IScheduleService
 
             if (response.IsSuccessStatusCode)
             {
-                var scheduleView = await response.Content.ReadFromJsonAsync<ScheduleView>(_serializerOptions);
+                var scheduleView = await response.Content.ReadFromJsonAsync<ScheduleRoomView>(_serializerOptions);
                 return scheduleView ?? new();
             }
             else
@@ -98,7 +98,7 @@ public class ScheduleService : IScheduleService
         }
     }
 
-    public async Task<ScheduleDto> GetById(int id)
+    public async Task<ScheduleRoomDto> GetById(int id)
     {
         try
         {
@@ -107,7 +107,7 @@ public class ScheduleService : IScheduleService
 
             if (response.IsSuccessStatusCode)
             {
-                var scheduleDto = await response.Content.ReadFromJsonAsync<ScheduleDto>(_serializerOptions);
+                var scheduleDto = await response.Content.ReadFromJsonAsync<ScheduleRoomDto>(_serializerOptions);
                 return scheduleDto ?? new();
             }
             else
@@ -126,7 +126,7 @@ public class ScheduleService : IScheduleService
         }
     }
 
-    public async Task<ScheduleDto> Update(ScheduleDto scheduleDto)
+    public async Task<ScheduleRoomDto> Update(ScheduleRoomDto scheduleDto)
     {
         try
         {
@@ -139,7 +139,7 @@ public class ScheduleService : IScheduleService
                 if (response.IsSuccessStatusCode)
                 {
                     using Stream resApi = await response.Content.ReadAsStreamAsync();
-                    var schedule = await JsonSerializer.DeserializeAsync<ScheduleDto>(resApi, _serializerOptions);
+                    var schedule = await JsonSerializer.DeserializeAsync<ScheduleRoomDto>(resApi, _serializerOptions);
                     if (schedule is not null)
                     {
                         return schedule;
@@ -154,7 +154,7 @@ public class ScheduleService : IScheduleService
         }
     }
 
-    public async Task<IEnumerable<ScheduleDto>> GetByAgendaActive()
+    public async Task<IEnumerable<ScheduleRoomDto>> GetByAgendaActive()
     {
         try
         {
@@ -164,7 +164,7 @@ public class ScheduleService : IScheduleService
 
             if (response.IsSuccessStatusCode)
             {
-                var scheduleDto = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleDto>>(_serializerOptions);
+                var scheduleDto = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleRoomDto>>(_serializerOptions);
                 return scheduleDto ??= [];
             }
             else
@@ -183,7 +183,7 @@ public class ScheduleService : IScheduleService
         }
     }
 
-    public async Task<IEnumerable<ScheduleDto>> GetByAgendaActiveSalaId(int roomId, DateTime dateSalected)
+    public async Task<IEnumerable<ScheduleRoomDto>> GetByAgendaActiveSalaId(int roomId, DateTime dateSalected)
     {
         try
         {
@@ -193,18 +193,18 @@ public class ScheduleService : IScheduleService
 
             if (response.IsSuccessStatusCode)
             {
-                var scheduleView = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleDto>>(_serializerOptions);
-                return scheduleView ??= new List<ScheduleDto>();
+                var scheduleView = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleRoomDto>>(_serializerOptions);
+                return scheduleView ??= new List<ScheduleRoomDto>();
             }
             else
             {
                 if (response.StatusCode == HttpStatusCode.NotFound)
                 {
-                    return new List<ScheduleDto>();
+                    return new List<ScheduleRoomDto>();
                 }
                 response.EnsureSuccessStatusCode();
             }
-            return new List<ScheduleDto>();
+            return new List<ScheduleRoomDto>();
         }
         catch (Exception)
         {

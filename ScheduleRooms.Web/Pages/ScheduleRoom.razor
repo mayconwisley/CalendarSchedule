@@ -1,0 +1,41 @@
+﻿@page "/ScheduleRoom"
+@inject IScheduleRoomService scheduleService
+<h3>Cadastro Agenda</h3>
+<button data-bs-toggle="modal" data-bs-target="#newScheduleRoom" class="btn btn-info">
+    Nova Agenda
+</button>
+@if (scheduleRoomView is null)
+{
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+}
+else
+{
+    <TableScheduleRoom ScheduleRoomView="scheduleRoomView" />
+
+    <PaginationTable PageCurrent="@ReceberPagina"
+                     TotalData="@scheduleRoomView.TotalData"
+                     Page="@scheduleRoomView.Page"
+                     TotalPage="@scheduleRoomView.TotalPage" />
+
+    <InsertScheduleRoomModal DataUpdated="@(() => DataUpdated())" />
+}
+
+@code {
+    private ScheduleRoomView? scheduleRoomView;
+
+    protected override async Task OnInitializedAsync()
+    {
+        scheduleRoomView = await scheduleService.GetAll();
+    }
+    private async void DataUpdated()
+    {
+        scheduleRoomView = await scheduleService.GetAll();
+        StateHasChanged();
+    }
+    private async Task ReceberPagina(int pageCurrent)
+    {
+        scheduleRoomView = await scheduleService.GetAll(pageCurrent);
+    }
+}

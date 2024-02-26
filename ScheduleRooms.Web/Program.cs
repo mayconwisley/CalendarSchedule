@@ -19,7 +19,7 @@ builder.Services.AddHttpClient("ConexaoApi", con =>
 });
 
 builder.Services.AddScoped<IRoomService, RoomService>();
-builder.Services.AddScoped<IScheduleService, ScheduleService>();
+builder.Services.AddScoped<IScheduleRoomService, ScheduleRoomService>();
 
 
 await builder.Build().RunAsync();

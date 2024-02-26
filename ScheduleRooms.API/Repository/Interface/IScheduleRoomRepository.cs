@@ -2,7 +2,7 @@
 
 namespace ScheduleRooms.API.Repository.Interface;
 
-public interface IScheduleRepository
+public interface IScheduleRoomRepository
 {
     Task<IEnumerable<ScheduleRoom>> GetAll(int page, int size, string search);
     Task<IEnumerable<ScheduleRoom>> GetByAgendaActive();

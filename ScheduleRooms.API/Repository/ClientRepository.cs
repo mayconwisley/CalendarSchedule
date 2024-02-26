@@ -5,19 +5,19 @@ using ScheduleRooms.API.Repository.Interface;
 
 namespace ScheduleRooms.API.Repository;
 
-public class RoomRespository(ScheduleContext scheduleContext) : IRoomRepository
+public class ClientRepository(ScheduleContext scheduleContext) : IClientRepository
 {
     private readonly ScheduleContext _scheduleContext = scheduleContext;
 
-    public async Task<Room> Create(Room room)
+    public async Task<Client> Create(Client client)
     {
         try
         {
-            if (room is not null)
+            if (client is not null)
             {
-                _scheduleContext.Rooms.Add(room);
+                _scheduleContext.Clients.Add(client);
                 await _scheduleContext.SaveChangesAsync();
-                return room;
+                return client;
             }
             return new();
         }
@@ -27,17 +27,16 @@ public class RoomRespository(ScheduleContext scheduleContext) : IRoomRepository
         }
     }
 
-    public async Task<Room> Delete(int id)
+    public async Task<Client> Delete(int id)
     {
         try
         {
-            var room = await GetById(id);
-
-            if (room is not null)
+            var client = await GetById(id);
+            if (client is not null)
             {
-                _scheduleContext.Remove(room);
+                _scheduleContext.Clients.Remove(client);
                 await _scheduleContext.SaveChangesAsync();
-                return room;
+                return client;
             }
             return new();
         }
@@ -47,17 +46,16 @@ public class RoomRespository(ScheduleContext scheduleContext) : IRoomRepository
         }
     }
 
-    public async Task<IEnumerable<Room>> GetAll(int page, int size, string search)
+    public async Task<IEnumerable<Client>> GetAll(int page, int size, string search)
     {
         try
         {
-            var rooms = await _scheduleContext.Rooms
+            var users = await _scheduleContext.Clients
                 .Skip((page - 1) * size)
                 .Take(size)
                 .OrderBy(o => o.Name)
                 .ToListAsync();
-
-            return rooms;
+            return users;
         }
         catch (Exception)
         {
@@ -65,17 +63,17 @@ public class RoomRespository(ScheduleContext scheduleContext) : IRoomRepository
         }
     }
 
-    public async Task<Room> GetById(int id)
+    public async Task<Client> GetById(int id)
     {
         try
         {
-            var room = await _scheduleContext.Rooms
+            var client = await _scheduleContext.Clients
                 .Where(w => w.Id == id)
                 .FirstOrDefaultAsync();
 
-            if (room is not null)
+            if (client is not null)
             {
-                return room;
+                return client;
             }
             return new();
         }
@@ -85,28 +83,29 @@ public class RoomRespository(ScheduleContext scheduleContext) : IRoomRepository
         }
     }
 
-    public async Task<int> TotalRooms(string search)
+    public async Task<int> TotalClients(string search)
     {
-        var totalSala = await _scheduleContext.Rooms
+        var totalClient = await _scheduleContext.Clients
             .Where(w => w.Name!.Contains(search))
             .CountAsync();
-        return totalSala;
+        return totalClient;
     }
 
-    public async Task<Room> Update(Room room)
+    public async Task<Client> Update(Client client)
     {
         try
         {
-            if (room is not null)
+            if (client is not null)
             {
-                _scheduleContext.Rooms.Entry(room).State = EntityState.Modified;
+                _scheduleContext.Clients.Entry(client).State = EntityState.Modified;
                 await _scheduleContext.SaveChangesAsync();
-                return room;
+                return client;
             }
             return new();
         }
         catch (Exception)
         {
+
             throw;
         }
     }

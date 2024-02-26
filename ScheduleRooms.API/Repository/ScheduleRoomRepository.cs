@@ -5,37 +5,37 @@ using ScheduleRooms.API.Repository.Interface;
 
 namespace ScheduleRooms.API.Repository;
 
-public class ScheduleRepository : IScheduleRepository
+public class ScheduleRoomRepository : IScheduleRoomRepository
 {
     private readonly ScheduleContext _scheduleContext;
 
-    public ScheduleRepository(ScheduleContext scheduleContext)
+    public ScheduleRoomRepository(ScheduleContext scheduleContext)
     {
         _scheduleContext = scheduleContext;
     }
 
-    public async Task<ScheduleRoom> Create(ScheduleRoom schedule)
+    public async Task<ScheduleRoom> Create(ScheduleRoom scheduleRoom)
     {
         try
         {
-            if (schedule is not null)
+            if (scheduleRoom is not null)
             {
 
                 // Verifique se existe uma schedule que se sobrepõe na mesma room
-                var overlappingAgendas = await _scheduleContext.Schedules
-                    .Where(a => a.RoomId == schedule.RoomId &&
-                                a.DateStart < schedule.DateFinal &&
-                                a.DateFinal > schedule.DateStart)
+                var overlappingAgendas = await _scheduleContext.ScheduleRooms
+                    .Where(a => a.RoomId == scheduleRoom.RoomId &&
+                                a.DateStart < scheduleRoom.DateFinal &&
+                                a.DateFinal > scheduleRoom.DateStart)
                     .ToListAsync();
 
-                if (overlappingAgendas.Count > 0)
+                if (overlappingAgendas.Count() > 0)
                 {
                     // Existe sobreposição, faça algo aqui, como lançar uma exceção.
                     throw new Exception("409");
                 }
-                _scheduleContext.Schedules.Add(schedule);
+                _scheduleContext.ScheduleRooms.Add(scheduleRoom);
                 await _scheduleContext.SaveChangesAsync();
-                return schedule;
+                return scheduleRoom;
             }
             return new();
         }
@@ -69,7 +69,7 @@ public class ScheduleRepository : IScheduleRepository
     {
         try
         {
-            var schedules = await _scheduleContext.Schedules
+            var schedules = await _scheduleContext.ScheduleRooms
                 .Include(i => i.Room)
                 .OrderByDescending(o => o.DateFinal)
                 .Skip((page - 1) * size)
@@ -88,7 +88,7 @@ public class ScheduleRepository : IScheduleRepository
     {
         try
         {
-            var schedules = await _scheduleContext.Schedules
+            var schedules = await _scheduleContext.ScheduleRooms            
                 .Include(i => i.Room)
                 .Where(w => w.DateFinal >= DateTime.Now)
                 .OrderBy(o => o.DateFinal)
@@ -106,7 +106,7 @@ public class ScheduleRepository : IScheduleRepository
     {
         try
         {
-            var schedules = await _scheduleContext.Schedules
+            var schedules = await _scheduleContext.ScheduleRooms
                 .Include(i => i.Room)
                 .Where(w => w.DateFinal >= DateTime.Now &&
                             w.DateFinal.Date == dateSalected.Date &&
@@ -126,7 +126,7 @@ public class ScheduleRepository : IScheduleRepository
     {
         try
         {
-            var schedule = await _scheduleContext.Schedules
+            var schedule = await _scheduleContext.ScheduleRooms
                 .Include(i => i.Room)
                 .Where(w => w.Id == id)
                 .FirstOrDefaultAsync();
@@ -145,7 +145,7 @@ public class ScheduleRepository : IScheduleRepository
 
     public async Task<int> TotalSchedules(string search)
     {
-        var totalAgendas = await _scheduleContext.Schedules
+        var totalAgendas = await _scheduleContext.ScheduleRooms
             .Where(w => w!.Description!.Contains(search))
             .CountAsync();
 
@@ -161,20 +161,20 @@ public class ScheduleRepository : IScheduleRepository
             {
 
                 // Verifique se existe uma schedule que se sobrepõe na mesma room
-                var overlappingAgendas = await _scheduleContext.Schedules
+                var overlappingAgendas = await _scheduleContext.ScheduleRooms
                     .Where(a => a.RoomId == schedule.RoomId &&
                                 a.Id != schedule.Id && // Exclua a própria schedule da verificação
                                 a.DateStart < schedule.DateFinal &&
                                 a.DateFinal > schedule.DateStart)
                     .ToListAsync();
 
-                if (overlappingAgendas.Count > 0)
+                if (overlappingAgendas.Count() > 0)
                 {
                     // Existe sobreposição, faça algo aqui, como lançar uma exceção.
                     throw new Exception("A atualização resultaria em uma sobreposição de datas para esta room.");
                 }
 
-                _scheduleContext.Schedules.Entry(schedule).State = EntityState.Modified;
+                _scheduleContext.ScheduleRooms.Entry(schedule).State = EntityState.Modified;
                 await _scheduleContext.SaveChangesAsync();
                 return schedule;
             }

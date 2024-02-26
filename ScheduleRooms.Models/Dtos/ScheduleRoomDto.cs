@@ -2,7 +2,7 @@
 
 namespace ScheduleRooms.Models.Dtos;
 
-public class ScheduleDto
+public class ScheduleRoomDto
 {
     public int Id { get; set; }
     [Required(ErrorMessage = "Descrição Obrigatório")]

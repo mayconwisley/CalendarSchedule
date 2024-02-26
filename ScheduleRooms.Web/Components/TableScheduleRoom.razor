@@ -1,4 +1,4 @@
-﻿@inject IScheduleService scheduleService
+﻿@inject IScheduleRoomService scheduleRoomService
 
 <div class="border mt-2">
     <table class="table table-striped align-middle">
@@ -15,9 +15,9 @@
             </tr>
         </thead>
         <tbody>
-            @if (ScheduleView is not null)
+            @if (ScheduleRoomView is not null)
             {
-                var schedules = ScheduleView.SchedulesDto;
+                var schedules = ScheduleRoomView.SchedulesDto;
 
                 if (schedules is not null)
                 {
@@ -53,10 +53,10 @@
 
 @code {
     [Parameter]
-    public ScheduleView? ScheduleView { get; set; }
+    public ScheduleRoomView? ScheduleRoomView { get; set; }
     private async void DataUpdated()
     {
-        ScheduleView = await scheduleService.GetAll();
+        ScheduleRoomView = await scheduleRoomService.GetAll();
         StateHasChanged();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ScheduleRooms.API.MappingDto;
+using ScheduleRooms.API.MappingDto.RoomDtos;
 using ScheduleRooms.API.Repository.Interface;
 using ScheduleRooms.API.Service.Interface;
 using ScheduleRooms.Models.Dtos;

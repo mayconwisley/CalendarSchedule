@@ -1,11 +1,11 @@
-﻿@inject IScheduleService scheduleService
+﻿@inject IScheduleRoomService scheduleRoomService
 @inject IRoomService roomService
 
 <div class="modal fade" id="editSchedule-@ScheduleId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <EditForm Model="@ScheduleDto" OnValidSubmit="@Edit">
-                <InputNumber hidden @bind-Value="ScheduleDto!.Id" />
+            <EditForm Model="@ScheduleRoomDto" OnValidSubmit="@Edit">
+                <InputNumber hidden @bind-Value="ScheduleRoomDto!.Id" />
                 <DataAnnotationsValidator />
 
                 <div class="modal-header">
@@ -19,21 +19,21 @@
                         <div class="col-6">
 
                             <label for="inDataInicio" class="form-label">Data/Hora Inicio</label>
-                            <InputDate class="form-control" Type="InputDateType.DateTimeLocal" id="inDataInicio" @bind-Value="ScheduleDto!.DateStart" />
+                            <InputDate class="form-control" Type="InputDateType.DateTimeLocal" id="inDataInicio" @bind-Value="ScheduleRoomDto!.DateStart" />
                         </div>
                         <div class="col-6">
                             <label for="inDataFinal" class="form-label">Data/Hora Final</label>
-                            <InputDate class="form-control" Type="InputDateType.DateTimeLocal" id="inDataFinal" @bind-Value="ScheduleDto.DateFinal" />
+                            <InputDate class="form-control" Type="InputDateType.DateTimeLocal" id="inDataFinal" @bind-Value="ScheduleRoomDto.DateFinal" />
                         </div>
                         <div class="col-12">
                             <label for="inDescricao" class="form-label">Descrição</label>
-                            <InputText class="form-control" @bind-Value="ScheduleDto!.Description" id="inDescricao" placeholder="Descrição" />
-                            <ValidationMessage For="@(() => ScheduleDto.Description)" />
+                            <InputText class="form-control" @bind-Value="ScheduleRoomDto!.Description" id="inDescricao" placeholder="Descrição" />
+                            <ValidationMessage For="@(() => ScheduleRoomDto.Description)" />
 
                         </div>
                         <div class="col-6">
                             <label for="inSala" class="form-label">Sala</label>
-                            <InputSelect class="form-select" id="inSala" @bind-Value="ScheduleDto!.RoomId">
+                            <InputSelect class="form-select" id="inSala" @bind-Value="ScheduleRoomDto!.RoomId">
                                 @if (RoomView?.RoomsDto is not null)
                                 {
                                     <option value="0">Selecione uma Opção</option>
@@ -48,11 +48,11 @@
                         <div class="col-6">
                             <label class="form-label">Opções</label>
                             <div class="form-check">
-                                <InputCheckbox class="form-check-input" @bind-Value="ScheduleDto.AllowCall" id="inPermiteLigar" />
+                                <InputCheckbox class="form-check-input" @bind-Value="ScheduleRoomDto.AllowCall" id="inPermiteLigar" />
                                 <label for="inPermiteLigar" class="form-check-label">Permite Ligar?</label>
                             </div>
                             <div class="form-check">
-                                <InputCheckbox class="form-check-input" @bind-Value="ScheduleDto.AllowChat" id="inPermiteChamar" />
+                                <InputCheckbox class="form-check-input" @bind-Value="ScheduleRoomDto.AllowChat" id="inPermiteChamar" />
                                 <label for="inPermiteChamar" class="form-check-label">Permite Chamar?</label>
                             </div>
                         </div>
@@ -70,7 +70,7 @@
     [Parameter]
     public Action? DataUpdated { get; set; }
 
-    private ScheduleDto? ScheduleDto { get; set; } = new();
+    private ScheduleRoomDto? ScheduleRoomDto { get; set; } = new();
     private RoomView? RoomView { get; set; } = new();
 
     [Parameter]
@@ -78,18 +78,17 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ScheduleDto = await scheduleService.GetById(ScheduleId);
+        ScheduleRoomDto = await scheduleRoomService.GetById(ScheduleId);
         RoomView = await roomService.GetAll();
     }
 
     private async Task Edit()
     {
-        if (ScheduleDto is not null)
+        if (ScheduleRoomDto is not null)
         {
-            var room = await scheduleService.Update(ScheduleDto);
+            var room = await scheduleRoomService.Update(ScheduleRoomDto);
             UpdateData();
-            ScheduleDto = new();
-
+            ScheduleRoomDto = new();
         }
     }
 

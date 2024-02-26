@@ -1,10 +1,10 @@
-﻿@inject IScheduleService scheduleService
+﻿@inject IScheduleRoomService scheduleRoomService
 
 <div class="modal fade" id="deletarSala-@ScheduleId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <EditForm Model="@ScheduleDto" OnValidSubmit="@Delete">
-                <InputNumber hidden @bind-Value="ScheduleDto!.Id" />
+            <EditForm Model="@ScheduleRoomDto" OnValidSubmit="@Delete">
+                <InputNumber hidden @bind-Value="ScheduleRoomDto!.Id" />
                 <DataAnnotationsValidator />
 
                 <div class="modal-header">
@@ -15,7 +15,7 @@
 
                     <div class="row g-3">
                         <div class="col-12">
-                            <p>Descrição: @ScheduleDto.Description</p>
+                            <p>Descrição: @ScheduleRoomDto.Description</p>
                         </div>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
     [Parameter]
     public Action? DataUpdated { get; set; }
 
-    private ScheduleDto? ScheduleDto { get; set; } = new();
+    private ScheduleRoomDto? ScheduleRoomDto { get; set; } = new();
 
     [Parameter]
     public int ScheduleId { get; set; }
@@ -40,15 +40,15 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ScheduleDto = await scheduleService.GetById(ScheduleId);
+        ScheduleRoomDto = await scheduleRoomService.GetById(ScheduleId);
         await base.OnInitializedAsync();
     }
 
     private async Task Delete()
     {
-        if (ScheduleDto is not null)
+        if (ScheduleRoomDto is not null)
         {
-            var room = await scheduleService.Delete(ScheduleId);
+            var room = await scheduleRoomService.Delete(ScheduleId);
             UpdateData();
         }
     }

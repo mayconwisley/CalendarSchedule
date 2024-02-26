@@ -1,4 +1,4 @@
-﻿@inject IScheduleService scheduleService
+﻿@inject IScheduleRoomService scheduleRoomService
 <div class="modal fade" id="tableSchedule-@RoomId-@DateSelected.ToString("ddMMyyyy")" tabindex="-1" aria-labelledby="tableScheduleLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -21,9 +21,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if (ScheduleView is not null)
+                            @if (ScheduleRoomView is not null)
                             {
-                                var schedules = ScheduleView;
+                                var schedules = ScheduleRoomView;
 
                                 if (schedules is not null)
                                 {
@@ -55,7 +55,7 @@
 
 @code {
 
-    private IEnumerable<ScheduleDto>? ScheduleView { get; set; }
+    private IEnumerable<ScheduleRoomDto>? ScheduleRoomView { get; set; }
 
     [Parameter]
     public int RoomId { get; set; }
@@ -65,7 +65,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ScheduleView = await scheduleService.GetByAgendaActiveSalaId(RoomId, DateSelected);
+        ScheduleRoomView = await scheduleRoomService.GetByAgendaActiveSalaId(RoomId, DateSelected);
         StateHasChanged();
     }
 }

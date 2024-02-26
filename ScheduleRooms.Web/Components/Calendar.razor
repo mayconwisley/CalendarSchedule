@@ -2,7 +2,7 @@
     DateTime dateStartMonth = new DateTime(competence.Year, competence.Month, 1);
     DateTime dateEndMonth = new DateTime(competence.Year, competence.Month, DateTime.DaysInMonth(competence.Year, competence.Month));
 }
-@inject IScheduleService scheduleService
+@inject IScheduleRoomService scheduleService
 @attribute [StreamRendering(true)]
 
 <div class="calendario">
@@ -68,7 +68,7 @@
                             g.Room,
                             g.DateStart.Date
                         })
-                        .Select(s => new ScheduleDto
+                        .Select(s => new ScheduleRoomDto
                     {
                         RoomId = s.Key.RoomId,
                         Room = s.Key.Room,
@@ -100,7 +100,7 @@
 
     DateTime competence = DateTime.Now.Date;
 
-    public IEnumerable<ScheduleDto>? ScheduleDto { get; set; }
+    public IEnumerable<ScheduleRoomDto>? ScheduleDto { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
