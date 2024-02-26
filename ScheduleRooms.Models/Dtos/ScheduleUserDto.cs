@@ -2,7 +2,7 @@
 
 namespace ScheduleRooms.Models.Dtos;
 
-public class ScheduleRoomDto
+public class ScheduleUserDto
 {
     public int Id { get; set; }
     [Required(ErrorMessage = "Descrição Obrigatório")]
@@ -13,7 +13,10 @@ public class ScheduleRoomDto
     public DateTime DateFinal { get; set; } = DateTime.Now.AddHours(1);
     public bool AllowCall { get; set; } = false;
     public bool AllowChat { get; set; } = false;
-    [Required(ErrorMessage = "Sala Obrigatória")]
-    public int RoomId { get; set; }
-    public string? Room { get; set; }
+    [Required(ErrorMessage = "Cliente Obrigatório")]
+    public int ClientId { get; set; }
+    public string? Client { get; set; }
+    [Required(ErrorMessage = "Usuário Obrigatório")]
+    public int UserId { get; set; }
+    public string? User { get; set; }
 }
