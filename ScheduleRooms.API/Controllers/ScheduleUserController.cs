@@ -118,7 +118,7 @@ public class ScheduleUserController(IScheduleUserService scheduleUserService) : 
             {
                 if (ex.Message == "409")
                 {
-                    return Conflict("O cadastro da Agenda resultaria em uma sobreposição de datas para esta sala.");
+                    return Conflict("O cadastro da agenda resultaria em uma sobreposição de datas para este usuário.");
                 }
             }
         }
