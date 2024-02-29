@@ -23,7 +23,7 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
                                 a.DateFinal > schedulesUser.DateStart)
                     .ToListAsync();
 
-                if (overlappingScheduleUser.Count() > 0)
+                if (overlappingScheduleUser.Count > 0)
                 {
                     // Existe sobreposição, faça algo aqui, como lançar uma exceção.
                     throw new Exception("409");
