@@ -18,12 +18,10 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
                 // Verifique se existe uma schedulesUser que se sobrepõe no mesmo usuário
                 var overlappingScheduleUser = await _scheduleContext.ScheduleUsers
                     .Where(a => a.UserId == schedulesUser.UserId &&
-                                a.ClientId == schedulesUser.ClientId &&
                                 a.DateStart < schedulesUser.DateFinal &&
                                 a.DateFinal > schedulesUser.DateStart)
-                    .ToListAsync();
-
-                if (overlappingScheduleUser.Count > 0)
+                    .AnyAsync();
+                if (overlappingScheduleUser)
                 {
                     // Existe sobreposição, faça algo aqui, como lançar uma exceção.
                     throw new Exception("409");
