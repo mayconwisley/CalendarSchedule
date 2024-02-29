@@ -120,6 +120,11 @@ public class ScheduleUserController(IScheduleUserService scheduleUserService) : 
                 {
                     return Conflict("O cadastro da agenda resultaria em uma sobreposição de datas para este usuário.");
                 }
+                if (ex.Message == "400")
+                {
+                    return BadRequest();
+
+                }
             }
         }
         return BadRequest("Dados inválidos");

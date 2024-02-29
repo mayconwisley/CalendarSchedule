@@ -28,6 +28,16 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
                     // Existe sobreposição, faça algo aqui, como lançar uma exceção.
                     throw new Exception("409");
                 }
+
+                var minorDate = await _scheduleContext.ScheduleUsers
+                    .Where(a => a.DateStart > schedulesUser.DateFinal)
+                    .CountAsync();
+                if (minorDate > 0)
+                {
+                    throw new Exception("400");
+                }
+
+
                 _scheduleContext.ScheduleUsers.Add(schedulesUser);
                 await _scheduleContext.SaveChangesAsync();
                 return schedulesUser;
