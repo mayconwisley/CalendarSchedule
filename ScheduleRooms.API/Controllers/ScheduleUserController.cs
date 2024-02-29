@@ -122,7 +122,7 @@ public class ScheduleUserController(IScheduleUserService scheduleUserService) : 
                 }
                 if (ex.Message == "400")
                 {
-                    return BadRequest();
+                    return BadRequest("Datas iguais ou 'Data de Início' é maior que a 'Data Final'.");
 
                 }
             }

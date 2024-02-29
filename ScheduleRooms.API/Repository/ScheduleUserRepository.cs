@@ -29,10 +29,9 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
                     throw new Exception("409");
                 }
 
-                var minorDate = await _scheduleContext.ScheduleUsers
-                    .Where(a => a.DateStart > schedulesUser.DateFinal)
-                    .CountAsync();
-                if (minorDate > 0)
+                var minorDate = schedulesUser.DateStart >= schedulesUser.DateFinal;
+
+                if (minorDate)
                 {
                     throw new Exception("400");
                 }
