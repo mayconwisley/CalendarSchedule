@@ -1,0 +1,60 @@
+﻿@inject IClientService clientService
+
+<div class="border mt-2">
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>Descrição</th>
+                <th>Ativo</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (ClientView is not null)
+            {
+                var clients = ClientView.ClientsDto;
+
+                if (clients is not null)
+                {
+                    @foreach (var client in clients)
+                    {
+                        <tr>
+                            <td>@client.Id</td>
+                            <td>@client.Name</td>
+                            <td>@client.Telephone</td>
+                            <td>@client.Description</td>
+                            <td>
+                                <InputCheckbox @bind-Value="client.Active" disabled />
+                            </td>
+                            <td>
+                                <button data-bs-toggle="modal" data-bs-target="#editClient-@client.Id" class="btn btn-info">
+                                    Editar
+                                </button>
+                                <EditClientModal ClientId="@client.Id" DataUpdated="@(() => DataUpdated())" />
+                                <button data-bs-toggle="modal" data-bs-target="#deleteClient-@client.Id" class="btn btn-danger">
+                                    Excluir
+                                </button>
+                                <DeleteClientModal ClientId="@client.Id" DataUpdated="@(() => DataUpdated())" />
+                            </td>
+                        </tr>
+
+                    }
+                }
+            }
+
+        </tbody>
+    </table>
+</div>
+
+@code {
+    [Parameter]
+    public ClientView? ClientView { get; set; }
+    private async void DataUpdated()
+    {
+        ClientView = await clientService.GetAll();
+        StateHasChanged();
+    }
+}

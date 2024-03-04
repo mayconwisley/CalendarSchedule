@@ -1,0 +1,44 @@
+﻿@page "/Client"
+
+@inject IClientService clientService
+
+<h3>Cadastro de Cliente</h3>
+<button data-bs-toggle="modal" data-bs-target="#newClient" class="btn btn-info">
+    Novo Cliente
+</button>
+
+@if (clientView is null)
+{
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+}
+else
+{
+    <TableClient ClientView="@clientView" />
+    <PaginationTable PageCurrent="@ReceberPagina"
+                     TotalData="@clientView.TotalData"
+                     Page="@clientView.Page"
+                     TotalPage="@clientView.TotalPage" />
+    <InsertClientModal DataUpdated="@(() => DataUpdated())" />
+}
+
+@code {
+    private ClientView? clientView;
+
+    protected override async Task OnInitializedAsync()
+    {
+        clientView = await clientService.GetAll();
+    }
+
+    private async void DataUpdated()
+    {
+        clientView = await clientService.GetAll();
+        StateHasChanged();
+    }
+    private async Task ReceberPagina(int pageCurrent)
+    {
+        clientView = await clientService.GetAll(pageCurrent);
+
+    }
+}

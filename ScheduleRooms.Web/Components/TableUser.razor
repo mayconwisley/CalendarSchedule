@@ -30,7 +30,7 @@
                                 <InputCheckbox @bind-Value="user.Active" disabled />
                             </td>
                             <td>
-                                <button data-bs-toggle="modal" data-bs-target="#editRoom-@user.Id" class="btn btn-info">
+                                <button data-bs-toggle="modal" data-bs-target="#editUser-@user.Id" class="btn btn-info">
                                     Editar
                                 </button>
                                 <EditUserModal UserId="@user.Id" DataUpdated="@(() => DataUpdated())" />

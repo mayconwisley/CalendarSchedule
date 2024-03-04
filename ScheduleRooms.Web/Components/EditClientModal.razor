@@ -1,0 +1,76 @@
+﻿@inject IClientService clientService
+
+<div class="modal fade" id="editClient-@ClientId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <EditForm Model="@ClientDto" OnValidSubmit="@Edit">
+                <InputNumber hidden @bind-Value="ClientDto!.Id" />
+                <DataAnnotationsValidator />
+
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Editar Cliente</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <label for="inName" class="form-label">Nome</label>
+                            <InputText class="form-control" id="inName" @bind-Value="ClientDto!.Name" placeholder="Nome" />
+                            <ValidationMessage For="@(() => ClientDto.Name)" />
+
+                        </div>
+                        <div class="col-3">
+
+                            <label for="inTelephone" class="form-label">Telefone</label>
+                            <InputText class="form-control" id="inTelephone" @bind-Value="ClientDto!.Telephone" placeholder="Telefone" />
+                        </div>
+                        <div class="col-3">
+                            <label for="inActice" class="form-label">Ativo</label>
+                            <InputCheckbox class="form-control" id="inActice" @bind-Value="ClientDto!.Active" placeholder="Ativo" />
+                        </div>
+                        <div class="col-12">
+                            <label for="inDescription" class="form-label">Descrição</label>
+                            <InputText class="form-control" id="inDescription" @bind-Value="ClientDto!.Description" placeholder="Descrição" />
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Action? DataUpdated { get; set; }
+
+    private ClientDto? ClientDto { get; set; } = new();
+
+    [Parameter]
+    public int ClientId { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        ClientDto = await clientService.GetById(ClientId);
+    }
+
+    private async Task Edit()
+    {
+        if (ClientDto is not null)
+        {
+            var room = await clientService.Update(ClientDto);
+            UpdateData();
+        }
+    }
+
+    private void UpdateData()
+    {
+        DataUpdated?.Invoke();
+    }
+}
