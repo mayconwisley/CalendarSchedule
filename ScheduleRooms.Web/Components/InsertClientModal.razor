@@ -15,7 +15,7 @@
                     <div class="row g-3">
                         <div class="col-6">
                             <label for="inName" class="form-label">Nome</label>
-                            <InputText class="form-control" id="inName" @bind-Value="ClientDto!.Name" placeholder="Name" />
+                            <InputText class="form-control" id="inName" @bind-Value="ClientDto!.Name" placeholder="Nome" />
                             <ValidationMessage For="@(() => ClientDto.Name)" />
 
                         </div>
@@ -37,7 +37,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Salvar</button>
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
                 </div>
             </EditForm>
         </div>
@@ -48,7 +48,7 @@
     [Parameter]
     public Action? DataUpdated { get; set; }
 
-    private ClientDto? ClientDto { get; set; }
+    private ClientDto? ClientDto { get; set; } = new();
 
 
     protected override async Task OnInitializedAsync()

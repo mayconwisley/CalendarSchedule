@@ -20,18 +20,18 @@
                             <ValidationMessage For="@(() => ClientDto.Name)" />
 
                         </div>
-                        <div class="col-3">
-
+                        <div class="col-6">
                             <label for="inTelephone" class="form-label">Telefone</label>
                             <InputText class="form-control" id="inTelephone" @bind-Value="ClientDto!.Telephone" placeholder="Telefone" />
                         </div>
-                        <div class="col-3">
-                            <label for="inActice" class="form-label">Ativo</label>
-                            <InputCheckbox class="form-control" id="inActice" @bind-Value="ClientDto!.Active" placeholder="Ativo" />
-                        </div>
+
                         <div class="col-12">
                             <label for="inDescription" class="form-label">Descrição</label>
                             <InputText class="form-control" id="inDescription" @bind-Value="ClientDto!.Description" placeholder="Descrição" />
+                        </div>
+                        <div class="col-12">
+                            <label for="inActice" class="form-label">Ativo</label>
+                            <InputCheckbox class="form-check-input" id="inActice" @bind-Value="ClientDto!.Active" placeholder="Ativo" />
                         </div>
 
                     </div>

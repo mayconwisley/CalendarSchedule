@@ -26,8 +26,8 @@
                         </div>
                         
                         <div class="col-12">
-                            <label for="inDescricao" class="form-label">Descrição</label>
-                            <InputText class="form-control" id="inDescricao" @bind-Value="UserDto!.Description" placeholder="Descrição" />
+                            <label for="inDescription" class="form-label">Descrição</label>
+                            <InputText class="form-control" id="inDescription" @bind-Value="UserDto!.Description" placeholder="Descrição" />
                         </div>
                         <div class="col-12">
                             <label for="inActive" class="form-label">Ativo</label>
@@ -37,7 +37,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Salvar</button>
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
                 </div>
             </EditForm>
         </div>
