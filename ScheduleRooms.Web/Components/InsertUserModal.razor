@@ -61,7 +61,7 @@
     {
         if (UserDto is not null)
         {
-            var room = await userService.Create(UserDto);
+            var user = await userService.Create(UserDto);
             UpdateData();
             UserDto = new();
 

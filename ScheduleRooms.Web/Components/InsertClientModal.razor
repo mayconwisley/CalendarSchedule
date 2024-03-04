@@ -48,7 +48,7 @@
     [Parameter]
     public Action? DataUpdated { get; set; }
 
-    private ClientDto? ClientDto { get; set; } = new();
+    private ClientDto? ClientDto { get; set; }
 
 
     protected override async Task OnInitializedAsync()
@@ -61,7 +61,7 @@
     {
         if (ClientDto is not null)
         {
-            var room = await clientService.Create(ClientDto);
+            var client = await clientService.Create(ClientDto);
             UpdateData();
             ClientDto = new();
 

@@ -3,7 +3,6 @@ using ScheduleRooms.Web.Models;
 using ScheduleRooms.Web.Service.Interface;
 using System.Net;
 using System.Net.Http.Json;
-using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 
@@ -107,7 +106,7 @@ public class ClientService : IClientService
             if (response.IsSuccessStatusCode)
             {
                 var clientDto = await response.Content.ReadFromJsonAsync<ClientDto>(_serializerOptions);
-                return clientDto;
+                return clientDto ??= new();
             }
             else
             {
