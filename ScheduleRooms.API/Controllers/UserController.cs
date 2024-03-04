@@ -19,7 +19,7 @@ public class UserController : ControllerBase
     [Route("All")]
     public async Task<ActionResult<IEnumerable<UserDto>>> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
     {
-        var roomsDto = await _userService.GetAll(page, size, search);
+        var usersDto = await _userService.GetAll(page, size, search);
         decimal totalData = (decimal)await _userService.TotalUsers(search);
         decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
 
@@ -28,7 +28,7 @@ public class UserController : ControllerBase
             totalPage = totalData;
         }
 
-        if (!roomsDto.Any())
+        if (!usersDto.Any())
         {
             return NotFound("Sem dados");
         }
@@ -38,7 +38,7 @@ public class UserController : ControllerBase
             page,
             totalPage,
             size,
-            roomsDto
+            usersDto
         });
 
     }

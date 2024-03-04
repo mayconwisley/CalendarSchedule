@@ -8,35 +8,34 @@ using System.Text.Json;
 
 namespace ScheduleRooms.Web.Service;
 
-public class RoomService : IRoomService
+public class UserService : IUserService
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly JsonSerializerOptions _serializerOptions;
-    private const string? apiEndPoint = "api/Room";
+    private const string? apiEndPoint = "api/User";
 
-    public RoomService(IHttpClientFactory httpClientFactory)
+    public UserService(IHttpClientFactory httpClientFactory)
     {
         _httpClientFactory = httpClientFactory;
         _serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
     }
 
-    public async Task<RoomDto> Create(RoomDto roomDto)
+    public async Task<UserDto> Create(UserDto userDto)
     {
         try
         {
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-
-            StringContent stringContent = new(JsonSerializer.Serialize(roomDto), Encoding.UTF8, "application/json");
+            StringContent stringContent = new(JsonSerializer.Serialize(userDto), Encoding.UTF8, "application/json");
 
             using (var response = await httpClient.PostAsync(apiEndPoint, stringContent))
             {
                 if (response.IsSuccessStatusCode)
                 {
                     using Stream resApi = await response.Content.ReadAsStreamAsync();
-                    var room = await JsonSerializer.DeserializeAsync<RoomDto>(resApi, _serializerOptions);
-                    if (room is not null)
+                    var user = await JsonSerializer.DeserializeAsync<UserDto>(resApi, _serializerOptions);
+                    if (user is not null)
                     {
-                        return room;
+                        return user;
                     }
                 }
             }
@@ -63,23 +62,21 @@ public class RoomService : IRoomService
         }
         catch (Exception)
         {
-
             throw;
         }
     }
 
-    public async Task<RoomView> GetAll(int page = 1, int size = 10, string search = "")
+    public async Task<UserView> GetAll(int page = 1, int size = 10, string search = "")
     {
         try
         {
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
             using var response = await httpClient.GetAsync($"{apiEndPoint}/All?page={page}&size={size}&search={search}");
 
-
             if (response.IsSuccessStatusCode)
             {
-                RoomView? salaView = await response.Content.ReadFromJsonAsync<RoomView>(_serializerOptions);
-                return salaView ??= new();
+                UserView? userView = await response.Content.ReadFromJsonAsync<UserView>(_serializerOptions);
+                return userView ??= new();
             }
             else
             {
@@ -90,7 +87,6 @@ public class RoomService : IRoomService
                 response.EnsureSuccessStatusCode();
                 return new();
             }
-
         }
         catch (Exception)
         {
@@ -98,7 +94,7 @@ public class RoomService : IRoomService
         }
     }
 
-    public async Task<RoomDto> GetById(int id)
+    public async Task<UserDto> GetById(int id)
     {
         try
         {
@@ -107,8 +103,8 @@ public class RoomService : IRoomService
 
             if (response.IsSuccessStatusCode)
             {
-                var roomDto = await response.Content.ReadFromJsonAsync<RoomDto>(_serializerOptions);
-                return roomDto ?? new();
+                var userDto = await response.Content.ReadFromJsonAsync<UserDto>(_serializerOptions);
+                return userDto ??= new();
             }
             else
             {
@@ -122,27 +118,27 @@ public class RoomService : IRoomService
         }
         catch (Exception)
         {
+
             throw;
         }
     }
 
-    public async Task<RoomDto> Update(RoomDto roomDto)
+    public async Task<UserDto> Update(UserDto userDto)
     {
         try
         {
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
 
-            StringContent stringContent = new(JsonSerializer.Serialize(roomDto), Encoding.UTF8, "application/json");
-
-            using (var response = await httpClient.PutAsync($"{apiEndPoint}/{roomDto.Id}", stringContent))
+            StringContent stringContent = new(JsonSerializer.Serialize(userDto), Encoding.UTF8, "application/json");
+            using (var response = await httpClient.PutAsync($"{apiEndPoint}/{userDto.Id}", stringContent))
             {
                 if (response.IsSuccessStatusCode)
                 {
                     using Stream resApi = await response.Content.ReadAsStreamAsync();
-                    var room = await JsonSerializer.DeserializeAsync<RoomDto>(resApi, _serializerOptions);
-                    if (room is not null)
+                    var user = await JsonSerializer.DeserializeAsync<UserDto>(resApi, _serializerOptions);
+                    if (user is not null)
                     {
-                        return room;
+                        return user;
                     }
                 }
             }
@@ -150,6 +146,7 @@ public class RoomService : IRoomService
         }
         catch (Exception)
         {
+
             throw;
         }
     }

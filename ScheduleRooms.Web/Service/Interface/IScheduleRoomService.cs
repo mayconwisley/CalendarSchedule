@@ -1,7 +1,7 @@
 ﻿using ScheduleRooms.Models.Dtos;
 using ScheduleRooms.Web.Models;
 
-namespace ScheduleRooms.Web.Service;
+namespace ScheduleRooms.Web.Service.Interface;
 
 public interface IScheduleRoomService
 {

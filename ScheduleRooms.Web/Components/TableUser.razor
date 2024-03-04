@@ -1,0 +1,60 @@
+﻿@inject IUserService userService
+
+<div class="border mt-2">
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nome</th>
+                <th>Celular</th>
+                <th>Descrição</th>
+                <th>Ativo</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (UserView is not null)
+            {
+                var users = UserView.UsersDto;
+
+                if (users is not null)
+                {
+                    @foreach (var user in users)
+                    {
+                        <tr>
+                            <td>@user.Id</td>
+                            <td>@user.Name</td>
+                            <td>@user.Cellphone</td>
+                            <td>@user.Description</td>
+                            <td>
+                                <InputCheckbox @bind-Value="user.Active" disabled />
+                            </td>
+                            <td>
+                                <button data-bs-toggle="modal" data-bs-target="#editRoom-@user.Id" class="btn btn-info">
+                                    Editar
+                                </button>
+                                <EditUserModal UserId="@user.Id" DataUpdated="@(() => DataUpdated())" />
+                                <button data-bs-toggle="modal" data-bs-target="#deleteUser-@user.Id" class="btn btn-danger">
+                                    Excluir
+                                </button>
+                                <DeleteUserModal UserId="@user.Id" DataUpdated="@(() => DataUpdated())" />
+                            </td>
+                        </tr>
+
+                    }
+                }
+            }
+
+        </tbody>
+    </table>
+</div>
+
+@code {
+    [Parameter]
+    public UserView? UserView { get; set; }
+    private async void DataUpdated()
+    {
+        UserView = await userService.GetAll();
+        StateHasChanged();
+    }
+}

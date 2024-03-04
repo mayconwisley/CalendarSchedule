@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using ScheduleRooms.Web;
 using ScheduleRooms.Web.Service;
+using ScheduleRooms.Web.Service.Interface;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -20,6 +21,7 @@ builder.Services.AddHttpClient("ConexaoApi", con =>
 
 builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddScoped<IScheduleRoomService, ScheduleRoomService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 
 await builder.Build().RunAsync();

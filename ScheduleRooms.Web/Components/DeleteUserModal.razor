@@ -1,0 +1,60 @@
+﻿@inject IUserService userService
+
+<div class="modal fade" id="deleteUser-@UserId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <EditForm Model="@UserDto" OnValidSubmit="@Delete">
+                <InputNumber hidden @bind-Value="UserDto!.Id" />
+                <DataAnnotationsValidator />
+
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Excluir Sala</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <p>Sala: @UserDto.Name</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Excluir</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Action? DataUpdated { get; set; }
+
+    private UserDto? UserDto { get; set; } = new();
+
+    [Parameter]
+    public int UserId { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        UserDto = await userService.GetById(UserId);
+        await base.OnInitializedAsync();
+    }
+
+    private async Task Delete()
+    {
+        if (UserDto is not null)
+        {
+            var room = await userService.Delete(UserId);
+            UpdateData();
+        }
+    }
+
+    private void UpdateData()
+    {
+        DataUpdated?.Invoke();
+    }
+}
