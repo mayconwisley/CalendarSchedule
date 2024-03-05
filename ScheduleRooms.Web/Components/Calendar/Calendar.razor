@@ -2,22 +2,24 @@
     DateTime dateStartMonth = new DateTime(competence.Year, competence.Month, 1);
     DateTime dateEndMonth = new DateTime(competence.Year, competence.Month, DateTime.DaysInMonth(competence.Year, competence.Month));
 }
-@inject IScheduleRoomService scheduleService
+@inject IScheduleRoomService scheduleRoomService
+@inject IScheduleUserService scheculeUserService
+
 @attribute [StreamRendering(true)]
 
 <div class="calendario">
     <div class="desc-mes">
         <nav>
             <ul class="pagination">
-                <li class="page-item">
+                <li class="page-room">
                     <button class="page-link pn-mes" @onclick="PreviousMonth">
                         <span aria-hidden="true">&laquo;</span>
                     </button>
                 </li>
-                <li class="page-item nome-mes">
+                <li class="page-room nome-mes">
                     <p class="page-link">@competence.ToString("MMMM/yyyy")</p>
                 </li>
-                <li class="page-item">
+                <li class="page-room">
                     <button class="page-link pn-mes" @onclick="NextMonth">
                         <span aria-hidden="true">&raquo;</span>
                     </button>
@@ -53,7 +55,7 @@
                         @dateStartMonth.AddDays(i).Day
                     </b>
 
-                    @if (ScheduleDto is null)
+                    @if (ScheduleRoomDto is null)
                     {
                         <span class="spinner-border" role="status">
                             <span class="visually-hidden">Loading...</span>
@@ -61,7 +63,7 @@
                     }
                     else
                     {
-                        var salaAgenda = ScheduleDto
+                        var scheduleRooms = ScheduleRoomDto
                         .GroupBy(g => new
                         {
                             g.RoomId,
@@ -77,15 +79,60 @@
                         .ToList()
                         .OrderBy(o => o.Room);
 
-                        @foreach (var item in salaAgenda)
+                        @foreach (var room in scheduleRooms)
                         {
-                            if (item.DateStart.Date == dateStartMonth.AddDays(i).Date)
+                            if (room.DateStart.Date == dateStartMonth.AddDays(i).Date)
                             {
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#tableSchedule-@item.RoomId-@dateStartMonth.AddDays(i).Date.ToString("ddMMyyyy")">
-                                    @item.Room
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#tableScheduleRoom-@room.RoomId-@dateStartMonth.AddDays(i).Date.ToString("ddMMyyyy")">
+                                    @room.Room
                                 </a>
 
-                                <TableScheduleRoomModal RoomId="@item.RoomId" DateSelected="@dateStartMonth.AddDays(i).Date" />
+                                <TableScheduleRoomModal RoomId="@room.RoomId" DateSelected="@dateStartMonth.AddDays(i).Date" />
+                            }
+                        }
+                    }
+
+                    @if (ScheduleUserDto is null)
+                    {
+                        <span class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </span>
+                    }
+                    else
+                    {
+                        var scheduleUsers = ScheduleUserDto
+                        .GroupBy(g => new
+                        {
+                            g.UserId,
+                            g.User,
+                            g.ClientId,
+                            g.Client,
+                            g.DateStart.Date
+                        })
+                        .Select(s => new ScheduleUserDto
+                    {
+                        UserId = s.Key.UserId,
+                        User = s.Key.User,
+                        ClientId = s.Key.ClientId,
+                        Client = s.Key.Client,
+                        DateStart = s.Key.Date
+                    })
+                        .ToList()
+                        .OrderBy(o => o.User);
+
+                        @foreach (var user in scheduleUsers)
+                        {
+                            if (user.DateStart.Date == dateStartMonth.AddDays(i).Date)
+                            {
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#tableScheduleUser-@user.UserId-@user.ClientId-@dateStartMonth.AddDays(i).Date.ToString("ddMMyyyy")">
+                                    @user.User
+                                </a>
+
+                                {
+                                    UserId = @user.UserId;
+                                }
+
+                                <TableScheduleUserModal UserId="@user.UserId" ClientId="@user.ClientId" DateSelected="@dateStartMonth.AddDays(i).Date" />
                             }
                         }
                     }
@@ -101,15 +148,19 @@
 
     DateTime competence = DateTime.Now.Date;
 
-    public IEnumerable<ScheduleRoomDto>? ScheduleDto { get; set; }
+    public IEnumerable<ScheduleRoomDto>? ScheduleRoomDto { get; set; }
+    public IEnumerable<ScheduleUserDto>? ScheduleUserDto { get; set; }
+
+    private int UserId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        ScheduleDto = await scheduleService.GetByAgendaActive();
+        ScheduleRoomDto = await scheduleRoomService.GetByAgendaActive();
+        ScheduleUserDto = await scheculeUserService.GetByScheduleUserActive();
 
         await base.OnInitializedAsync();
     }
-
+    
     private void NextMonth()
     {
         DateTime competenceAdd = competence.AddMonths(1);

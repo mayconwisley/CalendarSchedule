@@ -35,11 +35,11 @@
                                 <button data-bs-toggle="modal" data-bs-target="#editSchedule-@schedule.Id" class="btn btn-info">
                                     Editar
                                 </button>
-                                <EditScheduleModal ScheduleId="@schedule.Id" DataUpdated="@(() => DataUpdated())" />
+                                <EditScheduleRoomModal ScheduleId="@schedule.Id" DataUpdated="@(() => DataUpdated())" />
                                 <button data-bs-toggle="modal" data-bs-target="#deletarSala-@schedule.Id" class="btn btn-danger">
                                     Excluir
                                 </button>
-                                <DeleteScheduleModal ScheduleId="@schedule.Id" DataUpdated="@(() => DataUpdated())" />
+                                <DeleteScheduleRoomModal ScheduleId="@schedule.Id" DataUpdated="@(() => DataUpdated())" />
                             </td>
                         </tr>
                     }

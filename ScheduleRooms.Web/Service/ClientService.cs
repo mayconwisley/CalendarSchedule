@@ -39,6 +39,11 @@ public class ClientService : IClientService
                         return client;
                     }
                 }
+                else
+                {
+                    response.EnsureSuccessStatusCode();
+                    return new();
+                }
             }
             return new();
         }

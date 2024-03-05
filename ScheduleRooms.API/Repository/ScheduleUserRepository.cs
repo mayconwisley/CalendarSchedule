@@ -192,6 +192,26 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
         }
     }
 
+    public async Task<IEnumerable<ScheduleUser>> GetByScheduleUserId(int userId)
+    {
+        try
+        {
+            var schedule = await _scheduleContext.ScheduleUsers
+                .Include(i => i.User)
+                .Include(i => i.Client)
+                .Where(w => w.UserId == userId)
+                .OrderBy(o => o.User)
+                .ToListAsync();
+
+            return schedule;
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
+
     public async Task<int> TotalSchedules(string search)
     {
         var totalSchedule = await _scheduleContext.ScheduleUsers

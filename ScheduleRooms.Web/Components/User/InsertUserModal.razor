@@ -3,7 +3,7 @@
 <div class="modal fade" id="newUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <EditForm Model="@UserDto" OnValidSubmit="@Create">
+            <EditForm Model="@UserDto" OnValidSubmit="Create">
                 <DataAnnotationsValidator />
 
                 <div class="modal-header">
@@ -23,8 +23,9 @@
 
                             <label for="inCellphone" class="form-label">Celular</label>
                             <InputText class="form-control" id="inCellphone" @bind-Value="UserDto!.Cellphone" placeholder="Celular" />
+                            <ValidationMessage For="@(() => UserDto.Cellphone)" />
                         </div>
-                        
+
                         <div class="col-12">
                             <label for="inDescription" class="form-label">Descrição</label>
                             <InputText class="form-control" id="inDescription" @bind-Value="UserDto!.Description" placeholder="Descrição" />
@@ -50,7 +51,6 @@
 
     private UserDto? UserDto { get; set; }
 
-
     protected override async Task OnInitializedAsync()
     {
         UserDto ??= new();
@@ -64,7 +64,6 @@
             var user = await userService.Create(UserDto);
             UpdateData();
             UserDto = new();
-
         }
     }
 

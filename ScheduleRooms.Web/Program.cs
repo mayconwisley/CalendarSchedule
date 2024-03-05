@@ -23,6 +23,7 @@ builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddScoped<IScheduleRoomService, ScheduleRoomService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<IScheduleUserService, ScheduleUserService>();
 
 
 await builder.Build().RunAsync();

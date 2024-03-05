@@ -14,7 +14,7 @@ public class ScheduleUserController(IScheduleUserService scheduleUserService) : 
     [Route("All")]
     public async Task<ActionResult<IEnumerable<ScheduleUserDto>>> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
     {
-        var schedulesDto = await _scheduleUserService.GetAll(page, size, search);
+        var scheduleUsersDto = await _scheduleUserService.GetAll(page, size, search);
         decimal totalData = (decimal)await _scheduleUserService.TotalSchedules(search);
         decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
 
@@ -23,7 +23,7 @@ public class ScheduleUserController(IScheduleUserService scheduleUserService) : 
             totalPage = totalData;
         }
 
-        if (!schedulesDto.Any())
+        if (!scheduleUsersDto.Any())
         {
             return NotFound("Sem dados");
         }
@@ -33,10 +33,23 @@ public class ScheduleUserController(IScheduleUserService scheduleUserService) : 
             page,
             totalPage,
             size,
-            schedulesDto
+            scheduleUsersDto
         });
 
     }
+
+    [HttpGet("ScheduleUserId")]
+    public async Task<ActionResult<IEnumerable<ScheduleUserDto>>> GetByScheduleUserId(int userId)
+    {
+        var scheduleUserDto = await _scheduleUserService.GetByScheduleUserId(userId);
+
+        if (!scheduleUserDto.Any())
+        {
+            return NotFound("Sem dados");
+        }
+        return Ok(scheduleUserDto);
+    }
+
     [HttpGet("ScheduleActive")]
     public async Task<ActionResult<IEnumerable<ScheduleUserDto>>> GetByScheduleActive()
     {

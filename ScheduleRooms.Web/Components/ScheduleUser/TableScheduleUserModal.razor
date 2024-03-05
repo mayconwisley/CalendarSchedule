@@ -1,5 +1,5 @@
-﻿@inject IScheduleRoomService scheduleRoomService
-<div class="modal fade" id="tableSchedule-@RoomId-@DateSelected.ToString("ddMMyyyy")" tabindex="-1" aria-labelledby="tableScheduleLabel" aria-hidden="true">
+﻿@inject IScheduleUserService scheduleUserService
+<div class="modal fade" id="tableScheduleUser-@UserId-@ClientId-@DateSelected.ToString("ddMMyyyy")" tabindex="-1" aria-labelledby="tableScheduleLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -17,13 +17,14 @@
                                 <th>Data/Hora Fim</th>
                                 <th>Permitir Ligar</th>
                                 <th>Permitir Chamar</th>
-                                <th>Sala</th>
+                                <th>Cliente</th>
+                                <th>Usuário</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @if (ScheduleRoomView is not null)
+                            @if (ScheduleUserView is not null)
                             {
-                                var schedules = ScheduleRoomView;
+                                var schedules = ScheduleUserView;
 
                                 if (schedules is not null)
                                 {
@@ -36,7 +37,8 @@
                                             <td>@schedule.DateFinal</td>
                                             <td>@(schedule.AllowCall ? "Sim" : "Não")</td>
                                             <td>@(schedule.AllowChat ? "Sim" : "Não")</td>
-                                            <td>@schedule.Room</td>
+                                            <td>@schedule.Client</td>
+                                            <td>@schedule.User</td>
                                         </tr>
                                     }
                                 }
@@ -55,17 +57,19 @@
 
 @code {
 
-    private IEnumerable<ScheduleRoomDto>? ScheduleRoomView { get; set; }
+    private IEnumerable<ScheduleUserDto>? ScheduleUserView { get; set; }
 
     [Parameter]
-    public int RoomId { get; set; }
+    public int UserId { get; set; }
+    [Parameter]
+    public int ClientId { get; set; }
 
     [Parameter]
     public DateTime DateSelected { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        ScheduleRoomView = await scheduleRoomService.GetByAgendaActiveSalaId(RoomId, DateSelected);
+        ScheduleUserView = await scheduleUserService.GetByScheduleUserActiveUserId(UserId, DateSelected);
         StateHasChanged();
     }
 }
