@@ -111,7 +111,7 @@
             catch (Exception ex)
             {
                 await Error(ex.Message);
-                // ErroRetornado = ex.Message;
+                UpdateData();
             }
         }
     }
@@ -124,6 +124,5 @@
     private async Task Error(string error)
     {
         await ErroRetornado.InvokeAsync(error);
-        UpdateData();
     }
 }

@@ -12,11 +12,10 @@
 }
 else
 {
-    @if (messagem is not null)
+    if (messagem is not null)
     {
-        <MensageError Message="@ReceiveError" />
+        <MensageError Message="@messagem" />
     }
-
 
     <TableScheduleUser ScheduleUserView="scheduleUserView" />
 
@@ -25,12 +24,12 @@ else
                      Page="@scheduleUserView.Page"
                      TotalPage="@scheduleUserView.TotalPage" />
 
-    <InsertScheduleUserModal DataUpdated="@(() => DataUpdated())" />
+    <InsertScheduleUserModal ErroRetornado="ReceiveError" DataUpdated="@(() => DataUpdated())" />
 }
 
 @code {
     private ScheduleUserView? scheduleUserView;
-    private string? messagem { get; set; }
+    private string? messagem { get; set; };
 
     protected override async Task OnInitializedAsync()
     {

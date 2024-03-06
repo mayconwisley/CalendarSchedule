@@ -1,13 +1,13 @@
-﻿@if (!string.IsNullOrEmpty(Message.ToString()))
+﻿@if (!string.IsNullOrEmpty(Message))
 {
     <div class="alert alert-danger d-flex align-items-center" role="alert">
         <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill" /></svg>
         <div>
             <p>@Message</p>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            <button onclick="@Limpar" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                 x
                 <span class="visually-hidden">unread messages</span>
-            </span>
+            </button>
         </div>
     </div>
 
@@ -16,13 +16,12 @@
 
 @code {
     [Parameter]
-    public EventCallback<string> Message { get; set; }
+    public string Message { get; set; }
 
-
-    private async Task ReceiveMessage(string message)
+    private void Limpar()
     {
-
-        await Message.InvokeAsync(message);
+        Message = string.Empty;
     }
+
 
 }
