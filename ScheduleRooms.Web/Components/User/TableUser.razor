@@ -8,8 +8,8 @@
                 <th>Nome</th>
                 <th>Celular</th>
                 <th>Descrição</th>
-                <th>Ativo</th>
-                <th>Ações</th>
+                <th class="text-center">Ativo</th>
+                <th class="text-center">Ações</th>
             </tr>
         </thead>
         <tbody>
@@ -26,10 +26,10 @@
                             <td>@user.Name</td>
                             <td>@user.Cellphone</td>
                             <td>@user.Description</td>
-                            <td>
-                                <InputCheckbox @bind-Value="user.Active" disabled />
+                            <td class="text-center">
+                                @(user.Active ? "Sim" : "Não")
                             </td>
-                            <td>
+                            <td class="text-center">
                                 <button data-bs-toggle="modal" data-bs-target="#editUser-@user.Id" class="btn btn-info">
                                     Editar
                                 </button>

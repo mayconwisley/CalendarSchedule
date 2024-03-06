@@ -9,8 +9,8 @@
                 <th>Resposável</th>
                 <th>Telefone</th>
                 <th>Descrição</th>
-                <th>Ativo</th>
-                <th>Ações</th>
+                <th class="text-center">Ativo</th>
+                <th class="text-center">Ações</th>
             </tr>
         </thead>
         <tbody>
@@ -28,10 +28,10 @@
                             <td>@client.Responsible</td>
                             <td>@client.Telephone</td>
                             <td>@client.Description</td>
-                            <td>
-                                <InputCheckbox @bind-Value="client.Active" disabled />
+                            <td class="text-center">
+                                @(client.Active ? "Sim" : "Não")
                             </td>
-                            <td>
+                            <td class="text-center">
                                 <button data-bs-toggle="modal" data-bs-target="#editClient-@client.Id" class="btn btn-info">
                                     Editar
                                 </button>

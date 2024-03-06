@@ -37,11 +37,10 @@ public class ScheduleUserController(IScheduleUserService scheduleUserService) : 
         });
 
     }
-
-    [HttpGet("ScheduleUserId")]
-    public async Task<ActionResult<IEnumerable<ScheduleUserDto>>> GetByScheduleUserId(int userId)
+    [HttpGet("ScheduleActive")]
+    public async Task<ActionResult<IEnumerable<ScheduleUserDto>>> GetByScheduleActive()
     {
-        var scheduleUserDto = await _scheduleUserService.GetByScheduleUserId(userId);
+        var scheduleUserDto = await _scheduleUserService.GetByScheduleActive();
 
         if (!scheduleUserDto.Any())
         {
@@ -49,11 +48,10 @@ public class ScheduleUserController(IScheduleUserService scheduleUserService) : 
         }
         return Ok(scheduleUserDto);
     }
-
-    [HttpGet("ScheduleActive")]
-    public async Task<ActionResult<IEnumerable<ScheduleUserDto>>> GetByScheduleActive()
+    [HttpGet("ScheduleUserId/{userId:int}")]
+    public async Task<ActionResult<IEnumerable<ScheduleUserDto>>> GetByScheduleUserId(int userId)
     {
-        var scheduleUserDto = await _scheduleUserService.GetByScheduleActive();
+        var scheduleUserDto = await _scheduleUserService.GetByScheduleUserId(userId);
 
         if (!scheduleUserDto.Any())
         {
