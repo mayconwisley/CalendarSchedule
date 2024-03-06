@@ -1,17 +1,26 @@
-﻿<ul class="nav nav-tabs">
-    <li class="nav-item">
-        <NavLink class="nav-link active" aria-current="page" href="" Match="NavLinkMatch.All">Active</NavLink>
-    </li>
-    <li class="nav-item">
-        <NavLink class="nav-link" href="Room" Match="NavLinkMatch.Prefix">Salas</NavLink>
-    </li>
-    <li class="nav-item">
-        <NavLink class="nav-link" href="ScheduleRoom" Match="NavLinkMatch.Prefix">Agenda Salas</NavLink>
-    </li>
-    <li class="nav-item">
-        <NavLink class="nav-link" href="User" Match="NavLinkMatch.Prefix">Usuários</NavLink>
-    </li>
-</ul>
+﻿<div>
+    <ul class="nav nav-tabs nav justify-content-center">
+        <li class="nav-item">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">Calendário</NavLink>
+        </li>
+        <li class="nav-item">
+            <NavLink class="nav-link" href="Room" Match="NavLinkMatch.Prefix">Salas</NavLink>
+        </li>
+        <li class="nav-item">
+            <NavLink class="nav-link" href="ScheduleRoom" Match="NavLinkMatch.Prefix">Agenda Salas</NavLink>
+        </li>
+        <li class="nav-item">
+            <NavLink class="nav-link" href="User" Match="NavLinkMatch.Prefix">Usuários</NavLink>
+        </li>
+        <li class="nav-item">
+            <NavLink class="nav-link" href="Client" Match="NavLinkMatch.Prefix">Cliente</NavLink>
+        </li>
+        <li class="nav-item">
+            <NavLink class="nav-link" href="ScheduleUser" Match="NavLinkMatch.Prefix">Agenda Usuários</NavLink>
+        </li>
+    </ul>
+</div>
+
 @* <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">Agenda Salas</a>
@@ -20,7 +29,7 @@
         </button>
     </div>
 </div> *@
-@* 
+@*
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="flex-column">
         <div class="nav-item px-3">
