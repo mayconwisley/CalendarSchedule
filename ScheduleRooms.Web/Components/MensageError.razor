@@ -1,10 +1,10 @@
 ﻿@if (!string.IsNullOrEmpty(Message))
 {
-    <div class="alert alert-danger d-flex align-items-center" role="alert">
+    <div class="alert alert-danger d-flex align-items-center m-2 @ShowMessage" role="alert">
         <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill" /></svg>
         <div>
             <p>@Message</p>
-            <button onclick="@Limpar" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            <button @onclick="HideMessageWarning" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                 x
                 <span class="visually-hidden">unread messages</span>
             </button>
@@ -16,12 +16,12 @@
 
 @code {
     [Parameter]
-    public string Message { get; set; }
+    public string? Message { get; set; }
+    [Parameter]
+    public string? ShowMessage{ get; set; }
 
-    private void Limpar()
+    private void HideMessageWarning()
     {
-        Message = string.Empty;
+        ShowMessage = "d-none";
     }
-
-
 }

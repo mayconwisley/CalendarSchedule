@@ -1,4 +1,5 @@
 ﻿@page "/ScheduleUser"
+
 @inject IScheduleUserService scheduleUserService
 <h3>Cadastro Agenda do Usuário</h3>
 <button data-bs-toggle="modal" data-bs-target="#newScheduleUser" class="btn btn-info">
@@ -12,10 +13,7 @@
 }
 else
 {
-    if (messagem is not null)
-    {
-        <MensageError Message="@messagem" />
-    }
+    <MensageError Message="@messagem" ShowMessage="@ShowMessage" />
 
     <TableScheduleUser ScheduleUserView="scheduleUserView" />
 
@@ -29,7 +27,8 @@ else
 
 @code {
     private ScheduleUserView? scheduleUserView;
-    private string? messagem { get; set; };
+    private string? messagem { get; set; }
+    public string? ShowMessage { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -47,6 +46,15 @@ else
 
     private async Task ReceiveError(string message)
     {
-        messagem = message;
+        messagem = await Task.FromResult(message);
+        if (message is not null)
+        {
+            ShowMessage = "";
+        }
+        else
+        {
+            ShowMessage = "d-none";
+        }
+        StateHasChanged();
     }
 }

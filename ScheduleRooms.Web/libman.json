@@ -3,9 +3,19 @@
   "defaultProvider": "cdnjs",
   "libraries": [
     {
-      "library": "bootstrap@5.3.1",
+      "library": "bootstrap@5.3.3",
+      "destination": "wwwroot/css/bootstrap/"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "bootstrap@5.3.3",
       "destination": "wwwroot/css/bootstrap/"
     }
-
-  ]
+  ,
+{
+  "provider": "cdnjs",
+  "library": "popper.js@2.11.8",
+  "destination": "wwwroot/js/popper.js/"
+}
+]
 }
