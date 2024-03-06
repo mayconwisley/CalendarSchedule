@@ -39,6 +39,10 @@ public class ScheduleUserService : IScheduleUserService
                         return scheduleUser;
                     }
                 }
+                else
+                {
+                    throw new Exception(response.EnsureSuccessStatusCode().Content.ToString());
+                }
             }
             return new();
         }

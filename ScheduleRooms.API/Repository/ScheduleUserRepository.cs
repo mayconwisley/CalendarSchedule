@@ -228,19 +228,19 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
             if (schedulesUser is not null)
             {
 
-                // Verifique se existe uma schedule que se sobrepõe na mesma room
-                var overlappingSchedule = await _scheduleContext.ScheduleUsers
-                         .Where(a => a.UserId == schedulesUser.UserId &&
-                                a.ClientId == schedulesUser.ClientId &&
-                                a.DateStart < schedulesUser.DateFinal &&
-                                a.DateFinal > schedulesUser.DateStart)
-                    .ToListAsync();
+                //// Verifique se existe uma schedule que se sobrepõe na mesma room
+                //var overlappingSchedule = await _scheduleContext.ScheduleUsers
+                //         .Where(a => a.UserId == schedulesUser.UserId &&
+                //                a.ClientId == schedulesUser.ClientId &&
+                //                a.DateStart < schedulesUser.DateFinal &&
+                //                a.DateFinal > schedulesUser.DateStart)
+                //    .ToListAsync();
 
-                if (overlappingSchedule.Count() > 0)
-                {
-                    // Existe sobreposição, faça algo aqui, como lançar uma exceção.
-                    throw new Exception("A atualização resultaria em uma sobreposição de datas para esta room.");
-                }
+                //if (overlappingSchedule.Count() > 0)
+                //{
+                //    // Existe sobreposição, faça algo aqui, como lançar uma exceção.
+                //    throw new Exception("A atualização resultaria em uma sobreposição de datas para esta room.");
+                //}
 
                 _scheduleContext.ScheduleUsers.Entry(schedulesUser).State = EntityState.Modified;
                 await _scheduleContext.SaveChangesAsync();

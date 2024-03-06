@@ -10,10 +10,9 @@
 
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">Cadastro de Agenda</h1>
-                    <button @onclick="@(() => {ErroRetornado = ""; ScheduleUserDto = new(); })" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <MensageError Message="@ErroRetornado" />
                     <div class="row g-3">
                         <div class="col-6">
                             <label for="inDataInicio" class="form-label">Data/Hora Inicio</label>
@@ -87,7 +86,9 @@
     private ScheduleUserDto? ScheduleUserDto { get; set; }
     private UserView? UserView { get; set; } = new();
     private ClientView? ClientView { get; set; } = new();
-    private string? ErroRetornado { get; set; }
+
+    [Parameter]
+    public EventCallback<string> ErroRetornado { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -109,7 +110,8 @@
             }
             catch (Exception ex)
             {
-                ErroRetornado = ex.Message;
+                await Error(ex.Message);
+                // ErroRetornado = ex.Message;
             }
         }
     }
@@ -117,5 +119,11 @@
     private void UpdateData()
     {
         DataUpdated?.Invoke();
+    }
+
+    private async Task Error(string error)
+    {
+        await ErroRetornado.InvokeAsync(error);
+        UpdateData();
     }
 }

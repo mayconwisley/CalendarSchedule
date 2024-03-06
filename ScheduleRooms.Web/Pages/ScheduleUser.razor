@@ -12,6 +12,12 @@
 }
 else
 {
+    @if (messagem is not null)
+    {
+        <MensageError Message="@ReceiveError" />
+    }
+
+
     <TableScheduleUser ScheduleUserView="scheduleUserView" />
 
     <PaginationTable PageCurrent="@ReceberPagina"
@@ -24,6 +30,7 @@ else
 
 @code {
     private ScheduleUserView? scheduleUserView;
+    private string? messagem { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -37,5 +44,10 @@ else
     private async Task ReceberPagina(int pageCurrent)
     {
         scheduleUserView = await scheduleUserService.GetAll(pageCurrent);
+    }
+
+    private async Task ReceiveError(string message)
+    {
+        messagem = message;
     }
 }

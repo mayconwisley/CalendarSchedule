@@ -90,8 +90,8 @@
     public Action? DataUpdated { get; set; }
 
     private ScheduleUserDto? ScheduleUserDto { get; set; } = new();
-    private UserView? UserView { get; set; } = new();
-    private ClientView? ClientView { get; set; } = new();
+    private UserView? UserView { get; set; } 
+    private ClientView? ClientView { get; set; }
 
     [Parameter]
     public int ScheduleId { get; set; }
