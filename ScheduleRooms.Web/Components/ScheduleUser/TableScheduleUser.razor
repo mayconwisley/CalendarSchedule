@@ -1,9 +1,7 @@
 ﻿@inject IScheduleUserService scheduleUserService
 
 <div class="border mt-2">
-  
-
-      <table class="table table-striped align-middle">
+    <table class="table table-striped align-middle">
         <thead>
             <tr>
                 <th>Id</th>
@@ -14,7 +12,7 @@
                 <th>Permitir Chamar</th>
                 <th>Cliente</th>
                 <th>Usuário</th>
-                <th>Ações</th>
+                <th class="text-center">Ações</th>
             </tr>
         </thead>
         <tbody>
@@ -48,7 +46,6 @@
                         </tr>
                     }
                 }
-
             }
 
         </tbody>
@@ -59,14 +56,9 @@
     [Parameter]
     public ScheduleUserView? ScheduleUserView { get; set; }
 
-    [Parameter]
-    public string? Message { get; set; }
-
     private async void DataUpdated()
     {
         ScheduleUserView = await scheduleUserService.GetAll();
         StateHasChanged();
     }
-
-    
 }

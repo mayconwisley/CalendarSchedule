@@ -82,14 +82,13 @@
 @code {
     [Parameter]
     public Action? DataUpdated { get; set; }
+    [Parameter]
+    public EventCallback<string> ErroRetornado { get; set; }
 
     private ScheduleUserDto? ScheduleUserDto { get; set; }
     private UserView? UserView { get; set; } = new();
     private ClientView? ClientView { get; set; } = new();
-
-    [Parameter]
-    public EventCallback<string> ErroRetornado { get; set; }
-
+    
     protected override async Task OnInitializedAsync()
     {
         ScheduleUserDto = new();
@@ -111,7 +110,7 @@
             catch (Exception ex)
             {
                 await Error(ex.Message);
-                UpdateData();
+                ScheduleUserDto = new();
             }
         }
     }

@@ -14,7 +14,7 @@
 }
 else
 {
-    <MensageError Message="@messagem" ShowMessage="@ShowMessage" />
+    <MensageError Message="@Message" ShowMessage="@ShowMessage" />
 
     <TableScheduleUser ScheduleUserView="scheduleUserView" />
 
@@ -28,7 +28,7 @@ else
 
 @code {
     private ScheduleUserView? scheduleUserView;
-    private string? messagem { get; set; }
+    private string? Message { get; set; }
     public string? ShowMessage { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -47,7 +47,7 @@ else
 
     private async Task ReceiveError(string message)
     {
-        messagem = await Task.FromResult(message);
+        Message = await Task.FromResult(message);
         if (message is not null)
         {
             ShowMessage = "";
@@ -56,6 +56,5 @@ else
         {
             ShowMessage = "d-none";
         }
-        StateHasChanged();
     }
 }
