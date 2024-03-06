@@ -84,11 +84,10 @@
                             {
                                 if (room.DateStart.Date == dateStartMonth.AddDays(i).Date)
                                 {
-                                    <div class="conteudoDia">
-                                        <a href="#" data-bs-toggle="modal" data-bs-target="#tableScheduleRoom-@room.RoomId-@dateStartMonth.AddDays(i).Date.ToString("ddMMyyyy")">
-                                            @room.Room
-                                        </a>
-                                    </div>
+
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#tableScheduleRoom-@room.RoomId-@dateStartMonth.AddDays(i).Date.ToString("ddMMyyyy")">
+                                        @room.Room
+                                    </a>
 
                                     <TableScheduleRoomModal RoomId="@room.RoomId" DateSelected="@dateStartMonth.AddDays(i).Date" />
                                 }
@@ -127,13 +126,9 @@
                             {
                                 if (user.DateStart.Date == dateStartMonth.AddDays(i).Date)
                                 {
-                                    <div class="conteudoDia">
-                                        <a href="#" data-bs-toggle="modal" data-bs-target="#tableScheduleUser-@user.UserId-@user.ClientId-@dateStartMonth.AddDays(i).Date.ToString("ddMMyyyy")">
-                                            @user.User
-                                        </a>
-                                    </div>
-
-
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#tableScheduleUser-@user.UserId-@user.ClientId-@dateStartMonth.AddDays(i).Date.ToString("ddMMyyyy")">
+                                        @user.User
+                                    </a>
                                     {
                                         UserId = @user.UserId;
                                     }
