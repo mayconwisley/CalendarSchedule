@@ -8,24 +8,22 @@
                 <DataAnnotationsValidator />
 
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Editar Sala</h1>
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Editar Usuário</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-
                     <div class="row g-3">
                         <div class="col-6">
                             <label for="inNome" class="form-label">Nome</label>
                             <InputText class="form-control" id="inNome" @bind-Value="UserDto!.Name" placeholder="Name" />
                             <ValidationMessage For="@(() => UserDto.Name)" />
-
                         </div>
                         <div class="col-6">
-
                             <label for="inCellphone" class="form-label">Celular</label>
-                            <InputText class="form-control" id="inCellphone" @bind-Value="UserDto!.Cellphone" placeholder="Celular" />
+                            <InputText class="form-control" id="inCellphone" @bind-Value="UserDto!.Cellphone" placeholder="(xx) 9 9999-9999" />
+                            <ValidationMessage For="@(() => UserDto.Cellphone)" />
                         </div>
-                      
+
                         <div class="col-12">
                             <label for="inDescription" class="form-label">Descrição</label>
                             <InputText class="form-control" id="inDescription" @bind-Value="UserDto!.Description" placeholder="Descrição" />
@@ -47,13 +45,11 @@
 @code {
     [Parameter]
     public Action? DataUpdated { get; set; }
-
-    private UserDto? UserDto { get; set; } = new();
-
     [Parameter]
     public int UserId { get; set; }
 
-
+    private UserDto? UserDto { get; set; } = new();
+    
     protected override async Task OnInitializedAsync()
     {
         UserDto = await userService.GetById(UserId);

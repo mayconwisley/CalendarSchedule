@@ -9,7 +9,7 @@
                 <th>Celular</th>
                 <th>Descrição</th>
                 <th class="text-center">Ativo</th>
-                <th class="text-center">Ações</th>
+                <th>Ações</th>
             </tr>
         </thead>
         <tbody>
@@ -29,7 +29,7 @@
                             <td class="text-center">
                                 @(user.Active ? "Sim" : "Não")
                             </td>
-                            <td class="text-center">
+                            <td>
                                 <button data-bs-toggle="modal" data-bs-target="#editUser-@user.Id" class="btn btn-info">
                                     Editar
                                 </button>
