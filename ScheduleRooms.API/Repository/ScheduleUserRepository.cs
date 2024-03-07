@@ -109,6 +109,24 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
         }
     }
 
+    public async Task<IEnumerable<ScheduleUser>> GetBySchedule()
+    {
+        try
+        {
+            var schedules = await _scheduleContext.ScheduleUsers
+                .Include(i => i.Client)
+                .Include(i => i.User)
+                .OrderBy(o => o.DateFinal)
+                .ToListAsync();
+
+            return schedules;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
     public async Task<IEnumerable<ScheduleUser>> GetByScheduleActive()
     {
         try

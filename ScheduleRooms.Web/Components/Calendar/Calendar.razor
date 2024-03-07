@@ -159,7 +159,7 @@
     protected override async Task OnInitializedAsync()
     {
         ScheduleRoomDto = await scheduleRoomService.GetByAgendaActive();
-        ScheduleUserDto = await scheculeUserService.GetByScheduleUserActive();
+        ScheduleUserDto = await scheculeUserService.GetByScheduleUser();
 
         await base.OnInitializedAsync();
     }

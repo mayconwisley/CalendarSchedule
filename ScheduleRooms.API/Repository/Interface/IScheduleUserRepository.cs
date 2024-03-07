@@ -6,6 +6,7 @@ public interface IScheduleUserRepository
 {
     Task<IEnumerable<ScheduleUser>> GetAll(int page, int size, string search);
     Task<IEnumerable<ScheduleUser>> GetByScheduleUserId(int userId);
+    Task<IEnumerable<ScheduleUser>> GetBySchedule();
     Task<IEnumerable<ScheduleUser>> GetByScheduleActive();
     Task<IEnumerable<ScheduleUser>> GetByScheduleActiveUserId(int userId, DateTime dateSalected);
     Task<IEnumerable<ScheduleUser>> GetByScheduleActiveClientId(int clientId, DateTime dateSalected);

@@ -7,6 +7,7 @@ public interface IScheduleUserService
 {
     Task<ScheduleUserView> GetAll(int page = 1, int size = 10, string search = "");
     Task<IEnumerable<ScheduleUserDto>> GetByScheduleUserId(int userId);
+    Task<IEnumerable<ScheduleUserDto>> GetByScheduleUser();
     Task<IEnumerable<ScheduleUserDto>> GetByScheduleUserActive();
     Task<IEnumerable<ScheduleUserDto>> GetByScheduleUserActiveUserId(int userId, DateTime dateSelected);
     Task<IEnumerable<ScheduleUserDto>> GetByScheduleUserActiveClientId(int clientId, DateTime dateSelected);

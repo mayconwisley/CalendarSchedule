@@ -35,6 +35,12 @@ namespace ScheduleRooms.API.Service
             return scheduleEntity.ConvertScheduleToDto();
         }
 
+        public async Task<IEnumerable<ScheduleUserDto>> GetBySchedule()
+        {
+            var schedyleEntity = await _scheduleUserRepository.GetBySchedule();
+            return schedyleEntity.ConvertSchedulesToDto();
+        }
+
         public async Task<IEnumerable<ScheduleUserDto>> GetByScheduleActive()
         {
             var schedyleEntity = await _scheduleUserRepository.GetByScheduleActive();

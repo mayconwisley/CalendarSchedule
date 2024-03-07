@@ -313,4 +313,35 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
+
+    public async Task<IEnumerable<ScheduleUserDto>> GetByScheduleUser()
+    {
+        try
+        {
+            using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+            using var response = await httpClient.GetAsync($"{apiEndPoint}/Schedule");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var scheduleUserDto = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleUserDto>>(_serializerOptions);
+                return scheduleUserDto ??= [];
+
+            }
+            else
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return [];
+                }
+                response.EnsureSuccessStatusCode();
+                return [];
+            }
+
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
 }

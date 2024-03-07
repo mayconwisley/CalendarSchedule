@@ -37,6 +37,17 @@ public class ScheduleUserController(IScheduleUserService scheduleUserService) : 
         });
 
     }
+    [HttpGet("Schedule")]
+    public async Task<ActionResult<IEnumerable<ScheduleUserDto>>> GetBySchedule()
+    {
+        var scheduleUserDto = await _scheduleUserService.GetBySchedule();
+
+        if (!scheduleUserDto.Any())
+        {
+            return NotFound("Sem dados");
+        }
+        return Ok(scheduleUserDto);
+    }
     [HttpGet("ScheduleActive")]
     public async Task<ActionResult<IEnumerable<ScheduleUserDto>>> GetByScheduleActive()
     {
