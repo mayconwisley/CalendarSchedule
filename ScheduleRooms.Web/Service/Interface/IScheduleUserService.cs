@@ -9,7 +9,7 @@ public interface IScheduleUserService
     Task<IEnumerable<ScheduleUserDto>> GetByScheduleUserId(int userId);
     Task<IEnumerable<ScheduleUserDto>> GetByScheduleUser();
     Task<IEnumerable<ScheduleUserDto>> GetByScheduleUserActive();
-    Task<IEnumerable<ScheduleUserDto>> GetByScheduleUserActiveUserId(int userId, DateTime dateSelected);
+    Task<IEnumerable<ScheduleUserDto>> GetByScheduleUserDateUserId(int userId, DateTime dateSelected);
     Task<IEnumerable<ScheduleUserDto>> GetByScheduleUserActiveClientId(int clientId, DateTime dateSelected);
     Task<IEnumerable<ScheduleUserDto>> GetByScheduleUserActiveClinetIdUserId(int clientId, int userId, DateTime dateSelected);
     Task<ScheduleUserDto> GetById(int id);

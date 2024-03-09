@@ -8,7 +8,7 @@ namespace ScheduleRooms.API.Service.Interface
         Task<IEnumerable<ScheduleUserDto>> GetByScheduleUserId(int userId);
         Task<IEnumerable<ScheduleUserDto>> GetBySchedule();
         Task<IEnumerable<ScheduleUserDto>> GetByScheduleActive();
-        Task<IEnumerable<ScheduleUserDto>> GetByScheduleActiveUserId(int userId, DateTime dateSalected);
+        Task<IEnumerable<ScheduleUserDto>> GetByScheduleDateUserId(int userId, DateTime dateSalected);
         Task<IEnumerable<ScheduleUserDto>> GetByScheduleActiveClientId(int clientId, DateTime dateSalected);
         Task<IEnumerable<ScheduleUserDto>> GetByScheduleActiveClientIdUserId(int clientId, int userId, DateTime dateSalected);
         Task<ScheduleUserDto> GetById(int id);

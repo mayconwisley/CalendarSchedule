@@ -59,9 +59,9 @@ namespace ScheduleRooms.API.Service
             return scheduleEntity.ConvertSchedulesToDto();
         }
 
-        public async Task<IEnumerable<ScheduleUserDto>> GetByScheduleActiveUserId(int userId, DateTime dateSalected)
+        public async Task<IEnumerable<ScheduleUserDto>> GetByScheduleDateUserId(int userId, DateTime dateSalected)
         {
-            var scheduleEntity = await _scheduleUserRepository.GetByScheduleActiveUserId(userId, dateSalected);
+            var scheduleEntity = await _scheduleUserRepository.GetByScheduleDateUserId(userId, dateSalected);
             return scheduleEntity.ConvertSchedulesToDto();
         }
 

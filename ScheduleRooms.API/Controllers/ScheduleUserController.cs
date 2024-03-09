@@ -70,12 +70,12 @@ public class ScheduleUserController(IScheduleUserService scheduleUserService) : 
         }
         return Ok(scheduleUserDto);
     }
-    [HttpGet("ScheduleActiveUserId/{userId:int}/{strDateSalected}")]
+    [HttpGet("ScheduleDateUserId/{userId:int}/{strDateSalected}")]
     public async Task<ActionResult<IEnumerable<ScheduleUserDto>>> GetByScheduleUserId(int userId, string strDateSalected)
     {
         DateTime dateSalected = DateTime.Parse(strDateSalected.Replace("%2F", "/"));
 
-        var scheduleUserDto = await _scheduleUserService.GetByScheduleActiveUserId(userId, dateSalected);
+        var scheduleUserDto = await _scheduleUserService.GetByScheduleDateUserId(userId, dateSalected);
 
         if (!scheduleUserDto.Any())
         {

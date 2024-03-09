@@ -174,8 +174,7 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
             var schedules = await _scheduleContext.ScheduleUsers
                 .Include(i => i.User)
                 .Include(i => i.Client)
-                .Where(w => w.DateFinal >= DateTime.Now &&
-                            w.DateFinal.Date == dateSalected.Date &&
+                .Where(w => w.DateFinal.Date == dateSalected.Date &&
                             w.UserId == userId &&
                             w.ClientId == clientId)
                 .OrderBy(o => o.DateStart)
@@ -189,15 +188,14 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
         }
     }
 
-    public async Task<IEnumerable<ScheduleUser>> GetByScheduleActiveUserId(int userId, DateTime dateSalected)
+    public async Task<IEnumerable<ScheduleUser>> GetByScheduleDateUserId(int userId, DateTime dateSalected)
     {
         try
         {
             var schedules = await _scheduleContext.ScheduleUsers
                 .Include(i => i.User)
                 .Include(i => i.Client)
-                .Where(w => w.DateFinal >= DateTime.Now &&
-                            w.DateFinal.Date == dateSalected.Date &&
+                .Where(w => w.DateFinal.Date == dateSalected.Date &&
                             w.UserId == userId)
                 .OrderBy(o => o.DateStart)
                 .ToListAsync();

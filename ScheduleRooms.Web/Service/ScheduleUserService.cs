@@ -225,12 +225,12 @@ public class ScheduleUserService : IScheduleUserService
         }
     }
 
-    public async Task<IEnumerable<ScheduleUserDto>> GetByScheduleUserActiveUserId(int userId, DateTime dateSelected)
+    public async Task<IEnumerable<ScheduleUserDto>> GetByScheduleUserDateUserId(int userId, DateTime dateSelected)
     {
         try
         {
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            using var response = await httpClient.GetAsync($"{apiEndPoint}/ScheduleActiveUserId/{userId}/{dateSelected.ToString("dd/MM/yyyy").Replace("/", "%2F")}");
+            using var response = await httpClient.GetAsync($"{apiEndPoint}/ScheduleDateUserId/{userId}/{dateSelected.ToString("dd/MM/yyyy").Replace("/", "%2F")}");
 
             if (response.IsSuccessStatusCode)
             {
