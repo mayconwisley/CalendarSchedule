@@ -28,11 +28,14 @@
                         </div>
                         <div class="col-9">
                             <label for="inTelephone" class="form-label">Telefone</label>
-                            <InputText class="form-control" id="inTelephone" @bind-Value="ClientDto!.Telephone" placeholder="Telefone" />
+                            <InputText mask="(99) 9 9999-9999" type="tel" class="form-control" id="inTelephone" @bind-Value="ClientDto!.Telephone" placeholder="Telefone" />
                         </div>
                         <div class="col-3">
-                            <label for="inActice" class="form-label">Ativo</label>
-                            <InputCheckbox class="form-check-input" id="inActice" @bind-Value="ClientDto!.Active" placeholder="Ativo" />
+                            <label class="form-label">Opção</label>
+                            <div class="form-check">
+                                <InputCheckbox class="form-check-input" id="inActive" @bind-Value="ClientDto!.Active" />
+                                <label for="inActive" class="form-label">Ativo</label>
+                            </div>
                         </div>
                         <div class="col-12">
                             <label for="inDescription" class="form-label">Descrição</label>

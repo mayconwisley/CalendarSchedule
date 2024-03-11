@@ -26,12 +26,20 @@
                             <td>@client.Id</td>
                             <td>@client.Name</td>
                             <td>@client.Responsible</td>
-                            <td>@client.Telephone</td>
+                            @{
+                                string tel = decimal.Parse(client.Telephone!
+                                .Replace("-", "")
+                                .Replace("(", "")
+                                .Replace(")", "")
+                                .Replace(" ", "")).ToString("(##) ####-####");
+                            }
+
+                            <td>@tel</td>
                             <td>@client.Description</td>
                             <td class="text-center">
                                 @(client.Active ? "Sim" : "Não")
                             </td>
-                            <td class="text-center">
+                            <td>
                                 <button data-bs-toggle="modal" data-bs-target="#editClient-@client.Id" class="btn btn-info">
                                     Editar
                                 </button>

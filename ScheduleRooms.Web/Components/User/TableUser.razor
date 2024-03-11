@@ -24,7 +24,15 @@
                         <tr>
                             <td>@user.Id</td>
                             <td>@user.Name</td>
-                            <td>@user.Cellphone</td>
+                            @{
+                                string cel = decimal.Parse(user.Cellphone!
+                                .Replace("-", "")
+                                .Replace("(", "")
+                                .Replace(")", "")
+                                .Replace(" ", ""))
+                                .ToString("(##) # ####-####");
+                            }
+                            <td>@cel</td>
                             <td>@user.Description</td>
                             <td class="text-center">
                                 @(user.Active ? "Sim" : "Não")

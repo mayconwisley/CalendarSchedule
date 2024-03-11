@@ -10,7 +10,7 @@ public class ClientDto
     [Required(ErrorMessage = "Responsável obrigatório")]
     public string? Responsible { get; set; }
     [Required(ErrorMessage = "Telefone Obrigatório")]
-    [MaxLength(10, ErrorMessage = "Máximo 10 digito")]
+    [MaxLength(14, ErrorMessage = "Máximo 14 digito")]
     [MinLength(10, ErrorMessage = "Mínino 10 digito")]
     public string? Telephone { get; set; }
     public string? Description { get; set; }
