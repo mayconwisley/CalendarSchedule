@@ -13,6 +13,9 @@
     <RunAOTCompilation>False</RunAOTCompilation>
   </PropertyGroup>
   <ItemGroup>
+    <Content Remove="Pages\GameEasy.razor" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\ScheduleRooms.Models\ScheduleRooms.Models.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -22,5 +25,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="wwwroot\js\" />
+  </ItemGroup>
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\GameEasy.razor" />
+  </ItemGroup>
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\GameEasy.razor" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Pages\GameEasy.razor" />
   </ItemGroup>
 </Project>
