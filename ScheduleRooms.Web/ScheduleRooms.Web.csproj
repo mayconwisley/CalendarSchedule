@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
@@ -13,9 +13,6 @@
     <RunAOTCompilation>False</RunAOTCompilation>
   </PropertyGroup>
   <ItemGroup>
-    <Content Remove="Pages\GameEasy.razor" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\ScheduleRooms.Models\ScheduleRooms.Models.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -26,13 +23,5 @@
   <ItemGroup>
     <Folder Include="wwwroot\js\" />
   </ItemGroup>
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Pages\GameEasy.razor" />
-  </ItemGroup>
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Pages\GameEasy.razor" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Pages\GameEasy.razor" />
-  </ItemGroup>
+ 
 </Project>

@@ -1,3 +1,36 @@
-﻿@page "/Gameeasy"
+﻿@page "/GameEasy"
+<div class="content">
+    <h5>Game Easy</h5>
+    <h6>Acerte o numero aleatório de 0 a 1000</h6>
+    <p>Numero Aleatório: @numberRandom</p>
 
-<h1>Teste</h1>
+    <InputNumber @bind-Value="numberCurrent" />
+    <button onclick="@Validate">Validar</button>
+
+    <p>@finishGame</p>
+</div>
+@code {
+    private int numberRandom = 0;
+    private int numberCurrent = 0;
+    private int numbertAttempts = 0;
+    private string finishGame = "";
+
+    protected override Task OnInitializedAsync()
+    {
+        numberRandom = new Random().Next(0, 1000);
+
+        return base.OnInitializedAsync();
+    }
+
+    private void Validate()
+    {
+        if (numberRandom == numberCurrent)
+        {
+            finishGame = $"Acertou em {numbertAttempts} tentativas...";
+        }
+
+        numbertAttempts++;
+    }
+
+
+}
