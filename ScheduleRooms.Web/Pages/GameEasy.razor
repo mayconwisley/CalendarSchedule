@@ -5,7 +5,7 @@
     <p>Numero Aleatório: @numberRandom</p>
 
     <InputNumber @bind-Value="numberCurrent" />
-    <button onclick="@Validate">Validar</button>
+    <button onclick="@(() => Validate)">Validar</button>
 
     <p>@finishGame</p>
 </div>
