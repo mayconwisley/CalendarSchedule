@@ -3,7 +3,9 @@
     padding: 0px;
     box-sizing: border-box;
 }
-
+.titulo{
+    font-size: 25px;
+}
 .teste {
     margin: 0 auto;
     max-width: 90%;
@@ -99,7 +101,7 @@ a {
 .desc-mes {
     display: flex;
     width: 100%;
-    justify-content: center;
+    justify-content: space-between;
 }
 
     .desc-mes > nav > ul > li > p, button {

@@ -10,6 +10,10 @@
 <div class="teste">
     <div class="calendario">
         <div class="desc-mes">
+            <div class="titulo">
+                <p>Agenda de Salas</p>
+            </div>
+
             <nav>
                 <ul class="pagination">
                     <li class="page-room">
@@ -27,6 +31,10 @@
                     </li>
                 </ul>
             </nav>
+            <div>
+                <NavLink class="nav-link" href="Client" Match="NavLinkMatch.Prefix">Menu</NavLink>
+            </div>
+
         </div>
         <div class="dia-semana">
             <span>Domingo</span>
@@ -53,9 +61,9 @@
                     }
                     <span class="@(numWeek == 0 && dateStartMonth.AddDays(i).Date == DateTime.Now.Date ? "dia-atual dia" :
                                   (numWeek == 0 ? "domingo dia" :
-                                  (numWeek == 6 && dateStartMonth.AddDays(i).Date == DateTime.Now.Date ? "dia-atual dia" : 
-                                  (numWeek == 6 ? "sabado dia" : 
-                                  (dateStartMonth.AddDays(i).Date == DateTime.Now.Date ? "dia-atual dia" : 
+                                  (numWeek == 6 && dateStartMonth.AddDays(i).Date == DateTime.Now.Date ? "dia-atual dia" :
+                                  (numWeek == 6 ? "sabado dia" :
+                                  (dateStartMonth.AddDays(i).Date == DateTime.Now.Date ? "dia-atual dia" :
                                   "dia" )))))">
                         <b>
                             @dateStartMonth.AddDays(i).Day
@@ -77,11 +85,11 @@
                                 g.DateStart.Date
                             })
                             .Select(s => new ScheduleRoomDto
-                            {
-                                RoomId = s.Key.RoomId,
-                                Room = s.Key.Room,
-                                DateStart = s.Key.Date
-                            })
+                    {
+                        RoomId = s.Key.RoomId,
+                        Room = s.Key.Room,
+                        DateStart = s.Key.Date
+                    })
                             .ToList()
                             .OrderBy(o => o.Room);
 
@@ -117,13 +125,13 @@
                                 g.DateStart.Date
                             })
                             .Select(s => new ScheduleUserDto
-                            {
-                                UserId = s.Key.UserId,
-                                User = s.Key.User,
-                                ClientId = s.Key.ClientId,
-                                Client = s.Key.Client,
-                                DateStart = s.Key.Date
-                            })
+                    {
+                        UserId = s.Key.UserId,
+                        User = s.Key.User,
+                        ClientId = s.Key.ClientId,
+                        Client = s.Key.Client,
+                        DateStart = s.Key.Date
+                    })
                             .ToList()
                             .OrderBy(o => o.User);
 
