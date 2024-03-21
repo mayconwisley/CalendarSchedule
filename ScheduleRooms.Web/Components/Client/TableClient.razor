@@ -27,14 +27,16 @@
                             <td>@client.Name</td>
                             <td>@client.Responsible</td>
                             @{
-                                string tel = decimal.Parse(client.Telephone!
+                                string tel = client.Telephone!
                                 .Replace("-", "")
                                 .Replace("(", "")
                                 .Replace(")", "")
-                                .Replace(" ", "")).ToString("(##) ####-####");
+                                .Replace(" ", "");
+                                string tel1 = decimal.Parse(tel).ToString("(##) ####-####");
+                                string apiTel = $@"https://api.whatsapp.com/send?phone=55{tel}";
                             }
 
-                            <td>@tel</td>
+                            <td><a href="@apiTel" target="_blank">@tel1</a></td>
                             <td>@client.Description</td>
                             <td class="text-center">
                                 @(client.Active ? "Sim" : "Não")
