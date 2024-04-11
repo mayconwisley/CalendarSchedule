@@ -2,12 +2,12 @@
 
 public class ScheduleRoom
 {
-    public int Id { get; set; } = 0;
-    public string? Description { get; set; } = string.Empty;
-    public DateTime DateStart { get; set; } = DateTime.Now;
-    public DateTime DateFinal { get; set; } = DateTime.Now;
-    public bool AllowCall { get; set; } = false;
-    public bool AllowChat { get; set; } = false;
-    public int RoomId { get; set; } = 0;
-    public virtual Room? Room { get; set; } = new();
+    public int Id { get; set; }
+    public string? Description { get; set; }
+    public DateTime DateStart { get; set; } 
+    public DateTime DateFinal { get; set; } 
+    public bool AllowCall { get; set; }
+    public bool AllowChat { get; set; }
+    public int RoomId { get; set; }
+    public virtual Room? Room { get; set; }
 }

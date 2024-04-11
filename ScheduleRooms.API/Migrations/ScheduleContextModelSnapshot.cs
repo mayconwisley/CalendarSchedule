@@ -49,7 +49,7 @@ namespace ScheduleRooms.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Clients");
+                    b.ToTable("Clients", (string)null);
                 });
 
             modelBuilder.Entity("ScheduleRooms.API.Model.Room", b =>
@@ -74,7 +74,7 @@ namespace ScheduleRooms.API.Migrations
 
                     b.HasIndex("Name");
 
-                    b.ToTable("Rooms");
+                    b.ToTable("Rooms", (string)null);
                 });
 
             modelBuilder.Entity("ScheduleRooms.API.Model.ScheduleRoom", b =>
@@ -108,7 +108,7 @@ namespace ScheduleRooms.API.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("ScheduleRooms");
+                    b.ToTable("ScheduleRooms", (string)null);
                 });
 
             modelBuilder.Entity("ScheduleRooms.API.Model.ScheduleUser", b =>
@@ -146,7 +146,7 @@ namespace ScheduleRooms.API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ScheduleUsers");
+                    b.ToTable("ScheduleUsers", (string)null);
                 });
 
             modelBuilder.Entity("ScheduleRooms.API.Model.User", b =>
@@ -172,7 +172,7 @@ namespace ScheduleRooms.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("ScheduleRooms.API.Model.ScheduleRoom", b =>
