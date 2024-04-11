@@ -6,7 +6,7 @@ public class ScheduleRoomDto
 {
     public int Id { get; set; } = 0;
     [Required(ErrorMessage = "Descrição Obrigatório")]
-    public string? Description { get; set; }
+    public string? Description { get; set; } = string.Empty;
     [Required(ErrorMessage = "Data Inicio Obrigatório")]
     public DateTime DateStart { get; set; } = DateTime.Now;
     [Required(ErrorMessage = "Data Final Obrigatório")]
@@ -15,5 +15,5 @@ public class ScheduleRoomDto
     public bool AllowChat { get; set; } = false;
     [Required(ErrorMessage = "Sala Obrigatória")]
     public int RoomId { get; set; } = 0;
-    public string? Room { get; set; }
+    public string? Room { get; set; } = string.Empty;
 }
