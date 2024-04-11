@@ -13,6 +13,7 @@ public partial class FrmCadAgenda : Form
     private readonly int _scheduleId = 0;
     readonly bool isModify;
     readonly FrmPrincipal _form;
+   
     public FrmCadAgenda()
     {
         InitializeComponent();
