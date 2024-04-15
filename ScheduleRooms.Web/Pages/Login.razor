@@ -5,8 +5,8 @@
     <EditForm Model="@LoginDto" class="formLogin" OnValidSubmit="Log_in">
         <DataAnnotationsValidator />
         <h2>Login</h2>
-        <InputText @bind-Value="LoginDto.Username" type="text" placeholder="Usuário" />
-        <InputText @bind-Value="LoginDto.Password" type="password" placeholder="Senha" />
+        <InputText @bind-Value="LoginDto!.Username" type="text" placeholder="Usuário" />
+        <InputText @bind-Value="LoginDto!.Password" type="password" placeholder="Senha" />
         <button type="submit">Entrar</button>
     </EditForm>
 </div>

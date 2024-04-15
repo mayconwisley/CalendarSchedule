@@ -82,7 +82,7 @@ public class ScheduleRoomController : ControllerBase
         return NotFound("Sem dados");
 
     }
-    [Authorize]
+    
     [HttpPost]
     public async Task<ActionResult<ScheduleRoomDto>> Post([FromBody] ScheduleRoomDto scheduleDto)
     {
@@ -105,7 +105,7 @@ public class ScheduleRoomController : ControllerBase
         }
         return BadRequest("Dados inválidos");
     }
-    [Authorize]
+    
     [HttpPut("{id:int}")]
     public async Task<ActionResult<ScheduleRoomDto>> Put(int id, [FromBody] ScheduleRoomDto scheduleDto)
     {
@@ -121,7 +121,7 @@ public class ScheduleRoomController : ControllerBase
         await _scheduleService.Update(scheduleDto);
         return Ok(scheduleDto);
     }
-    [Authorize]
+    
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<ScheduleRoomDto>> Delete(int id)
     {

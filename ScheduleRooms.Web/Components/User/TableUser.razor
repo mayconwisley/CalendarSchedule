@@ -9,7 +9,9 @@
                 <th>Nome</th>
                 <th>Celular</th>
                 <th>Descrição</th>
+                <th>Gestor</th>
                 <th class="text-center">Ativo</th>
+                <th>Usuário</th>
                 <th>Ações</th>
             </tr>
         </thead>
@@ -37,8 +39,12 @@
                             <td><a href="@apiCel" target="_blank">@cel1</a></td>
                             <td>@user.Description</td>
                             <td class="text-center">
+                                @(user.Manager ? "Sim" : "Não")
+                            </td>
+                            <td class="text-center">
                                 @(user.Active ? "Sim" : "Não")
                             </td>
+                            <td>@user.Username</td>
                             <td>
                                 <button data-bs-toggle="modal" data-bs-target="#editUser-@user.Id" class="btn btn-info">
                                     Editar

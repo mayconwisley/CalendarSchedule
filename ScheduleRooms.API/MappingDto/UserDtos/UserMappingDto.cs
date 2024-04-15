@@ -16,6 +16,7 @@ public static class UserMappingDto
                     Description = user.Description,
                     Username = user.Username,
                     Password = user.Password,
+                    Manager = user.Manager,
                     Active = user.Active
                 }).ToList();
 
@@ -31,6 +32,7 @@ public static class UserMappingDto
                     Description = user.Description,
                     Username = user.Username,
                     Password = user.Password,
+                    Manager = user.Manager,
                     Active = user.Active
                 }).ToList();
     }
@@ -44,6 +46,7 @@ public static class UserMappingDto
             Description = user.Description,
             Username = user.Username,
             Password = user.Password,
+            Manager = user.Manager,
             Active = user.Active
 
         };
@@ -58,6 +61,7 @@ public static class UserMappingDto
             Description = userDto.Description,
             Username = userDto.Username,
             Password = userDto.Password,
+            Manager = userDto.Manager,
             Active = userDto.Active
         };
     }

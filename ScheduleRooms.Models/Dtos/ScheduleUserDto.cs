@@ -11,8 +11,8 @@ public class ScheduleUserDto
     public DateTime DateStart { get; set; } = DateTime.Now;
     [Required(ErrorMessage = "Data Final Obrigatório")]
     public DateTime DateFinal { get; set; } = DateTime.Now.AddHours(1);
-    public bool AllowCall { get; set; } = false;
-    public bool AllowChat { get; set; } = false;
+    public bool MeetingType { get; set; } = false;
+    public bool StatusSchedule { get; set; } = false;
     [Required(ErrorMessage = "Cliente Obrigatório")]
     public int ClientId { get; set; } = 0;
     public string? Client { get; set; } = string.Empty;

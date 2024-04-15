@@ -6,8 +6,8 @@ public class ScheduleUser
     public string? Description { get; set; }
     public DateTime DateStart { get; set; } 
     public DateTime DateFinal { get; set; } 
-    public bool AllowCall { get; set; }
-    public bool AllowChat { get; set; }
+    public bool MeetingType { get; set; }
+    public bool StatusSchedule { get; set; }
     public int ClientId { get; set; }
     public virtual Client? Client { get; set; }
     public int UserId { get; set; }

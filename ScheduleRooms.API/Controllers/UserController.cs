@@ -58,7 +58,7 @@ public class UserController : ControllerBase
         return NotFound("Sem dados");
 
     }
-    [Authorize]
+    
     [HttpPost]
     public async Task<ActionResult<UserDto>> Post([FromBody] UserDto userDto)
     {
@@ -69,7 +69,7 @@ public class UserController : ControllerBase
         }
         return BadRequest("Dados inválidos");
     }
-    [Authorize]
+    
     [HttpPut("{id:int}")]
     public async Task<ActionResult<UserDto>> Put(int id, [FromBody] UserDto userDto)
     {
@@ -85,7 +85,7 @@ public class UserController : ControllerBase
         await _userService.Update(userDto);
         return Ok(userDto);
     }
-    [Authorize]
+    
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<UserDto>> Delete(int id)
     {

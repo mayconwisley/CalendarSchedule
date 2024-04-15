@@ -14,8 +14,8 @@ public static class ScheduleUserMappingDto
                     Description = scheduleUser.Description,
                     DateStart = scheduleUser.DateStart,
                     DateFinal = scheduleUser.DateFinal,
-                    AllowCall = scheduleUser.AllowCall,
-                    AllowChat = scheduleUser.AllowChat,
+                    MeetingType = scheduleUser.MeetingType,
+                    StatusSchedule = scheduleUser.StatusSchedule,
                     Client = scheduleUser?.Client?.Name,
                     ClientId = scheduleUser!.Client!.Id,
                     User = scheduleUser?.User?.Name,
@@ -31,8 +31,8 @@ public static class ScheduleUserMappingDto
                     Description = scheduleUser.Description,
                     DateStart = scheduleUser.DateStart,
                     DateFinal = scheduleUser.DateFinal,
-                    AllowCall = scheduleUser.AllowCall,
-                    AllowChat = scheduleUser.AllowChat,
+                    MeetingType = scheduleUser.MeetingType,
+                    StatusSchedule = scheduleUser.StatusSchedule,
                     ClientId = scheduleUser.ClientId,
                     UserId = scheduleUser.UserId
 
@@ -46,8 +46,8 @@ public static class ScheduleUserMappingDto
             Description = scheduleUser.Description,
             DateStart = scheduleUser.DateStart,
             DateFinal = scheduleUser.DateFinal,
-            AllowChat = scheduleUser.AllowChat,
-            AllowCall = scheduleUser.AllowCall,
+            MeetingType = scheduleUser.MeetingType,
+            StatusSchedule = scheduleUser.StatusSchedule,
             Client = scheduleUser?.Client?.Name,
             ClientId = scheduleUser!.Client!.Id,
             User = scheduleUser?.User?.Name,
@@ -62,8 +62,8 @@ public static class ScheduleUserMappingDto
             Description = scheduleUserDto.Description,
             DateStart = scheduleUserDto.DateStart,
             DateFinal = scheduleUserDto.DateFinal,
-            AllowChat = scheduleUserDto.AllowChat,
-            AllowCall = scheduleUserDto.AllowCall,
+            MeetingType = scheduleUserDto.MeetingType,
+            StatusSchedule = scheduleUserDto.StatusSchedule,
             ClientId = scheduleUserDto.ClientId,
             UserId = scheduleUserDto.UserId
         };

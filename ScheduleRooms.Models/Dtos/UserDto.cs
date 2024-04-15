@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace ScheduleRooms.Models.Dtos;
 
@@ -18,5 +17,6 @@ public class UserDto
     public string? Username { get; set; } = string.Empty;
     [Required(ErrorMessage = "Senha Obrigatória")]
     public string? Password { get; set; } = string.Empty;
+    public bool Manager { get; set; } = false;
     public bool Active { get; set; } = true;
 }

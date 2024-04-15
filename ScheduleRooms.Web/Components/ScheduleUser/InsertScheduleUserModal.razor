@@ -61,12 +61,12 @@
                         <div class="col-6">
                             <label class="form-label">Opções</label>
                             <div class="form-check">
-                                <InputCheckbox class="form-check-input" @bind-Value="ScheduleUserDto.AllowCall" id="inPermiteLigar" />
-                                <label for="inPermiteLigar" class="form-check-label">Permite Ligar?</label>
+                                <InputCheckbox class="form-check-input" @bind-Value="ScheduleUserDto.MeetingType" id="inTypeMeeting" />
+                                <label for="inTypeMeeting" class="form-check-label">Remoto?</label>
                             </div>
                             <div class="form-check">
-                                <InputCheckbox class="form-check-input" @bind-Value="ScheduleUserDto.AllowChat" id="inPermiteChamar" />
-                                <label for="inPermiteChamar" class="form-check-label">Permite Chamar?</label>
+                                <InputCheckbox class="form-check-input" @bind-Value="ScheduleUserDto.StatusSchedule" id="inStatusSchedule" />
+                                <label for="inStatusSchedule" class="form-check-label">Confirmada?</label>
                             </div>
                         </div>
                     </div>
@@ -88,7 +88,7 @@
     private ScheduleUserDto? ScheduleUserDto { get; set; }
     private UserView? UserView { get; set; } = new();
     private ClientView? ClientView { get; set; } = new();
-    
+
     protected override async Task OnInitializedAsync()
     {
         ScheduleUserDto = new();

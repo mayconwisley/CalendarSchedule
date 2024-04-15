@@ -24,6 +24,7 @@ public class UserService(IUserRepository userRepository,
             Cellphone = userDto.Cellphone,
             Username = userDto.Username,
             Password = _encryptionUtility.Dado(userDto.Password),
+            Manager = userDto.Manager,
             Active = userDto.Active
         };
 
@@ -79,6 +80,7 @@ public class UserService(IUserRepository userRepository,
             Cellphone = userDto.Cellphone,
             Username = userDto.Username,
             Password = _encryptionUtility.Dado(userDto.Password),
+            Manager = userDto.Manager,
             Active = userDto.Active
         };
 

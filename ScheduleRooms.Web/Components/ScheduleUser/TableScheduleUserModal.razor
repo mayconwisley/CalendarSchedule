@@ -15,8 +15,8 @@
                                 <th>Descrição</th>
                                 <th>Data/Hora Inicio</th>
                                 <th>Data/Hora Fim</th>
-                                <th>Permitir Ligar</th>
-                                <th>Permitir Chamar</th>
+                                <th>Remoto</th>
+                                <th>Confirmada</th>
                                 <th>Cliente</th>
                                 <th>Usuário</th>
                             </tr>
@@ -35,8 +35,8 @@
                                             <td>@schedule.Description</td>
                                             <td>@schedule.DateStart</td>
                                             <td>@schedule.DateFinal</td>
-                                            <td>@(schedule.AllowCall ? "Sim" : "Não")</td>
-                                            <td>@(schedule.AllowChat ? "Sim" : "Não")</td>
+                                            <td>@(schedule.MeetingType ? "Sim" : "Não")</td>
+                                            <td>@(schedule.StatusSchedule ? "Sim" : "Não")</td>
                                             <td>@schedule.Client</td>
                                             <td>@schedule.User</td>
                                         </tr>

@@ -58,7 +58,7 @@ public class RoomController : ControllerBase
         return NotFound("Sem dados");
 
     }
-    [Authorize]
+    
     [HttpPost]
     public async Task<ActionResult<RoomDto>> Post([FromBody] RoomDto roomDto)
     {
@@ -69,7 +69,7 @@ public class RoomController : ControllerBase
         }
         return BadRequest("Dados inválidos");
     }
-    [Authorize]
+    
     [HttpPut("{id:int}")]
     public async Task<ActionResult<RoomDto>> Put(int id, [FromBody] RoomDto roomDto)
     {
@@ -85,7 +85,7 @@ public class RoomController : ControllerBase
         await _roomService.Update(roomDto);
         return Ok(roomDto);
     }
-    [Authorize]
+    
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<RoomDto>> Delete(int id)
     {

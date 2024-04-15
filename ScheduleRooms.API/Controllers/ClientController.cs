@@ -54,7 +54,7 @@ public class ClientController(IClientService clientService) : ControllerBase
         return NotFound("Sem dados");
 
     }
-    [Authorize]
+   
     [HttpPost]
     public async Task<ActionResult<ClientDto>> Post([FromBody] ClientDto clientDto)
     {
@@ -65,7 +65,7 @@ public class ClientController(IClientService clientService) : ControllerBase
         }
         return BadRequest("Dados inválidos");
     }
-    [Authorize]
+   
     [HttpPut("{id:int}")]
     public async Task<ActionResult<ClientDto>> Put(int id, [FromBody] ClientDto clientDto)
     {
@@ -81,7 +81,7 @@ public class ClientController(IClientService clientService) : ControllerBase
         await _clientService.Update(clientDto);
         return Ok(clientDto);
     }
-    [Authorize]
+   
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<ClientDto>> Delete(int id)
     {
