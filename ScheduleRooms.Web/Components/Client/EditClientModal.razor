@@ -6,7 +6,6 @@
             <EditForm Model="@ClientDto" OnValidSubmit="@Edit">
                 <InputNumber hidden @bind-Value="ClientDto!.Id" />
                 <DataAnnotationsValidator />
-
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">Editar Cliente</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -18,7 +17,6 @@
                             <label for="inName" class="form-label">Nome</label>
                             <InputText class="form-control" id="inName" @bind-Value="ClientDto!.Name" placeholder="Nome" />
                             <ValidationMessage For="@(() => ClientDto.Name)" />
-
                         </div>
                         <div class="col-6">
                             <label for="inResponsible" class="form-label">Responsável</label>
@@ -50,10 +48,7 @@
                             <label for="inDescription" class="form-label">Descrição</label>
                             <InputText class="form-control" id="inDescription" @bind-Value="ClientDto!.Description" placeholder="Descrição" />
                         </div>
-
-
                     </div>
-
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
@@ -71,7 +66,6 @@
 
     [Parameter]
     public int ClientId { get; set; }
-
 
     protected override async Task OnInitializedAsync()
     {
