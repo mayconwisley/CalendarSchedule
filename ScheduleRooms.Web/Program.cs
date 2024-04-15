@@ -24,6 +24,7 @@ builder.Services.AddScoped<IScheduleRoomService, ScheduleRoomService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IScheduleUserService, ScheduleUserService>();
+builder.Services.AddScoped<ILoginService, LoginService>();
 
 
 await builder.Build().RunAsync();

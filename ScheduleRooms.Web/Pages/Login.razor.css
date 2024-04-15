@@ -1,0 +1,26 @@
+﻿.page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    background-color: #480ca8; /* Cor de fundo escura */
+}
+
+.formLogin {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    border-radius: 7px;
+    padding: 40px;
+    box-shadow: 10px 10px 40px rgba(0, 0, 0, 0.4);
+    gap: 5px;
+}
+
+/* Estilize os campos de entrada e o botão conforme necessário */
+input[type="text"],
+input[type="password"],
+button {
+    /* Adicione estilos personalizados aqui */
+}

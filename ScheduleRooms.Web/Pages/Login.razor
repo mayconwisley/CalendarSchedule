@@ -1,0 +1,30 @@
+﻿@page "/Login"
+@inject ILoginService loginService
+
+<div class="page">
+    <EditForm Model="@LoginDto" class="formLogin" OnValidSubmit="Log_in">
+        <DataAnnotationsValidator />
+        <h2>Login</h2>
+        <InputText @bind-Value="LoginDto.Username" type="text" placeholder="Usuário" />
+        <InputText @bind-Value="LoginDto.Password" type="password" placeholder="Senha" />
+        <button type="submit">Entrar</button>
+    </EditForm>
+</div>
+
+@code {
+    private LoginDto? LoginDto { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        LoginDto ??= new();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task Log_in()
+    {
+        if (LoginDto is not null)
+        {
+            var token = await loginService.Token(LoginDto);
+        }
+    }
+}
