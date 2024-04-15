@@ -83,6 +83,24 @@ public class UserRepository(ScheduleContext scheduleContext) : IUserRepository
         }
     }
 
+    public async Task<IEnumerable<User>> GetManagerAll(int page, int size, string search)
+    {
+        try
+        {
+            var users = await _scheduleContext.Users
+                .Where(w => w.Manager == true)
+                .Skip((page - 1) * size)
+                .Take(size)
+                .OrderBy(o => o.Name)
+                .ToListAsync();
+            return users;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
     public async Task<string> GetPassword(string username)
     {
         var password = await _scheduleContext.Users

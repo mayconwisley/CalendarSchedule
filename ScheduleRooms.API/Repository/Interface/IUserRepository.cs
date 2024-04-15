@@ -5,6 +5,7 @@ namespace ScheduleRooms.API.Repository.Interface;
 public interface IUserRepository
 {
     Task<IEnumerable<User>> GetAll(int page, int size, string search);
+    Task<IEnumerable<User>> GetManagerAll(int page, int size, string search);
     Task<User> GetById(int id);
     Task<string> GetPassword(string username);
     Task<User> Create(User user);

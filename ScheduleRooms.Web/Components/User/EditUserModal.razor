@@ -70,20 +70,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-
-
-        var userDto = await userService.GetById(UserId);
-
-        UserDto = new()
-            {
-                Id = userDto.Id,
-                Name = userDto.Name,
-Cellphone = userDto.Cellphone,
-
-            };
-
-
-
+        UserDto = await userService.GetById(UserId);
     }
 
     private async Task Edit()

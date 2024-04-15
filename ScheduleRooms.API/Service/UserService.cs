@@ -48,8 +48,25 @@ public class UserService(IUserRepository userRepository,
 
     public async Task<UserDto> GetById(int id)
     {
-        var userEntity = await _userRepository.GetById(id);
-        return userEntity.ConvertUserToDto();
+        var userDto = await _userRepository.GetById(id);
+        UserDto user = new()
+        {
+            Id = userDto.Id,
+            Name = userDto.Name,
+            Description = userDto.Description,
+            Cellphone = userDto.Cellphone,
+            Username = userDto.Username,
+            Password = _decryptionUtility.Dado(userDto.Password),
+            Manager = userDto.Manager,
+            Active = userDto.Active
+        };
+        return user;
+    }
+
+    public async Task<IEnumerable<UserDto>> GetManagerAll(int page, int size, string search)
+    {
+        var userEntity = await _userRepository.GetManagerAll(page, size, search);
+        return userEntity.ConvertUsersToDto();
     }
 
     public async Task<bool> GetPassword(string username, string password)
