@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ScheduleRooms.API.Service.Interface;
 using ScheduleRooms.Models.Dtos;
 
 namespace ScheduleRooms.API.Controllers;
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class ClientController(IClientService clientService) : ControllerBase

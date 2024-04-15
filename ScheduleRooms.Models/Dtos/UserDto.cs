@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ScheduleRooms.Models.Dtos;
 
@@ -12,5 +13,10 @@ public class UserDto
     [MinLength(11, ErrorMessage = "Mínino 11 digito")]
     public string? Cellphone { get; set; } = string.Empty;
     public string? Description { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Usuário Obrigatório")]
+    [MaxLength(16, ErrorMessage = "Máximo 50 digito")]
+    public string? Username { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Senha Obrigatória")]
+    public string? Password { get; set; } = string.Empty;
     public bool Active { get; set; } = true;
 }

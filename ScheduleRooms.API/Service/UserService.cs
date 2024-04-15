@@ -1,17 +1,33 @@
 ﻿using ScheduleRooms.API.MappingDto.UserDtos;
 using ScheduleRooms.API.Repository.Interface;
 using ScheduleRooms.API.Service.Interface;
+using ScheduleRooms.API.Utility.Interface;
 using ScheduleRooms.Models.Dtos;
 
 namespace ScheduleRooms.API.Service;
 
-public class UserService(IUserRepository userRepository) : IUserService
+public class UserService(IUserRepository userRepository,
+                         IEncryptionUtility encryptionUtility,
+                         IDecryptionUtility decryptionUtility) : IUserService
 {
     private readonly IUserRepository _userRepository = userRepository;
+    private readonly IEncryptionUtility _encryptionUtility = encryptionUtility;
+    private readonly IDecryptionUtility _decryptionUtility = decryptionUtility;
 
     public async Task Create(UserDto userDto)
     {
-        await _userRepository.Create(userDto.ConvertDtoToUser());
+        UserDto user = new()
+        {
+            Id = userDto.Id,
+            Name = userDto.Name,
+            Description = userDto.Description,
+            Cellphone = userDto.Cellphone,
+            Username = userDto.Username,
+            Password = _encryptionUtility.Dado(userDto.Password),
+            Active = userDto.Active
+        };
+
+        await _userRepository.Create(user.ConvertDtoToUser());
     }
 
     public async Task Delete(int id)
@@ -35,6 +51,18 @@ public class UserService(IUserRepository userRepository) : IUserService
         return userEntity.ConvertUserToDto();
     }
 
+    public async Task<bool> GetPassword(string username, string password)
+    {
+        var pass = await _userRepository.GetPassword(username);
+        pass = _decryptionUtility.Dado(pass);
+
+        if (pass == password)
+        {
+            return true;
+        }
+        return false;
+    }
+
     public async Task<int> TotalUsers(string search)
     {
         var totalUser = await _userRepository.TotalUser(search);
@@ -43,6 +71,17 @@ public class UserService(IUserRepository userRepository) : IUserService
 
     public async Task Update(UserDto userDto)
     {
-        await _userRepository.Update(userDto.ConvertDtoToUser());
+        UserDto user = new()
+        {
+            Id = userDto.Id,
+            Name = userDto.Name,
+            Description = userDto.Description,
+            Cellphone = userDto.Cellphone,
+            Username = userDto.Username,
+            Password = _encryptionUtility.Dado(userDto.Password),
+            Active = userDto.Active
+        };
+
+        await _userRepository.Update(user.ConvertDtoToUser());
     }
 }

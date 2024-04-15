@@ -14,6 +14,8 @@ public static class UserMappingDto
                     Name = user.Name,
                     Cellphone = user.Cellphone,
                     Description = user.Description,
+                    Username = user.Username,
+                    Password = user.Password,
                     Active = user.Active
                 }).ToList();
 
@@ -27,6 +29,8 @@ public static class UserMappingDto
                     Name = user.Name,
                     Cellphone = user.Cellphone,
                     Description = user.Description,
+                    Username = user.Username,
+                    Password = user.Password,
                     Active = user.Active
                 }).ToList();
     }
@@ -38,6 +42,8 @@ public static class UserMappingDto
             Name = user.Name,
             Cellphone = user.Cellphone,
             Description = user.Description,
+            Username = user.Username,
+            Password = user.Password,
             Active = user.Active
 
         };
@@ -50,6 +56,8 @@ public static class UserMappingDto
             Name = userDto.Name,
             Cellphone = userDto.Cellphone,
             Description = userDto.Description,
+            Username = userDto.Username,
+            Password = userDto.Password,
             Active = userDto.Active
         };
     }

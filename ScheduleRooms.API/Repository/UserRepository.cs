@@ -83,6 +83,21 @@ public class UserRepository(ScheduleContext scheduleContext) : IUserRepository
         }
     }
 
+    public async Task<string> GetPassword(string username)
+    {
+        var password = await _scheduleContext.Users
+            .Where(w => w.Username == username)
+            .Select(w => w.Password)
+            .FirstOrDefaultAsync();
+
+        if (password is not null)
+        {
+            return password;
+        }
+        return string.Empty;
+
+    }
+
     public async Task<int> TotalUser(string search)
     {
         var totalUser = await _scheduleContext.Users

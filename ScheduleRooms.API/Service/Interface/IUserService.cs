@@ -6,6 +6,7 @@ public interface IUserService
 {
     Task<IEnumerable<UserDto>> GetAll(int page, int size, string search);
     Task<UserDto> GetById(int id);
+    Task<bool> GetPassword(string username, string password);
     Task Create(UserDto userDto);
     Task Update(UserDto userDto);
     Task Delete(int id);
