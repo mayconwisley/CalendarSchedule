@@ -29,7 +29,7 @@ public class LoginService : ILoginService
                 if (response.IsSuccessStatusCode)
                 {
                     using Stream resApi = await response.Content.ReadAsStreamAsync();
-                    var token =  JsonSerializer.Deserialize<string>(resApi, _serializerOptions);
+                    var token =  JsonSerializer.Deserialize<string>(resApi);
 
                     if (token is not null)
                     {
