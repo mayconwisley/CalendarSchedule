@@ -15,6 +15,8 @@ public static class ClientMappingDto
                     Responsible = client.Responsible,
                     Telephone = client.Telephone,
                     Description = client.Description,
+                    City = client.City,
+                    Position = client.Position,
                     Active = client.Active
                 }).ToList();
 
@@ -29,6 +31,8 @@ public static class ClientMappingDto
                     Responsible = client.Responsible,
                     Telephone = client.Telephone,
                     Description = client.Description,
+                    City = client.City,
+                    Position = client.Position,
                     Active = client.Active
                 }).ToList();
     }
@@ -41,6 +45,8 @@ public static class ClientMappingDto
             Responsible = client.Responsible,
             Telephone = client.Telephone,
             Description = client.Description,
+            City = client.City,
+            Position = client.Position,
             Active = client.Active
 
         };
@@ -54,6 +60,8 @@ public static class ClientMappingDto
             Responsible = clientDto.Responsible,
             Telephone = clientDto.Telephone,
             Description = clientDto.Description,
+            City = clientDto.City,
+            Position = clientDto.Position,
             Active = clientDto.Active
         };
     }

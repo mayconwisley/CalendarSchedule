@@ -7,7 +7,9 @@
                 <th>Id</th>
                 <th>Nome</th>
                 <th>Resposável</th>
+                <th>Cargo</th>
                 <th>Telefone</th>
+                <th>Cidade</th>
                 <th>Descrição</th>
                 <th class="text-center">Ativo</th>
                 <th class="text-center">Ações</th>
@@ -26,6 +28,7 @@
                             <td>@client.Id</td>
                             <td>@client.Name</td>
                             <td>@client.Responsible</td>
+                            <td>@client.Position</td>
                             @{
                                 string tel = client.Telephone!
                                 .Replace("-", "")
@@ -37,6 +40,7 @@
                             }
 
                             <td><a href="@apiTel" target="_blank">@tel1</a></td>
+                            <td>@client.City</td>
                             <td>@client.Description</td>
                             <td class="text-center">
                                 @(client.Active ? "Sim" : "Não")

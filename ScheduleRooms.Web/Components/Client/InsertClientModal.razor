@@ -23,6 +23,16 @@
                             <InputText class="form-control" id="inResponsible" @bind-Value="ClientDto!.Responsible" placeholder="Responsável" />
                             <ValidationMessage For="@(() => ClientDto.Responsible)" />
                         </div>
+                        <div class="col-6">
+                            <label for="inCargo" class="form-label">Cargo</label>
+                            <InputText class="form-control" id="inCargo" @bind-Value="ClientDto!.Position" placeholder="Cargo" />
+                            <ValidationMessage For="@(() => ClientDto.Position)" />
+                        </div>
+                        <div class="col-6">
+                            <label for="inCidade" class="form-label">Cidade</label>
+                            <InputText class="form-control" id="inCidade" @bind-Value="ClientDto!.City" placeholder="Cidade" />
+                            <ValidationMessage For="@(() => ClientDto.City)" />
+                        </div>
                         <div class="col-9">
 
                             <label for="inTelephone" class="form-label">Telefone</label>
