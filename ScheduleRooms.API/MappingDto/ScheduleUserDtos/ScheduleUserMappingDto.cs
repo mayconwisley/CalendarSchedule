@@ -21,7 +21,8 @@ public static class ScheduleUserMappingDto
                     City = scheduleUser!.Client.City,
                     User = scheduleUser?.User?.Name,
                     UserId = scheduleUser!.User!.Id,
-                    ManagerId = scheduleUser.ManagerId
+                    ManagerId = scheduleUser.ManagerId,
+                    Prospection = scheduleUser.Client.Prospection
 
                 }).ToList();
     }
@@ -56,7 +57,8 @@ public static class ScheduleUserMappingDto
             City = scheduleUser!.Client.City,
             User = scheduleUser?.User?.Name,
             UserId = scheduleUser!.User!.Id,
-            ManagerId = scheduleUser.ManagerId
+            ManagerId = scheduleUser.ManagerId,
+            Prospection = scheduleUser.Client.Prospection
         };
     }
     public static ScheduleUser ConvertDtoToSchedule(this ScheduleUserDto scheduleUserDto)

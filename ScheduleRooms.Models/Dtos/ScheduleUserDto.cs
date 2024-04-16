@@ -22,4 +22,5 @@ public class ScheduleUserDto
     public string? User { get; set; } = string.Empty;
     [Required(ErrorMessage = "Gestor Obrigatório")]
     public int ManagerId { get; set; } = 0;
+    public bool Prospection { get; set; } = false;
 }
