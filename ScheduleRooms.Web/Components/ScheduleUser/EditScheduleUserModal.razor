@@ -34,7 +34,7 @@
                             <ValidationMessage For="@(() => ScheduleUserDto.Description)" />
 
                         </div>
-                        <div class="col-6">
+                        <div class="col-12">
                             <label for="inClient" class="form-label">Cliente</label>
                             <InputSelect class="form-select" id="inClient" @bind-Value="ScheduleUserDto!.ClientId">
                                 @if (ClientView?.ClientsDto is not null)
@@ -65,6 +65,21 @@
 
                         </div>
                         <div class="col-6">
+                            <label for="inManager" class="form-label">Gestor</label>
+                            <InputSelect class="form-select" id="inManager" @bind-Value="ScheduleUserDto!.ManagerId">
+                                @if (UserViewManager?.UsersDto is not null)
+                                {
+                                    <option value="0">Selecione uma Opção</option>
+                                    @foreach (var user in UserViewManager.UsersDto)
+                                    {
+                                        int managerId = ScheduleUserDto.ManagerId;
+                                        <option value="@managerId"> @user.Name</option>
+                                    }
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => ScheduleUserDto.ManagerId)" />
+                        </div>
+                        <div class="col-6">
                             <label class="form-label">Opções</label>
                             <div class="form-check">
                                 <InputCheckbox class="form-check-input" @bind-Value="ScheduleUserDto.MeetingType" id="inTypeMeeting" />
@@ -90,7 +105,8 @@
     public Action? DataUpdated { get; set; }
 
     private ScheduleUserDto? ScheduleUserDto { get; set; } = new();
-    private UserView? UserView { get; set; } 
+    private UserView? UserView { get; set; }
+    private UserView? UserViewManager { get; set; }
     private ClientView? ClientView { get; set; }
 
     [Parameter]
@@ -100,6 +116,7 @@
     {
         ScheduleUserDto = await scheduleUserService.GetById(ScheduleId);
         UserView = await userService.GetAll();
+        UserViewManager = await userService.GetManagerAll();
         ClientView = await clientService.GetAll();
     }
 

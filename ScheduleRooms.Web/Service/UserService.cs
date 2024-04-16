@@ -93,6 +93,33 @@ public class UserService : IUserService
             throw;
         }
     }
+    public async Task<UserView> GetManagerAll(int page = 1, int size = 10, string search = "")
+    {
+        try
+        {
+            using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+            using var response = await httpClient.GetAsync($"{apiEndPoint}/ManagerAll?page={page}&size={size}&search={search}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                UserView? userView = await response.Content.ReadFromJsonAsync<UserView>(_serializerOptions);
+                return userView;
+            }
+            else
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return new();
+                }
+                response.EnsureSuccessStatusCode();
+                return new();
+            }
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
 
     public async Task<UserDto> GetById(int id)
     {

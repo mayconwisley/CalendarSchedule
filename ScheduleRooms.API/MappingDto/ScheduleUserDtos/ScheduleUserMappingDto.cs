@@ -16,10 +16,13 @@ public static class ScheduleUserMappingDto
                     DateFinal = scheduleUser.DateFinal,
                     MeetingType = scheduleUser.MeetingType,
                     StatusSchedule = scheduleUser.StatusSchedule,
-                    Client = scheduleUser?.Client?.Name,
                     ClientId = scheduleUser!.Client!.Id,
+                    Client = scheduleUser?.Client?.Name,
+                    City = scheduleUser!.Client.City,
                     User = scheduleUser?.User?.Name,
-                    UserId = scheduleUser!.User!.Id
+                    UserId = scheduleUser!.User!.Id,
+                    ManagerId = scheduleUser.ManagerId
+
                 }).ToList();
     }
     public static IEnumerable<ScheduleUser> ConvertScheduleToDto(this IEnumerable<ScheduleUserDto> scheduleUserDto)
@@ -34,8 +37,8 @@ public static class ScheduleUserMappingDto
                     MeetingType = scheduleUser.MeetingType,
                     StatusSchedule = scheduleUser.StatusSchedule,
                     ClientId = scheduleUser.ClientId,
-                    UserId = scheduleUser.UserId
-
+                    UserId = scheduleUser.UserId,
+                    ManagerId = scheduleUser.ManagerId
                 }).ToList();
     }
     public static ScheduleUserDto ConvertScheduleToDto(this ScheduleUser scheduleUser)
@@ -48,10 +51,12 @@ public static class ScheduleUserMappingDto
             DateFinal = scheduleUser.DateFinal,
             MeetingType = scheduleUser.MeetingType,
             StatusSchedule = scheduleUser.StatusSchedule,
-            Client = scheduleUser?.Client?.Name,
             ClientId = scheduleUser!.Client!.Id,
+            Client = scheduleUser?.Client?.Name,
+            City = scheduleUser!.Client.City,
             User = scheduleUser?.User?.Name,
-            UserId = scheduleUser!.User!.Id
+            UserId = scheduleUser!.User!.Id,
+            ManagerId = scheduleUser.ManagerId
         };
     }
     public static ScheduleUser ConvertDtoToSchedule(this ScheduleUserDto scheduleUserDto)
@@ -65,7 +70,8 @@ public static class ScheduleUserMappingDto
             MeetingType = scheduleUserDto.MeetingType,
             StatusSchedule = scheduleUserDto.StatusSchedule,
             ClientId = scheduleUserDto.ClientId,
-            UserId = scheduleUserDto.UserId
+            UserId = scheduleUserDto.UserId,
+            ManagerId = scheduleUserDto.ManagerId,
         };
     }
 }

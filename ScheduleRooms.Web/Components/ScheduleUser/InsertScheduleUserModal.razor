@@ -29,7 +29,7 @@
                             <InputText class="form-control" @bind-Value="ScheduleUserDto!.Description" id="inDescricao" placeholder="Descrição" />
                             <ValidationMessage For="@(() => ScheduleUserDto.Description)" />
                         </div>
-                        <div class="col-6">
+                        <div class="col-12">
                             <label for="inClient" class="form-label">Cliente</label>
                             <InputSelect class="form-select" id="inClient" @bind-Value="ScheduleUserDto!.ClientId">
                                 @if (ClientView?.ClientsDto is not null)
@@ -51,6 +51,20 @@
                                 {
                                     <option value="0">Selecione uma Opção</option>
                                     @foreach (var user in UserView.UsersDto)
+                                    {
+                                        <option value="@user.Id"> @user.Name</option>
+                                    }
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => ScheduleUserDto.UserId)" />
+                        </div>
+                        <div class="col-6">
+                            <label for="inManager" class="form-label">Gestor</label>
+                            <InputSelect class="form-select" id="inManager" @bind-Value="ScheduleUserDto!.ManagerId">
+                                @if (UserViewManager?.UsersDto is not null)
+                                {
+                                    <option value="0">Selecione uma Opção</option>
+                                    @foreach (var user in UserViewManager.UsersDto)
                                     {
                                         <option value="@user.Id"> @user.Name</option>
                                     }
@@ -87,12 +101,14 @@
 
     private ScheduleUserDto? ScheduleUserDto { get; set; }
     private UserView? UserView { get; set; } = new();
+    private UserView? UserViewManager { get; set; } = new();
     private ClientView? ClientView { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
         ScheduleUserDto = new();
         UserView = await userService.GetAll();
+        UserViewManager = await userService.GetManagerAll();
         ClientView = await clientService.GetAll();
         await base.OnInitializedAsync();
     }

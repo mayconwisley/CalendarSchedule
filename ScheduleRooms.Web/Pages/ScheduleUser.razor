@@ -2,6 +2,8 @@
 @layout NewLayout
 
 @inject IScheduleUserService scheduleUserService
+@inject IUserService userService
+
 <h3>Cadastro Agenda do Usuário</h3>
 <button data-bs-toggle="modal" data-bs-target="#newScheduleUser" class="btn btn-info">
     Nova Agenda
@@ -16,7 +18,7 @@ else
 {
     <MensageError Message="@Message" ShowMessage="@ShowMessage" />
 
-    <TableScheduleUser ScheduleUserView="scheduleUserView" />
+    <TableScheduleUser ScheduleUserView="scheduleUserView" UserViewManager="userView" />
 
     <PaginationTable PageCurrent="@ReceberPagina"
                      TotalData="@scheduleUserView.TotalData"
@@ -28,16 +30,19 @@ else
 
 @code {
     private ScheduleUserView? scheduleUserView;
+    private UserView? userView;
     private string? Message { get; set; }
     public string? ShowMessage { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         scheduleUserView = await scheduleUserService.GetAll();
+        userView = await userService.GetManagerAll();
     }
     private async void DataUpdated()
     {
         scheduleUserView = await scheduleUserService.GetAll();
+        userView = await userService.GetManagerAll();
         StateHasChanged();
     }
     private async Task ReceberPagina(int pageCurrent)

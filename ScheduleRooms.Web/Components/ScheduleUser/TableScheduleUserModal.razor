@@ -33,8 +33,8 @@
                                         <tr>
                                             <td>@schedule.Id</td>
                                             <td>@schedule.Description</td>
-                                            <td>@schedule.DateStart</td>
-                                            <td>@schedule.DateFinal</td>
+                                            <td>@schedule.DateStart.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td>@schedule.DateFinal.ToString("dd/MM/yyyy HH:mm")</td>
                                             <td>@(schedule.MeetingType ? "Sim" : "Não")</td>
                                             <td>@(schedule.StatusSchedule ? "Sim" : "Não")</td>
                                             <td>@schedule.Client</td>

@@ -43,6 +43,33 @@ public class UserController : ControllerBase
         });
 
     }
+    [HttpGet]
+    [Route("ManagerAll")]
+    public async Task<ActionResult<IEnumerable<UserDto>>> GetManagerAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
+    {
+        var usersDto = await _userService.GetManagerAll(page, size, search);
+        decimal totalData = (decimal)await _userService.TotalUsers(search);
+        decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
+
+        if (size == 1)
+        {
+            totalPage = totalData;
+        }
+
+        if (!usersDto.Any())
+        {
+            return NotFound("Sem dados");
+        }
+        return Ok(new
+        {
+            totalData,
+            page,
+            totalPage,
+            size,
+            usersDto
+        });
+
+    }
     [HttpGet("{id:int}", Name = "GetUser")]
     public async Task<ActionResult<UserDto>> GetById(int id)
     {
@@ -58,7 +85,7 @@ public class UserController : ControllerBase
         return NotFound("Sem dados");
 
     }
-    
+
     [HttpPost]
     public async Task<ActionResult<UserDto>> Post([FromBody] UserDto userDto)
     {
@@ -69,7 +96,7 @@ public class UserController : ControllerBase
         }
         return BadRequest("Dados inválidos");
     }
-    
+
     [HttpPut("{id:int}")]
     public async Task<ActionResult<UserDto>> Put(int id, [FromBody] UserDto userDto)
     {
@@ -85,7 +112,7 @@ public class UserController : ControllerBase
         await _userService.Update(userDto);
         return Ok(userDto);
     }
-    
+
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<UserDto>> Delete(int id)
     {

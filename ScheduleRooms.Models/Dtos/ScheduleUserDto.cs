@@ -16,7 +16,10 @@ public class ScheduleUserDto
     [Required(ErrorMessage = "Cliente Obrigatório")]
     public int ClientId { get; set; } = 0;
     public string? Client { get; set; } = string.Empty;
+    public string? City { get; set; } = string.Empty;
     [Required(ErrorMessage = "Usuário Obrigatório")]
     public int UserId { get; set; } = 0;
     public string? User { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Gestor Obrigatório")]
+    public int ManagerId { get; set; } = 0;
 }
