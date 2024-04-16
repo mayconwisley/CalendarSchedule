@@ -18,7 +18,7 @@ else
 {
     <MensageError Message="@Message" ShowMessage="@ShowMessage" />
 
-    <TableScheduleUser ScheduleUserView="scheduleUserView" UserViewManager="userView" />
+    <TableScheduleUser ScheduleUserView="scheduleUserView" UserViewManager="userViewManager" />
 
     <PaginationTable PageCurrent="@ReceberPagina"
                      TotalData="@scheduleUserView.TotalData"
@@ -30,19 +30,19 @@ else
 
 @code {
     private ScheduleUserView? scheduleUserView;
-    private UserView? userView;
+    private UserView? userViewManager;
     private string? Message { get; set; }
     public string? ShowMessage { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         scheduleUserView = await scheduleUserService.GetAll();
-        userView = await userService.GetManagerAll();
+        userViewManager = await userService.GetManagerAll();
     }
     private async void DataUpdated()
     {
         scheduleUserView = await scheduleUserService.GetAll();
-        userView = await userService.GetManagerAll();
+        userViewManager = await userService.GetManagerAll();
         StateHasChanged();
     }
     private async Task ReceberPagina(int pageCurrent)

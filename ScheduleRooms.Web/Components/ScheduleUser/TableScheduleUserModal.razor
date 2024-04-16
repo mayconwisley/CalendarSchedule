@@ -1,9 +1,10 @@
 ﻿@inject IScheduleUserService scheduleUserService
+@inject IUserService userService
 <div class="modal fade" id="tableScheduleUser-@UserId-@ClientId-@DateSelected.ToString("ddMMyyyy")" tabindex="-1" aria-labelledby="tableScheduleLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="tableScheduleLabel">Consulta do dia</h1>
+                <h1 class="modal-title fs-5" id="tableScheduleLabel">Consulta do dia - <strong>@UserDto!.Name</strong> </h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -12,13 +13,13 @@
                         <thead>
                             <tr>
                                 <th>Id</th>
+                                <th>Cliente</th>
                                 <th>Descrição</th>
                                 <th>Data/Hora Inicio</th>
                                 <th>Data/Hora Fim</th>
                                 <th>Remoto</th>
                                 <th>Confirmada</th>
-                                <th>Cliente</th>
-                                <th>Usuário</th>
+
                             </tr>
                         </thead>
                         <tbody>
@@ -32,13 +33,12 @@
                                     {
                                         <tr>
                                             <td>@schedule.Id</td>
+                                            <td>@schedule.Client</td>
                                             <td>@schedule.Description</td>
                                             <td>@schedule.DateStart.ToString("dd/MM/yyyy HH:mm")</td>
                                             <td>@schedule.DateFinal.ToString("dd/MM/yyyy HH:mm")</td>
                                             <td>@(schedule.MeetingType ? "Sim" : "Não")</td>
                                             <td>@(schedule.StatusSchedule ? "Sim" : "Não")</td>
-                                            <td>@schedule.Client</td>
-                                            <td>@schedule.User</td>
                                         </tr>
                                     }
                                 }
@@ -53,16 +53,16 @@
         </div>
     </div>
 </div>
-
-
 @code {
 
     private IEnumerable<ScheduleUserDto>? ScheduleUserView { get; set; }
-
+    private UserDto? UserDto { get; set; } = new();
     [Parameter]
     public int UserId { get; set; }
     [Parameter]
     public int ClientId { get; set; }
+    [Parameter]
+    public int ScheduleId { get; set; }
 
     [Parameter]
     public DateTime DateSelected { get; set; }
@@ -70,6 +70,7 @@
     protected override async Task OnInitializedAsync()
     {
         ScheduleUserView = await scheduleUserService.GetByScheduleUserDateUserId(UserId, DateSelected);
+        UserDto = await userService.GetById(UserId);
         StateHasChanged();
     }
 }

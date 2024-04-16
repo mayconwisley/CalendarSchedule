@@ -72,8 +72,9 @@
                                     <option value="0">Selecione uma Opção</option>
                                     @foreach (var user in UserViewManager.UsersDto)
                                     {
-                                        int managerId = ScheduleUserDto.ManagerId;
-                                        <option value="@managerId"> @user.Name</option>
+                                        ScheduleUserDto.ManagerId = user.Id;
+
+                                        <option value="@ScheduleUserDto.ManagerId"> @user.Name</option>
                                     }
                                 }
                             </InputSelect>

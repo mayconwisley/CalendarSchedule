@@ -14,10 +14,13 @@ public static class ClientMappingDto
                     Name = client.Name,
                     Responsible = client.Responsible,
                     Telephone = client.Telephone,
+                    Email = client.Email,
                     Description = client.Description,
                     City = client.City,
                     Position = client.Position,
-                    Active = client.Active
+                    Active = client.Active,
+                    Prospection = client.Prospection
+
                 }).ToList();
 
     }
@@ -30,10 +33,13 @@ public static class ClientMappingDto
                     Name = client.Name,
                     Responsible = client.Responsible,
                     Telephone = client.Telephone,
+                    Email = client.Email,
                     Description = client.Description,
                     City = client.City,
                     Position = client.Position,
-                    Active = client.Active
+                    Active = client.Active,
+                    Prospection = client.Prospection
+
                 }).ToList();
     }
     public static ClientDto ConvertClientToDto(this Client client)
@@ -45,9 +51,11 @@ public static class ClientMappingDto
             Responsible = client.Responsible,
             Telephone = client.Telephone,
             Description = client.Description,
+            Email = client.Email,
             City = client.City,
             Position = client.Position,
-            Active = client.Active
+            Active = client.Active,
+            Prospection = client.Prospection
 
         };
     }
@@ -59,10 +67,12 @@ public static class ClientMappingDto
             Name = clientDto.Name,
             Responsible = clientDto.Responsible,
             Telephone = clientDto.Telephone,
+            Email = clientDto.Email,
             Description = clientDto.Description,
             City = clientDto.City,
             Position = clientDto.Position,
-            Active = clientDto.Active
+            Active = clientDto.Active,
+            Prospection = clientDto.Prospection
         };
     }
 }

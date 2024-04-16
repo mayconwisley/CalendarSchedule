@@ -13,15 +13,20 @@
                 <div class="modal-body">
 
                     <div class="row g-3">
-                        <div class="col-6">
+                        <div class="col-12">
                             <label for="inName" class="form-label">Nome</label>
                             <InputText class="form-control" id="inName" @bind-Value="ClientDto!.Name" placeholder="Nome" />
                             <ValidationMessage For="@(() => ClientDto.Name)" />
                         </div>
-                        <div class="col-6">
+                        <div class="col-12">
                             <label for="inResponsible" class="form-label">Responsável</label>
                             <InputText class="form-control" id="inResponsible" @bind-Value="ClientDto!.Responsible" placeholder="Responsável" />
                             <ValidationMessage For="@(() => ClientDto.Responsible)" />
+                        </div>
+                        <div class="col-12">
+                            <label for="inEmail" class="form-label">Email</label>
+                            <InputText type="email" class="form-control" id="inEmail" @bind-Value="ClientDto!.Email" placeholder="Email" />
+                            <ValidationMessage For="@(() => ClientDto.Email)" />
                         </div>
                         <div class="col-6">
                             <label for="inCargo" class="form-label">Cargo</label>
@@ -42,6 +47,10 @@
                             <div class="form-check">
                                 <InputCheckbox class="form-check-input" id="inActive" @bind-Value="ClientDto!.Active" />
                                 <label for="inActive" class="form-label">Ativo</label>
+                            </div>
+                            <div class="form-check">
+                                <InputCheckbox class="form-check-input" id="inProspection" @bind-Value="ClientDto!.Prospection" />
+                                <label for="inProspection" class="form-label">Prospecção</label>
                             </div>
                         </div>
                         <div class="col-12">

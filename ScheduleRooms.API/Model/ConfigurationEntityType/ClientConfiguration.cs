@@ -17,5 +17,7 @@ public class ClientConfiguration : IEntityTypeConfiguration<Client>
             .HasColumnType("VARCHAR(500)");
         builder.Property(p => p.Telephone)
             .HasColumnType("VARCHAR(20)");
+        builder.Property(p => p.Email)
+            .HasColumnType("VARCHAR(50)");
     }
 }

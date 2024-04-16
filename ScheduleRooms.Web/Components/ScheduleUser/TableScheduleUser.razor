@@ -9,8 +9,6 @@
                 <th>Descrição</th>
                 <th>Data/Hora Inicio</th>
                 <th>Data/Hora Fim</th>
-                <th>Remoto</th>
-                <th>Confirmada</th>
                 <th>Cliente</th>
                 <th>Cidade</th>
                 <th>Gestor</th>
@@ -22,7 +20,7 @@
             @if (ScheduleUserView is not null)
             {
                 var schedules = ScheduleUserView.ScheduleUsersDto;
-                var managers = UserViewManager.UsersDto;
+                var managers = UserViewManager!.UsersDto;
                 if (schedules is not null)
                 {
                     @foreach (var schedule in schedules)
@@ -32,16 +30,23 @@
                             <td>@schedule.Description</td>
                             <td>@schedule.DateStart.ToString("dd/MM/yyyy HH:mm")</td>
                             <td>@schedule.DateFinal.ToString("dd/MM/yyyy HH:mm")</td>
-                            <td class="text-center">@(schedule.MeetingType ? "Sim" : "Não")</td>
-                            <td class="text-center">@(schedule.StatusSchedule ? "Sim" : "Não")</td>
                             <td>@schedule.Client</td>
                             <td>@schedule.City</td>
-                            <td>
-                                @managers.FirstOrDefault(f=>f.Id ==schedule.ManagerId).Name
-                            </td>
+                            @{
+                                var manager = managers!.FirstOrDefault(f => f.Id == schedule.ManagerId, new UserDto()).Name;
+
+                                if (manager is not null)
+                                {
+                                    <td>@manager</td>
+                                }
+                            }
                             <td>@schedule.User</td>
 
                             <td>
+                                <button data-bs-toggle="modal" data-bs-target="#tableScheduleDatail-@schedule.Id" class="btn btn-info">
+                                    Detalhe
+                                </button>
+                                <TableScheduleDetailModal ScheduleUserId="@schedule.Id" />
                                 <button data-bs-toggle="modal" data-bs-target="#editSchedule-@schedule.Id" class="btn btn-info">
                                     Editar
                                 </button>
@@ -69,7 +74,7 @@
     private async void DataUpdated()
     {
         ScheduleUserView = await scheduleUserService.GetAll();
-        UserViewManager = await userService.GetManagerAll();
+        //UserViewManager = await userService.GetManagerAll();
 
         StateHasChanged();
     }
