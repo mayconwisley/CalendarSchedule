@@ -4,5 +4,5 @@ namespace ScheduleRooms.Web.Service.Interface;
 
 public interface ILoginService
 {
-    public Task<string> Token(LoginDto login);
+    public Task<TokenDto> Token(LoginDto login);
 }

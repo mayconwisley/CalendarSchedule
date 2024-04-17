@@ -1,3 +1,4 @@
+using Blazored.SessionStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using ScheduleRooms.Web;
@@ -25,6 +26,9 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IScheduleUserService, ScheduleUserService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
+
+builder.Services.AddBlazoredSessionStorage();
+builder.Services.AddScoped<ITokenStorageService, TokenStorageService>();
 
 
 await builder.Build().RunAsync();

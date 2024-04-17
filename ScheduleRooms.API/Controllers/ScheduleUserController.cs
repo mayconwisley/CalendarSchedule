@@ -5,6 +5,7 @@ using ScheduleRooms.Models.Dtos;
 
 namespace ScheduleRooms.API.Controllers;
 
+
 [Route("api/[controller]")]
 [ApiController]
 public class ScheduleUserController(IScheduleUserService scheduleUserService) : ControllerBase
@@ -125,7 +126,7 @@ public class ScheduleUserController(IScheduleUserService scheduleUserService) : 
         return NotFound("Sem dados");
 
     }
-    
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<ScheduleUserDto>> Post([FromBody] ScheduleUserDto scheduleUserDto)
     {
@@ -152,7 +153,7 @@ public class ScheduleUserController(IScheduleUserService scheduleUserService) : 
         }
         return BadRequest("Dados inválidos");
     }
-    
+    [Authorize]
     [HttpPut("{id:int}")]
     public async Task<ActionResult<ScheduleUserDto>> Put(int id, [FromBody] ScheduleUserDto scheduleUserDto)
     {
@@ -168,7 +169,7 @@ public class ScheduleUserController(IScheduleUserService scheduleUserService) : 
         await _scheduleUserService.Update(scheduleUserDto);
         return Ok(scheduleUserDto);
     }
-    
+    [Authorize]
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<ScheduleUserDto>> Delete(int id)
     {

@@ -17,7 +17,7 @@ public class LoginService : ILoginService
         _serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
     }
 
-    public async Task<string> Token(LoginDto loginDto)
+    public async Task<TokenDto> Token(LoginDto loginDto)
     {
         try
         {
@@ -29,19 +29,15 @@ public class LoginService : ILoginService
                 if (response.IsSuccessStatusCode)
                 {
                     using Stream resApi = await response.Content.ReadAsStreamAsync();
-                    var token =  JsonSerializer.Deserialize<string>(resApi);
+                    var token = await JsonSerializer.DeserializeAsync<TokenDto>(resApi, _serializerOptions);
 
                     if (token is not null)
                     {
                         return token;
                     }
                 }
-                else
-                {
-                    response.EnsureSuccessStatusCode();
-                }
             }
-            return string.Empty;
+            return new();
         }
         catch (Exception)
         {

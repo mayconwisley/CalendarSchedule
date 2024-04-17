@@ -2,6 +2,7 @@
 using ScheduleRooms.Web.Models;
 using ScheduleRooms.Web.Service.Interface;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
@@ -11,20 +12,32 @@ namespace ScheduleRooms.Web.Service;
 public class ClientService : IClientService
 {
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ITokenStorageService _tokenStorageService;
     private readonly JsonSerializerOptions _serializerOptions;
     private const string? apiEndPoint = "api/Client";
 
-    public ClientService(IHttpClientFactory httpClientFactory)
+
+    public ClientService(IHttpClientFactory httpClientFactory, ITokenStorageService tokenStorageService)
     {
         _httpClientFactory = httpClientFactory;
         _serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        _tokenStorageService = tokenStorageService;
     }
 
     public async Task<ClientDto> Create(ClientDto clientDto)
     {
         try
         {
+            var token = await _tokenStorageService.GetToken();
+
+            if (token.Bearer is null)
+            {
+                return new();
+            }
+
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+
             StringContent stringContent = new(JsonSerializer.Serialize(clientDto), Encoding.UTF8, "application/json");
 
             using (var response = await httpClient.PostAsync(apiEndPoint, stringContent))
@@ -57,7 +70,16 @@ public class ClientService : IClientService
     {
         try
         {
+            var token = await _tokenStorageService.GetToken();
+
+            if (token.Bearer is null)
+            {
+                return new();
+            }
+
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+
             using var response = await httpClient.DeleteAsync($"{apiEndPoint}/{id}");
 
             if (response.IsSuccessStatusCode)
@@ -76,7 +98,15 @@ public class ClientService : IClientService
     {
         try
         {
+            var token = await _tokenStorageService.GetToken();
+
+            if (token.Bearer is null)
+            {
+                return new();
+            }
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+
             using var response = await httpClient.GetAsync($"{apiEndPoint}/All?page={page}&size={size}&search={search}");
 
             if (response.IsSuccessStatusCode)
@@ -105,7 +135,16 @@ public class ClientService : IClientService
     {
         try
         {
+            var token = await _tokenStorageService.GetToken();
+
+            if (token.Bearer is null)
+            {
+                return new();
+            }
+
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+
             using var response = await httpClient.GetAsync($"{apiEndPoint}/{id}");
 
             if (response.IsSuccessStatusCode)
@@ -133,7 +172,15 @@ public class ClientService : IClientService
     {
         try
         {
+            var token = await _tokenStorageService.GetToken();
+
+            if (token.Bearer is null)
+            {
+                return new();
+            }
+
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
 
             StringContent stringContent = new StringContent(JsonSerializer.Serialize(clientDto), Encoding.UTF8, "application/json");
 

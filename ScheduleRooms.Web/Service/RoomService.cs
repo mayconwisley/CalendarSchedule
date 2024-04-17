@@ -2,6 +2,7 @@
 using ScheduleRooms.Web.Models;
 using ScheduleRooms.Web.Service.Interface;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
@@ -11,12 +12,14 @@ namespace ScheduleRooms.Web.Service;
 public class RoomService : IRoomService
 {
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ITokenStorageService _tokenStorageService;
     private readonly JsonSerializerOptions _serializerOptions;
     private const string? apiEndPoint = "api/Room";
 
-    public RoomService(IHttpClientFactory httpClientFactory)
+    public RoomService(IHttpClientFactory httpClientFactory, ITokenStorageService tokenStorageService)
     {
         _httpClientFactory = httpClientFactory;
+        _tokenStorageService = tokenStorageService;
         _serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
     }
 
@@ -24,7 +27,14 @@ public class RoomService : IRoomService
     {
         try
         {
+            var token = await _tokenStorageService.GetToken();
+
+            if (token.Bearer is null)
+            {
+                return new();
+            }
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
 
             StringContent stringContent = new(JsonSerializer.Serialize(roomDto), Encoding.UTF8, "application/json");
 
@@ -53,7 +63,14 @@ public class RoomService : IRoomService
     {
         try
         {
+            var token = await _tokenStorageService.GetToken();
+
+            if (token.Bearer is null)
+            {
+                return new();
+            }
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
             using var response = await httpClient.DeleteAsync($"{apiEndPoint}/{id}");
             if (response.IsSuccessStatusCode)
             {
@@ -72,7 +89,14 @@ public class RoomService : IRoomService
     {
         try
         {
+            var token = await _tokenStorageService.GetToken();
+
+            if (token.Bearer is null)
+            {
+                return new();
+            }
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
             using var response = await httpClient.GetAsync($"{apiEndPoint}/All?page={page}&size={size}&search={search}");
 
 
@@ -102,7 +126,14 @@ public class RoomService : IRoomService
     {
         try
         {
+            var token = await _tokenStorageService.GetToken();
+
+            if (token.Bearer is null)
+            {
+                return new();
+            }
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
             using var response = await httpClient.GetAsync($"{apiEndPoint}/{id}");
 
             if (response.IsSuccessStatusCode)
@@ -130,7 +161,14 @@ public class RoomService : IRoomService
     {
         try
         {
+            var token = await _tokenStorageService.GetToken();
+
+            if (token.Bearer is null)
+            {
+                return new();
+            }
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
 
             StringContent stringContent = new(JsonSerializer.Serialize(roomDto), Encoding.UTF8, "application/json");
 

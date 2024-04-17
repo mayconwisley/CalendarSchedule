@@ -101,10 +101,10 @@ public class UserRepository(ScheduleContext scheduleContext) : IUserRepository
         }
     }
 
-    public async Task<string> GetPassword(string username)
+    public async Task<string> GetPassword(LoginApi login)
     {
         var password = await _scheduleContext.Users
-            .Where(w => w.Username == username)
+            .Where(w => w.Username == login.Username)
             .Select(w => w.Password)
             .FirstOrDefaultAsync();
 

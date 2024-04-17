@@ -11,11 +11,11 @@ namespace ScheduleRooms.API.Controllers
         private readonly IGetTokenService _getTokenService = getTokenService;
 
         [HttpPost]
-        public async Task<ActionResult> Login([FromBody] LoginDto login)
+        public async Task<ActionResult<TokenDto>> Login([FromBody] LoginDto login)
         {
             if (login is not null)
             {
-                var token = await _getTokenService.Token(login.Username, login.Password);
+                var token = await _getTokenService.Token(login);
                 if (token != null)
                 {
                     return Ok(token);

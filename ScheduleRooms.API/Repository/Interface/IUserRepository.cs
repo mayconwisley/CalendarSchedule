@@ -7,7 +7,7 @@ public interface IUserRepository
     Task<IEnumerable<User>> GetAll(int page, int size, string search);
     Task<IEnumerable<User>> GetManagerAll(int page, int size, string search);
     Task<User> GetById(int id);
-    Task<string> GetPassword(string username);
+    Task<string> GetPassword(LoginApi login);
     Task<User> Create(User user);
     Task<User> Update(User user);
     Task<User> Delete(int id);

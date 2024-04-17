@@ -5,7 +5,7 @@ using ScheduleRooms.Models.Dtos;
 
 namespace ScheduleRooms.API.Controllers;
 
-
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class ClientController(IClientService clientService) : ControllerBase

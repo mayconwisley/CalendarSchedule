@@ -1,5 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using ScheduleRooms.API.Service.Interface;
+using ScheduleRooms.Models.Dtos;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -19,18 +20,18 @@ public class GetTokenService : IGetTokenService
         _userService = userService;
 
     }
-    public async Task<string> Token(string username, string password)
+    public async Task<TokenDto> Token(LoginDto login)
     {
-        if (username is null || password is null)
+        TokenDto tokenDto = new();
+        if (login.Username is null || login.Password is null)
         {
-            return string.Empty;
+            return new();
         }
 
-        if (!await _userService.GetPassword(username,password))
+        if (!await _userService.GetPassword(login))
         {
-            return string.Empty;
+            return new();
         }
-
 
         string? strJWT = _configuration.GetSection("JWT")["Secret"];
         byte[] jwt = Encoding.UTF8.GetBytes(strJWT!);
@@ -39,7 +40,9 @@ public class GetTokenService : IGetTokenService
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
-                new Claim("Acesso Api", "Acesso Api")
+                new Claim("Acesso Api", "Acesso Api"),
+                new Claim("Usuário", login.Username)
+
             }),
             Expires = DateTime.UtcNow.AddHours(4),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(jwt), SecurityAlgorithms.HmacSha256Signature)
@@ -48,6 +51,8 @@ public class GetTokenService : IGetTokenService
         var token = tokenHandler.CreateToken(tokenConfig);
         var strToken = tokenHandler.WriteToken(token);
 
-        return $"Bearer {strToken}";
+        tokenDto.Bearer = strToken;
+
+        return tokenDto;
     }
 }

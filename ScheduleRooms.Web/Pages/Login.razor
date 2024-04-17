@@ -1,6 +1,6 @@
 ﻿@page "/Login"
-@inject ILoginService loginService
-
+@inject ITokenStorageService tokenStorageService
+@inject NavigationManager navigationManager
 <div class="page">
     <EditForm Model="@LoginDto" class="formLogin" OnValidSubmit="Log_in">
         <DataAnnotationsValidator />
@@ -12,19 +12,42 @@
 </div>
 
 @code {
-    private LoginDto? LoginDto { get; set; }
+    private LoginDto? LoginDto { get; set; } = new();
+    private TokenDto? TokenDto { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        LoginDto ??= new();
-        await base.OnInitializedAsync();
+        try
+        {
+            var token = await tokenStorageService.GetToken(LoginDto);
+            if (token.Bearer is null)
+            {
+                await tokenStorageService.RemoverToken();
+            }
+
+            if (token.Bearer is not null)
+            {
+                navigationManager.NavigateTo("/ScheduleUser", true);
+            }
+            await base.OnInitializedAsync();
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     private async Task Log_in()
     {
         if (LoginDto is not null)
         {
-            var token = await loginService.Token(LoginDto);
+            var token = await tokenStorageService.GetToken(LoginDto);
+
+            if (token.Bearer is not null)
+            {
+                navigationManager.NavigateTo("/ScheduleUser", true);
+            }
         }
+
     }
 }

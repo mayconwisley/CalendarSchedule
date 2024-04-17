@@ -1,4 +1,5 @@
-﻿using ScheduleRooms.API.MappingDto.UserDtos;
+﻿using ScheduleRooms.API.MappingDto.LoginDtos;
+using ScheduleRooms.API.MappingDto.UserDtos;
 using ScheduleRooms.API.Repository.Interface;
 using ScheduleRooms.API.Service.Interface;
 using ScheduleRooms.API.Utility.Interface;
@@ -69,12 +70,12 @@ public class UserService(IUserRepository userRepository,
         return userEntity.ConvertUsersToDto();
     }
 
-    public async Task<bool> GetPassword(string username, string password)
+    public async Task<bool> GetPassword(LoginDto login)
     {
-        var pass = await _userRepository.GetPassword(username);
+        var pass = await _userRepository.GetPassword(login.ConvertLoginDtoToLoginApi());
         pass = _decryptionUtility.Dado(pass);
 
-        if (pass == password)
+        if (pass == login.Password)
         {
             return true;
         }

@@ -1,6 +1,8 @@
-﻿namespace ScheduleRooms.API.Service.Interface;
+﻿using ScheduleRooms.Models.Dtos;
+
+namespace ScheduleRooms.API.Service.Interface;
 
 public interface IGetTokenService
 {
-    public Task<string> Token(string username, string password);
+    public Task<TokenDto> Token(LoginDto login);
 }
