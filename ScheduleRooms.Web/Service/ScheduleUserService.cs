@@ -63,7 +63,6 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
-
     public async Task<bool> Delete(int id)
     {
         try
@@ -90,20 +89,19 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
-
     public async Task<ScheduleUserView> GetAll(int page = 1, int size = 10, string search = "")
     {
         try
         {
-            var token = await _tokenStorageService.GetToken();
+            //var token = await _tokenStorageService.GetToken();
 
-            if (token.Bearer is null)
-            {
-                return new();
-            }
+            //if (token.Bearer is null)
+            //{
+            //    return new();
+            //}
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
             using var response = await httpClient.GetAsync($"{apiEndPoint}/All?page={page}&size={size}&search={search}");
 
             if (response.IsSuccessStatusCode)
@@ -129,20 +127,19 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
-
     public async Task<ScheduleUserDto> GetById(int id)
     {
         try
         {
-            var token = await _tokenStorageService.GetToken();
+            //var token = await _tokenStorageService.GetToken();
 
-            if (token.Bearer is null)
-            {
-                return new();
-            }
+            //if (token.Bearer is null)
+            //{
+            //    return new();
+            //}
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
             using var response = await httpClient.GetAsync($"{apiEndPoint}/{id}");
 
             if (response.IsSuccessStatusCode)
@@ -166,20 +163,19 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
-
     public async Task<IEnumerable<ScheduleUserDto>> GetByScheduleUserActive()
     {
         try
         {
-            var token = await _tokenStorageService.GetToken();
+            //var token = await _tokenStorageService.GetToken();
 
-            if (token.Bearer is null)
-            {
-                return [];
-            }
+            //if (token.Bearer is null)
+            //{
+            //    return [];
+            //}
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
             using var response = await httpClient.GetAsync($"{apiEndPoint}/ScheduleActive");
 
             if (response.IsSuccessStatusCode)
@@ -205,20 +201,19 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
-
     public async Task<IEnumerable<ScheduleUserDto>> GetByScheduleUserActiveClientId(int clientId, DateTime dateSelected)
     {
         try
         {
-            var token = await _tokenStorageService.GetToken();
+            //var token = await _tokenStorageService.GetToken();
 
-            if (token.Bearer is null)
-            {
-                return [];
-            }
+            //if (token.Bearer is null)
+            //{
+            //    return [];
+            //}
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
             using var response = await httpClient.GetAsync($"{apiEndPoint}/ScheduleActiveClientId/{clientId}/{dateSelected.ToString("dd/MM/yyyy").Replace("/", "%2F")}");
 
             if (response.IsSuccessStatusCode)
@@ -244,20 +239,19 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
-
     public async Task<IEnumerable<ScheduleUserDto>> GetByScheduleUserActiveClinetIdUserId(int clientId, int userId, DateTime dateSelected)
     {
         try
         {
-            var token = await _tokenStorageService.GetToken();
+            //var token = await _tokenStorageService.GetToken();
 
-            if (token.Bearer is null)
-            {
-                return [];
-            }
+            //if (token.Bearer is null)
+            //{
+            //    return [];
+            //}
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
             using var response = await httpClient.GetAsync($"{apiEndPoint}/ScheduleActiveClientIdUserId/{clientId}/{userId}/{dateSelected.ToString("dd/MM/yyyy").Replace("/", "%2F")}");
 
             if (response.IsSuccessStatusCode)
@@ -283,20 +277,19 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
-
     public async Task<IEnumerable<ScheduleUserDto>> GetByScheduleUserDateUserId(int userId, DateTime dateSelected)
     {
         try
         {
-            var token = await _tokenStorageService.GetToken();
+            //var token = await _tokenStorageService.GetToken();
 
-            if (token.Bearer is null)
-            {
-                return [];
-            }
+            //if (token.Bearer is null)
+            //{
+            //    return [];
+            //}
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
             using var response = await httpClient.GetAsync($"{apiEndPoint}/ScheduleDateUserId/{userId}/{dateSelected.ToString("dd/MM/yyyy").Replace("/", "%2F")}");
 
             if (response.IsSuccessStatusCode)
@@ -322,7 +315,6 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
-
     public async Task<ScheduleUserDto> Update(ScheduleUserDto scheduleUserDto)
     {
         try
@@ -357,20 +349,19 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
-
     public async Task<IEnumerable<ScheduleUserDto>> GetByScheduleUserId(int userId)
     {
         try
         {
-            var token = await _tokenStorageService.GetToken();
+            //var token = await _tokenStorageService.GetToken();
 
-            if (token.Bearer is null)
-            {
-                return [];
-            }
+            //if (token.Bearer is null)
+            //{
+            //    return [];
+            //}
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
             using var response = await httpClient.GetAsync($"{apiEndPoint}/ScheduleUserId/{userId}");
 
             if (response.IsSuccessStatusCode)
@@ -396,20 +387,19 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
-
     public async Task<IEnumerable<ScheduleUserDto>> GetByScheduleUser()
     {
         try
         {
-            var token = await _tokenStorageService.GetToken();
+            //var token = await _tokenStorageService.GetToken();
 
-            if (token.Bearer is null)
-            {
-                return [];
-            }
+            //if (token.Bearer is null)
+            //{
+            //    return [];
+            //}
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
             using var response = await httpClient.GetAsync($"{apiEndPoint}/Schedule");
 
             if (response.IsSuccessStatusCode)

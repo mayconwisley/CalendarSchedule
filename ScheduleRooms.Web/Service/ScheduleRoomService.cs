@@ -62,7 +62,6 @@ public class ScheduleRoomService : IScheduleRoomService
             throw;
         }
     }
-
     public async Task<bool> Delete(int id)
     {
         try
@@ -88,20 +87,19 @@ public class ScheduleRoomService : IScheduleRoomService
             throw;
         }
     }
-
     public async Task<ScheduleRoomView> GetAll(int page = 1, int size = 10, string search = "")
     {
         try
         {
-            var token = await _tokenStorageService.GetToken();
+            //var token = await _tokenStorageService.GetToken();
 
-            if (token.Bearer is null)
-            {
-                return new();
-            }
+            //if (token.Bearer is null)
+            //{
+            //    return new();
+            //}
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
             using var response = await httpClient.GetAsync($"{apiEndPoint}/All?page={page}&size={size}&search={search}");
 
 
@@ -125,20 +123,19 @@ public class ScheduleRoomService : IScheduleRoomService
             throw;
         }
     }
-
     public async Task<ScheduleRoomDto> GetById(int id)
     {
         try
         {
-            var token = await _tokenStorageService.GetToken();
+            //var token = await _tokenStorageService.GetToken();
 
-            if (token.Bearer is null)
-            {
-                return new();
-            }
+            //if (token.Bearer is null)
+            //{
+            //    return new();
+            //}
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
             using var response = await httpClient.GetAsync($"{apiEndPoint}/{id}");
 
             if (response.IsSuccessStatusCode)
@@ -161,7 +158,6 @@ public class ScheduleRoomService : IScheduleRoomService
             throw;
         }
     }
-
     public async Task<ScheduleRoomDto> Update(ScheduleRoomDto scheduleDto)
     {
         try
@@ -197,20 +193,19 @@ public class ScheduleRoomService : IScheduleRoomService
             throw;
         }
     }
-
     public async Task<IEnumerable<ScheduleRoomDto>> GetByAgendaActive()
     {
         try
         {
-            var token = await _tokenStorageService.GetToken();
+            //var token = await _tokenStorageService.GetToken();
 
-            if (token.Bearer is null)
-            {
-                return [];
-            }
+            //if (token.Bearer is null)
+            //{
+            //    return [];
+            //}
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
             using var response = await httpClient.GetAsync($"{apiEndPoint}/ScheduleActive");
 
 
@@ -234,20 +229,19 @@ public class ScheduleRoomService : IScheduleRoomService
             throw;
         }
     }
-
     public async Task<IEnumerable<ScheduleRoomDto>> GetByAgendaActiveSalaId(int roomId, DateTime dateSalected)
     {
         try
         {
-            var token = await _tokenStorageService.GetToken();
+            //var token = await _tokenStorageService.GetToken();
 
-            if (token.Bearer is null)
-            {
-                return [];
-            }
+            //if (token.Bearer is null)
+            //{
+            //    return [];
+            //}
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
             using var response = await httpClient.GetAsync($"{apiEndPoint}/ScheduleActiveRoomId/{roomId}/{dateSalected.ToString("dd/MM/yyyy").Replace("/", "%2F")}");
 
 

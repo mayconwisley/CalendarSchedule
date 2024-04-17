@@ -58,7 +58,6 @@ public class UserService : IUserService
             throw;
         }
     }
-
     public async Task<bool> Delete(int id)
     {
         try
@@ -84,20 +83,19 @@ public class UserService : IUserService
             throw;
         }
     }
-
     public async Task<UserView> GetAll(int page = 1, int size = 10, string search = "")
     {
         try
         {
-            var token = await _tokenStorageService.GetToken();
+            //var token = await _tokenStorageService.GetToken();
 
-            if (token.Bearer is null)
-            {
-                return new();
-            }
+            //if (token.Bearer is null)
+            //{
+            //    return new();
+            //}
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
             using var response = await httpClient.GetAsync($"{apiEndPoint}/All?page={page}&size={size}&search={search}");
 
             if (response.IsSuccessStatusCode)
@@ -124,15 +122,15 @@ public class UserService : IUserService
     {
         try
         {
-            var token = await _tokenStorageService.GetToken();
+            //var token = await _tokenStorageService.GetToken();
 
-            if (token.Bearer is null)
-            {
-                return new();
-            }
+            //if (token.Bearer is null)
+            //{
+            //    return new();
+            //}
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
             using var response = await httpClient.GetAsync($"{apiEndPoint}/ManagerAll?page={page}&size={size}&search={search}");
 
             if (response.IsSuccessStatusCode)
@@ -155,20 +153,19 @@ public class UserService : IUserService
             throw;
         }
     }
-
     public async Task<UserDto> GetById(int id)
     {
         try
         {
-            var token = await _tokenStorageService.GetToken();
+            //var token = await _tokenStorageService.GetToken();
 
-            if (token.Bearer is null)
-            {
-                return new();
-            }
+            //if (token.Bearer is null)
+            //{
+            //    return new();
+            //}
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
             using var response = await httpClient.GetAsync($"{apiEndPoint}/{id}");
 
             if (response.IsSuccessStatusCode)
@@ -192,7 +189,6 @@ public class UserService : IUserService
             throw;
         }
     }
-
     public async Task<UserDto> Update(UserDto userDto)
     {
         try

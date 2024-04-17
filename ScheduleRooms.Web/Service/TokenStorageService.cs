@@ -1,6 +1,5 @@
 ﻿using Blazored.SessionStorage;
 using ScheduleRooms.Models.Dtos;
-using ScheduleRooms.Web.Pages;
 using ScheduleRooms.Web.Service.Interface;
 
 namespace ScheduleRooms.Web.Service;
@@ -16,6 +15,7 @@ public class TokenStorageService : ITokenStorageService
         _sessionStorageService = sessionStorageService;
         _loginService = loginService;
     }
+
     public async Task<TokenDto> GetToken()
     {
         var tokenDto = await _sessionStorageService.GetItemAsync<TokenDto>($"{key}");
@@ -29,7 +29,6 @@ public class TokenStorageService : ITokenStorageService
     {
         return await _sessionStorageService.GetItemAsync<TokenDto>($"{key}") ?? await AddToken(login);
     }
-
     private async Task<TokenDto> AddToken(LoginDto login)
     {
         var token = await _loginService.Token(login);
@@ -45,6 +44,4 @@ public class TokenStorageService : ITokenStorageService
     {
         await _sessionStorageService.ClearAsync();
     }
-
-
 }
