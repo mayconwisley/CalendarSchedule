@@ -13,13 +13,11 @@
 
 @code {
     private LoginDto? LoginDto { get; set; } = new();
-    private TokenDto? TokenDto { get; set; } = new();
-
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            var token = await tokenStorageService.GetToken(LoginDto);
+            var token = await tokenStorageService.GetToken(LoginDto!);
             if (token.Bearer is null)
             {
                 await tokenStorageService.RemoverToken();

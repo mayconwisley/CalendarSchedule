@@ -45,7 +45,8 @@ public class GetTokenService : IGetTokenService
 
             }),
             Expires = DateTime.UtcNow.AddHours(4),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(jwt), SecurityAlgorithms.HmacSha256Signature)
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(jwt),
+                                                                SecurityAlgorithms.HmacSha256Signature)
         };
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(tokenConfig);

@@ -88,9 +88,9 @@ public class ScheduleRoomRepository : IScheduleRoomRepository
     {
         try
         {
-            var schedules = await _scheduleContext.ScheduleRooms            
+            var schedules = await _scheduleContext.ScheduleRooms
                 .Include(i => i.Room)
-               // .Where(w => w.DateFinal >= DateTime.Now)
+                // .Where(w => w.DateFinal >= DateTime.Now)
                 .OrderBy(o => o.DateFinal)
                 .ToListAsync();
 

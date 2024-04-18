@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ScheduleRooms.API.Model;
+﻿namespace ScheduleRooms.API.Model;
 
 public class LoginApi
 {
