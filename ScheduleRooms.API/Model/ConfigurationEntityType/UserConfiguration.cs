@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ScheduleRooms.API.Utility.Interface;
 
 namespace ScheduleRooms.API.Model.ConfigurationEntityType;
 
 public class UserConfiguration : IEntityTypeConfiguration<User>
 {
+   
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.Property(p => p.Name)
@@ -22,5 +24,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasColumnType("VARCHAR(500)");
         builder.Property(p => p.Cellphone)
             .HasColumnType("VARCHAR(20)");
+
+      
     }
 }
