@@ -1,6 +1,7 @@
 ﻿using ScheduleRooms.Models.Dtos;
 using ScheduleRooms.Web.Models;
 using ScheduleRooms.Web.Service.Interface;
+using System.Drawing;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -221,6 +222,42 @@ public class UserService : IUserService
         catch (Exception)
         {
 
+            throw;
+        }
+    }
+
+    public async Task<UserDto> GetManagerUsername(string username)
+    {
+        try
+        {
+            //var token = await _tokenStorageService.GetToken();
+
+            //if (token.Bearer is null)
+            //{
+            //    return new();
+            //}
+
+            using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+            using var response = await httpClient.GetAsync($"{apiEndPoint}/Username/{username}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                UserDto? userDto = await response.Content.ReadFromJsonAsync<UserDto>(_serializerOptions);
+                return userDto ??= new();
+            }
+            else
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return new();
+                }
+                response.EnsureSuccessStatusCode();
+                return new();
+            }
+        }
+        catch (Exception)
+        {
             throw;
         }
     }

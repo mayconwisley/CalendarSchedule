@@ -1,6 +1,8 @@
 ﻿@page "/ScheduleRoom"
 @layout NewLayout
+@inject ITokenStorageService tokenStorageService
 @inject IScheduleRoomService scheduleService
+@inject NavigationManager navigationManager
 <h3>Cadastro Agenda</h3>
 <button data-bs-toggle="modal" data-bs-target="#newScheduleRoom" class="btn btn-info">
     Nova Agenda
@@ -25,10 +27,22 @@ else
 
 @code {
     private ScheduleRoomView? scheduleRoomView;
+    private LoginDto? LoginDto { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        scheduleRoomView = await scheduleService.GetAll();
+        var token = await tokenStorageService.GetToken(LoginDto!);
+        if (token.Bearer is null)
+        {
+            await tokenStorageService.RemoverToken();
+            navigationManager.NavigateTo("/Login", true);
+        }
+
+        if (token.Bearer is not null)
+        {
+            scheduleRoomView = await scheduleService.GetAll();
+        }
+
     }
     private async void DataUpdated()
     {

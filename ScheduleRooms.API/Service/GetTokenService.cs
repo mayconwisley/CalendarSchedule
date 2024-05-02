@@ -42,7 +42,6 @@ public class GetTokenService : IGetTokenService
             {
                 new Claim("Acesso Api", "Acesso Api"),
                 new Claim("Usuário", login.Username)
-
             }),
             Expires = DateTime.UtcNow.AddHours(4),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(jwt),

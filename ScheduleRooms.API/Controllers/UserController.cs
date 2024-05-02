@@ -86,6 +86,21 @@ public class UserController : ControllerBase
         return NotFound("Sem dados");
 
     }
+    [HttpGet("Username/{username}")]
+    public async Task<ActionResult<UserDto>> GetManagerUsername(string username)
+    {
+        var userDto = await _userService.GetManagerUsername(username);
+        if (userDto.Id <= 0)
+        {
+            return NotFound("Sem dados");
+        }
+        if (userDto is not null)
+        {
+            return Ok(userDto);
+        }
+        return NotFound("Sem dados");
+
+    }
     [Authorize]
     [HttpPost]
     public async Task<ActionResult<UserDto>> Post([FromBody] UserDto userDto)

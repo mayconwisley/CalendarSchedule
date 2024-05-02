@@ -1,4 +1,5 @@
-﻿<div>
+﻿@inject IUserService userService
+<div>
     <ul class="nav nav-tabs nav justify-content-center">
         <li class="nav-item">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">Calendário</NavLink>
@@ -9,9 +10,17 @@
         <li class="nav-item">
         <NavLink class="nav-link" href="ScheduleRoom" Match="NavLinkMatch.Prefix">Agenda Salas</NavLink>
         </li> *@
-        @* <li class="nav-item">
-            <NavLink class="nav-link" href="User" Match="NavLinkMatch.Prefix">Usuários</NavLink>
-        </li> *@
+
+        @{
+            
+            if (userDto is not null)
+            {
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="User" Match="NavLinkMatch.Prefix">Usuários</NavLink>
+                </li>
+            }
+        }
+        
         <li class="nav-item">
             <NavLink class="nav-link" href="Client" Match="NavLinkMatch.Prefix">Cliente</NavLink>
         </li>
@@ -21,9 +30,20 @@
     </ul>
 </div>
 @code {
+
+    [Parameter]
+    public string? Username { get; set; }
+
     private bool collapseNavMenu = true;
 
+    private UserDto? userDto;
+
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private async Task Teste(string username)
+    {
+        userDto = await userService.GetManagerUsername(username);
+    }
 
     private void ToggleNavMenu()
     {

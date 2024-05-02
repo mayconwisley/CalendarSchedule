@@ -101,6 +101,28 @@ public class UserRepository(ScheduleContext scheduleContext) : IUserRepository
         }
     }
 
+    public async Task<User> GetManagerUsername(string username)
+    {
+        try
+        {
+            var user = await _scheduleContext.Users
+                .Where(w => w.Username!.ToUpper() == username.ToUpper())
+                .FirstOrDefaultAsync();
+
+            if (user is not null)
+            {
+                return user;
+            }
+
+            return new();
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
+
     public async Task<string> GetPassword(LoginApi login)
     {
         var password = await _scheduleContext.Users

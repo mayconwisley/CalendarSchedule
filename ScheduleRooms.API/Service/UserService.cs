@@ -70,6 +70,12 @@ public class UserService(IUserRepository userRepository,
         return userEntity.ConvertUsersToDto();
     }
 
+    public async Task<UserDto> GetManagerUsername(string username)
+    {
+        var userEntity = await _userRepository.GetManagerUsername(username);
+        return userEntity.ConvertUserToDto();
+    }
+
     public async Task<bool> GetPassword(LoginDto login)
     {
         var pass = await _userRepository.GetPassword(login.ConvertLoginDtoToLoginApi());

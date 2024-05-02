@@ -31,14 +31,11 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-
-
         var token = await tokenStorageService.GetToken(LoginDto!);
         if (token.Bearer is null)
         {
             await tokenStorageService.RemoverToken();
             navigationManager.NavigateTo("/Login", true);
-
         }
 
         if (token.Bearer is not null)
