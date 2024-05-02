@@ -1,6 +1,8 @@
 ﻿@page "/User"
 @layout NewLayout
+@inject ITokenStorageService tokenStorageService
 @inject IUserService userService
+@inject NavigationManager navigationManager
 
 <h3>Cadastro de Usuário</h3>
 <button data-bs-toggle="modal" data-bs-target="#newUser" class="btn btn-info">
@@ -25,10 +27,24 @@ else
 
 @code {
     private UserView? userView;
+    private LoginDto? LoginDto { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        userView = await userService.GetAll();
+
+
+        var token = await tokenStorageService.GetToken(LoginDto!);
+        if (token.Bearer is null)
+        {
+            await tokenStorageService.RemoverToken();
+            navigationManager.NavigateTo("/Login", true);
+
+        }
+
+        if (token.Bearer is not null)
+        {
+            userView = await userService.GetAll();
+        }
     }
 
     private async void DataUpdated()
