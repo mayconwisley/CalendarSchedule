@@ -5,11 +5,17 @@
 
 <div class="login-container">
     <h2>Login</h2>
-    <EditForm Model="@LoginDto" class="formLogin" OnValidSubmit="Log_in">
+    <EditForm Model="@LoginDto" OnValidSubmit="Log_in">
         <DataAnnotationsValidator />
-        <InputText @bind-Value="LoginDto!.Username" type="text" placeholder="Usuário" />
-        <InputText @bind-Value="LoginDto!.Password" type="password" placeholder="Senha" />
-        <button type="submit">Entrar</button>
+        <div>
+            <InputText @bind-Value="LoginDto!.Username" type="text" placeholder="Usuário" />
+        </div>
+        <div>
+            <InputText @bind-Value="LoginDto!.Password" type="password" placeholder="Senha" />
+        </div>
+        <div>
+            <button type="submit">Entrar</button>
+        </div>
     </EditForm>
 </div>
 

@@ -13,9 +13,9 @@
 
         @{
 
-            if (UserDto is not null)
+            if (UserSessionDto is not null)
             {
-                if (UserDto.Manager == true)
+                if (UserSessionDto.Manager == true)
                 {
                     <li class="nav-item">
                         <NavLink class="nav-link" href="User" Match="NavLinkMatch.Prefix">Usuários</NavLink>
@@ -35,13 +35,13 @@
 @code {
 
     private bool collapseNavMenu = true;
-    private UserDto? UserDto;
+    private UserSessionDto? UserSessionDto;
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     protected override async Task OnInitializedAsync()
     {
-        UserDto = new();
-        UserDto = await userStorageService.GetUserSession();
+        UserSessionDto = new();
+        UserSessionDto = await userStorageService.GetUserSession();
 
         await base.OnInitializedAsync();
     }

@@ -10,27 +10,34 @@ public class UserStorageService(ISessionStorageService sessionStorageService, IU
     private readonly ISessionStorageService _sessionStorageService = sessionStorageService;
     private readonly IUserService _userService = userService;
 
-    public async Task<UserDto> GetUserSession()
+    public async Task<UserSessionDto> GetUserSession()
     {
-        var userDto = await _sessionStorageService.GetItemAsync<UserDto>($"{sessionUser}");
-        if (userDto is not null)
+        var user = await _sessionStorageService.GetItemAsync<UserSessionDto>($"{sessionUser}");
+        if (user is not null)
         {
-            return userDto;
+            return user;
         }
         return new();
     }
 
-    public async Task<UserDto> GetUserSession(LoginDto loginDto)
+    public async Task<UserSessionDto> GetUserSession(LoginDto loginDto)
     {
-        return await _sessionStorageService.GetItemAsync<UserDto>($"{sessionUser}") ?? await AddUserSession(loginDto);
+        var user = await _sessionStorageService.GetItemAsync<UserSessionDto>($"{sessionUser}") ?? await AddUserSession(loginDto);
+        return user;
     }
-    private async Task<UserDto> AddUserSession(LoginDto loginDto)
+    private async Task<UserSessionDto> AddUserSession(LoginDto loginDto)
     {
         var user = await _userService.GetManagerUsername(loginDto.Username);
+        UserSessionDto userSession = new()
+        {
+            Username = user.Username,
+            Manager = user.Manager
+        };
+
         if (user is not null)
         {
-            await _sessionStorageService.SetItemAsync(sessionUser, user);
-            return user;
+            await _sessionStorageService.SetItemAsync(sessionUser, userSession);
+            return userSession;
         }
         return new();
     }
