@@ -1,4 +1,5 @@
-﻿@{
+﻿@using System.Globalization
+@{
     DateTime dateStartMonth = new DateTime(competence.Year, competence.Month, 1);
     DateTime dateEndMonth = new DateTime(competence.Year, competence.Month, DateTime.DaysInMonth(competence.Year, competence.Month));
 }
@@ -22,7 +23,7 @@
                         </button>
                     </li>
                     <li class="page-room nome-mes">
-                        <p class="page-link">@competence.ToString("MMMM/yyyy")</p>
+                        <p class="page-link">@competence.ToString("MMMM/yyyy", new CultureInfo("pt-BR"))</p>
                     </li>
                     <li class="page-room">
                         <button class="page-link pn-mes" @onclick="NextMonth">
@@ -46,8 +47,6 @@
             <span>Sábado</span>
         </div>
         <div class="centro-mes">
-
-
             <div class="dia-mes">
                 @for (int i = 0; i < dateEndMonth.Day; i++)
                 {
@@ -154,7 +153,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 
@@ -179,13 +177,10 @@
     {
         DateTime competenceAdd = competence.AddMonths(1);
         competence = competenceAdd;
-
     }
     private void PreviousMonth()
     {
         DateTime competenceRemove = competence.AddMonths(-1);
         competence = competenceRemove;
     }
-
-
 }
