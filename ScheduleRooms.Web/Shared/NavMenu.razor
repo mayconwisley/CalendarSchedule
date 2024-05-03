@@ -1,4 +1,4 @@
-﻿@inject IUserService userService
+﻿@inject ITokenStorageService loginService
 <div>
     <ul class="nav nav-tabs nav justify-content-center">
         <li class="nav-item">
@@ -12,15 +12,18 @@
         </li> *@
 
         @{
-            
-            if (userDto is not null)
+
+            if (UserDto is not null)
             {
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="User" Match="NavLinkMatch.Prefix">Usuários</NavLink>
-                </li>
+                if (UserDto.Manager == true)
+                {
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="User" Match="NavLinkMatch.Prefix">Usuários</NavLink>
+                    </li>
+                }
             }
         }
-        
+
         <li class="nav-item">
             <NavLink class="nav-link" href="Client" Match="NavLinkMatch.Prefix">Cliente</NavLink>
         </li>
@@ -31,18 +34,16 @@
 </div>
 @code {
 
-    [Parameter]
-    public string? Username { get; set; }
-
     private bool collapseNavMenu = true;
-
-    private UserDto? userDto;
-
+    private UserDto? UserDto;
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
-    private async Task Teste(string username)
+    protected override async Task OnInitializedAsync()
     {
-        userDto = await userService.GetManagerUsername(username);
+        UserDto = new();
+        UserDto = await loginService.GetUserSession();
+
+        await base.OnInitializedAsync();
     }
 
     private void ToggleNavMenu()

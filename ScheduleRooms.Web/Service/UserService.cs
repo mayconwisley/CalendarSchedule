@@ -1,7 +1,6 @@
 ﻿using ScheduleRooms.Models.Dtos;
 using ScheduleRooms.Web.Models;
 using ScheduleRooms.Web.Service.Interface;
-using System.Drawing;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;

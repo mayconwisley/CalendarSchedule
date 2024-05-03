@@ -4,17 +4,13 @@ using ScheduleRooms.Web.Service.Interface;
 
 namespace ScheduleRooms.Web.Service;
 
-public class TokenStorageService : ITokenStorageService
+public class TokenStorageService(ISessionStorageService sessionStorageService, ILoginService loginService, IUserService userService) : ITokenStorageService
 {
     private const string key = "Token";
-    private readonly ISessionStorageService _sessionStorageService;
-    private readonly ILoginService _loginService;
-
-    public TokenStorageService(ISessionStorageService sessionStorageService, ILoginService loginService)
-    {
-        _sessionStorageService = sessionStorageService;
-        _loginService = loginService;
-    }
+    private const string sessionUser = "DadoUser";
+    private readonly IUserService _userService = userService;
+    private readonly ISessionStorageService _sessionStorageService = sessionStorageService;
+    private readonly ILoginService _loginService = loginService;
 
     public async Task<TokenDto> GetToken()
     {
@@ -44,4 +40,33 @@ public class TokenStorageService : ITokenStorageService
     {
         await _sessionStorageService.ClearAsync();
     }
+
+    public async Task<UserDto> GetUserSession()
+    {
+        var userDto = await _sessionStorageService.GetItemAsync<UserDto>($"{sessionUser}");
+        if (userDto is not null)
+        {
+            return userDto;
+        }
+        return new();
+    }
+    public async Task<UserDto> GetUserSession(LoginDto loginDto)
+    {
+        return await _sessionStorageService.GetItemAsync<UserDto>($"{sessionUser}") ?? await AddUserSession(loginDto);
+    }
+    private async Task<UserDto> AddUserSession(LoginDto loginDto)
+    {
+        var user = await _userService.GetManagerUsername(loginDto.Username);
+        if (user is not null)
+        {
+            await _sessionStorageService.SetItemAsync(sessionUser, user);
+            return user;
+        }
+        return new();
+    }
+    public async Task RemoveUserSession()
+    {
+        await _sessionStorageService.ClearAsync();
+    }
+
 }

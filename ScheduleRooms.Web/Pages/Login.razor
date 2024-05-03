@@ -1,7 +1,6 @@
 ﻿@page "/Login"
 @inject ITokenStorageService tokenStorageService
 @inject NavigationManager navigationManager
-@inject IUserService userService
 
 <div class="login-container">
     <h2>Login</h2>
@@ -42,7 +41,7 @@
         if (LoginDto is not null)
         {
             var token = await tokenStorageService.GetToken(LoginDto);
-            var teste = await userService.GetManagerUsername(LoginDto.Username);
+          
             if (token.Bearer is not null)
             {
                 navigationManager.NavigateTo("/ScheduleUser", true);
