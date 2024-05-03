@@ -9,6 +9,7 @@ public class LoginService : ILoginService
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly JsonSerializerOptions _serializerOptions;
+
     private const string? apiEndPoint = "api/Login";
 
     public LoginService(IHttpClientFactory httpClientFactory)

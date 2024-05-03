@@ -1,4 +1,4 @@
-﻿@inject ITokenStorageService loginService
+﻿@inject IUserStorageService userStorageService
 <div>
     <ul class="nav nav-tabs nav justify-content-center">
         <li class="nav-item">
@@ -41,7 +41,7 @@
     protected override async Task OnInitializedAsync()
     {
         UserDto = new();
-        UserDto = await loginService.GetUserSession();
+        UserDto = await userStorageService.GetUserSession();
 
         await base.OnInitializedAsync();
     }

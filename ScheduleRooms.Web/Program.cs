@@ -19,6 +19,7 @@ builder.Services.AddHttpClient("ConexaoApi", con =>
 {
     con.BaseAddress = new Uri(baseUrl);
 });
+builder.Services.AddBlazoredSessionStorage();
 
 builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddScoped<IScheduleRoomService, ScheduleRoomService>();
@@ -26,9 +27,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IScheduleUserService, ScheduleUserService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
-
-builder.Services.AddBlazoredSessionStorage();
 builder.Services.AddScoped<ITokenStorageService, TokenStorageService>();
+builder.Services.AddScoped<IUserStorageService, UserStorageService>();
 
 
 await builder.Build().RunAsync();

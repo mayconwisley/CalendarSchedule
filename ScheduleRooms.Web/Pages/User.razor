@@ -1,6 +1,7 @@
 ﻿@page "/User"
 @layout NewLayout
 @inject ITokenStorageService tokenStorageService
+@inject IUserStorageService userStorageService
 @inject IUserService userService
 @inject NavigationManager navigationManager
 
@@ -36,6 +37,11 @@ else
         {
             await tokenStorageService.RemoverToken();
             navigationManager.NavigateTo("/Login", true);
+        }
+        var user = await userStorageService.GetUserSession();
+        if (user.Manager == false)
+        {
+            navigationManager.NavigateTo("/", true);
         }
 
         if (token.Bearer is not null)

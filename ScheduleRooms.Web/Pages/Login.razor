@@ -1,5 +1,6 @@
 ﻿@page "/Login"
 @inject ITokenStorageService tokenStorageService
+@inject IUserStorageService userStorageService
 @inject NavigationManager navigationManager
 
 <div class="login-container">
@@ -41,12 +42,11 @@
         if (LoginDto is not null)
         {
             var token = await tokenStorageService.GetToken(LoginDto);
-          
+            var user = await userStorageService.GetUserSession(LoginDto);
             if (token.Bearer is not null)
             {
                 navigationManager.NavigateTo("/ScheduleUser", true);
             }
         }
-
     }
 }
