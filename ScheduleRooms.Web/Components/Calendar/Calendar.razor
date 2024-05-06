@@ -23,7 +23,7 @@
                         </button>
                     </li>
                     <li class="page-room nome-mes">
-                        <p class="page-link">@competence.ToString("MMMM/yyyy", new CultureInfo("pt-BR"))</p>
+                        <p class="page-link">@competence.ToString("MMMM/yyyy", new CultureInfo("pt-br"))</p>
                     </li>
                     <li class="page-room">
                         <button class="page-link pn-mes" @onclick="NextMonth">
@@ -117,8 +117,6 @@
                             {
                                 g.UserId,
                                 g.User,
-                                g.ClientId,
-                                g.Client,
                                 g.DateStart.Date
 
                             })
@@ -126,8 +124,6 @@
                             {
                                 UserId = s.Key.UserId,
                                 User = s.Key.User,
-                                ClientId = s.Key.ClientId,
-                                Client = s.Key.Client,
                                 DateStart = s.Key.Date
 
                             })
