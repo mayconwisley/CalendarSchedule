@@ -16,7 +16,13 @@
     public string? Message { get; set; }
     [Parameter]
     public string? ShowMessage { get; set; }
+    [Parameter]
+    public int Key { get; set; }
 
+    protected override void OnParametersSet()
+    {
+        StateHasChanged();
+    }
     private void HideMessageWarning()
     {
         ShowMessage = "d-none";

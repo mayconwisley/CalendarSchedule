@@ -8,6 +8,7 @@
 <button data-bs-toggle="modal" data-bs-target="#newScheduleUser" class="btn btn-info">
     Nova Agenda
 </button>
+
 @if (scheduleUserView is null)
 {
     <div class="spinner-border" role="status">
@@ -16,8 +17,8 @@
 }
 else
 {
-    <MensageError Message="@Message" ShowMessage="@ShowMessage" />
 
+    <MensageError Message="@Message" ShowMessage="@ShowMessage" Key="@MessageKey" />
     <TableScheduleUser ScheduleUserView="scheduleUserView" UserViewManager="userViewManager" />
 
     <PaginationTable PageCurrent="@ReceberPagina"
@@ -32,6 +33,7 @@ else
     private ScheduleUserView? scheduleUserView;
     private UserView? userViewManager;
     private string? Message { get; set; }
+    private int MessageKey { get; set; } = 0;
     public string? ShowMessage { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -49,10 +51,10 @@ else
     {
         scheduleUserView = await scheduleUserService.GetAll(pageCurrent);
     }
-
     private async Task ReceiveError(string message)
     {
         Message = await Task.FromResult(message);
+
         if (message is not null)
         {
             ShowMessage = "";
@@ -61,5 +63,7 @@ else
         {
             ShowMessage = "d-none";
         }
+        MessageKey++;
+        StateHasChanged();
     }
 }
