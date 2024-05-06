@@ -82,11 +82,11 @@
                                 g.Room,
                                 g.DateStart.Date
                             }).Select(s => new ScheduleRoomDto
-                    {
-                        RoomId = s.Key.RoomId,
-                        Room = s.Key.Room,
-                        DateStart = s.Key.Date
-                    })
+                            {
+                                RoomId = s.Key.RoomId,
+                                Room = s.Key.Room,
+                                DateStart = s.Key.Date
+                            })
                             .ToList()
                             .OrderBy(o => o.Room);
 
@@ -123,14 +123,14 @@
 
                             })
                             .Select(s => new ScheduleUserDto
-                    {
-                        UserId = s.Key.UserId,
-                        User = s.Key.User,
-                        ClientId = s.Key.ClientId,
-                        Client = s.Key.Client,
-                        DateStart = s.Key.Date
+                            {
+                                UserId = s.Key.UserId,
+                                User = s.Key.User,
+                                ClientId = s.Key.ClientId,
+                                Client = s.Key.Client,
+                                DateStart = s.Key.Date
 
-                    })
+                            })
                             .ToList()
                             .OrderBy(o => o.User);
 
