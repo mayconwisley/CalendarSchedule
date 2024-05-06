@@ -1,5 +1,6 @@
 ﻿@using System.Globalization
 @{
+    CultureInfo cultureInfo = new("pr-BR");
     DateTime dateStartMonth = new DateTime(competence.Year, competence.Month, 1);
     DateTime dateEndMonth = new DateTime(competence.Year, competence.Month, DateTime.DaysInMonth(competence.Year, competence.Month));
 }
@@ -23,7 +24,7 @@
                         </button>
                     </li>
                     <li class="page-room nome-mes">
-                        <p class="page-link">@competence.ToString("MMMM/yyyy", new CultureInfo("pt-br"))</p>
+                        <p class="page-link">@competence.ToString("MMMM/yyyy", cultureInfo)</p>
                     </li>
                     <li class="page-room">
                         <button class="page-link pn-mes" @onclick="NextMonth">
