@@ -71,6 +71,33 @@ public class UserController : ControllerBase
         });
 
     }
+    [HttpGet]
+    [Route("ManagerAllByUserCurrent")]
+    public async Task<ActionResult<IEnumerable<UserDto>>> GetManagerAllByUserCurrent([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "", [FromQuery] string username = "")
+    {
+        var usersDto = await _userService.GetManagerAllByUserCurrent(page, size, search, username);
+        decimal totalData = (decimal)await _userService.TotalUsers(search);
+        decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
+
+        if (size == 1)
+        {
+            totalPage = totalData;
+        }
+
+        if (!usersDto.Any())
+        {
+            return NotFound("Sem dados");
+        }
+        return Ok(new
+        {
+            totalData,
+            page,
+            totalPage,
+            size,
+            usersDto
+        });
+
+    }
     [HttpGet("{id:int}", Name = "GetUser")]
     public async Task<ActionResult<UserDto>> GetById(int id)
     {

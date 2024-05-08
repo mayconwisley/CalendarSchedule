@@ -101,6 +101,35 @@ public class UserRepository(ScheduleContext scheduleContext) : IUserRepository
         }
     }
 
+    public async Task<IEnumerable<User>> GetManagerAllByUserCurrent(int page, int size, string search, string username)
+    {
+        try
+        {
+            IEnumerable<User> users = await _scheduleContext.Users
+                  .Where(w => w.Username.ToUpper() == username.ToUpper())
+                  .Skip((page - 1) * size)
+                  .Take(size)
+                  .OrderBy(o => o.Name)
+                  .ToListAsync();
+
+
+            IEnumerable<User> usersManager = await _scheduleContext.Users
+                .Where(w => w.Manager == true)
+                .Skip((page - 1) * size)
+                .Take(size)
+                .OrderBy(o => o.Name)
+                .ToListAsync();
+
+            users = users.Union(usersManager);
+
+            return users;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
     public async Task<User> GetManagerUsername(string username)
     {
         try

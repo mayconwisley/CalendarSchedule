@@ -70,6 +70,12 @@ public class UserService(IUserRepository userRepository,
         return userEntity.ConvertUsersToDto();
     }
 
+    public async Task<IEnumerable<UserDto>> GetManagerAllByUserCurrent(int page, int size, string search, string username)
+    {
+        var users = await _userRepository.GetManagerAllByUserCurrent(page, size, search, username);
+        return users.ConvertUsersToDto();
+    }
+
     public async Task<UserDto> GetManagerUsername(string username)
     {
         var userEntity = await _userRepository.GetManagerUsername(username);
