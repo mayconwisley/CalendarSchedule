@@ -224,7 +224,6 @@ public class UserService : IUserService
             throw;
         }
     }
-
     public async Task<UserDto> GetManagerUsername(string username)
     {
         try
@@ -260,7 +259,6 @@ public class UserService : IUserService
             throw;
         }
     }
-
     public async Task<UserView> GetManagerAllByUserCurrent(int page = 1, int size = 10, string search = "", string username = "")
     {
         try
