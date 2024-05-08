@@ -102,6 +102,7 @@
     private ScheduleUserDto? ScheduleUserDto { get; set; }
     private UserView? UserView { get; set; } = new();
     private UserView? UserViewManager { get; set; } = new();
+    private UserView? UserViewManagerByUserCurrent { get; set; } = new();
     private ClientView? ClientView { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
@@ -109,6 +110,7 @@
         ScheduleUserDto = new();
         UserView = await userService.GetAll();
         UserViewManager = await userService.GetManagerAll();
+        UserViewManagerByUserCurrent = await userService.GetManagerAllByUserCurrent();
         ClientView = await clientService.GetAll();
         await base.OnInitializedAsync();
     }

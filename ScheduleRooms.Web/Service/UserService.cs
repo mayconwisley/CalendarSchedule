@@ -260,4 +260,40 @@ public class UserService : IUserService
             throw;
         }
     }
+
+    public async Task<UserView> GetManagerAllByUserCurrent(int page = 1, int size = 10, string search = "", string username = "")
+    {
+        try
+        {
+            //var token = await _tokenStorageService.GetToken();
+
+            //if (token.Bearer is null)
+            //{
+            //    return new();
+            //}
+
+            using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+            using var response = await httpClient.GetAsync($"{apiEndPoint}/ManagerAllByUserCurrent?page={page}&size={size}&search={search}&username={username}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                UserView? userView = await response.Content.ReadFromJsonAsync<UserView>(_serializerOptions);
+                return userView ??= new();
+            }
+            else
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return new();
+                }
+                response.EnsureSuccessStatusCode();
+                return new();
+            }
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
 }
