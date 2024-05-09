@@ -106,21 +106,20 @@ public class UserRepository(ScheduleContext scheduleContext) : IUserRepository
         try
         {
             IEnumerable<User> users = await _scheduleContext.Users
-                  .Where(w => w.Username.ToUpper() == username.ToUpper())
+                  .Where(w => w.Username!.ToUpper() == username.ToUpper())
                   .Skip((page - 1) * size)
                   .Take(size)
-                  .OrderBy(o => o.Name)
                   .ToListAsync();
-
 
             IEnumerable<User> usersManager = await _scheduleContext.Users
                 .Where(w => w.Manager == true)
                 .Skip((page - 1) * size)
                 .Take(size)
-                .OrderBy(o => o.Name)
                 .ToListAsync();
 
-            users = users.Union(usersManager);
+            users = users
+                    .Union(usersManager)
+                    .OrderBy(o => o.Name);
 
             return users;
         }
@@ -147,7 +146,6 @@ public class UserRepository(ScheduleContext scheduleContext) : IUserRepository
         }
         catch (Exception)
         {
-
             throw;
         }
     }
@@ -189,7 +187,6 @@ public class UserRepository(ScheduleContext scheduleContext) : IUserRepository
         }
         catch (Exception)
         {
-
             throw;
         }
     }
