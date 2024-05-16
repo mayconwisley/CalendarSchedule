@@ -106,7 +106,7 @@ public class UserRepository(ScheduleContext scheduleContext) : IUserRepository
         try
         {
             IEnumerable<User> users = await _scheduleContext.Users
-                  .Where(w => w.Username!.ToUpper() == username.ToUpper())
+                  .Where(w => w.Username!.Equals(username, StringComparison.CurrentCultureIgnoreCase))
                   .Skip((page - 1) * size)
                   .Take(size)
                   .ToListAsync();
@@ -134,7 +134,7 @@ public class UserRepository(ScheduleContext scheduleContext) : IUserRepository
         try
         {
             var user = await _scheduleContext.Users
-                .Where(w => w.Username!.ToUpper() == username.ToUpper())
+                .Where(w => w.Username!.Equals(username, StringComparison.CurrentCultureIgnoreCase))
                 .FirstOrDefaultAsync();
 
             if (user is not null)
