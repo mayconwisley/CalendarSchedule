@@ -8,7 +8,7 @@
                 <DataAnnotationsValidator />
 
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Editar Usuário</h1>
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Editar Colaborador</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -24,8 +24,8 @@
                             <ValidationMessage For="@(() => UserDto.Cellphone)" />
                         </div>
                         <div class="col-6">
-                            <label for="inUsername" class="form-label">Usuário</label>
-                            <InputText class="form-control" id="inUsername" @bind-Value="UserDto!.Username" placeholder="Usuário" />
+                            <label for="inUsername" class="form-label">Colaborador</label>
+                            <InputText class="form-control" id="inUsername" @bind-Value="UserDto!.Username" placeholder="Colaborador" />
                             <ValidationMessage For="@(() => UserDto.Username)" />
 
                         </div>
