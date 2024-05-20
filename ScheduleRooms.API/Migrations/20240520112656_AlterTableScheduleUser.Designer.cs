@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ScheduleRooms.API.Data;
 
@@ -11,9 +12,11 @@ using ScheduleRooms.API.Data;
 namespace ScheduleRooms.API.Migrations
 {
     [DbContext(typeof(ScheduleContext))]
-    partial class ScheduleContextModelSnapshot : ModelSnapshot
+    [Migration("20240520112656_AlterTableScheduleUser")]
+    partial class AlterTableScheduleUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -131,7 +134,7 @@ namespace ScheduleRooms.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ClientId")
+                    b.Property<int>("ClientId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateFinal")
@@ -234,8 +237,10 @@ namespace ScheduleRooms.API.Migrations
             modelBuilder.Entity("ScheduleRooms.API.Model.ScheduleUser", b =>
                 {
                     b.HasOne("ScheduleRooms.API.Model.Client", "Client")
-                        .WithMany("ScheduleUsers")
-                        .HasForeignKey("ClientId");
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ScheduleRooms.API.Model.User", "User")
                         .WithMany()
@@ -246,11 +251,6 @@ namespace ScheduleRooms.API.Migrations
                     b.Navigation("Client");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ScheduleRooms.API.Model.Client", b =>
-                {
-                    b.Navigation("ScheduleUsers");
                 });
 #pragma warning restore 612, 618
         }

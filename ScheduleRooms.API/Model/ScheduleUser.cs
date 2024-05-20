@@ -8,8 +8,9 @@ public class ScheduleUser
     public DateTime DateFinal { get; set; }
     public bool MeetingType { get; set; }
     public bool StatusSchedule { get; set; }
-    public int ClientId { get; set; }
-    public virtual Client? Client { get; set; }
+    public bool Particular { get; set; }
+    public int? ClientId { get; set; }
+    public Client? Client { get; set; }
     public int UserId { get; set; }
     public virtual User? User { get; set; }
     public int ManagerId { get; set; }

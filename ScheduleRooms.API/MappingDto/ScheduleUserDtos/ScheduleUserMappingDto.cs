@@ -22,7 +22,8 @@ public static class ScheduleUserMappingDto
                     User = scheduleUser?.User?.Name,
                     UserId = scheduleUser!.User!.Id,
                     ManagerId = scheduleUser.ManagerId,
-                    Prospection = scheduleUser.Client.Prospection
+                    Prospection = scheduleUser.Client.Prospection,
+                    Particular = scheduleUser.Particular
 
                 }).ToList();
     }
@@ -39,7 +40,8 @@ public static class ScheduleUserMappingDto
                     StatusSchedule = scheduleUser.StatusSchedule,
                     ClientId = scheduleUser.ClientId,
                     UserId = scheduleUser.UserId,
-                    ManagerId = scheduleUser.ManagerId
+                    ManagerId = scheduleUser.ManagerId,
+                    Particular = scheduleUser.Particular
                 }).ToList();
     }
     public static ScheduleUserDto ConvertScheduleToDto(this ScheduleUser scheduleUser)
@@ -58,7 +60,8 @@ public static class ScheduleUserMappingDto
             User = scheduleUser?.User?.Name,
             UserId = scheduleUser!.User!.Id,
             ManagerId = scheduleUser.ManagerId,
-            Prospection = scheduleUser.Client.Prospection
+            Prospection = scheduleUser.Client.Prospection,
+            Particular = scheduleUser.Particular
         };
     }
     public static ScheduleUser ConvertDtoToSchedule(this ScheduleUserDto scheduleUserDto)
@@ -74,6 +77,7 @@ public static class ScheduleUserMappingDto
             ClientId = scheduleUserDto.ClientId,
             UserId = scheduleUserDto.UserId,
             ManagerId = scheduleUserDto.ManagerId,
+            Particular = scheduleUserDto.Particular
         };
     }
 }

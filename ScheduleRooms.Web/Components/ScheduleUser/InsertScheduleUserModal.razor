@@ -13,6 +13,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <div class="col-12">
+                        <div class="form-check">
+                            <InputCheckbox class="form-check-input" @bind-Value="ScheduleUserDto.Particular" id="inTypeMeeting" />
+                            <label for="inTypeMeeting" class="form-check-label">Particular?</label>
+                        </div>
+                    </div>
+
                     <div class="row g-3">
                         <div class="col-6">
                             <label for="inDataInicio" class="form-label">Data/Hora Inicio</label>

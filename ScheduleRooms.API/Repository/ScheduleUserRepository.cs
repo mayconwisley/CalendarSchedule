@@ -41,9 +41,9 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
             }
             return new();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new Exception(ex.Message);
         }
     }
 
