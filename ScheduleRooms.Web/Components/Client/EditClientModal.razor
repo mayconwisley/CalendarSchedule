@@ -4,7 +4,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <EditForm Model="@ClientDto" OnValidSubmit="@Edit">
-                <InputNumber hidden @bind-Value="ClientDto!.Id" />
+                <InputNumber hidden @bind-Value="ClientDto.Id" />
                 <DataAnnotationsValidator />
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">Editar Cliente</h1>
@@ -49,13 +49,13 @@
                                 <label for="inActive" class="form-label">Ativo</label>
                             </div>
                             <div class="form-check">
-                                <InputCheckbox class="form-check-input" id="inProspection" @bind-Value="ClientDto!.Prospection" />
+                                <InputCheckbox class="form-check-input" id="inProspection" @bind-Value="ClientDto.Prospection" />
                                 <label for="inProspection" class="form-label">Prospecção</label>
                             </div>
                         </div>
                         <div class="col-12">
                             <label for="inDescription" class="form-label">Descrição</label>
-                            <InputText class="form-control" id="inDescription" @bind-Value="ClientDto!.Description" placeholder="Descrição" />
+                            <InputText class="form-control" id="inDescription" @bind-Value="ClientDto.Description" placeholder="Descrição" />
                         </div>
                     </div>
                 </div>

@@ -19,7 +19,7 @@ public static class ClientMappingDto
                     City = client.City,
                     Position = client.Position,
                     Active = client.Active,
-                    Prospection = client.Prospection
+                    Prospection = client.Prospection != null && client.Prospection
 
                 }).ToList();
 
@@ -38,7 +38,7 @@ public static class ClientMappingDto
                     City = client.City,
                     Position = client.Position,
                     Active = client.Active,
-                    Prospection = client.Prospection
+                    Prospection = client.Prospection != null && client.Prospection
 
                 }).ToList();
     }
@@ -55,7 +55,7 @@ public static class ClientMappingDto
             City = client.City,
             Position = client.Position,
             Active = client.Active,
-            Prospection = client.Prospection
+            Prospection = client.Prospection != null && client.Prospection
 
         };
     }
@@ -72,7 +72,7 @@ public static class ClientMappingDto
             City = clientDto.City,
             Position = clientDto.Position,
             Active = clientDto.Active,
-            Prospection = clientDto.Prospection
+            Prospection = clientDto.Prospection != null && clientDto.Prospection
         };
     }
 }
