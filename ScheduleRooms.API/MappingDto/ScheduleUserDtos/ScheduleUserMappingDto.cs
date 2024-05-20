@@ -18,11 +18,11 @@ public static class ScheduleUserMappingDto
                     StatusSchedule = scheduleUser.StatusSchedule,
                     ClientId = scheduleUser?.Client?.Id,
                     Client = scheduleUser?.Client?.Name,
-                    City = scheduleUser?.Client.City,
+                    City = scheduleUser?.Client?.City,
                     User = scheduleUser?.User?.Name,
                     UserId = scheduleUser!.User!.Id,
                     ManagerId = scheduleUser.ManagerId,
-                    Prospection = scheduleUser?.Client?.Prospection == null ? false : scheduleUser.Client.Prospection,
+                    //Prospection = scheduleUser.Client.Prospection,
                     Particular = scheduleUser.Particular
 
                 }).ToList();
@@ -54,13 +54,13 @@ public static class ScheduleUserMappingDto
             DateFinal = scheduleUser.DateFinal,
             MeetingType = scheduleUser.MeetingType,
             StatusSchedule = scheduleUser.StatusSchedule,
-            ClientId = scheduleUser!.Client!.Id,
+            ClientId = scheduleUser?.Client?.Id,
             Client = scheduleUser?.Client?.Name,
-            City = scheduleUser!.Client.City,
+            City = scheduleUser?.Client.City,
             User = scheduleUser?.User?.Name,
             UserId = scheduleUser!.User!.Id,
             ManagerId = scheduleUser.ManagerId,
-            Prospection = scheduleUser.Client.Prospection != null && scheduleUser.Client.Prospection,
+            //Prospection = scheduleUser.Client.Prospection != null && scheduleUser.Client.Prospection,
             Particular = scheduleUser.Particular
         };
     }
