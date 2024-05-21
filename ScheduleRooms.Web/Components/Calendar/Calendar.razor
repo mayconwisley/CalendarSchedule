@@ -122,11 +122,11 @@
 
                             })
                             .Select(s => new ScheduleUserDto
-                    {
-                        UserId = s.Key.UserId,
-                        User = s.Key.User,
-                        DateStart = s.Key.Date
-                    })
+                            {
+                                UserId = s.Key.UserId,
+                                User = s.Key.User,
+                                DateStart = s.Key.Date
+                            })
                             .ToList()
                             .OrderBy(o => o.User);
 
