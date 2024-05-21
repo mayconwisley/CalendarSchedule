@@ -113,9 +113,50 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
     {
         try
         {
-            var schedules = await _scheduleContext.ScheduleUsers
-                .Include(i => i.Client)
-                .Include(i => i.User)
+            var schedules = await (
+                        from s in _scheduleContext.ScheduleUsers
+                        join u in _scheduleContext.Users on s.UserId equals u.Id
+                        join c in _scheduleContext.Clients on s.ClientId equals c.Id into sc
+                        from c in sc.DefaultIfEmpty()
+                        join m in _scheduleContext.Users on s.ManagerId equals m.Id into sm
+                        from m in sm.DefaultIfEmpty()
+                        select new ScheduleUser
+                        {
+                            Id = s.Id,
+                            UserId = s.UserId,
+                            ClientId = s.ClientId,
+                            DateStart = s.DateStart,
+                            DateFinal = s.DateFinal,
+                            Description = s.Description,
+                            ManagerId = s.ManagerId,
+                            MeetingType = s.MeetingType,
+                            Particular = s.Particular,
+                            StatusSchedule = s.StatusSchedule,
+                            Client = c == null ? null : new Client
+                            {
+                                Id = c.Id,
+                                Name = c.Name,
+                                Active = c.Active,
+                                City = c.City,
+                                Description = c.Description,
+                                Email = c.Email,
+                                Position = c.Position,
+                                Prospection = c.Prospection,
+                                Responsible = c.Responsible,
+                                Telephone = c.Telephone,
+                            },
+                            User = new User
+                            {
+                                Id = u.Id,
+                                Name = u.Name,
+                                Description = u.Description,
+                                Cellphone = u.Cellphone,
+                                Active = u.Active,
+                                Manager = u.Manager,
+                                Username = u.Username
+
+                            }
+                        })
                 .OrderBy(o => o.DateFinal)
                 .ToListAsync();
 

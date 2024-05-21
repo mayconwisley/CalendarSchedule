@@ -22,6 +22,7 @@ public static class ScheduleUserMappingDto
                     User = scheduleUser?.User?.Name,
                     UserId = scheduleUser!.User!.Id,
                     ManagerId = scheduleUser.ManagerId,
+                    Manager = scheduleUser.Manager,
                     //Prospection = scheduleUser.Client.Prospection,
                     Particular = scheduleUser.Particular
 
@@ -56,10 +57,11 @@ public static class ScheduleUserMappingDto
             StatusSchedule = scheduleUser.StatusSchedule,
             ClientId = scheduleUser?.Client?.Id,
             Client = scheduleUser?.Client?.Name,
-            City = scheduleUser?.Client.City,
+            City = scheduleUser?.Client?.City,
             User = scheduleUser?.User?.Name,
             UserId = scheduleUser!.User!.Id,
             ManagerId = scheduleUser.ManagerId,
+            Manager = scheduleUser.Manager,
             //Prospection = scheduleUser.Client.Prospection != null && scheduleUser.Client.Prospection,
             Particular = scheduleUser.Particular
         };

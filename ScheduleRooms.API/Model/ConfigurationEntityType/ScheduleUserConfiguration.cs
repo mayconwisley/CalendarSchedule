@@ -11,5 +11,8 @@ public class ScheduleUserConfiguration : IEntityTypeConfiguration<ScheduleUser>
             .HasColumnType("VARCHAR(500)");
         builder.Property(p => p.ManagerId)
             .IsRequired();
+        builder.Property(p => p.Manager)
+            .HasColumnType("VARCHAR(150)");
+
     }
 }

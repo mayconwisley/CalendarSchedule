@@ -15,8 +15,8 @@
                 <div class="modal-body">
                     <div class="col-12">
                         <div class="form-check">
-                            <InputCheckbox class="form-check-input" @bind-Value="ScheduleUserDto.Particular" id="inTypeMeeting" />
-                            <label for="inTypeMeeting" class="form-check-label">Particular?</label>
+                            <InputCheckbox class="form-check-input" @onclick=(Particular) @bind-Value="ScheduleUserDto.Particular" id="inParticular" />
+                            <label for="inParticular" class="form-check-label">Particular?</label>
                         </div>
                     </div>
 
@@ -36,60 +36,80 @@
                             <InputText class="form-control" @bind-Value="ScheduleUserDto!.Description" id="inDescricao" placeholder="Descrição" />
                             <ValidationMessage For="@(() => ScheduleUserDto.Description)" />
                         </div>
-                        <div class="col-12">
-                            <label for="inClient" class="form-label">Cliente</label>
-                            <InputSelect class="form-select" id="inClient" @bind-Value="ScheduleUserDto!.ClientId">
-                                @if (ClientView?.ClientsDto is not null)
-                                {
-                                    <option value="0">Selecione uma Opção</option>
-                                    @foreach (var client in ClientView.ClientsDto)
-                                    {
-                                        <option value="@client.Id"> @client.Name</option>
-                                    }
-                                }
-                            </InputSelect>
-                            <ValidationMessage For="@(() => ScheduleUserDto.ClientId)" />
-                        </div>
 
-                        <div class="col-6">
-                            <label for="inUser" class="form-label">Usuário</label>
-                            <InputSelect class="form-select" id="inUser" @bind-Value="ScheduleUserDto!.UserId">
-                                @if (UserView?.UsersDto is not null)
-                                {
-                                    <option value="0">Selecione uma Opção</option>
-                                    @foreach (var user in UserView.UsersDto)
+                        @if (!particular)
+                        {
+                            <div class="col-12">
+                                <label for="inClient" class="form-label">Cliente</label>
+                                <InputSelect class="form-select" id="inClient" @bind-Value="ScheduleUserDto!.ClientId">
+                                    @if (ClientView?.ClientsDto is not null)
                                     {
-                                        <option value="@user.Id"> @user.Name</option>
+                                        <option value="0">Selecione uma Opção</option>
+                                        @foreach (var client in ClientView.ClientsDto)
+                                        {
+                                            <option value="@client.Id"> @client.Name</option>
+                                        }
                                     }
-                                }
-                            </InputSelect>
-                            <ValidationMessage For="@(() => ScheduleUserDto.UserId)" />
-                        </div>
-                        <div class="col-6">
-                            <label for="inManager" class="form-label">Gestor</label>
-                            <InputSelect class="form-select" id="inManager" @bind-Value="ScheduleUserDto!.ManagerId">
-                                @if (UserViewManager?.UsersDto is not null)
-                                {
-                                    <option value="0">Selecione uma Opção</option>
-                                    @foreach (var user in UserViewManager.UsersDto)
+                                </InputSelect>
+                                <ValidationMessage For="@(() => ScheduleUserDto.ClientId)" />
+                            </div>
+                            <div class="col-6">
+                                <label for="inUser" class="form-label">Colaborador</label>
+                                <InputSelect class="form-select" id="inUser" @bind-Value="ScheduleUserDto!.UserId">
+                                    @if (UserView?.UsersDto is not null)
                                     {
-                                        <option value="@user.Id"> @user.Name</option>
+                                        <option value="0">Selecione uma Opção</option>
+                                        @foreach (var user in UserView.UsersDto)
+                                        {
+                                            <option value="@user.Id"> @user.Name</option>
+                                        }
                                     }
-                                }
-                            </InputSelect>
-                            <ValidationMessage For="@(() => ScheduleUserDto.UserId)" />
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Opções</label>
-                            <div class="form-check">
-                                <InputCheckbox class="form-check-input" @bind-Value="ScheduleUserDto.MeetingType" id="inTypeMeeting" />
-                                <label for="inTypeMeeting" class="form-check-label">Remoto?</label>
+                                </InputSelect>
+                                <ValidationMessage For="@(() => ScheduleUserDto.UserId)" />
                             </div>
-                            <div class="form-check">
-                                <InputCheckbox class="form-check-input" @bind-Value="ScheduleUserDto.StatusSchedule" id="inStatusSchedule" />
-                                <label for="inStatusSchedule" class="form-check-label">Reservada?</label>
+                            <div class="col-6">
+                                <label for="inManager" class="form-label">Gestor</label>
+                                <InputSelect class="form-select" id="inManager" @bind-Value="ScheduleUserDto!.ManagerId">
+                                    @if (UserViewManager?.UsersDto is not null)
+                                    {
+                                        <option value="0">Selecione uma Opção</option>
+                                        @foreach (var user in UserViewManager.UsersDto)
+                                        {
+                                            <option value="@user.Id"> @user.Name</option>
+                                        }
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="@(() => ScheduleUserDto.ManagerId)" />
                             </div>
-                        </div>
+                            <div class="col-6">
+                                <label class="form-label">Opções</label>
+                                <div class="form-check">
+                                    <InputCheckbox class="form-check-input" @bind-Value="ScheduleUserDto.MeetingType" id="inTypeMeeting" />
+                                    <label for="inTypeMeeting" class="form-check-label">Remoto?</label>
+                                </div>
+                                <div class="form-check">
+                                    <InputCheckbox class="form-check-input" @bind-Value="ScheduleUserDto.StatusSchedule" id="inStatusSchedule" />
+                                    <label for="inStatusSchedule" class="form-check-label">Reservada?</label>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-12">
+                                <label for="inUser" class="form-label">Colaborador</label>
+                                <InputSelect class="form-select" id="inUser" @bind-Value="ScheduleUserDto!.UserId">
+                                    @if (UserView?.UsersDto is not null)
+                                    {
+                                        <option value="0">Selecione uma Opção</option>
+                                        @foreach (var user in UserView.UsersDto)
+                                        {
+                                            <option value="@user.Id"> @user.Name</option>
+                                        }
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="@(() => ScheduleUserDto.UserId)" />
+                            </div>
+                        }
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -111,6 +131,8 @@
     private UserView? UserViewManager { get; set; } = new();
     private UserView? UserViewManagerByUserCurrent { get; set; } = new();
     private ClientView? ClientView { get; set; } = new();
+
+    private bool particular = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -143,6 +165,12 @@
     private void UpdateData()
     {
         DataUpdated?.Invoke();
+    }
+
+    private void Particular()
+    {
+        particular = !particular;
+        StateHasChanged();
     }
 
     private async Task Error(string error)

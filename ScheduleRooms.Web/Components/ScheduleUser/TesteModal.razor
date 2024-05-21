@@ -17,6 +17,7 @@
                                 <th>Descrição</th>
                                 <th>Remoto</th>
                                 <th>Confirmada</th>
+                                <th>Particular</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -28,6 +29,7 @@
                                     <td>@ScheduleUserDto.Description</td>
                                     <td>@(ScheduleUserDto.MeetingType ? "Sim" : "Não")</td>
                                     <td>@(ScheduleUserDto.StatusSchedule ? "Sim" : "Não")</td>
+                                    <td>@(ScheduleUserDto.Particular ? "Sim" : "Não")</td>
                                 </tr>
                             }
                         </tbody>

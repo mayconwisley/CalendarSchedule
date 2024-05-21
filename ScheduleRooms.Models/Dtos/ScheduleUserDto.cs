@@ -20,5 +20,6 @@ public class ScheduleUserDto
     public int UserId { get; set; } = 0;
     public string? User { get; set; } = string.Empty;
     public int ManagerId { get; set; } = 0;
+    public string Manager { get; set; } = string.Empty;
 //  public bool? Prospection { get; set; } = false;
 }

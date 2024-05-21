@@ -83,11 +83,11 @@
                                 g.Room,
                                 g.DateStart.Date
                             }).Select(s => new ScheduleRoomDto
-                            {
-                                RoomId = s.Key.RoomId,
-                                Room = s.Key.Room,
-                                DateStart = s.Key.Date
-                            })
+                    {
+                        RoomId = s.Key.RoomId,
+                        Room = s.Key.Room,
+                        DateStart = s.Key.Date
+                    })
                             .ToList()
                             .OrderBy(o => o.Room);
 
@@ -122,12 +122,11 @@
 
                             })
                             .Select(s => new ScheduleUserDto
-                            {
-                                UserId = s.Key.UserId,
-                                User = s.Key.User,
-                                DateStart = s.Key.Date
-
-                            })
+                    {
+                        UserId = s.Key.UserId,
+                        User = s.Key.User,
+                        DateStart = s.Key.Date
+                    })
                             .ToList()
                             .OrderBy(o => o.User);
 
@@ -136,7 +135,7 @@
                                 if (user.DateStart.Date == dateStartMonth.AddDays(i).Date)
                                 {
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#tableScheduleUser-@user.UserId-@user.ClientId-@dateStartMonth.AddDays(i).Date.ToString("ddMMyyyy")">
-                                        @user.User
+                                        @user.User - @user.Manager
                                     </a>
                                     {
                                         UserId = @user.UserId;

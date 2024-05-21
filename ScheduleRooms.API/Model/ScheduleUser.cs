@@ -14,4 +14,5 @@ public class ScheduleUser
     public int UserId { get; set; }
     public virtual User? User { get; set; }
     public int ManagerId { get; set; }
+    public string Manager { get; set; } = string.Empty;
 }
