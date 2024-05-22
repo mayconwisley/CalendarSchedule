@@ -132,6 +132,7 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
                             MeetingType = s.MeetingType,
                             Particular = s.Particular,
                             StatusSchedule = s.StatusSchedule,
+                            Manager = m.Name,
                             Client = c == null ? null : new Client
                             {
                                 Id = c.Id,
@@ -156,6 +157,7 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
                                 Username = u.Username
 
                             }
+
                         })
                 .OrderBy(o => o.DateFinal)
                 .ToListAsync();

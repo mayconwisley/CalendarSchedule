@@ -16,7 +16,7 @@
                 <div class="modal-body">
                     <div class="col-12">
                         <div class="form-check">
-                            <InputCheckbox class="form-check-input" @onclick=(Particular) @bind-Value="ScheduleUserDto.Particular" id="inParticular" />
+                            <InputCheckbox class="form-check-input" @onclick=(IsParticular) @bind-Value="ScheduleUserDto.Particular" id="inParticular" />
                             <label for="inParticular" class="form-check-label">Particular?</label>
                         </div>
                     </div>
@@ -38,7 +38,7 @@
                             <ValidationMessage For="@(() => ScheduleUserDto.Description)" />
 
                         </div>
-                        @if (!particular)
+                        @if (!Particular)
                         {
                             <div class="col-12">
                                 <label for="inClient" class="form-label">Cliente</label>
@@ -130,7 +130,8 @@
     private UserView? UserViewManager { get; set; }
     private ClientView? ClientView { get; set; }
 
-    private bool particular = false;
+    [Parameter]
+    public bool Particular { get; set; } = false;
 
     [Parameter]
     public int ScheduleId { get; set; }
@@ -151,9 +152,9 @@
             ScheduleUserDto = new();
         }
     }
-    private void Particular()
+    private void IsParticular()
     {
-        particular = !particular;
+        Particular = !Particular;
         StateHasChanged();
     }
     private void UpdateData()

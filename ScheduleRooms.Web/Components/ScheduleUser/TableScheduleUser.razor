@@ -50,7 +50,7 @@
                                 <button data-bs-toggle="modal" data-bs-target="#editSchedule-@schedule.Id" class="btn btn-info">
                                     Editar
                                 </button>
-                                <EditScheduleUserModal ScheduleId="@schedule.Id" DataUpdated="@(() => DataUpdated())" />
+                                <EditScheduleUserModal Particular="@schedule.Particular" ScheduleId="@schedule.Id" DataUpdated="@(() => DataUpdated())" />
                                 <button data-bs-toggle="modal" data-bs-target="#deleteUser-@schedule.Id" class="btn btn-danger">
                                     Excluir
                                 </button>

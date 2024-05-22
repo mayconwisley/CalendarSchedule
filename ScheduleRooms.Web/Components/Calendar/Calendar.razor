@@ -83,11 +83,11 @@
                                 g.Room,
                                 g.DateStart.Date
                             }).Select(s => new ScheduleRoomDto
-                    {
-                        RoomId = s.Key.RoomId,
-                        Room = s.Key.Room,
-                        DateStart = s.Key.Date
-                    })
+                            {
+                                RoomId = s.Key.RoomId,
+                                Room = s.Key.Room,
+                                DateStart = s.Key.Date
+                            })
                             .ToList()
                             .OrderBy(o => o.Room);
 
@@ -123,17 +123,18 @@
                                 g.Particular,
                                 g.DateStart.Date
 
+
                             })
                             .Select(s => new ScheduleUserDto
-                                {
-                                    UserId = s.Key.UserId,
-                                    User = s.Key.User,
-                                    ManagerId = s.Key.ManagerId,
-                                    Manager = s.Key.Manager,
-                                    Particular = s.Key.Particular,
-                                    DateStart = s.Key.Date
+                            {
+                                UserId = s.Key.UserId,
+                                User = s.Key.User,
+                                ManagerId = s.Key.ManagerId,
+                                Manager = s.Key.Manager,
+                                Particular = s.Key.Particular,
+                                DateStart = s.Key.Date
 
-                                })
+                            })
                             .ToList()
                             .OrderBy(o => o.User);
 
@@ -142,10 +143,19 @@
                                 if (user.DateStart.Date == dateStartMonth.AddDays(i).Date)
                                 {
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#tableScheduleUser-@user.UserId-@user.ClientId-@dateStartMonth.AddDays(i).Date.ToString("ddMMyyyy")">
-                                       
+
                                         @{
-                                            var dado = string.Join("-", user.User, user.Manager);
-                                        } 
+                                            string dado = string.Empty;
+
+                                            if (user.Particular)
+                                            {
+                                                dado = $"{user.User} - Particular";
+                                            }
+                                            else
+                                            {
+                                                dado = string.Join(", ", user.User, user.Manager);
+                                            }
+                                        }
                                         @dado
                                     </a>
                                     {

@@ -23,7 +23,7 @@ public static class ScheduleUserMappingDto
                     UserId = scheduleUser!.User!.Id,
                     ManagerId = scheduleUser.ManagerId,
                     Manager = scheduleUser.Manager,
-                    //Prospection = scheduleUser.Client.Prospection,
+                    Prospection = scheduleUser?.Client?.Prospection == null ? false : true,
                     Particular = scheduleUser.Particular
 
                 }).ToList();
@@ -62,7 +62,7 @@ public static class ScheduleUserMappingDto
             UserId = scheduleUser!.User!.Id,
             ManagerId = scheduleUser.ManagerId,
             Manager = scheduleUser.Manager,
-            //Prospection = scheduleUser.Client.Prospection != null && scheduleUser.Client.Prospection,
+            Prospection = scheduleUser?.Client?.Prospection == null ? false : true,
             Particular = scheduleUser.Particular
         };
     }
