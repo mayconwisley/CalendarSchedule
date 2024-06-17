@@ -9,6 +9,11 @@ public class ScheduleContext(DbContextOptions<ScheduleContext> options, IEncrypt
 {
     private readonly IEncryptionUtility _encryptionUtility = encryptionUtility;
 
+    public DbSet<User> Users { get; set; }
+    public DbSet<Client> Clients { get; set; }
+    public DbSet<Schedule> Schedules { get; set; }
+       public DbSet<ScheduleUser> ScheduleUsers { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -25,13 +30,8 @@ public class ScheduleContext(DbContextOptions<ScheduleContext> options, IEncrypt
               Active = true,
               Manager = false
           });
+
+        modelBuilder.Entity<ScheduleUser>()
+            .HasKey(at => new { at.ScheduleId, at.UserId });
     }
-
-    public DbSet<Room> Rooms { get; set; }
-    public DbSet<User> Users { get; set; }
-    public DbSet<Client> Clients { get; set; }
-    public DbSet<ScheduleRoom> ScheduleRooms { get; set; }
-    public DbSet<ScheduleUser> ScheduleUsers { get; set; }
-
-
 }

@@ -2,22 +2,21 @@
 using Microsoft.AspNetCore.Mvc;
 using ScheduleRooms.API.Service.Interface;
 using ScheduleRooms.Models.Dtos;
+using System.Drawing;
 
 namespace ScheduleRooms.API.Controllers;
-
 
 [Route("api/[controller]")]
 [ApiController]
 public class ScheduleUserController(IScheduleUserService scheduleUserService) : ControllerBase
 {
     private readonly IScheduleUserService _scheduleUserService = scheduleUserService;
-
     [HttpGet]
     [Route("All")]
     public async Task<ActionResult<IEnumerable<ScheduleUserDto>>> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
     {
-        var scheduleUsersDto = await _scheduleUserService.GetAll(page, size, search);
-        decimal totalData = (decimal)await _scheduleUserService.TotalSchedules(search);
+        var scheduleUserDto = await _scheduleUserService.GetAll(page, size, search);
+        decimal totalData = (decimal)await _scheduleUserService.TotalScheduleUser(search);
         decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
 
         if (size == 1)
@@ -25,7 +24,7 @@ public class ScheduleUserController(IScheduleUserService scheduleUserService) : 
             totalPage = totalData;
         }
 
-        if (!scheduleUsersDto.Any())
+        if (!scheduleUserDto.Any())
         {
             return NotFound("Sem dados");
         }
@@ -35,87 +34,58 @@ public class ScheduleUserController(IScheduleUserService scheduleUserService) : 
             page,
             totalPage,
             size,
-            scheduleUsersDto
+            scheduleUserDto
         });
 
     }
-    [HttpGet("Schedule")]
-    public async Task<ActionResult<IEnumerable<ScheduleUserDto>>> GetBySchedule()
+
+    [HttpGet("{scheduleId:int}", Name = "GetScheduleUserId")]
+    public async Task<ActionResult<ScheduleUserDto>> GetById(int scheduleId)
     {
-        var scheduleUserDto = await _scheduleUserService.GetBySchedule();
+        var scheduleUserDto = await _scheduleUserService.GetByScheduleId(scheduleId);
+        if (scheduleUserDto.Any())
+        {
+            return NotFound("Sem dados");
+        }
+        if (scheduleUserDto is not null)
+        {
+            return Ok(scheduleUserDto);
+        }
+        return NotFound("Sem dados");
+
+    }
+    [HttpGet("DateStart/{dateStart}")]
+    public async Task<ActionResult<IEnumerable<ScheduleUserDto>>> GetByDateStart([FromQuery] int page = 1, [FromQuery] int size = 10, string dateStart = "")
+    {
+        DateTime dateSalected = DateTime.Parse(dateStart.Replace("%2F", "/"));
+
+        var scheduleUserDto = await _scheduleUserService.GetByDateStart(page, size, dateSalected);
+        decimal totalData = (decimal)await _scheduleUserService.TotalScheduleUser(dateSalected.Date.ToString("yyyy-MM-dd"));
+        decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
+
+        if (size == 1)
+        {
+            totalPage = totalData;
+        }
 
         if (!scheduleUserDto.Any())
         {
             return NotFound("Sem dados");
         }
-        return Ok(scheduleUserDto);
-    }
-    [HttpGet("ScheduleActive")]
-    public async Task<ActionResult<IEnumerable<ScheduleUserDto>>> GetByScheduleActive()
-    {
-        var scheduleUserDto = await _scheduleUserService.GetByScheduleActive();
+        return Ok(new
+        {
+            totalData,
+            page,
+            totalPage,
+            size,
+            scheduleUserDto
+        });
+
+
+
+
 
         if (!scheduleUserDto.Any())
-        {
-            return NotFound("Sem dados");
-        }
-        return Ok(scheduleUserDto);
-    }
-    [HttpGet("ScheduleUserId/{userId:int}")]
-    public async Task<ActionResult<IEnumerable<ScheduleUserDto>>> GetByScheduleUserId(int userId)
-    {
-        var scheduleUserDto = await _scheduleUserService.GetByScheduleUserId(userId);
-
-        if (!scheduleUserDto.Any())
-        {
-            return NotFound("Sem dados");
-        }
-        return Ok(scheduleUserDto);
-    }
-    [HttpGet("ScheduleDateUserId/{userId:int}/{strDateSalected}")]
-    public async Task<ActionResult<IEnumerable<ScheduleUserDto>>> GetByScheduleUserId(int userId, string strDateSalected)
-    {
-        DateTime dateSalected = DateTime.Parse(strDateSalected.Replace("%2F", "/"));
-
-        var scheduleUserDto = await _scheduleUserService.GetByScheduleDateUserId(userId, dateSalected);
-
-        if (!scheduleUserDto.Any())
-        {
-            return NotFound("Sem dados");
-        }
-        return Ok(scheduleUserDto);
-    }
-    [HttpGet("ScheduleActiveClientId/{clientId:int}/{strDateSalected}")]
-    public async Task<ActionResult<IEnumerable<ScheduleUserDto>>> GetByScheduleClientId(int clientId, string strDateSalected)
-    {
-        DateTime dateSalected = DateTime.Parse(strDateSalected.Replace("%2F", "/"));
-
-        var scheduleUserDto = await _scheduleUserService.GetByScheduleActiveClientId(clientId, dateSalected);
-
-        if (!scheduleUserDto.Any())
-        {
-            return NotFound("Sem dados");
-        }
-        return Ok(scheduleUserDto);
-    }
-    [HttpGet("ScheduleActiveClientIdUserId/{clientId:int}/{userId:int}/{strDateSalected}")]
-    public async Task<ActionResult<IEnumerable<ScheduleUserDto>>> GetByScheduleClientId(int clientId, int userId, string strDateSalected)
-    {
-        DateTime dateSalected = DateTime.Parse(strDateSalected.Replace("%2F", "/"));
-
-        var scheduleUserDto = await _scheduleUserService.GetByScheduleActiveClientIdUserId(clientId, userId, dateSalected);
-
-        if (!scheduleUserDto.Any())
-        {
-            return NotFound("Sem dados");
-        }
-        return Ok(scheduleUserDto);
-    }
-    [HttpGet("{id:int}", Name = "GetScheduleUser")]
-    public async Task<ActionResult<ScheduleUserDto>> GetById(int id)
-    {
-        var scheduleUserDto = await _scheduleUserService.GetById(id);
-        if (scheduleUserDto.Id <= 0)
         {
             return NotFound("Sem dados");
         }
@@ -128,15 +98,15 @@ public class ScheduleUserController(IScheduleUserService scheduleUserService) : 
     }
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<ScheduleUserDto>> Post([FromBody] ScheduleUserDto scheduleUserDto)
+    public async Task<ActionResult<ScheduleUserDto>> Post([FromBody] ScheduleUserCreateDto scheduleUserCreateDto)
     {
-        if (scheduleUserDto is not null)
+        if (scheduleUserCreateDto is not null)
         {
             try
             {
-                await _scheduleUserService.Create(scheduleUserDto);
+                var scheduleUser = await _scheduleUserService.Create(scheduleUserCreateDto);
 
-                return new CreatedAtRouteResult("GetScheduleUser", new { id = scheduleUserDto.Id }, scheduleUserDto);
+                return new CreatedAtRouteResult("GetScheduleUserId", new { scheduleId = scheduleUser.ScheduleId }, scheduleUser);
             }
             catch (Exception ex)
             {
@@ -155,34 +125,30 @@ public class ScheduleUserController(IScheduleUserService scheduleUserService) : 
     }
     [Authorize]
     [HttpPut("{id:int}")]
-    public async Task<ActionResult<ScheduleUserDto>> Put(int id, [FromBody] ScheduleUserDto scheduleUserDto)
+    public async Task<ActionResult<ScheduleUserDto>> Put(int id, [FromBody] ScheduleUserCreateDto scheduleUserCreateDto)
     {
-        if (id != scheduleUserDto.Id)
+        if (id != scheduleUserCreateDto.ScheduleId)
         {
             return BadRequest("Dados inválidos");
         }
-        if (scheduleUserDto is null)
+        if (scheduleUserCreateDto is null)
         {
             return BadRequest("Dados inválidos");
         }
 
-        await _scheduleUserService.Update(scheduleUserDto);
+        var scheduleUserDto = await _scheduleUserService.Update(scheduleUserCreateDto);
         return Ok(scheduleUserDto);
     }
     [Authorize]
-    [HttpDelete("{id:int}")]
-    public async Task<ActionResult<ScheduleUserDto>> Delete(int id)
+    [HttpDelete("{scheduleId:int}")]
+    public async Task<ActionResult<ScheduleUserDto>> Delete(int scheduleId)
     {
-        var scheduleUserDto = await _scheduleUserService.GetById(id);
-        if (scheduleUserDto is null)
+        var scheduleDto = await _scheduleUserService.GetByScheduleId(scheduleId);
+        if (!scheduleDto.Any())
         {
             return NotFound("Sem dados");
         }
-        if (scheduleUserDto.Id <= 0)
-        {
-            return NotFound("Sem dados");
-        }
-        await _scheduleUserService.Delete(id);
-        return Ok(scheduleUserDto);
+        await _scheduleUserService.Delete(scheduleId);
+        return Ok(scheduleDto);
     }
 }

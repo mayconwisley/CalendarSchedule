@@ -5,8 +5,8 @@
 <div class="modal fade" id="editSchedule-@ScheduleId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <EditForm Model="@ScheduleUserDto" OnValidSubmit="@Edit">
-                <InputNumber hidden @bind-Value="ScheduleUserDto!.Id" />
+            <EditForm Model="@ScheduleDto" OnValidSubmit="@Edit">
+                <InputNumber hidden @bind-Value="ScheduleDto!.Id" />
                 <DataAnnotationsValidator />
 
                 <div class="modal-header">
@@ -16,7 +16,7 @@
                 <div class="modal-body">
                     <div class="col-12">
                         <div class="form-check">
-                            <InputCheckbox class="form-check-input" @onclick=(IsParticular) @bind-Value="ScheduleUserDto.Particular" id="inParticular" />
+                            <InputCheckbox class="form-check-input" @onclick=(IsParticular) @bind-Value="ScheduleDto.Particular" id="inParticular" />
                             <label for="inParticular" class="form-check-label">Particular?</label>
                         </div>
                     </div>
@@ -24,25 +24,25 @@
                     <div class="row g-3">
                         <div class="col-6">
                             <label for="inDataInicio" class="form-label">Data/Hora Inicio</label>
-                            <InputDate class="form-control" Type="InputDateType.DateTimeLocal" id="inDataInicio" @bind-Value="ScheduleUserDto!.DateStart" />
-                            <ValidationMessage For="@(() => ScheduleUserDto.DateStart)" />
+                            <InputDate class="form-control" Type="InputDateType.DateTimeLocal" id="inDataInicio" @bind-Value="ScheduleDto!.DateStart" />
+                            <ValidationMessage For="@(() => ScheduleDto.DateStart)" />
                         </div>
                         <div class="col-6">
                             <label for="inDataFinal" class="form-label">Data/Hora Final</label>
-                            <InputDate class="form-control" Type="InputDateType.DateTimeLocal" id="inDataFinal" @bind-Value="ScheduleUserDto.DateFinal" />
-                            <ValidationMessage For="@(() => ScheduleUserDto.DateFinal)" />
+                            <InputDate class="form-control" Type="InputDateType.DateTimeLocal" id="inDataFinal" @bind-Value="ScheduleDto.DateFinal" />
+                            <ValidationMessage For="@(() => ScheduleDto.DateFinal)" />
                         </div>
                         <div class="col-12">
                             <label for="inDescricao" class="form-label">Descrição</label>
-                            <InputText class="form-control" @bind-Value="ScheduleUserDto!.Description" id="inDescricao" placeholder="Descrição" />
-                            <ValidationMessage For="@(() => ScheduleUserDto.Description)" />
+                            <InputText class="form-control" @bind-Value="ScheduleDto!.Description" id="inDescricao" placeholder="Descrição" />
+                            <ValidationMessage For="@(() => ScheduleDto.Description)" />
 
                         </div>
                         @if (!Particular)
                         {
                             <div class="col-12">
                                 <label for="inClient" class="form-label">Cliente</label>
-                                <InputSelect class="form-select" id="inClient" @bind-Value="ScheduleUserDto!.ClientId">
+                                <InputSelect class="form-select" id="inClient" @bind-Value="ScheduleDto!.ClientId">
                                     @if (ClientView?.ClientsDto is not null)
                                     {
                                         <option value="0">Selecione uma Opção</option>
@@ -52,11 +52,11 @@
                                         }
                                     }
                                 </InputSelect>
-                                <ValidationMessage For="@(() => ScheduleUserDto.ClientId)" />
+                                <ValidationMessage For="@(() => ScheduleDto.ClientId)" />
                             </div>
-                            <div class="col-6">
+                          @*   <div class="col-6">
                                 <label for="inUser" class="form-label">Colaborador</label>
-                                <InputSelect class="form-select" id="inUser" @bind-Value="ScheduleUserDto!.UserId">
+                                <InputSelect class="form-select" id="inUser" @bind-Value="ScheduleDto!.UserId">
                                     @if (UserView?.UsersDto is not null)
                                     {
                                         <option value="0">Selecione uma Opção</option>
@@ -66,11 +66,11 @@
                                         }
                                     }
                                 </InputSelect>
-                                <ValidationMessage For="@(() => ScheduleUserDto.UserId)" />
-                            </div>
-                            <div class="col-6">
+                                <ValidationMessage For="@(() => ScheduleDto.UserId)" />
+                            </div> *@
+                           @*  <div class="col-6">
                                 <label for="inManager" class="form-label">Gestor</label>
-                                <InputSelect class="form-select" id="inManager" @bind-Value="ScheduleUserDto!.ManagerId">
+                                <InputSelect class="form-select" id="inManager" @bind-Value="ScheduleDto!.ManagerId">
                                     @if (UserViewManager?.UsersDto is not null)
                                     {
                                         <option value="0">Selecione uma Opção</option>
@@ -80,25 +80,25 @@
                                         }
                                     }
                                 </InputSelect>
-                                <ValidationMessage For="@(() => ScheduleUserDto.UserId)" />
-                            </div>
+                                <ValidationMessage For="@(() => ScheduleDto.UserId)" />
+                            </div> *@
                             <div class="col-6">
                                 <label class="form-label">Opções</label>
                                 <div class="form-check">
-                                    <InputCheckbox class="form-check-input" @bind-Value="ScheduleUserDto.MeetingType" id="inTypeMeeting" />
+                                    <InputCheckbox class="form-check-input" @bind-Value="ScheduleDto.MeetingType" id="inTypeMeeting" />
                                     <label for="inTypeMeeting" class="form-check-label">Remoto?</label>
                                 </div>
                                 <div class="form-check">
-                                    <InputCheckbox class="form-check-input" @bind-Value="ScheduleUserDto.StatusSchedule" id="inStatusSchedule" />
+                                    <InputCheckbox class="form-check-input" @bind-Value="ScheduleDto.StatusSchedule" id="inStatusSchedule" />
                                     <label for="inStatusSchedule" class="form-check-label">Reservada?</label>
                                 </div>
                             </div>
                         }
                         else
                         {
-                            <div class="col-12">
+                           @*  <div class="col-12">
                                 <label for="inUser" class="form-label">Colaborador</label>
-                                <InputSelect class="form-select" id="inUser" @bind-Value="ScheduleUserDto!.UserId">
+                                <InputSelect class="form-select" id="inUser" @bind-Value="ScheduleDto!.UserId">
                                     @if (UserView?.UsersDto is not null)
                                     {
                                         <option value="0">Selecione uma Opção</option>
@@ -108,8 +108,8 @@
                                         }
                                     }
                                 </InputSelect>
-                                <ValidationMessage For="@(() => ScheduleUserDto.UserId)" />
-                            </div>
+                                <ValidationMessage For="@(() => ScheduleDto.UserId)" />
+                            </div> *@
                         }
                     </div>
                 </div>
@@ -125,7 +125,7 @@
     [Parameter]
     public Action? DataUpdated { get; set; }
 
-    private ScheduleUserDto? ScheduleUserDto { get; set; } = new();
+    private ScheduleDto? ScheduleDto { get; set; } = new();
     private UserView? UserView { get; set; }
     private UserView? UserViewManager { get; set; }
     private ClientView? ClientView { get; set; }
@@ -138,18 +138,18 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ScheduleUserDto = await scheduleUserService.GetById(ScheduleId);
+        ScheduleDto = await scheduleUserService.GetById(ScheduleId);
         UserView = await userService.GetAll();
         UserViewManager = await userService.GetManagerAll();
         ClientView = await clientService.GetAll();
     }
     private async Task Edit()
     {
-        if (ScheduleUserDto is not null)
+        if (ScheduleDto is not null)
         {
-            var user = await scheduleUserService.Update(ScheduleUserDto);
+            var user = await scheduleUserService.Update(ScheduleDto);
             UpdateData();
-            ScheduleUserDto = new();
+            ScheduleDto = new();
         }
     }
     private void IsParticular()

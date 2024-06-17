@@ -15,9 +15,9 @@ public class UserService(IUserRepository userRepository,
     private readonly IEncryptionUtility _encryptionUtility = encryptionUtility;
     private readonly IDecryptionUtility _decryptionUtility = decryptionUtility;
 
-    public async Task Create(UserDto userDto)
+    public async Task<UserDto> Create(UserDto userDto)
     {
-        UserDto user = new()
+        UserDto userDt = new()
         {
             Id = userDto.Id,
             Name = userDto.Name,
@@ -29,7 +29,8 @@ public class UserService(IUserRepository userRepository,
             Active = userDto.Active
         };
 
-        await _userRepository.Create(user.ConvertDtoToUser());
+        var user = await _userRepository.Create(userDt.ConvertDtoToUser());
+        return user.ConvertUserToDto();
     }
 
     public async Task Delete(int id)

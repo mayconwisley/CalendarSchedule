@@ -3,8 +3,8 @@
 <div class="modal fade" id="deleteUser-@ScheduleId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <EditForm Model="@ScheduleUserDto" OnValidSubmit="@Delete">
-                <InputNumber hidden @bind-Value="ScheduleUserDto!.Id" />
+            <EditForm Model="@ScheduleDto" OnValidSubmit="@Delete">
+                <InputNumber hidden @bind-Value="ScheduleDto.Id" />
                 <DataAnnotationsValidator />
 
                 <div class="modal-header">
@@ -15,10 +15,10 @@
 
                     <div class="row g-3">
                         <div class="col-12">
-                            <p>Id: @ScheduleUserDto.Id</p>
-                            <p>Descrição: @ScheduleUserDto.Description</p>
-                            <p>Cliente: @ScheduleUserDto.Client</p>
-                            <p>Usuário: @ScheduleUserDto.User</p>
+                            <p>Id: @ScheduleDto.Id</p>
+                            <p>Descrição: @ScheduleDto.Description</p>
+                           @*  <p>Cliente: @ScheduleDto.Client</p> *@
+                           @*  <p>Usuário: @ScheduleDto.User</p> *@
                         </div>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
     [Parameter]
     public Action? DataUpdated { get; set; }
 
-    private ScheduleUserDto? ScheduleUserDto { get; set; } = new();
+    private ScheduleDto? ScheduleDto { get; set; } = new();
 
     [Parameter]
     public int ScheduleId { get; set; }
@@ -43,13 +43,13 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ScheduleUserDto = await scheduleUserService.GetById(ScheduleId);
+        ScheduleDto = await scheduleUserService.GetById(ScheduleId);
         await base.OnInitializedAsync();
     }
 
     private async Task Delete()
     {
-        if (ScheduleUserDto is not null)
+        if (ScheduleDto is not null)
         {
             var room = await scheduleUserService.Delete(ScheduleId);
             UpdateData();

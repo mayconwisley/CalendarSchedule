@@ -134,7 +134,7 @@ public class UserController : ControllerBase
     {
         if (userDto is not null)
         {
-            await _userService.Create(userDto);
+            userDto = await _userService.Create(userDto);
             return new CreatedAtRouteResult("GetUser", new { id = userDto.Id }, userDto);
         }
         return BadRequest("Dados inválidos");

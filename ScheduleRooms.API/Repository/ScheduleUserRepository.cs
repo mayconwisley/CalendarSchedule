@@ -9,60 +9,45 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
 {
     private readonly ScheduleContext _scheduleContext = scheduleContext;
 
-    public async Task<ScheduleUser> Create(ScheduleUser schedulesUser)
+    public async Task<ScheduleUser> Create(ScheduleUser scheduleUser)
     {
         try
         {
-            if (schedulesUser is not null)
+            if (scheduleUser is not null)
             {
-                // Verifique se existe uma schedulesUser que se sobrepõe no mesmo usuário
-                var overlappingScheduleUser = await _scheduleContext.ScheduleUsers
-                    .Where(a => a.UserId == schedulesUser.UserId &&
-                                a.DateStart < schedulesUser.DateFinal &&
-                                a.DateFinal > schedulesUser.DateStart)
-                    .AnyAsync();
-                if (overlappingScheduleUser)
-                {
-                    // Existe sobreposição, faça algo aqui, como lançar uma exceção.
-                    throw new Exception("409");
-                }
-
-                var minorDate = schedulesUser.DateStart >= schedulesUser.DateFinal;
-
-                if (minorDate)
-                {
-                    throw new Exception("400");
-                }
-
-
-                _scheduleContext.ScheduleUsers.Add(schedulesUser);
+                _scheduleContext.ScheduleUsers.Add(scheduleUser);
                 await _scheduleContext.SaveChangesAsync();
-                return schedulesUser;
-            }
-            return new();
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message);
-        }
-    }
 
-    public async Task<ScheduleUser> Delete(int id)
-    {
-        try
-        {
-            var schedulesUser = await GetById(id);
+                scheduleUser = await GetById(scheduleUser.UserId, scheduleUser.ScheduleId);
 
-            if (schedulesUser is not null)
-            {
-                _scheduleContext.ScheduleUsers.Remove(schedulesUser);
-                await _scheduleContext.SaveChangesAsync();
-                return schedulesUser;
+                return scheduleUser;
             }
             return new();
         }
         catch (Exception)
         {
+            throw;
+        }
+    }
+
+    public async Task<IEnumerable<ScheduleUser>> Delete(int scheduleId)
+    {
+        try
+        {
+            var scheduleUsers = await GetByScheduleId(scheduleId);
+
+            if (scheduleUsers is not null)
+            {
+                _scheduleContext.ScheduleUsers.RemoveRange(scheduleUsers);
+                await _scheduleContext.SaveChangesAsync();
+                return scheduleUsers;
+            }
+
+            return [];
+        }
+        catch (Exception)
+        {
+
             throw;
         }
     }
@@ -71,15 +56,42 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
     {
         try
         {
-            var schedules = await _scheduleContext.ScheduleUsers
-                .Include(i => i.Client)
+            var scheduleUsers = await _scheduleContext.ScheduleUsers
                 .Include(i => i.User)
-                .OrderByDescending(o => o.DateFinal)
+                .Include(i => i.Schedule)
+                .OrderByDescending(o => o.ScheduleId)
                 .Skip((page - 1) * size)
                 .Take(size)
                 .ToListAsync();
 
-            return schedules;
+            return scheduleUsers;
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
+
+    public async Task<IEnumerable<ScheduleUser>> GetByDateStart(int page, int size, DateTime dateStart)
+    {
+        try
+        {
+            var scheduleUsers = await _scheduleContext.ScheduleUsers
+                .Include(i => i.User)
+                .Include(i => i.Schedule)
+                .OrderByDescending(o => o.Schedule.DateFinal)
+                .Skip((page - 1) * size)
+                .Take(size)
+                .Where(w => w.Schedule.DateStart.Date == dateStart.Date)
+                .ToListAsync();
+
+            if (scheduleUsers is not null)
+            {
+                return scheduleUsers;
+            }
+
+            return [];
         }
         catch (Exception)
         {
@@ -87,20 +99,22 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
         }
     }
 
-    public async Task<ScheduleUser> GetById(int id)
+    public async Task<ScheduleUser> GetById(int userId, int scheduleId)
     {
         try
         {
-            var schedule = await _scheduleContext.ScheduleUsers
-                .Include(i => i.Client)
+            var scheduleUser = await _scheduleContext.ScheduleUsers
                 .Include(i => i.User)
-                .Where(w => w.Id == id)
+                .Include(i => i.Schedule)
+                .Where(w => w.ScheduleId == scheduleId &&
+                            w.UserId == userId)
                 .FirstOrDefaultAsync();
 
-            if (schedule is not null)
+            if (scheduleUser is not null)
             {
-                return schedule;
+                return scheduleUser;
             }
+
             return new();
         }
         catch (Exception)
@@ -109,79 +123,16 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
         }
     }
 
-    public async Task<IEnumerable<ScheduleUser>> GetBySchedule()
+    public async Task<IEnumerable<ScheduleUser>> GetByScheduleId(int scheduleId)
     {
         try
         {
-            var schedules = await (
-                        from s in _scheduleContext.ScheduleUsers
-                        join u in _scheduleContext.Users on s.UserId equals u.Id
-                        join c in _scheduleContext.Clients on s.ClientId equals c.Id into sc
-                        from c in sc.DefaultIfEmpty()
-                        join m in _scheduleContext.Users on s.ManagerId equals m.Id into sm
-                        from m in sm.DefaultIfEmpty()
-                        select new ScheduleUser
-                        {
-                            Id = s.Id,
-                            UserId = s.UserId,
-                            ClientId = s.ClientId,
-                            DateStart = s.DateStart,
-                            DateFinal = s.DateFinal,
-                            Description = s.Description,
-                            ManagerId = s.ManagerId,
-                            MeetingType = s.MeetingType,
-                            Particular = s.Particular,
-                            StatusSchedule = s.StatusSchedule,
-                            Manager = m.Name,
-                            Client = c == null ? null : new Client
-                            {
-                                Id = c.Id,
-                                Name = c.Name,
-                                Active = c.Active,
-                                City = c.City,
-                                Description = c.Description,
-                                Email = c.Email,
-                                Position = c.Position,
-                                Prospection = c.Prospection,
-                                Responsible = c.Responsible,
-                                Telephone = c.Telephone,
-                            },
-                            User = new User
-                            {
-                                Id = u.Id,
-                                Name = u.Name,
-                                Description = u.Description,
-                                Cellphone = u.Cellphone,
-                                Active = u.Active,
-                                Manager = u.Manager,
-                                Username = u.Username
-
-                            }
-
-                        })
-                .OrderBy(o => o.DateFinal)
-                .ToListAsync();
-
-            return schedules;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
-
-    public async Task<IEnumerable<ScheduleUser>> GetByScheduleActive()
-    {
-        try
-        {
-            var schedules = await _scheduleContext.ScheduleUsers
-                .Include(i => i.Client)
+            var scheduleUsers = await _scheduleContext.ScheduleUsers
                 .Include(i => i.User)
-                .Where(w => w.DateFinal >= DateTime.Now)
-                .OrderBy(o => o.DateFinal)
+                .Include(i => i.Schedule)
+                .Where(w => w.ScheduleId == scheduleId)
                 .ToListAsync();
-
-            return schedules;
+            return scheduleUsers;
         }
         catch (Exception)
         {
@@ -189,121 +140,23 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
         }
     }
 
-    public async Task<IEnumerable<ScheduleUser>> GetByScheduleActiveClientId(int clientId, DateTime dateSalected)
+    public async Task<int> TotalScheduleUser(string search)
+    {
+        var totalScheduleUser = await _scheduleContext.ScheduleUsers
+                .Where(w => w.Schedule.DateStart.Date.ToString().Contains(search))
+                .CountAsync();
+        return totalScheduleUser;
+    }
+
+    public async Task<ScheduleUser> Update(ScheduleUser scheduleUser)
     {
         try
         {
-            var schedules = await _scheduleContext.ScheduleUsers
-                .Include(i => i.User)
-                .Include(i => i.Client)
-                .Where(w => w.DateFinal >= DateTime.Now &&
-                            w.DateFinal.Date == dateSalected.Date &&
-                            w.ClientId == clientId)
-                .OrderBy(o => o.DateStart)
-                .ToListAsync();
-
-            return schedules;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
-
-    public async Task<IEnumerable<ScheduleUser>> GetByScheduleActiveClientIdUserId(int clientId, int userId, DateTime dateSalected)
-    {
-        try
-        {
-            var schedules = await _scheduleContext.ScheduleUsers
-                .Include(i => i.User)
-                .Include(i => i.Client)
-                .Where(w => w.DateFinal.Date == dateSalected.Date &&
-                            w.UserId == userId &&
-                            w.ClientId == clientId)
-                .OrderBy(o => o.DateStart)
-                .ToListAsync();
-
-            return schedules;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
-
-    public async Task<IEnumerable<ScheduleUser>> GetByScheduleDateUserId(int userId, DateTime dateSalected)
-    {
-        try
-        {
-            var schedules = await _scheduleContext.ScheduleUsers
-                .Include(i => i.User)
-                .Include(i => i.Client)
-                .Where(w => w.DateFinal.Date == dateSalected.Date &&
-                            w.UserId == userId)
-                .OrderBy(o => o.DateStart)
-                .ToListAsync();
-
-            return schedules;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
-
-    public async Task<IEnumerable<ScheduleUser>> GetByScheduleUserId(int userId)
-    {
-        try
-        {
-            var schedule = await _scheduleContext.ScheduleUsers
-                .Include(i => i.User)
-                .Include(i => i.Client)
-                .Where(w => w.UserId == userId)
-                .OrderBy(o => o.User)
-                .ToListAsync();
-
-            return schedule;
-        }
-        catch (Exception)
-        {
-
-            throw;
-        }
-    }
-
-    public async Task<int> TotalSchedules(string search)
-    {
-        var totalSchedule = await _scheduleContext.ScheduleUsers
-            .Where(w => w!.Description!.Contains(search))
-            .CountAsync();
-
-        return totalSchedule;
-    }
-
-    public async Task<ScheduleUser> Update(ScheduleUser schedulesUser)
-    {
-        try
-        {
-            if (schedulesUser is not null)
+            if (scheduleUser is not null)
             {
-
-                //// Verifique se existe uma schedule que se sobrepõe na mesma room
-                //var overlappingSchedule = await _scheduleContext.ScheduleUsers
-                //         .Where(a => a.UserId == schedulesUser.UserId &&
-                //                a.ClientId == schedulesUser.ClientId &&
-                //                a.DateStart < schedulesUser.DateFinal &&
-                //                a.DateFinal > schedulesUser.DateStart)
-                //    .ToListAsync();
-
-                //if (overlappingSchedule.Count() > 0)
-                //{
-                //    // Existe sobreposição, faça algo aqui, como lançar uma exceção.
-                //    throw new Exception("A atualização resultaria em uma sobreposição de datas para esta room.");
-                //}
-
-                _scheduleContext.ScheduleUsers.Entry(schedulesUser).State = EntityState.Modified;
+                _scheduleContext.ScheduleUsers.Entry(scheduleUser).State = EntityState.Modified;
                 await _scheduleContext.SaveChangesAsync();
-                return schedulesUser;
+                return scheduleUser;
             }
             return new();
         }

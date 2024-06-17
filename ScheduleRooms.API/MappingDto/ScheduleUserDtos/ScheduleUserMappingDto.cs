@@ -5,81 +5,155 @@ namespace ScheduleRooms.API.MappingDto.ScheduleUserDtos;
 
 public static class ScheduleUserMappingDto
 {
-    public static IEnumerable<ScheduleUserDto> ConvertSchedulesToDto(this IEnumerable<ScheduleUser> schedulesUser)
+    public static IEnumerable<ScheduleUserDto> ConvertSchedulesUserDto(this IEnumerable<ScheduleUser> scheduleUsers)
     {
-        return (from scheduleUser in schedulesUser
+        return (from scheduleUser in scheduleUsers
                 select new ScheduleUserDto
                 {
-                    Id = scheduleUser.Id,
-                    Description = scheduleUser.Description,
-                    DateStart = scheduleUser.DateStart,
-                    DateFinal = scheduleUser.DateFinal,
-                    MeetingType = scheduleUser.MeetingType,
-                    StatusSchedule = scheduleUser.StatusSchedule,
-                    ClientId = scheduleUser?.Client?.Id,
-                    Client = scheduleUser?.Client?.Name,
-                    City = scheduleUser?.Client?.City,
-                    User = scheduleUser?.User?.Name,
-                    UserId = scheduleUser!.User!.Id,
-                    ManagerId = scheduleUser.ManagerId,
-                    Manager = scheduleUser.Manager,
-                    Prospection = scheduleUser?.Client?.Prospection == null ? false : true,
-                    Particular = scheduleUser.Particular
+                    ScheduleId = scheduleUser.ScheduleId,
+                    Schedule = new ScheduleDto
+                    {
+                        Id = scheduleUser.Schedule.Id,
+                        Description = scheduleUser.Schedule.Description,
+                        DateStart = scheduleUser.Schedule.DateStart,
+                        DateFinal = scheduleUser.Schedule.DateFinal,
+                        MeetingType = scheduleUser.Schedule.MeetingType,
+                        StatusSchedule = scheduleUser.Schedule.StatusSchedule,
+                        Particular = scheduleUser.Schedule.Particular,
+                        ClientId = scheduleUser.Schedule.ClientId,
+                    },
+                    UserId = scheduleUser.UserId,
+                    User = new UserDto
+                    {
+                        Id = scheduleUser.User.Id,
+                        Description = scheduleUser.User.Description,
+                        Name = scheduleUser.User.Name,
+                        Username = scheduleUser.User.Username,
+                        Password = scheduleUser.User.Password,
+                        Cellphone = scheduleUser.User.Cellphone,
+                        Manager = scheduleUser.User.Manager,
+                        Active = scheduleUser.User.Active
+                    }
+                }
 
-                }).ToList();
+            ).ToList();
     }
-    public static IEnumerable<ScheduleUser> ConvertScheduleToDto(this IEnumerable<ScheduleUserDto> scheduleUserDto)
+    public static IEnumerable<ScheduleUser> ConvertDtoScheduleUsers(this IEnumerable<ScheduleUserDto> scheduleUserDtos)
     {
-        return (from scheduleUser in scheduleUserDto
+        return (from scheduleUserDto in scheduleUserDtos
                 select new ScheduleUser
                 {
-                    Id = scheduleUser.Id,
-                    Description = scheduleUser.Description,
-                    DateStart = scheduleUser.DateStart,
-                    DateFinal = scheduleUser.DateFinal,
-                    MeetingType = scheduleUser.MeetingType,
-                    StatusSchedule = scheduleUser.StatusSchedule,
-                    ClientId = scheduleUser.ClientId,
-                    UserId = scheduleUser.UserId,
-                    ManagerId = scheduleUser.ManagerId,
-                    Particular = scheduleUser.Particular
-                }).ToList();
+                    ScheduleId = scheduleUserDto.ScheduleId,
+                    Schedule = new Schedule
+                    {
+                        Id = scheduleUserDto.Schedule.Id,
+                        Description = scheduleUserDto.Schedule.Description,
+                        DateStart = scheduleUserDto.Schedule.DateStart,
+                        DateFinal = scheduleUserDto.Schedule.DateFinal,
+                        MeetingType = scheduleUserDto.Schedule.MeetingType,
+                        StatusSchedule = scheduleUserDto.Schedule.StatusSchedule,
+                        Particular = scheduleUserDto.Schedule.Particular,
+                        ClientId = scheduleUserDto.Schedule.ClientId,
+                    },
+                    UserId = scheduleUserDto.UserId,
+                    User = new User
+                    {
+                        Id = scheduleUserDto.User.Id,
+                        Description = scheduleUserDto.User.Description,
+                        Name = scheduleUserDto.User.Name,
+                        Username = scheduleUserDto.User.Username,
+                        Password = scheduleUserDto.User.Password,
+                        Cellphone = scheduleUserDto.User.Cellphone,
+                        Manager = scheduleUserDto.User.Manager,
+                        Active = scheduleUserDto.User.Active
+                    }
+                }
+
+            ).ToList();
     }
-    public static ScheduleUserDto ConvertScheduleToDto(this ScheduleUser scheduleUser)
-    {
-        return new ScheduleUserDto
-        {
-            Id = scheduleUser.Id,
-            Description = scheduleUser.Description,
-            DateStart = scheduleUser.DateStart,
-            DateFinal = scheduleUser.DateFinal,
-            MeetingType = scheduleUser.MeetingType,
-            StatusSchedule = scheduleUser.StatusSchedule,
-            ClientId = scheduleUser?.Client?.Id,
-            Client = scheduleUser?.Client?.Name,
-            City = scheduleUser?.Client?.City,
-            User = scheduleUser?.User?.Name,
-            UserId = scheduleUser!.User!.Id,
-            ManagerId = scheduleUser.ManagerId,
-            Manager = scheduleUser.Manager,
-            Prospection = scheduleUser?.Client?.Prospection == null ? false : true,
-            Particular = scheduleUser.Particular
-        };
-    }
-    public static ScheduleUser ConvertDtoToSchedule(this ScheduleUserDto scheduleUserDto)
+
+
+    public static ScheduleUser ConvertDtoScheduleUser(this ScheduleUserDto scheduleUserDto)
     {
         return new ScheduleUser
         {
-            Id = scheduleUserDto.Id,
-            Description = scheduleUserDto.Description,
-            DateStart = scheduleUserDto.DateStart,
-            DateFinal = scheduleUserDto.DateFinal,
-            MeetingType = scheduleUserDto.MeetingType,
-            StatusSchedule = scheduleUserDto.StatusSchedule,
-            ClientId = scheduleUserDto.ClientId,
+            ScheduleId = scheduleUserDto.ScheduleId,
+            Schedule = new Schedule
+            {
+                Id = scheduleUserDto.Schedule.Id,
+                Description = scheduleUserDto.Schedule.Description,
+                DateStart = scheduleUserDto.Schedule.DateStart,
+                DateFinal = scheduleUserDto.Schedule.DateFinal,
+                MeetingType = scheduleUserDto.Schedule.MeetingType,
+                StatusSchedule = scheduleUserDto.Schedule.StatusSchedule,
+                Particular = scheduleUserDto.Schedule.Particular,
+                ClientId = scheduleUserDto.Schedule.ClientId,
+            },
             UserId = scheduleUserDto.UserId,
-            ManagerId = scheduleUserDto.ManagerId,
-            Particular = scheduleUserDto.Particular
+            User = new User
+            {
+                Id = scheduleUserDto.User.Id,
+                Description = scheduleUserDto.User.Description,
+                Name = scheduleUserDto.User.Name,
+                Username = scheduleUserDto.User.Username,
+                Password = scheduleUserDto.User.Password,
+                Cellphone = scheduleUserDto.User.Cellphone,
+                Manager = scheduleUserDto.User.Manager,
+                Active = scheduleUserDto.User.Active
+            }
         };
+
+    }
+
+    public static ScheduleUserDto ConvertScheduleUserDto(this ScheduleUser scheduleUser)
+    {
+        return new ScheduleUserDto
+        {
+            ScheduleId = scheduleUser.ScheduleId,
+            Schedule = new ScheduleDto
+            {
+                Id = scheduleUser.Schedule.Id,
+                Description = scheduleUser.Schedule.Description,
+                DateStart = scheduleUser.Schedule.DateStart,
+                DateFinal = scheduleUser.Schedule.DateFinal,
+                MeetingType = scheduleUser.Schedule.MeetingType,
+                StatusSchedule = scheduleUser.Schedule.StatusSchedule,
+                Particular = scheduleUser.Schedule.Particular,
+                ClientId = scheduleUser.Schedule.ClientId,
+            },
+            UserId = scheduleUser.UserId,
+            User = new UserDto
+            {
+                Id = scheduleUser.User.Id,
+                Description = scheduleUser.User.Description,
+                Name = scheduleUser.User.Name,
+                Username = scheduleUser.User.Username,
+                Password = scheduleUser.User.Password,
+                Cellphone = scheduleUser.User.Cellphone,
+                Manager = scheduleUser.User.Manager,
+                Active = scheduleUser.User.Active
+            }
+        };
+
+    }
+
+    public static ScheduleUserCreateDto ConvertScheduleUserCreateDto(this ScheduleUser scheduleUser)
+    {
+        return new ScheduleUserCreateDto
+        {
+            ScheduleId = scheduleUser.ScheduleId,
+            UserId = scheduleUser.UserId
+        };
+
+    }
+
+    public static ScheduleUser ConvertDtoScheduleUserCreate(this ScheduleUserCreateDto scheduleUserCreateDto)
+    {
+        return new ScheduleUser
+        {
+            ScheduleId = scheduleUserCreateDto.ScheduleId,
+            UserId = scheduleUserCreateDto.UserId
+        };
+
     }
 }

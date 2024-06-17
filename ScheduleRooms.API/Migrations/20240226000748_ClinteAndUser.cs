@@ -44,7 +44,7 @@ namespace ScheduleRooms.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ScheduleUser",
+                name: "Schedule",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -76,12 +76,12 @@ namespace ScheduleRooms.API.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_ScheduleUser_ClientId",
-                table: "ScheduleUser",
+                table: "Schedule",
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ScheduleUser_UserId",
-                table: "ScheduleUser",
+                table: "Schedule",
                 column: "UserId");
         }
 
@@ -89,7 +89,7 @@ namespace ScheduleRooms.API.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ScheduleUser");
+                name: "Schedule");
 
             migrationBuilder.DropTable(
                 name: "Client");

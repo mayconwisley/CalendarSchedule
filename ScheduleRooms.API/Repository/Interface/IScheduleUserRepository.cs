@@ -5,15 +5,11 @@ namespace ScheduleRooms.API.Repository.Interface;
 public interface IScheduleUserRepository
 {
     Task<IEnumerable<ScheduleUser>> GetAll(int page, int size, string search);
-    Task<IEnumerable<ScheduleUser>> GetByScheduleUserId(int userId);
-    Task<IEnumerable<ScheduleUser>> GetBySchedule();
-    Task<IEnumerable<ScheduleUser>> GetByScheduleActive();
-    Task<IEnumerable<ScheduleUser>> GetByScheduleDateUserId(int userId, DateTime dateSalected);
-    Task<IEnumerable<ScheduleUser>> GetByScheduleActiveClientId(int clientId, DateTime dateSalected);
-    Task<IEnumerable<ScheduleUser>> GetByScheduleActiveClientIdUserId(int clientId, int userId, DateTime dateSalected);
-    Task<ScheduleUser> GetById(int id);
-    Task<ScheduleUser> Create(ScheduleUser schedulesUser);
-    Task<ScheduleUser> Update(ScheduleUser schedulesUser);
-    Task<ScheduleUser> Delete(int id);
-    Task<int> TotalSchedules(string search);
+    Task<IEnumerable<ScheduleUser>> GetByScheduleId(int scheduleId);
+    Task<IEnumerable<ScheduleUser>> GetByDateStart(int page, int size, DateTime dateStart);
+    Task<ScheduleUser> GetById(int userId, int scheduleId);
+    Task<ScheduleUser> Create(ScheduleUser scheduleUser);
+    Task<ScheduleUser> Update(ScheduleUser scheduleUser);
+    Task<IEnumerable<ScheduleUser>> Delete(int scheduleId);
+    Task<int> TotalScheduleUser(string search);
 }

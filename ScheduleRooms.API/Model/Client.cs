@@ -12,6 +12,6 @@ public class Client
     public string? Description { get; set; }
     public bool Active { get; set; }
     public bool Prospection { get; set; }
-    public ICollection<ScheduleUser>? ScheduleUsers { get; set; }
+    public ICollection<Schedule>? ScheduleUsers { get; set; }
 
 }

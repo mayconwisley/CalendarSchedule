@@ -12,11 +12,11 @@ namespace ScheduleRooms.API.Migrations
         {
             migrationBuilder.DropForeignKey(
                 name: "FK_ScheduleUser_Client_ClientId",
-                table: "ScheduleUser");
+                table: "Schedule");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_ScheduleUser_User_UserId",
-                table: "ScheduleUser");
+                table: "Schedule");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_User",
@@ -24,7 +24,7 @@ namespace ScheduleRooms.API.Migrations
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_ScheduleUser",
-                table: "ScheduleUser");
+                table: "Schedule");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_Client",
@@ -35,7 +35,7 @@ namespace ScheduleRooms.API.Migrations
                 newName: "Users");
 
             migrationBuilder.RenameTable(
-                name: "ScheduleUser",
+                name: "Schedule",
                 newName: "SchedueleUsers");
 
             migrationBuilder.RenameTable(
@@ -113,7 +113,7 @@ namespace ScheduleRooms.API.Migrations
 
             migrationBuilder.RenameTable(
                 name: "SchedueleUsers",
-                newName: "ScheduleUser");
+                newName: "Schedule");
 
             migrationBuilder.RenameTable(
                 name: "Clients",
@@ -121,12 +121,12 @@ namespace ScheduleRooms.API.Migrations
 
             migrationBuilder.RenameIndex(
                 name: "IX_SchedueleUsers_UserId",
-                table: "ScheduleUser",
+                table: "Schedule",
                 newName: "IX_ScheduleUser_UserId");
 
             migrationBuilder.RenameIndex(
                 name: "IX_SchedueleUsers_ClientId",
-                table: "ScheduleUser",
+                table: "Schedule",
                 newName: "IX_ScheduleUser_ClientId");
 
             migrationBuilder.AddPrimaryKey(
@@ -136,7 +136,7 @@ namespace ScheduleRooms.API.Migrations
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_ScheduleUser",
-                table: "ScheduleUser",
+                table: "Schedule",
                 column: "Id");
 
             migrationBuilder.AddPrimaryKey(
@@ -146,7 +146,7 @@ namespace ScheduleRooms.API.Migrations
 
             migrationBuilder.AddForeignKey(
                 name: "FK_ScheduleUser_Client_ClientId",
-                table: "ScheduleUser",
+                table: "Schedule",
                 column: "ClientId",
                 principalTable: "Client",
                 principalColumn: "Id",
@@ -154,7 +154,7 @@ namespace ScheduleRooms.API.Migrations
 
             migrationBuilder.AddForeignKey(
                 name: "FK_ScheduleUser_User_UserId",
-                table: "ScheduleUser",
+                table: "Schedule",
                 column: "UserId",
                 principalTable: "User",
                 principalColumn: "Id",

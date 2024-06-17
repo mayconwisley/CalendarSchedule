@@ -23,7 +23,7 @@ public class ScheduleUserService : IScheduleUserService
         _tokenStorageService = tokenStorageService;
     }
 
-    public async Task<ScheduleUserDto> Create(ScheduleUserDto scheduleUserDto)
+    public async Task<ScheduleDto> Create(ScheduleDto scheduleUserDto)
     {
         try
         {
@@ -44,7 +44,7 @@ public class ScheduleUserService : IScheduleUserService
                 if (response.IsSuccessStatusCode)
                 {
                     using Stream resApi = await response.Content.ReadAsStreamAsync();
-                    var scheduleUser = await JsonSerializer.DeserializeAsync<ScheduleUserDto>(resApi, _serializerOptions);
+                    var scheduleUser = await JsonSerializer.DeserializeAsync<ScheduleDto>(resApi, _serializerOptions);
                     if (scheduleUser is not null)
                     {
                         return scheduleUser;
@@ -127,7 +127,7 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
-    public async Task<ScheduleUserDto> GetById(int id)
+    public async Task<ScheduleDto> GetById(int id)
     {
         try
         {
@@ -144,7 +144,7 @@ public class ScheduleUserService : IScheduleUserService
 
             if (response.IsSuccessStatusCode)
             {
-                var scheduleUserDto = await response.Content.ReadFromJsonAsync<ScheduleUserDto>(_serializerOptions);
+                var scheduleUserDto = await response.Content.ReadFromJsonAsync<ScheduleDto>(_serializerOptions);
                 return scheduleUserDto ??= new();
             }
             else
@@ -163,7 +163,7 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
-    public async Task<IEnumerable<ScheduleUserDto>> GetByScheduleUserActive()
+    public async Task<IEnumerable<ScheduleDto>> GetByScheduleUserActive()
     {
         try
         {
@@ -180,7 +180,7 @@ public class ScheduleUserService : IScheduleUserService
 
             if (response.IsSuccessStatusCode)
             {
-                var scheduleUserDto = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleUserDto>>(_serializerOptions);
+                var scheduleUserDto = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleDto>>(_serializerOptions);
                 return scheduleUserDto ??= [];
 
             }
@@ -201,7 +201,7 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
-    public async Task<IEnumerable<ScheduleUserDto>> GetByScheduleUserActiveClientId(int clientId, DateTime dateSelected)
+    public async Task<IEnumerable<ScheduleDto>> GetByScheduleUserActiveClientId(int clientId, DateTime dateSelected)
     {
         try
         {
@@ -218,7 +218,7 @@ public class ScheduleUserService : IScheduleUserService
 
             if (response.IsSuccessStatusCode)
             {
-                var scheduleUserDto = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleUserDto>>(_serializerOptions);
+                var scheduleUserDto = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleDto>>(_serializerOptions);
                 return scheduleUserDto ??= [];
 
             }
@@ -239,7 +239,7 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
-    public async Task<IEnumerable<ScheduleUserDto>> GetByScheduleUserActiveClinetIdUserId(int clientId, int userId, DateTime dateSelected)
+    public async Task<IEnumerable<ScheduleDto>> GetByScheduleUserActiveClinetIdUserId(int clientId, int userId, DateTime dateSelected)
     {
         try
         {
@@ -256,7 +256,7 @@ public class ScheduleUserService : IScheduleUserService
 
             if (response.IsSuccessStatusCode)
             {
-                var scheduleUserDto = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleUserDto>>(_serializerOptions);
+                var scheduleUserDto = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleDto>>(_serializerOptions);
                 return scheduleUserDto ??= [];
 
             }
@@ -277,7 +277,7 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
-    public async Task<IEnumerable<ScheduleUserDto>> GetByScheduleUserDateUserId(int userId, DateTime dateSelected)
+    public async Task<IEnumerable<ScheduleDto>> GetByScheduleUserDateUserId(int userId, DateTime dateSelected)
     {
         try
         {
@@ -294,7 +294,7 @@ public class ScheduleUserService : IScheduleUserService
 
             if (response.IsSuccessStatusCode)
             {
-                var scheduleUserDto = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleUserDto>>(_serializerOptions);
+                var scheduleUserDto = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleDto>>(_serializerOptions);
                 return scheduleUserDto ??= [];
 
             }
@@ -315,7 +315,7 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
-    public async Task<ScheduleUserDto> Update(ScheduleUserDto scheduleUserDto)
+    public async Task<ScheduleDto> Update(ScheduleDto scheduleUserDto)
     {
         try
         {
@@ -335,7 +335,7 @@ public class ScheduleUserService : IScheduleUserService
                 if (response.IsSuccessStatusCode)
                 {
                     using Stream resApi = await response.Content.ReadAsStreamAsync();
-                    var scheduleUser = await JsonSerializer.DeserializeAsync<ScheduleUserDto>(resApi, _serializerOptions);
+                    var scheduleUser = await JsonSerializer.DeserializeAsync<ScheduleDto>(resApi, _serializerOptions);
                     if (scheduleUser is not null)
                     {
                         return scheduleUser;
@@ -349,7 +349,7 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
-    public async Task<IEnumerable<ScheduleUserDto>> GetByScheduleUserId(int userId)
+    public async Task<IEnumerable<ScheduleDto>> GetByScheduleUserId(int userId)
     {
         try
         {
@@ -366,7 +366,7 @@ public class ScheduleUserService : IScheduleUserService
 
             if (response.IsSuccessStatusCode)
             {
-                var scheduleUserDto = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleUserDto>>(_serializerOptions);
+                var scheduleUserDto = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleDto>>(_serializerOptions);
                 return scheduleUserDto ??= [];
 
             }
@@ -387,7 +387,7 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
-    public async Task<IEnumerable<ScheduleUserDto>> GetByScheduleUser()
+    public async Task<IEnumerable<ScheduleDto>> GetByScheduleUser()
     {
         try
         {
@@ -404,7 +404,7 @@ public class ScheduleUserService : IScheduleUserService
 
             if (response.IsSuccessStatusCode)
             {
-                var scheduleUserDto = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleUserDto>>(_serializerOptions);
+                var scheduleUserDto = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleDto>>(_serializerOptions);
                 return scheduleUserDto ??= [];
 
             }

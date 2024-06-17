@@ -4,7 +4,7 @@
     DateTime dateStartMonth = new DateTime(competence.Year, competence.Month, 1);
     DateTime dateEndMonth = new DateTime(competence.Year, competence.Month, DateTime.DaysInMonth(competence.Year, competence.Month));
 }
-@inject IScheduleRoomService scheduleRoomService
+
 @inject IScheduleUserService scheculeUserService
 
 @attribute [StreamRendering(true)]
@@ -69,101 +69,65 @@
                             @dateStartMonth.AddDays(i).Day
                         </b>
 
-                        @if (ScheduleRoomDto is null)
+                        @if (ScheduleDto is null)
                         {
                             <div class="spinner-border spinner-border-sm" role="status">
                                 <span class="visually-hidden">Loading...</span>
                             </div>
                         }
                         else
-                        {
-                            var scheduleRooms = ScheduleRoomDto.GroupBy(g => new
-                            {
-                                g.RoomId,
-                                g.Room,
-                                g.DateStart.Date
-                            }).Select(s => new ScheduleRoomDto
-                            {
-                                RoomId = s.Key.RoomId,
-                                Room = s.Key.Room,
-                                DateStart = s.Key.Date
-                            })
-                            .ToList()
-                            .OrderBy(o => o.Room);
-
-                            @foreach (var room in scheduleRooms)
-                            {
-                                if (room.DateStart.Date == dateStartMonth.AddDays(i).Date)
-                                {
-
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#tableScheduleRoom-@room.RoomId-@dateStartMonth.AddDays(i).Date.ToString("ddMMyyyy")">
-                                        @room.Room
-                                    </a>
-
-                                    <TableScheduleRoomModal RoomId="@room.RoomId" DateSelected="@dateStartMonth.AddDays(i).Date" />
-                                }
-                            }
-                        }
-
-                        @if (ScheduleUserDto is null)
-                        {
-                            <div class="spinner-border spinner-border-sm" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        }
-                        else
-                        {
-                            var scheduleUsers = ScheduleUserDto
-                            .GroupBy(g => new
-                            {
-                                g.UserId,
-                                g.User,
-                                g.ManagerId,
-                                g.Manager,
-                                g.Particular,
-                                g.DateStart.Date
+                        {@*
+                    var scheduleUsers = ScheduleDto
+                    .GroupBy(g => new
+                    {
+                    g.UserId,
+                    g.User,
+                    g.ManagerId,
+                    g.Manager,
+                    g.Particular,
+                    g.DateStart.Date
 
 
-                            })
-                            .Select(s => new ScheduleUserDto
-                            {
-                                UserId = s.Key.UserId,
-                                User = s.Key.User,
-                                ManagerId = s.Key.ManagerId,
-                                Manager = s.Key.Manager,
-                                Particular = s.Key.Particular,
-                                DateStart = s.Key.Date
+                    })
+                    .Select(s => new ScheduleDto
+                    {
+                    UserId = s.Key.UserId,
+                    User = s.Key.User,
+                    ManagerId = s.Key.ManagerId,
+                    Manager = s.Key.Manager,
+                    Particular = s.Key.Particular,
+                    DateStart = s.Key.Date
 
-                            })
-                            .ToList()
-                            .OrderBy(o => o.User);
+                    })
+                    .ToList()
+                    .OrderBy(o => o.User);
 
-                            @foreach (var user in scheduleUsers)
-                            {
-                                if (user.DateStart.Date == dateStartMonth.AddDays(i).Date)
-                                {
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#tableScheduleUser-@user.UserId-@user.ClientId-@dateStartMonth.AddDays(i).Date.ToString("ddMMyyyy")">
+                    @foreach (var user in scheduleUsers)
+                    {
+                    if (user.DateStart.Date == dateStartMonth.AddDays(i).Date)
+                    {
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#tableScheduleUser-@user.UserId-@user.ClientId-@dateStartMonth.AddDays(i).Date.ToString("ddMMyyyy")">
 
-                                        @{
-                                            string dado = string.Empty;
+                    @{
+                    string dado = string.Empty;
 
-                                            if (user.Particular)
-                                            {
-                                                dado = $"{user.User} - Particular";
-                                            }
-                                            else
-                                            {
-                                                dado = string.Join(", ", user.User, user.Manager);
-                                            }
-                                        }
-                                        @dado
-                                    </a>
-                                    {
-                                        UserId = @user.UserId;
-                                    }
-                                    <TableScheduleUserModal UserId="@user.UserId" ClientId="@user.ClientId" DateSelected="@dateStartMonth.AddDays(i).Date" />
-                                }
-                            }
+                    if (user.Particular)
+                    {
+                    dado = $"{user.User} - Particular";
+                    }
+                    else
+                    {
+                    dado = string.Join(", ", user.User, user.Manager);
+                    }
+                    }
+                    @dado
+                    </a>
+                    {
+                    UserId = @user.UserId;
+                    }
+                    <TableScheduleUserModal UserId="@user.UserId" ClientId="@user.ClientId" DateSelected="@dateStartMonth.AddDays(i).Date" />
+                    }
+                    } *@
                         }
                     </span>
                 }
@@ -177,15 +141,13 @@
 
     DateTime competence = DateTime.Now.Date;
 
-    public IEnumerable<ScheduleRoomDto>? ScheduleRoomDto { get; set; }
-    public IEnumerable<ScheduleUserDto>? ScheduleUserDto { get; set; }
+    public IEnumerable<ScheduleDto>? ScheduleDto { get; set; }
 
     private int UserId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        ScheduleRoomDto = await scheduleRoomService.GetByAgendaActive();
-        ScheduleUserDto = await scheculeUserService.GetByScheduleUser();
+        ScheduleDto = await scheculeUserService.GetByScheduleUser();
 
         await base.OnInitializedAsync();
     }

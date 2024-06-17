@@ -10,7 +10,7 @@ public interface IUserService
     Task<UserDto> GetById(int id);
     Task<UserDto> GetManagerUsername(string username);
     Task<bool> GetPassword(LoginDto login);
-    Task Create(UserDto userDto);
+    Task<UserDto> Create(UserDto userDto);
     Task Update(UserDto userDto);
     Task Delete(int id);
     Task<int> TotalUsers(string search);

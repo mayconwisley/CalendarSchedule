@@ -64,66 +64,7 @@ namespace ScheduleRooms.API.Migrations
                     b.ToTable("Clients");
                 });
 
-            modelBuilder.Entity("ScheduleRooms.API.Model.Room", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .HasColumnType("VARCHAR(255)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("VARCHAR(15)");
-
-                    b.Property<string>("Ramal")
-                        .HasColumnType("VARCHAR(5)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name");
-
-                    b.ToTable("Rooms");
-                });
-
-            modelBuilder.Entity("ScheduleRooms.API.Model.ScheduleRoom", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("AllowCall")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("AllowChat")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("DateFinal")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateStart")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("VARCHAR(500)");
-
-                    b.Property<int>("RoomId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoomId");
-
-                    b.ToTable("ScheduleRooms");
-                });
-
-            modelBuilder.Entity("ScheduleRooms.API.Model.ScheduleUser", b =>
+            modelBuilder.Entity("ScheduleRooms.API.Model.Schedule", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -135,20 +76,14 @@ namespace ScheduleRooms.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateFinal")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("DATETIME");
 
                     b.Property<DateTime>("DateStart")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("DATETIME");
 
                     b.Property<string>("Description")
-                        .HasColumnType("VARCHAR(500)");
-
-                    b.Property<string>("Manager")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(150)");
-
-                    b.Property<int>("ManagerId")
-                        .HasColumnType("int");
+                        .HasColumnType("VARCHAR(500)");
 
                     b.Property<bool>("MeetingType")
                         .HasColumnType("bit");
@@ -159,12 +94,22 @@ namespace ScheduleRooms.API.Migrations
                     b.Property<bool>("StatusSchedule")
                         .HasColumnType("bit");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
+
+                    b.ToTable("Schedules");
+                });
+
+            modelBuilder.Entity("ScheduleRooms.API.Model.ScheduleUser", b =>
+                {
+                    b.Property<int>("ScheduleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ScheduleId", "UserId");
 
                     b.HasIndex("UserId");
 
@@ -224,35 +169,45 @@ namespace ScheduleRooms.API.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ScheduleRooms.API.Model.ScheduleRoom", b =>
-                {
-                    b.HasOne("ScheduleRooms.API.Model.Room", "Room")
-                        .WithMany()
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Room");
-                });
-
-            modelBuilder.Entity("ScheduleRooms.API.Model.ScheduleUser", b =>
+            modelBuilder.Entity("ScheduleRooms.API.Model.Schedule", b =>
                 {
                     b.HasOne("ScheduleRooms.API.Model.Client", "Client")
                         .WithMany("ScheduleUsers")
                         .HasForeignKey("ClientId");
 
+                    b.Navigation("Client");
+                });
+
+            modelBuilder.Entity("ScheduleRooms.API.Model.ScheduleUser", b =>
+                {
+                    b.HasOne("ScheduleRooms.API.Model.Schedule", "Schedule")
+                        .WithMany("ScheduleUsers")
+                        .HasForeignKey("ScheduleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ScheduleRooms.API.Model.User", "User")
-                        .WithMany()
+                        .WithMany("ScheduleUsers")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Client");
+                    b.Navigation("Schedule");
 
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("ScheduleRooms.API.Model.Client", b =>
+                {
+                    b.Navigation("ScheduleUsers");
+                });
+
+            modelBuilder.Entity("ScheduleRooms.API.Model.Schedule", b =>
+                {
+                    b.Navigation("ScheduleUsers");
+                });
+
+            modelBuilder.Entity("ScheduleRooms.API.Model.User", b =>
                 {
                     b.Navigation("ScheduleUsers");
                 });

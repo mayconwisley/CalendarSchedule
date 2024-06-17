@@ -1,20 +1,14 @@
 ﻿using ScheduleRooms.Models.Dtos;
 
-namespace ScheduleRooms.API.Service.Interface
+namespace ScheduleRooms.API.Service.Interface;
+
+public interface IScheduleUserService
 {
-    public interface IScheduleUserService
-    {
-        Task<IEnumerable<ScheduleUserDto>> GetAll(int page, int size, string search);
-        Task<IEnumerable<ScheduleUserDto>> GetByScheduleUserId(int userId);
-        Task<IEnumerable<ScheduleUserDto>> GetBySchedule();
-        Task<IEnumerable<ScheduleUserDto>> GetByScheduleActive();
-        Task<IEnumerable<ScheduleUserDto>> GetByScheduleDateUserId(int userId, DateTime dateSalected);
-        Task<IEnumerable<ScheduleUserDto>> GetByScheduleActiveClientId(int clientId, DateTime dateSalected);
-        Task<IEnumerable<ScheduleUserDto>> GetByScheduleActiveClientIdUserId(int clientId, int userId, DateTime dateSalected);
-        Task<ScheduleUserDto> GetById(int id);
-        Task Create(ScheduleUserDto schedulesUserDto);
-        Task Update(ScheduleUserDto schedulesUserDto);
-        Task Delete(int id);
-        Task<int> TotalSchedules(string search);
-    }
+    Task<IEnumerable<ScheduleUserDto>> GetAll(int page, int size, string search);
+    Task<IEnumerable<ScheduleUserDto>> GetByScheduleId(int scheduleId);
+    Task<IEnumerable<ScheduleUserDto>> GetByDateStart(int page, int size, DateTime dateStart);
+    Task<ScheduleUserDto> Create(ScheduleUserCreateDto scheduleUserCreateDto);
+    Task<ScheduleUserDto> Update(ScheduleUserCreateDto scheduleUserCreateDto);
+    Task Delete(int scheduleId);
+    Task<int> TotalScheduleUser(string search);
 }

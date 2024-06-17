@@ -21,15 +21,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if (ScheduleUserDto is not null)
+                            @if (ScheduleDto is not null)
                             {
                                 <tr>
-                                    <td>@ScheduleUserDto.Id</td>
-                                    <td>@ScheduleUserDto.ManagerId</td>
-                                    <td>@ScheduleUserDto.Description</td>
-                                    <td>@(ScheduleUserDto.MeetingType ? "Sim" : "Não")</td>
-                                    <td>@(ScheduleUserDto.StatusSchedule ? "Sim" : "Não")</td>
-                                    <td>@(ScheduleUserDto.Particular ? "Sim" : "Não")</td>
+                                    <td>@ScheduleDto.Id</td>
+                                  @*   <td>@ScheduleDto.ManagerId</td> *@
+                                    <td>@ScheduleDto.Description</td>
+                                    <td>@(ScheduleDto.MeetingType ? "Sim" : "Não")</td>
+                                    <td>@(ScheduleDto.StatusSchedule ? "Sim" : "Não")</td>
+                                    <td>@(ScheduleDto.Particular ? "Sim" : "Não")</td>
                                 </tr>
                             }
                         </tbody>
@@ -45,7 +45,7 @@
 
 
 @code {
-    private ScheduleUserDto? ScheduleUserDto { get; set; } = new();
+    private ScheduleDto? ScheduleDto { get; set; } = new();
     private UserDto? UserDto { get; set; } = new();
 
     [Parameter]
@@ -54,7 +54,7 @@
     public int ScheduleId { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        ScheduleUserDto = await scheduleUserService.GetById(ScheduleId);
+        ScheduleDto = await scheduleUserService.GetById(ScheduleId);
         UserDto = await userService.GetById(UserId);
         StateHasChanged();
     }

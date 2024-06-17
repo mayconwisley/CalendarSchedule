@@ -10,4 +10,5 @@ public class User
     public string? Password { get; set; }
     public bool Manager { get; set; }
     public bool Active { get; set; }
+    public List<ScheduleUser>? ScheduleUsers { get; set; }
 }

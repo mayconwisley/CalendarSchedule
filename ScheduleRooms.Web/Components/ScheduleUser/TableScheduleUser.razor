@@ -30,8 +30,8 @@
                             <td>@schedule.Description</td>
                             <td>@schedule.DateStart.ToString("dd/MM/yyyy HH:mm")</td>
                             <td>@schedule.DateFinal.ToString("dd/MM/yyyy HH:mm")</td>
-                            <td>@schedule.Client</td>
-                            <td>@schedule.City</td>
+                           @*  <td>@schedule.Client</td> *@
+                           @*  <td>@schedule.City</td>
                             @{
                                 var manager = managers!.FirstOrDefault(f => f.Id == schedule.ManagerId, new UserDto()).Name;
 
@@ -40,7 +40,7 @@
                                     <td>@manager</td>
                                 }
                             }
-                            <td>@schedule.User</td>
+                            <td>@schedule.User</td> *@
 
                             <td>
                                 <button data-bs-toggle="modal" data-bs-target="#tableScheduleDatail-@schedule.Id" class="btn btn-info">

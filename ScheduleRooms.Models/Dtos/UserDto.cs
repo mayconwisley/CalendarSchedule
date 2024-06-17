@@ -4,7 +4,7 @@ namespace ScheduleRooms.Models.Dtos;
 
 public class UserDto
 {
-    public int Id { get; set; } = 0;
+    public int Id { get; set; }
     [Required(ErrorMessage = "Nome obrigatório")]
     public string? Name { get; set; } = string.Empty;
     [Required(ErrorMessage = "Celular obrigatório")]
