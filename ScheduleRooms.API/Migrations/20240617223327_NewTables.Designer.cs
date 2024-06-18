@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ScheduleRooms.API.Data;
 
@@ -11,9 +12,11 @@ using ScheduleRooms.API.Data;
 namespace ScheduleRooms.API.Migrations
 {
     [DbContext(typeof(ScheduleContext))]
-    partial class ScheduleContextModelSnapshot : ModelSnapshot
+    [Migration("20240617223327_NewTables")]
+    partial class NewTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -197,6 +200,9 @@ namespace ScheduleRooms.API.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Cellphone")
+                        .HasColumnType("VARCHAR(20)");
+
                     b.Property<string>("Description")
                         .HasColumnType("VARCHAR(500)");
 
@@ -227,6 +233,7 @@ namespace ScheduleRooms.API.Migrations
                         {
                             Id = 1,
                             Active = true,
+                            Cellphone = "44111111111",
                             Description = "Administrador",
                             Manager = true,
                             Name = "Admin",

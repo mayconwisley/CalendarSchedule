@@ -12,12 +12,12 @@ public static class ClientMappingDto
                 {
                     Id = client.Id,
                     Name = client.Name,
-                    Responsible = client.Responsible,
+                 
                     Telephone = client.Telephone,
-                    Email = client.Email,
+                  
                     Description = client.Description,
                     City = client.City,
-                    Position = client.Position,
+                   
                     Active = client.Active,
                     Prospection = client.Prospection != null && client.Prospection
 
@@ -31,12 +31,12 @@ public static class ClientMappingDto
                 {
                     Id = client.Id,
                     Name = client.Name,
-                    Responsible = client.Responsible,
+                 
                     Telephone = client.Telephone,
-                    Email = client.Email,
+                   
                     Description = client.Description,
                     City = client.City,
-                    Position = client.Position,
+                
                     Active = client.Active,
                     Prospection = client.Prospection != null && client.Prospection
 
@@ -48,12 +48,12 @@ public static class ClientMappingDto
         {
             Id = client.Id,
             Name = client.Name,
-            Responsible = client.Responsible,
+           
             Telephone = client.Telephone,
             Description = client.Description,
-            Email = client.Email,
+          
             City = client.City,
-            Position = client.Position,
+         
             Active = client.Active,
             Prospection = client.Prospection != null && client.Prospection
 
@@ -65,12 +65,12 @@ public static class ClientMappingDto
         {
             Id = clientDto.Id,
             Name = clientDto.Name,
-            Responsible = clientDto.Responsible,
+        
             Telephone = clientDto.Telephone,
-            Email = clientDto.Email,
+       
             Description = clientDto.Description,
             City = clientDto.City,
-            Position = clientDto.Position,
+         
             Active = clientDto.Active,
             Prospection = clientDto.Prospection != null && clientDto.Prospection
         };

@@ -14,4 +14,5 @@ public class ScheduleDto
     public bool StatusSchedule { get; set; } = false;
     public bool Particular { get; set; } = false;
     public int? ClientId { get; set; } = null;
+    public ClientDto ClienteDto { get; set; }
 }

@@ -135,10 +135,7 @@ public class ScheduleRepository(ScheduleContext scheduleContext) : IScheduleRepo
                                 Active = c.Active,
                                 City = c.City,
                                 Description = c.Description,
-                                Email = c.Email,
-                                Position = c.Position,
-                                Prospection = c.Prospection,
-                                Responsible = c.Responsible,
+                              
                                 Telephone = c.Telephone,
                             }
 

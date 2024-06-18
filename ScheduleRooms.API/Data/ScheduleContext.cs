@@ -10,9 +10,12 @@ public class ScheduleContext(DbContextOptions<ScheduleContext> options, IEncrypt
     private readonly IEncryptionUtility _encryptionUtility = encryptionUtility;
 
     public DbSet<User> Users { get; set; }
+    public DbSet<UserContact> UserContacts { get; set; }
     public DbSet<Client> Clients { get; set; }
+    public DbSet<ClientResponsible> ClientResponsibles { get; set; }
+    public DbSet<ClientContact> ClientContacts { get; set; }
     public DbSet<Schedule> Schedules { get; set; }
-       public DbSet<ScheduleUser> ScheduleUsers { get; set; }
+    public DbSet<ScheduleUser> ScheduleUsers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -25,10 +28,9 @@ public class ScheduleContext(DbContextOptions<ScheduleContext> options, IEncrypt
               Name = "Admin",
               Username = "Admin",
               Password = _encryptionUtility.Dado("admin"),
-              Cellphone = "44111111111",
               Description = "Administrador",
               Active = true,
-              Manager = false
+              Manager = true
           });
 
         modelBuilder.Entity<ScheduleUser>()

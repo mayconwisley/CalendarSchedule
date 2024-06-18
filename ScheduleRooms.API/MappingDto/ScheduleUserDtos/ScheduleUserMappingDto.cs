@@ -30,7 +30,6 @@ public static class ScheduleUserMappingDto
                         Name = scheduleUser.User.Name,
                         Username = scheduleUser.User.Username,
                         Password = scheduleUser.User.Password,
-                        Cellphone = scheduleUser.User.Cellphone,
                         Manager = scheduleUser.User.Manager,
                         Active = scheduleUser.User.Active
                     }
@@ -63,7 +62,6 @@ public static class ScheduleUserMappingDto
                         Name = scheduleUserDto.User.Name,
                         Username = scheduleUserDto.User.Username,
                         Password = scheduleUserDto.User.Password,
-                        Cellphone = scheduleUserDto.User.Cellphone,
                         Manager = scheduleUserDto.User.Manager,
                         Active = scheduleUserDto.User.Active
                     }
@@ -97,12 +95,10 @@ public static class ScheduleUserMappingDto
                 Name = scheduleUserDto.User.Name,
                 Username = scheduleUserDto.User.Username,
                 Password = scheduleUserDto.User.Password,
-                Cellphone = scheduleUserDto.User.Cellphone,
                 Manager = scheduleUserDto.User.Manager,
                 Active = scheduleUserDto.User.Active
             }
         };
-
     }
 
     public static ScheduleUserDto ConvertScheduleUserDto(this ScheduleUser scheduleUser)
@@ -129,12 +125,10 @@ public static class ScheduleUserMappingDto
                 Name = scheduleUser.User.Name,
                 Username = scheduleUser.User.Username,
                 Password = scheduleUser.User.Password,
-                Cellphone = scheduleUser.User.Cellphone,
                 Manager = scheduleUser.User.Manager,
                 Active = scheduleUser.User.Active
             }
         };
-
     }
 
     public static ScheduleUserCreateDto ConvertScheduleUserCreateDto(this ScheduleUser scheduleUser)
@@ -144,7 +138,6 @@ public static class ScheduleUserMappingDto
             ScheduleId = scheduleUser.ScheduleId,
             UserId = scheduleUser.UserId
         };
-
     }
 
     public static ScheduleUser ConvertDtoScheduleUserCreate(this ScheduleUserCreateDto scheduleUserCreateDto)
@@ -154,6 +147,5 @@ public static class ScheduleUserMappingDto
             ScheduleId = scheduleUserCreateDto.ScheduleId,
             UserId = scheduleUserCreateDto.UserId
         };
-
     }
 }
