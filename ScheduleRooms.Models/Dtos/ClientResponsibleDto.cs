@@ -1,6 +1,6 @@
-﻿namespace ScheduleRooms.API.Model;
+﻿namespace ScheduleRooms.Models.Dtos;
 
-public class ClientResponsible
+public class ClientResponsibleDto
 {
     public int Id { get; set; }
     public string? Name { get; set; }
@@ -8,5 +8,5 @@ public class ClientResponsible
     public string? Description { get; set; }
     public string? Position { get; set; }
     public bool Active { get; set; }
-    public ICollection<ClientContact>? ClientContacts { get; set; }
+    public List<ClientContactDto>? ClientContactDtos { get; set; }
 }
