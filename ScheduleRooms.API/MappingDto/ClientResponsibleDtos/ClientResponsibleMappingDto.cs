@@ -61,31 +61,31 @@ public static class ClientResponsibleMappingDto
         };
     }
 
-    //public static ClientResponsibleCreateDto ConvertClientResponsibleCreateToDto(this ClientResponsible clientResponsible)
-    //{
-    //    return new ClientResponsibleCreateDto
-    //    {
+    public static ClientResponsibleCreateDto ConvertClientResponsibleCreateToDto(this ClientResponsible clientResponsible)
+    {
+        return new ClientResponsibleCreateDto
+        {
 
-    //        Id = clientResponsible.Id,
-    //        Name = clientResponsible.Name,
-    //        Email = clientResponsible.Email,
-    //        Description = clientResponsible.Description,
-    //        Position = clientResponsible.Position,
-    //        Active = clientResponsible.Active
+            Id = clientResponsible.Id,
+            Name = clientResponsible.Name,
+            Email = clientResponsible.Email,
+            Description = clientResponsible.Description,
+            Position = clientResponsible.Position,
+            Active = clientResponsible.Active
 
-    //    };
-    //}
-    //public static ClientResponsible ConvertDtoToClientResponsibleCreate(this ClientResponsibleCreateDto clientResponsibleCreateDto)
-    //{
-    //    return new ClientResponsible
-    //    {
+        };
+    }
+    public static ClientResponsible ConvertDtoToClientResponsibleCreate(this ClientResponsibleCreateDto clientResponsibleCreateDto)
+    {
+        return new ClientResponsible
+        {
 
-    //        Id = clientResponsibleCreateDto.Id,
-    //        Name = clientResponsibleCreateDto.Name,
-    //        Email = clientResponsibleCreateDto.Email,
-    //        Description = clientResponsibleCreateDto.Description,
-    //        Position = clientResponsibleCreateDto.Position,
-    //        Active = clientResponsibleCreateDto.Active
-    //    };
-    //}
+            Id = clientResponsibleCreateDto.Id,
+            Name = clientResponsibleCreateDto.Name,
+            Email = clientResponsibleCreateDto.Email,
+            Description = clientResponsibleCreateDto.Description,
+            Position = clientResponsibleCreateDto.Position,
+            Active = clientResponsibleCreateDto.Active
+        };
+    }
 }

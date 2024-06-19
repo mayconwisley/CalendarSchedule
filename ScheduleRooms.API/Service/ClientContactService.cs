@@ -1,42 +1,56 @@
-﻿using ScheduleRooms.API.Service.Interface;
+﻿using ScheduleRooms.API.MappingDto.ClientContactDtos;
+using ScheduleRooms.API.Repository.Interface;
+using ScheduleRooms.API.Service.Interface;
 using ScheduleRooms.Models.Dtos;
 
 namespace ScheduleRooms.API.Service;
 
-public class ClientContactService : IClientContactService
+public class ClientContactService(IClientContactRepository clientContactRepository) : IClientContactService
 {
-    public Task<ClientContactDto> Create(ClientContactDto clientContactDto)
+    readonly IClientContactRepository _clientContactRepository = clientContactRepository;
+
+    public async Task<ClientContactDto> Create(ClientContactCreateDto clientContactCreateDto)
     {
-        throw new NotImplementedException();
+        var clientContact = await _clientContactRepository.Create(clientContactCreateDto.ConvertDtoToClientContactCreate());
+        return clientContact.ConvertClientContactToDto();
     }
 
-    public Task Delete(int id)
+    public async Task Delete(int id)
     {
-        throw new NotImplementedException();
+        var clientContact = await GetById(id);
+        if (clientContact is not null)
+        {
+            await _clientContactRepository.Delete(clientContact.Id);
+        }
     }
 
-    public Task<IEnumerable<ClientContactDto>> GetAll(int page, int size, string search)
+    public async Task<IEnumerable<ClientContactDto>> GetAll(int page, int size, string search)
     {
-        throw new NotImplementedException();
+        var clientContacts = await _clientContactRepository.GetAll(page, size, search);
+        return clientContacts.ConvertClientContactsToDto();
     }
 
-    public Task<IEnumerable<ClientContactDto>> GetByClientId(int page, int size, int clientId)
+    public async Task<IEnumerable<ClientContactDto>> GetByClientId(int page, int size, int clientId)
     {
-        throw new NotImplementedException();
+        var clientContacts = await _clientContactRepository.GetByClientId(page, size, clientId);
+        return clientContacts.ConvertClientContactsToDto();
     }
 
-    public Task<ClientContactDto> GetById(int id)
+    public async Task<ClientContactDto> GetById(int id)
     {
-        throw new NotImplementedException();
+        var clientContact = await _clientContactRepository.GetById(id);
+        return clientContact.ConvertClientContactToDto();
     }
 
-    public Task<int> TotalClientContact(string search)
+    public async Task<int> TotalClientContact(string search)
     {
-        throw new NotImplementedException();
+        var totalClientContact = await _clientContactRepository.TotalClientContact(search);
+        return totalClientContact;
     }
 
-    public Task<ClientContactDto> Update(ClientContactDto clientContactDto)
+    public async Task<ClientContactDto> Update(ClientContactCreateDto clientContactCreateDto)
     {
-        throw new NotImplementedException();
+        var clientContact = await _clientContactRepository.Update(clientContactCreateDto.ConvertDtoToClientContactCreate());
+        return clientContact.ConvertClientContactToDto();
     }
 }

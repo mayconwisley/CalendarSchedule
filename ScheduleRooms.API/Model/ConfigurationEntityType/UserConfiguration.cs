@@ -5,7 +5,7 @@ namespace ScheduleRooms.API.Model.ConfigurationEntityType;
 
 public class UserConfiguration : IEntityTypeConfiguration<User>
 {
-   
+
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.Property(p => p.Name)
@@ -21,5 +21,5 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired();
         builder.Property(p => p.Description)
             .HasColumnType("VARCHAR(500)");
-     }
+    }
 }

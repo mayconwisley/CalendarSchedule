@@ -135,7 +135,7 @@ public class ScheduleRepository(ScheduleContext scheduleContext) : IScheduleRepo
                                 Active = c.Active,
                                 City = c.City,
                                 Description = c.Description,
-                              
+
                                 Telephone = c.Telephone,
                             }
 
@@ -191,7 +191,7 @@ public class ScheduleRepository(ScheduleContext scheduleContext) : IScheduleRepo
             throw;
         }
     }
-  
+
     public async Task<int> TotalSchedules(string search)
     {
         var totalSchedule = await _scheduleContext.Schedules

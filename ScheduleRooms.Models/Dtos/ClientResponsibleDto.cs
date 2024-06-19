@@ -1,4 +1,6 @@
-﻿namespace ScheduleRooms.Models.Dtos;
+﻿using System.Text.Json.Serialization;
+
+namespace ScheduleRooms.Models.Dtos;
 
 public class ClientResponsibleDto
 {
@@ -8,5 +10,6 @@ public class ClientResponsibleDto
     public string? Description { get; set; }
     public string? Position { get; set; }
     public bool Active { get; set; }
+    [JsonIgnore]
     public List<ClientContactDto>? ClientContactDtos { get; set; }
 }

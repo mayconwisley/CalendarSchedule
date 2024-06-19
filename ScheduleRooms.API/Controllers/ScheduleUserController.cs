@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using ScheduleRooms.API.Service.Interface;
 using ScheduleRooms.Models.Dtos;
-using System.Drawing;
 
 namespace ScheduleRooms.API.Controllers;
 

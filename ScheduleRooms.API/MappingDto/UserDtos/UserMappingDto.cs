@@ -12,7 +12,7 @@ public static class UserMappingDto
                 {
                     Id = user.Id,
                     Name = user.Name,
-                   
+
                     Description = user.Description,
                     Username = user.Username,
                     Password = user.Password,
@@ -28,7 +28,7 @@ public static class UserMappingDto
                 {
                     Id = user.Id,
                     Name = user.Name,
-                  
+
                     Description = user.Description,
                     Username = user.Username,
                     Password = user.Password,
@@ -42,7 +42,7 @@ public static class UserMappingDto
         {
             Id = user.Id,
             Name = user.Name,
-          
+
             Description = user.Description,
             Username = user.Username,
             Password = user.Password,
@@ -57,7 +57,7 @@ public static class UserMappingDto
         {
             Id = userDto.Id,
             Name = userDto.Name,
-         
+
             Description = userDto.Description,
             Username = userDto.Username,
             Password = userDto.Password,

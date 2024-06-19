@@ -4,10 +4,10 @@ namespace ScheduleRooms.API.Service.Interface
 {
     public interface IClientResponsibleService
     {
-        Task<IEnumerable<ClientContactDto>> GetAll(int page, int size, string search);
-        Task<ClientContactDto> GetById(int id);
-        Task<ClientContactDto> Create(ClientContactDto clientContactDto);
-        Task<ClientContactDto> Update(ClientContactDto clientContactDto);
+        Task<IEnumerable<ClientResponsibleDto>> GetAll(int page, int size, string search);
+        Task<ClientResponsibleDto> GetById(int id);
+        Task<ClientResponsibleDto> Create(ClientResponsibleCreateDto clientResponsibleCreateDto);
+        Task<ClientResponsibleDto> Update(ClientResponsibleCreateDto clientResponsibleCreateDto);
         Task Delete(int id);
         Task<int> TotalClientResponsible(string search);
     }

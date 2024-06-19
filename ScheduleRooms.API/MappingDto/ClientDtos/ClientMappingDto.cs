@@ -12,12 +12,12 @@ public static class ClientMappingDto
                 {
                     Id = client.Id,
                     Name = client.Name,
-                 
+
                     Telephone = client.Telephone,
-                  
+
                     Description = client.Description,
                     City = client.City,
-                   
+
                     Active = client.Active,
                     Prospection = client.Prospection != null && client.Prospection
 
@@ -31,12 +31,12 @@ public static class ClientMappingDto
                 {
                     Id = client.Id,
                     Name = client.Name,
-                 
+
                     Telephone = client.Telephone,
-                   
+
                     Description = client.Description,
                     City = client.City,
-                
+
                     Active = client.Active,
                     Prospection = client.Prospection != null && client.Prospection
 
@@ -48,12 +48,12 @@ public static class ClientMappingDto
         {
             Id = client.Id,
             Name = client.Name,
-           
+
             Telephone = client.Telephone,
             Description = client.Description,
-          
+
             City = client.City,
-         
+
             Active = client.Active,
             Prospection = client.Prospection != null && client.Prospection
 
@@ -65,12 +65,12 @@ public static class ClientMappingDto
         {
             Id = clientDto.Id,
             Name = clientDto.Name,
-        
+
             Telephone = clientDto.Telephone,
-       
+
             Description = clientDto.Description,
             City = clientDto.City,
-         
+
             Active = clientDto.Active,
             Prospection = clientDto.Prospection != null && clientDto.Prospection
         };

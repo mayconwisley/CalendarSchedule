@@ -1,54 +1,52 @@
-﻿using ScheduleRooms.API.MappingDto.ClientContactDtos;
-using ScheduleRooms.API.MappingDto.UserContactContatctDto;
-using ScheduleRooms.API.Repository;
+﻿using ScheduleRooms.API.MappingDto.ClientResponsibleDtos;
 using ScheduleRooms.API.Repository.Interface;
 using ScheduleRooms.API.Service.Interface;
 using ScheduleRooms.Models.Dtos;
 
 namespace ScheduleRooms.API.Service
 {
-    public class ClientResponsibleService(IClientContactRepository clientContactRepository) : IClientResponsibleService
+    public class ClientResponsibleService(IClientResponsibleRepository clientResponsibleRepository) : IClientResponsibleService
     {
-        private readonly IClientContactRepository _clientContactRepository = clientContactRepository;
+        private readonly IClientResponsibleRepository _clientResponsibleRepository = clientResponsibleRepository;
 
-        public async Task<ClientContactDto> Create(ClientContactDto clientContactDto)
+        public async Task<ClientResponsibleDto> Create(ClientResponsibleCreateDto clientResponsibleCreateDto)
         {
-            var clientContact = await _clientContactRepository.Create(clientContactDto.ConvertDtoToClientContact());
-            return clientContact.ConvertClientContactToDto();
+            var clientResponsible = await _clientResponsibleRepository.Create(clientResponsibleCreateDto.ConvertDtoToClientResponsibleCreate());
+            return clientResponsible.ConvertClientResponsibleToDto();
         }
 
         public async Task Delete(int id)
         {
-            var clientContact = await GetById(id);
-            if (clientContact is not null)
+            var clientResponsible = await GetById(id);
+            if (clientResponsible is not null)
             {
-                await _clientContactRepository.Delete(clientContact.Id);
+                await _clientResponsibleRepository.Delete(clientResponsible.Id);
             }
         }
 
-        public async Task<IEnumerable<ClientContactDto>> GetAll(int page, int size, string search)
+        public async Task<IEnumerable<ClientResponsibleDto>> GetAll(int page, int size, string search)
         {
-            var clientContacts = await _clientContactRepository.GetAll(page, size, search);
-            return clientContacts.ConvertClientContactsToDto();
+            var clientResponsibles = await _clientResponsibleRepository.GetAll(page, size, search);
+            return clientResponsibles.ConvertClientResponsibleToDtos();
         }
 
-        public async Task<ClientContactDto> GetById(int id)
+        public async Task<ClientResponsibleDto> GetById(int id)
         {
-            var clientContact = await _clientContactRepository.GetById(id);
-            return clientContact.ConvertClientContactToDto();
+            var clientResponsible = await _clientResponsibleRepository.GetById(id);
+            return clientResponsible.ConvertClientResponsibleToDto();
 
         }
 
         public async Task<int> TotalClientResponsible(string search)
         {
-            var totalClientContact = await _clientContactRepository.TotalClientContact(search);
+            var totalClientContact = await _clientResponsibleRepository.TotalClientResponsible(search);
             return totalClientContact;
         }
 
-        public async Task<ClientContactDto> Update(ClientContactDto clientContactDto)
+        public async Task<ClientResponsibleDto> Update(ClientResponsibleCreateDto clientResponsibleCreateDto)
         {
-            var clientContact = await _clientContactRepository.Update(clientContactDto.ConvertDtoToClientContact());
-            return clientContact.ConvertClientContactToDto();
+            var clientResponsible = await _clientResponsibleRepository.Update(clientResponsibleCreateDto.ConvertDtoToClientResponsibleCreate());
+            return clientResponsible.ConvertClientResponsibleToDto();
         }
     }
 }
