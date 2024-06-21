@@ -6,11 +6,12 @@
             <tr>
                 <th>Id</th>
                 <th>Nome</th>
-                <th>Responsável</th>
-                <th>Cargo</th>
                 <th>Telefone</th>
-                <th>Email</th>
+                <th>Estado</th>
                 <th>Cidade</th>
+                <th>Rua</th>
+                <th>Numero</th>
+                <th>Jardim</th>
                 <th>Descrição</th>
                 <th class="text-center">Prospecção</th>
                 <th class="text-center">Ativo</th>
@@ -29,8 +30,6 @@
                         <tr>
                             <td>@client.Id</td>
                             <td>@client.Name</td>
-                            <td>@client.Responsible</td>
-                            <td>@client.Position</td>
                             @{
                                 string tel = client.Telephone!
                                 .Replace("-", "")
@@ -40,15 +39,12 @@
                                 string tel1 = decimal.Parse(tel).ToString("(##) ####-####");
                                 string apiTel = $@"https://api.whatsapp.com/send?phone=55{tel}";
                             }
-
                             <td><a href="@apiTel" target="_blank">@tel1</a></td>
-                            <td>
-                                @{
-                                    string email = $"mailto:{client.Email}";
-                                }
-                                <a href="@email">@client.Email</a>
-                            </td>
+                            <td>@client.State</td>
                             <td>@client.City</td>
+                            <td>@client.Road</td>
+                            <td>@client.Number</td>
+                            <td>@client.Garden</td>
                             <td>@client.Description</td>
                             <td class="text-center">
                                 @(client.Prospection ? "Sim" : "Não")

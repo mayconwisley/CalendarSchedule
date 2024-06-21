@@ -7,9 +7,6 @@ public class UserDto
     public int Id { get; set; }
     [Required(ErrorMessage = "Nome obrigatório")]
     public string? Name { get; set; } = string.Empty;
-    [Required(ErrorMessage = "Celular obrigatório")]
-    [MaxLength(16, ErrorMessage = "Máximo 16 digito")]
-    [MinLength(11, ErrorMessage = "Mínino 11 digito")]
     public string? Description { get; set; } = string.Empty;
     [Required(ErrorMessage = "Usuário Obrigatório")]
     [MaxLength(16, ErrorMessage = "Máximo 50 digito")]

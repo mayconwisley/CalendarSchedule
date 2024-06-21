@@ -51,9 +51,9 @@ public class UserRepository(ScheduleContext scheduleContext) : IUserRepository
         try
         {
             var users = await _scheduleContext.Users
+                .OrderBy(o => o.Name)
                 .Skip((page - 1) * size)
                 .Take(size)
-                .OrderBy(o => o.Name)
                 .ToListAsync();
             return users;
         }

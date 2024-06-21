@@ -7,9 +7,8 @@
             <tr>
                 <th>Id</th>
                 <th>Nome</th>
-                <th>Celular</th>
                 <th>Descrição</th>
-                <th>Gestor</th>
+                <th class="text-center">Gestor</th>
                 <th class="text-center">Ativo</th>
                 <th>Usuário</th>
                 <th>Ações</th>
@@ -27,16 +26,6 @@
                         <tr>
                             <td>@user.Id</td>
                             <td>@user.Name</td>
-                            @{
-                                string cel = user.Cellphone!
-                                .Replace("-", "")
-                                .Replace("(", "")
-                                .Replace(")", "")
-                                .Replace(" ", "");
-                                string cel1 = decimal.Parse(cel).ToString("(##) # ####-####");
-                                string apiCel = $@"https://api.whatsapp.com/send?phone=55{cel}";
-                            }
-                            <td><a href="@apiCel" target="_blank">@cel1</a></td>
                             <td>@user.Description</td>
                             <td class="text-center">
                                 @(user.Manager ? "Sim" : "Não")

@@ -11,23 +11,18 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-
                     <div class="row g-3">
-                        <div class="col-6">
-                            <label for="inName" class="form-label">Nome</label>
-                            <InputText class="form-control" id="inName" @bind-Value="UserDto!.Name" placeholder="Name" />
+                        <div class="col-12">
+                            <label for="inNome" class="form-label">Nome</label>
+                            <InputText class="form-control" id="inNome" @bind-Value="UserDto!.Name" placeholder="Nome" />
                             <ValidationMessage For="@(() => UserDto.Name)" />
+                        </div>
 
-                        </div>
                         <div class="col-6">
-                            <label for="inCellphone" class="form-label">Celular</label>
-                            <InputText mask="(99) 9 9999-9999" type="tel" class="form-control" id="inCellphone" @bind-Value="UserDto!.Cellphone" placeholder="Celular" />
-                            <ValidationMessage For="@(() => UserDto.Cellphone)" />
-                        </div>
-                        <div class="col-6">
-                            <label for="inUsername" class="form-label">Colaborador</label>
-                            <InputText class="form-control" id="inUsername" @bind-Value="UserDto!.Username" placeholder="Colaborador" />
+                            <label for="inUsername" class="form-label">Usuário</label>
+                            <InputText class="form-control" id="inUsername" @bind-Value="UserDto!.Username" placeholder="Usuário" />
                             <ValidationMessage For="@(() => UserDto.Username)" />
+
 
                         </div>
                         <div class="col-6">
@@ -52,9 +47,7 @@
                                 <label for="inActive" class="form-label">Ativo</label>
                             </div>
                         </div>
-
                     </div>
-
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
@@ -85,6 +78,7 @@
             UpdateData();
             UserDto = new();
         }
+        StateHasChanged();
     }
 
     private void UpdateData()

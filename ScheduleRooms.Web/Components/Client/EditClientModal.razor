@@ -18,29 +18,41 @@
                             <InputText class="form-control" id="inName" @bind-Value="ClientDto!.Name" placeholder="Nome" />
                             <ValidationMessage For="@(() => ClientDto.Name)" />
                         </div>
-                        <div class="col-12">
-                            <label for="inResponsible" class="form-label">Responsável</label>
-                            <InputText class="form-control" id="inResponsible" @bind-Value="ClientDto!.Responsible" placeholder="Responsável" />
-                            <ValidationMessage For="@(() => ClientDto.Responsible)" />
-                        </div>
-                        <div class="col-12">
-                            <label for="inEmail" class="form-label">Email</label>
-                            <InputText type="email" class="form-control" id="inEmail" @bind-Value="ClientDto!.Email" placeholder="Email" />
-                            <ValidationMessage For="@(() => ClientDto.Email)" />
+                        <div class="col-6">
+                            <label for="inTelephone" class="form-label">Telefone</label>
+                            <InputText class="form-control" id="inTelephone" @bind-Value="ClientDto!.Telephone" placeholder="Telefone" />
+                            <ValidationMessage For="@(() => ClientDto.Telephone)" />
                         </div>
                         <div class="col-6">
-                            <label for="inCargo" class="form-label">Cargo</label>
-                            <InputText class="form-control" id="inCargo" @bind-Value="ClientDto!.Position" placeholder="Cargo" />
-                            <ValidationMessage For="@(() => ClientDto.Position)" />
+                            <label for="inState" class="form-label">Estado</label>
+                            <InputText type="text" class="form-control" id="inState" @bind-Value="ClientDto!.State" placeholder="Estado" />
+                            <ValidationMessage For="@(() => ClientDto.State)" />
                         </div>
                         <div class="col-6">
-                            <label for="inCidade" class="form-label">Cidade</label>
-                            <InputText class="form-control" id="inCidade" @bind-Value="ClientDto!.City" placeholder="Cidade" />
+                            <label for="inCity" class="form-label">Cidade</label>
+                            <InputText class="form-control" id="inCity" @bind-Value="ClientDto!.City" placeholder="Cidade" />
                             <ValidationMessage For="@(() => ClientDto.City)" />
                         </div>
-                        <div class="col-9">
-                            <label for="inTelephone" class="form-label">Telefone</label>
-                            <InputText mask="(99) 9 9999-9999" type="tel" class="form-control" id="inTelephone" @bind-Value="ClientDto!.Telephone" placeholder="Telefone" />
+                        <div class="col-6">
+                            <label for="inRoad" class="form-label">Rua</label>
+                            <InputText class="form-control" id="inRoad" @bind-Value="ClientDto!.Road" placeholder="Rua" />
+                            <ValidationMessage For="@(() => ClientDto.Road)" />
+                        </div>
+                        <div class="col-3">
+
+                            <label for="inNumber" class="form-label">Número</label>
+                            <InputText mask="(99) 9 9999-9999" type="tel" class="form-control" id="inNumber" @bind-Value="ClientDto!.Number" placeholder="Número" />
+                            <ValidationMessage For="@(() => ClientDto.Number)" />
+                        </div>
+                        <div class="col-3">
+
+                            <label for="inGarden" class="form-label">Jardim</label>
+                            <InputText mask="(99) 9 9999-9999" type="tel" class="form-control" id="inGarden" @bind-Value="ClientDto!.Garden" placeholder="Jardim" />
+                            <ValidationMessage For="@(() => ClientDto.Garden)" />
+                        </div>
+                        <div class="col-12">
+                            <label for="inDescription" class="form-label">Descrição</label>
+                            <InputText class="form-control" id="inDescription" @bind-Value="ClientDto!.Description" placeholder="Descrição" />
                         </div>
                         <div class="col-3">
                             <label class="form-label">Opção</label>
@@ -49,13 +61,9 @@
                                 <label for="inActive" class="form-label">Ativo</label>
                             </div>
                             <div class="form-check">
-                                <InputCheckbox class="form-check-input" id="inProspection" @bind-Value="ClientDto.Prospection" />
+                                <InputCheckbox class="form-check-input" id="inProspection" @bind-Value="ClientDto!.Prospection" />
                                 <label for="inProspection" class="form-label">Prospecção</label>
                             </div>
-                        </div>
-                        <div class="col-12">
-                            <label for="inDescription" class="form-label">Descrição</label>
-                            <InputText class="form-control" id="inDescription" @bind-Value="ClientDto.Description" placeholder="Descrição" />
                         </div>
                     </div>
                 </div>
