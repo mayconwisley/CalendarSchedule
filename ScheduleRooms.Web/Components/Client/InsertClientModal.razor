@@ -34,6 +34,12 @@
                             <ValidationMessage For="@(() => ClientDto.City)" />
                         </div>
                         <div class="col-6">
+
+                            <label for="inGarden" class="form-label">Jardim</label>
+                            <InputText mask="(99) 9 9999-9999" type="tel" class="form-control" id="inGarden" @bind-Value="ClientDto!.Garden" placeholder="Jardim" />
+                            <ValidationMessage For="@(() => ClientDto.Garden)" />
+                        </div>
+                        <div class="col-9">
                             <label for="inRoad" class="form-label">Rua</label>
                             <InputText class="form-control" id="inRoad" @bind-Value="ClientDto!.Road" placeholder="Rua" />
                             <ValidationMessage For="@(() => ClientDto.Road)" />
@@ -44,28 +50,23 @@
                             <InputText mask="(99) 9 9999-9999" type="tel" class="form-control" id="inNumber" @bind-Value="ClientDto!.Number" placeholder="Número" />
                             <ValidationMessage For="@(() => ClientDto.Number)" />
                         </div>
-                        <div class="col-3">
 
-                            <label for="inGarden" class="form-label">Jardim</label>
-                            <InputText mask="(99) 9 9999-9999" type="tel" class="form-control" id="inGarden" @bind-Value="ClientDto!.Garden" placeholder="Jardim" />
-                            <ValidationMessage For="@(() => ClientDto.Garden)" />
-                        </div>
                         <div class="col-12">
                             <label for="inDescription" class="form-label">Descrição</label>
                             <InputText class="form-control" id="inDescription" @bind-Value="ClientDto!.Description" placeholder="Descrição" />
                         </div>
-                        <div class="col-3">
-                            <label class="form-label">Opção</label>
+                        <div class="col-6">
                             <div class="form-check">
                                 <InputCheckbox class="form-check-input" id="inActive" @bind-Value="ClientDto!.Active" />
                                 <label for="inActive" class="form-label">Ativo</label>
                             </div>
+                        </div>
+                        <div class="col-6">
                             <div class="form-check">
                                 <InputCheckbox class="form-check-input" id="inProspection" @bind-Value="ClientDto!.Prospection" />
                                 <label for="inProspection" class="form-label">Prospecção</label>
                             </div>
                         </div>
-
 
                     </div>
 
