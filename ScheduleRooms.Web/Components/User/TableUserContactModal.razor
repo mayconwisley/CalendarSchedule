@@ -1,0 +1,58 @@
+﻿@using System.Globalization
+@inject IUserContactService userContactService
+
+<div class="modal fade" id="tableUserContact-@UserId" tabindex="-1" aria-labelledby="tableContactLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="tableContactLabel">Consulta Contato - <strong>@UserName</strong> </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="border">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Tipo</th>
+                                <th>Número</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (UserContactView is not null)
+                            {
+                                @foreach (var userContactDto in UserContactView.UserContactsDto)
+                                {
+                                    <tr>
+                                        <td>@userContactDto.Id</td>
+                                        <td>@userContactDto.Type</td>
+                                        <td>@userContactDto.Number</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public UserContactView? UserContactView { get; set; }
+
+    [Parameter]
+    public int UserId { get; set; }
+    [Parameter]
+    public string? UserName { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        UserContactView = await userContactService.GetByUserId(UserId);
+        StateHasChanged();
+    }
+}

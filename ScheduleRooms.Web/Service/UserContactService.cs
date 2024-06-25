@@ -195,7 +195,7 @@ public class UserContactService : IUserContactService
         }
     }
 
-    public async Task<IEnumerable<UserDto>> GetByUserId(int userId = 0)
+    public async Task<UserContactView> GetByUserId(int page = 1, int size = 10, int userId = 0)
     {
         try
         {
@@ -208,21 +208,21 @@ public class UserContactService : IUserContactService
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
             //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
-            using var response = await httpClient.GetAsync($"{apiEndPoint}/UserContactByUserId/{userId}");
+            using var response = await httpClient.GetAsync($"{apiEndPoint}/UserContactByUserId/{userId}?page={page}&size={size}");
 
             if (response.IsSuccessStatusCode)
             {
-                var userDtos = await response.Content.ReadFromJsonAsync<IEnumerable<UserDto>>(_serializerOptions);
-                return userDtos ??= [];
+                var userDtos = await response.Content.ReadFromJsonAsync<UserContactView>(_serializerOptions);
+                return userDtos ??= new();
             }
             else
             {
                 if (response.StatusCode == HttpStatusCode.NotFound)
                 {
-                    return [];
+                    return new();
                 }
                 response.EnsureSuccessStatusCode();
-                return [];
+                return new();
             }
         }
         catch (Exception)
