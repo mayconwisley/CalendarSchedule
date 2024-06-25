@@ -39,6 +39,16 @@
                                     Editar
                                 </button>
                                 <EditUserModal UserId="@user.Id" DataUpdated="@(() => DataUpdated())" />
+
+                                <button data-bs-toggle="modal" data-bs-target="#newContactUser-@user.Id" class="btn btn-info">
+                                    Add Contato
+                                </button>
+                                <InsertUserContactModal UserId="@user.Id" UserName="@user.Name" />
+
+                                <button data-bs-toggle="modal" data-bs-target="#detailContactUser-@user.Id" class="btn btn-info">
+                                    Detalhe
+                                </button>
+
                                 <button data-bs-toggle="modal" data-bs-target="#deleteUser-@user.Id" class="btn btn-danger">
                                     Excluir
                                 </button>

@@ -1,0 +1,74 @@
+﻿@using System.Globalization
+@inject IUserContactService userContactService
+
+<div class="modal fade" id="tableUserContact-@UserId" tabindex="-1" aria-labelledby="tableScheduleLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="tableScheduleLabel">Consulta do dia - <strong>@UserDto!.Name</strong> </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="border">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Cliente</th>
+                                <th>Prospecção</th>
+                                <th>Descrição</th>
+                                <th>Data/Hora Inicio</th>
+                                <th>Data/Hora Fim</th>
+                                <th>Remoto</th>
+                                <th>Reservada</th>
+                                <th>Particular</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ScheduleUserView is not null)
+                            {
+                                var schedules = ScheduleUserView;
+
+                                if (schedules is not null)
+                                {
+                                    @foreach (var schedule in schedules)
+                                    {
+                                        <tr>
+                                            <td>@schedule.Id</td>
+                                            @* <td>@schedule.Client</td> *@
+                                            @*  <td>@(schedule.Prospection ? "Sim" : "Não")</td> *@
+                                            <td>@schedule.Description</td>
+                                            <td>@schedule.DateStart.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td>@schedule.DateFinal.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td>@(schedule.MeetingType ? "Sim" : "Não")</td>
+                                            <td>@(schedule.StatusSchedule ? "Sim" : "Não")</td>
+                                            <td>@(schedule.Particular ? "Sim" : "Não")</td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public UserView? UserView { get; set; }
+    
+    [Parameter]
+    public int UserId { get; set; }
+    
+    private async void DataUpdated()
+    {
+        UserView = await userContactService.GetById();
+        StateHasChanged();
+    }
+}

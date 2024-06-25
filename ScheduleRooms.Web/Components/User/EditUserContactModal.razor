@@ -1,0 +1,84 @@
+﻿@inject IUserService userService
+
+<div class="modal fade" id="editUser-@UserId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <EditForm Model="@UserDto" OnValidSubmit="@Edit">
+                <InputNumber hidden @bind-Value="UserDto!.Id" />
+                <DataAnnotationsValidator />
+
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Editar Colaborador</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label for="inNome" class="form-label">Nome</label>
+                            <InputText class="form-control" id="inNome" @bind-Value="UserDto!.Name" placeholder="Name" />
+                            <ValidationMessage For="@(() => UserDto.Name)" />
+                        </div>
+                        <div class="col-6">
+                            <label for="inUsername" class="form-label">Usuário</label>
+                            <InputText class="form-control" id="inUsername" @bind-Value="UserDto!.Username" placeholder="Usuário" />
+                            <ValidationMessage For="@(() => UserDto.Username)" />
+
+                        </div>
+                        <div class="col-6">
+                            <label for="inPassword" class="form-label">Senha</label>
+                            <InputText type="password" class="form-control" id="inPassword" @bind-Value="UserDto!.Password" placeholder="Senha" />
+                            <ValidationMessage For="@(() => UserDto.Password)" />
+                        </div>
+                        <div class="col-12">
+                            <label for="inDescription" class="form-label">Descrição</label>
+                            <InputText class="form-control" id="inDescription" @bind-Value="UserDto!.Description" placeholder="Descrição" />
+                        </div>
+                        <div class="col-6">
+                            <div class="form-check">
+                                <InputCheckbox class="form-check-input" id="inManager" @bind-Value="UserDto!.Manager" />
+                                <label for="inManager" class="form-label">Gestor</label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-check">
+                                <InputCheckbox class="form-check-input" id="inActive" @bind-Value="UserDto!.Active" />
+                                <label for="inActive" class="form-label">Ativo</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Action? DataUpdated { get; set; }
+    [Parameter]
+    public int UserId { get; set; }
+
+    private UserDto? UserDto { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        UserDto = await userService.GetById(UserId);
+    }
+
+    private async Task Edit()
+    {
+        if (UserDto is not null)
+        {
+            var room = await userService.Update(UserDto);
+            UpdateData();
+        }
+    }
+
+    private void UpdateData()
+    {
+        DataUpdated?.Invoke();
+    }
+}
