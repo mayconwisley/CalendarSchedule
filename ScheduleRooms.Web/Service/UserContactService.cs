@@ -195,7 +195,7 @@ public class UserContactService : IUserContactService
         }
     }
 
-    public async Task<UserContactView> GetByUserId(int page = 1, int size = 10, int userId = 0)
+    public async Task<UserContactView> GetByUserId(int page, int size, int userId)
     {
         try
         {

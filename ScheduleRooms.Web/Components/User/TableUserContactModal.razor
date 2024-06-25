@@ -43,7 +43,7 @@
 
 @code {
     [Parameter]
-    public UserContactView? UserContactView { get; set; }
+    public UserContactView? UserContactView { get; set; } = new();
 
     [Parameter]
     public int UserId { get; set; }
@@ -52,7 +52,7 @@
 
     protected async override Task OnInitializedAsync()
     {
-        UserContactView = await userContactService.GetByUserId(UserId);
+        UserContactView = await userContactService.GetByUserId(1, 10, UserId);
         StateHasChanged();
     }
 }
