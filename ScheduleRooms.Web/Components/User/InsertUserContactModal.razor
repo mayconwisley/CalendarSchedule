@@ -18,14 +18,14 @@
                             <span>@UserId - @UserName</span>
                         </div>
                         <div class="col-6">
-                            <label for="inType" class="form-label">Tipo</label>
-                            <InputText class="form-control" id="inType" @bind-Value="UserContactCreateDto!.Type" placeholder="Tipo" />
+                            <label for="inType-@UserId" class="form-label">Tipo</label>
+                            <InputText class="form-control" id="inType-@UserId" @bind-Value="UserContactCreateDto!.Type" placeholder="Tipo" />
                             <ValidationMessage For="@(() => UserContactCreateDto.Type)" />
                         </div>
 
                         <div class="col-6">
-                            <label for="inNumber" class="form-label">Número</label>
-                            <InputText class="form-control" id="inNumber" @bind-Value="UserContactCreateDto!.Number" placeholder="Número" />
+                            <label for="inNumber-@UserId" class="form-label">Número</label>
+                            <InputText class="form-control" id="inNumber-@UserId" @bind-Value="UserContactCreateDto!.Number" placeholder="Número" />
                             <ValidationMessage For="@(() => UserContactCreateDto.Number)" />
                         </div>
 

@@ -21,14 +21,21 @@
                         <tbody>
                             @if (UserContactView is not null)
                             {
-                                @foreach (var userContactDto in UserContactView.UserContactsDto)
+                                var userContacts = UserContactView.UserContactsDto;
+
+                                if (userContacts is not null)
                                 {
-                                    <tr>
-                                        <td>@userContactDto.Id</td>
-                                        <td>@userContactDto.Type</td>
-                                        <td>@userContactDto.Number</td>
-                                    </tr>
+                                    @foreach (var userContactDto in userContacts)
+                                    {
+                                        <tr>
+                                            <td>@userContactDto.Id</td>
+                                            <td>@userContactDto.Type</td>
+                                            <td>@userContactDto.Number</td>
+                                        </tr>
+                                    }
                                 }
+
+
                             }
                         </tbody>
                     </table>

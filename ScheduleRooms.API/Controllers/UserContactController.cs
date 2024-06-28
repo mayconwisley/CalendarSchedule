@@ -15,7 +15,7 @@ public class UserContactController(IUserContactService userContactService) : Con
     [Route("All")]
     public async Task<ActionResult<IEnumerable<UserContactDto>>> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
     {
-        var usersContactDto = await _userContactService.GetAll(page, size, search);
+        var userContactsDto = await _userContactService.GetAll(page, size, search);
         decimal totalData = (decimal)await _userContactService.TotalUserContact(search);
         decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
 
@@ -24,7 +24,7 @@ public class UserContactController(IUserContactService userContactService) : Con
             totalPage = totalData;
         }
 
-        if (!usersContactDto.Any())
+        if (!userContactsDto.Any())
         {
             return NotFound("Sem dados");
         }
@@ -34,7 +34,7 @@ public class UserContactController(IUserContactService userContactService) : Con
             page,
             totalPage,
             size,
-            usersContactDto
+            userContactsDto
         });
 
     }
