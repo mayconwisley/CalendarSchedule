@@ -1,23 +1,24 @@
-﻿@page "/UserCreate"
+﻿@page "/UserEdit/{UserId}"
 
 @inject IUserService userService
 @inject NavigationManager navigationManager
 
-<EditForm Model="@UserDto" OnValidSubmit="Create">
+
+<h1>Editar Colaborador</h1>
+<EditForm Model="@UserDto" OnValidSubmit="@Edit">
+    <InputNumber hidden @bind-Value="UserDto!.Id" />
     <DataAnnotationsValidator />
 
     <div class="row g-3">
         <div class="col-12">
             <label for="inNome" class="form-label">Nome</label>
-            <InputText class="form-control" id="inNome" @bind-Value="UserDto!.Name" placeholder="Nome" />
+            <InputText class="form-control" id="inNome" @bind-Value="UserDto!.Name" placeholder="Name" />
             <ValidationMessage For="@(() => UserDto.Name)" />
         </div>
-
         <div class="col-6">
             <label for="inUsername" class="form-label">Usuário</label>
             <InputText class="form-control" id="inUsername" @bind-Value="UserDto!.Username" placeholder="Usuário" />
             <ValidationMessage For="@(() => UserDto.Username)" />
-
 
         </div>
         <div class="col-6">
@@ -25,7 +26,6 @@
             <InputText type="password" class="form-control" id="inPassword" @bind-Value="UserDto!.Password" placeholder="Senha" />
             <ValidationMessage For="@(() => UserDto.Password)" />
         </div>
-
         <div class="col-12">
             <label for="inDescription" class="form-label">Descrição</label>
             <InputText class="form-control" id="inDescription" @bind-Value="UserDto!.Description" placeholder="Descrição" />
@@ -43,36 +43,42 @@
             </div>
         </div>
     </div>
-    <button type="submit" class="btn btn-primary">Salvar</button>
+
+
+    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
+    <NavLink href="User" class="btn btn-info">
+        Voltar
+    </NavLink>
 
 </EditForm>
 
+
 @code {
     [Parameter]
-    public Action? DataUpdated { get; set; }
+    public EventCallback DataUpdated { get; set; }
 
-    private UserDto? UserDto { get; set; }
+    [Parameter]
+    public string UserId { get; set; } = string.Empty;
+
+    private UserDto? UserDto { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        UserDto ??= new();
-        await base.OnInitializedAsync();
+        UserDto = await userService.GetById(int.Parse(UserId));
     }
 
-    private async Task Create()
+    private async Task Edit()
     {
         if (UserDto is not null)
         {
-            var user = await userService.Create(UserDto);
-            UpdateData();
-            UserDto = new();
+            var room = await userService.Update(UserDto);
+            await UpdateData();
+            navigationManager.NavigateTo("/User");
         }
-        navigationManager.NavigateTo("/User");
-        StateHasChanged();
     }
 
-    private void UpdateData()
+    private async Task UpdateData()
     {
-        DataUpdated?.Invoke();
+        await DataUpdated.InvokeAsync(null);
     }
 }

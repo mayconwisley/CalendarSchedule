@@ -35,10 +35,11 @@
                             </td>
                             <td>@user.Username</td>
                             <td>
-                                <button data-bs-toggle="modal" data-bs-target="#editUser-@user.Id" class="btn btn-info">
+
+                                <NavLink href=@($"UserEdit/{user.Id}") class="btn btn-info">
                                     Editar
-                                </button>
-                                <EditUserModal UserId="@user.Id" DataUpdated="@(() =>  DataUpdated())" />
+                                </NavLink>
+
 
                                 <button data-bs-toggle="modal" data-bs-target="#newContactUser-@user.Id" class="btn btn-info">
                                     Add Contato
@@ -66,7 +67,7 @@
 @code {
     [Parameter]
     public UserView? UserView { get; set; }
-    
+
     private async Task DataUpdated()
     {
         UserView = await userService.GetAll();
