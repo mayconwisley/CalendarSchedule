@@ -38,12 +38,12 @@
                                 <button data-bs-toggle="modal" data-bs-target="#editUser-@user.Id" class="btn btn-info">
                                     Editar
                                 </button>
-                                <EditUserModal UserId="@user.Id" DataUpdated="@(() => DataUpdated())" />
+                                <EditUserModal UserId="@user.Id" DataUpdated="@(() =>  DataUpdated())" />
 
                                 <button data-bs-toggle="modal" data-bs-target="#newContactUser-@user.Id" class="btn btn-info">
                                     Add Contato
                                 </button>
-                                <InsertUserContactModal UserId="@user.Id" UserName="@user.Name" />
+                                <InsertUserContactModal UserId="@user.Id" UserName="@user.Name" DataUpdated="@DataUpdated" />
 
                                 <button data-bs-toggle="modal" data-bs-target="#tableUserContact-@user.Id" class="btn btn-info">
                                     Detalhe
@@ -56,11 +56,9 @@
                                 <DeleteUserModal UserId="@user.Id" DataUpdated="@(() => DataUpdated())" />
                             </td>
                         </tr>
-
                     }
                 }
             }
-
         </tbody>
     </table>
 </div>
@@ -68,7 +66,8 @@
 @code {
     [Parameter]
     public UserView? UserView { get; set; }
-    private async void DataUpdated()
+    
+    private async Task DataUpdated()
     {
         UserView = await userService.GetAll();
         StateHasChanged();

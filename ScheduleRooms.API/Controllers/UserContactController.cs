@@ -42,7 +42,7 @@ public class UserContactController(IUserContactService userContactService) : Con
     [Route("UserContactByUserId/{userId:int}")]
     public async Task<ActionResult<IEnumerable<UserContactDto>>> UserContactByUserId([FromQuery] int page = 1, [FromQuery] int size = 10, int userId = 0)
     {
-        var usersContactDto = await _userContactService.GetByUserId(page, size, userId);
+        var userContactsDto = await _userContactService.GetByUserId(page, size, userId);
         decimal totalData = (decimal)await _userContactService.TotalUserContact(userId.ToString());
         decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
 
@@ -51,7 +51,7 @@ public class UserContactController(IUserContactService userContactService) : Con
             totalPage = totalData;
         }
 
-        if (!usersContactDto.Any())
+        if (!userContactsDto.Any())
         {
             return NotFound("Sem dados");
         }
@@ -61,7 +61,7 @@ public class UserContactController(IUserContactService userContactService) : Con
             page,
             totalPage,
             size,
-            usersContactDto
+            userContactsDto
         });
 
     }

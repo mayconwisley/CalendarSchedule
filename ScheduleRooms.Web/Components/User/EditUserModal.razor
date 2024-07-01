@@ -57,7 +57,8 @@
 
 @code {
     [Parameter]
-    public Action? DataUpdated { get; set; }
+    public EventCallback DataUpdated { get; set; }
+
     [Parameter]
     public int UserId { get; set; }
 
@@ -73,12 +74,12 @@
         if (UserDto is not null)
         {
             var room = await userService.Update(UserDto);
-            UpdateData();
+            await UpdateData();
         }
     }
 
-    private void UpdateData()
+    private async Task UpdateData()
     {
-        DataUpdated?.Invoke();
+        await DataUpdated.InvokeAsync(null);
     }
 }

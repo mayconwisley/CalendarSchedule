@@ -16,6 +16,7 @@
                                 <th>Id</th>
                                 <th>Tipo</th>
                                 <th>Número</th>
+                                <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -31,6 +32,15 @@
                                             <td>@userContactDto.Id</td>
                                             <td>@userContactDto.Type</td>
                                             <td>@userContactDto.Number</td>
+                                            <td>
+                                                <button data-bs-toggle="modal" data-bs-target="#editContact-@userContactDto.Id" class="btn btn-info">
+                                                    Editar
+                                                </button>
+                                                <EditUserContactModal UserId="@UserId" UserName="@UserName" />
+                                                <button data-bs-toggle="modal" data-bs-target="#deleteContact-@userContactDto.Id" class="btn btn-danger">
+                                                    Excluir
+                                                </button>
+                                            </td>
                                         </tr>
                                     }
                                 }
@@ -47,6 +57,10 @@
 </div>
 
 @code {
+
+    [Parameter]
+    public EventCallback DataUpdated { get; set; }
+
     [Parameter]
     public UserContactView? UserContactView { get; set; } = new();
 
@@ -57,9 +71,13 @@
 
     protected async override Task OnInitializedAsync()
     {
-        var teste = await userContactService.GetByUserId(1, 10, UserId);
-        
         UserContactView = await userContactService.GetByUserId(1, 10, UserId);
+        await DataUpdate();
+    }
+
+    private async Task DataUpdate()
+    {
+        await DataUpdated.InvokeAsync(null);
         StateHasChanged();
     }
 }

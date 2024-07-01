@@ -24,7 +24,7 @@ public class UserContactService : IUserContactService
         _serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
     }
 
-    public async Task<UserDto> Create(UserContactCreateDto userContactCreateDto)
+    public async Task<UserContactDto> Create(UserContactCreateDto userContactCreateDto)
     {
         try
         {
@@ -44,7 +44,7 @@ public class UserContactService : IUserContactService
                 if (response.IsSuccessStatusCode)
                 {
                     using Stream resApi = await response.Content.ReadAsStreamAsync();
-                    var user = await JsonSerializer.DeserializeAsync<UserDto>(resApi, _serializerOptions);
+                    var user = await JsonSerializer.DeserializeAsync<UserContactDto>(resApi, _serializerOptions);
 
                     if (user is not null)
                     {
@@ -122,7 +122,7 @@ public class UserContactService : IUserContactService
         }
     }
 
-    public async Task<UserDto> GetById(int id)
+    public async Task<UserContactDto> GetById(int id)
     {
         try
         {
@@ -139,7 +139,7 @@ public class UserContactService : IUserContactService
 
             if (response.IsSuccessStatusCode)
             {
-                var userDto = await response.Content.ReadFromJsonAsync<UserDto>(_serializerOptions);
+                var userDto = await response.Content.ReadFromJsonAsync<UserContactDto>(_serializerOptions);
                 return userDto ??= new();
             }
             else
@@ -159,7 +159,7 @@ public class UserContactService : IUserContactService
         }
     }
 
-    public async Task<UserDto> Update(UserContactCreateDto userContactCreateDto)
+    public async Task<UserContactDto> Update(UserContactCreateDto userContactCreateDto)
     {
         try
         {
@@ -179,7 +179,7 @@ public class UserContactService : IUserContactService
                 if (response.IsSuccessStatusCode)
                 {
                     using Stream resApi = await response.Content.ReadAsStreamAsync();
-                    var user = await JsonSerializer.DeserializeAsync<UserDto>(resApi, _serializerOptions);
+                    var user = await JsonSerializer.DeserializeAsync<UserContactDto>(resApi, _serializerOptions);
                     if (user is not null)
                     {
                         return user;

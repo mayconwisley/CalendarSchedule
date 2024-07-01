@@ -44,16 +44,15 @@
 
 @code {
     [Parameter]
-    public Action? DataUpdated { get; set; }
+    public EventCallback DataUpdated { get; set; }
+
     [Parameter]
     public int UserId { get; set; }
     [Parameter]
     public string? UserName { get; set; }
 
     private UserContactCreateDto? UserContactCreateDto { get; set; }
-    private UserDto? UserDto { get; set; }
-    private UserView? UserView { get; set; }
-    
+        
     protected override async Task OnInitializedAsync()
     {
         UserContactCreateDto ??= new();
@@ -65,14 +64,15 @@
         if (UserContactCreateDto is not null)
         {
             var userContact = await userContactService.Create(UserContactCreateDto);
-            UpdateData();
+            await UpdateData();
             UserContactCreateDto = new();
         }
-        StateHasChanged();
+        
     }
 
-    private void UpdateData()
+    private async Task UpdateData()
     {
-        DataUpdated?.Invoke();
+        await DataUpdated.InvokeAsync(null);
+        StateHasChanged();
     }
 }

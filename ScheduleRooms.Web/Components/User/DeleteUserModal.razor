@@ -30,7 +30,7 @@
 
 @code {
     [Parameter]
-    public Action? DataUpdated { get; set; }
+    public EventCallback DataUpdated { get; set; }
 
     private UserDto? UserDto { get; set; } = new();
 
@@ -49,12 +49,12 @@
         if (UserDto is not null)
         {
             var room = await userService.Delete(UserId);
-            UpdateData();
+            await UpdateData();
         }
     }
 
-    private void UpdateData()
+    private async Task UpdateData()
     {
-        DataUpdated?.Invoke();
+        await DataUpdated.InvokeAsync(null);
     }
 }
