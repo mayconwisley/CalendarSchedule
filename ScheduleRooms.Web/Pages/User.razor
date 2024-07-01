@@ -6,9 +6,9 @@
 @inject NavigationManager navigationManager
 
 <h3>Cadastro de Colaborador</h3>
-<button data-bs-toggle="modal" data-bs-target="#newUser" class="btn btn-info">
+<NavLink href="UserCreate" class="btn btn-info">
     Novo Colaborador
-</button>
+</NavLink>
 
 @if (userView is null)
 {
@@ -23,7 +23,7 @@ else
                      TotalData="@userView.TotalData"
                      Page="@userView.Page"
                      TotalPage="@userView.TotalPage" />
-    <InsertUserModal DataUpdated="@(() => DataUpdated())" />
+    @* <InsertUserModal DataUpdated="@(() => DataUpdated())" /> *@
 }
 
 @code {
