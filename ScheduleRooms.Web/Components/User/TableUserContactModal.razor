@@ -57,6 +57,8 @@
 
     protected async override Task OnInitializedAsync()
     {
+        var teste = await userContactService.GetByUserId(1, 10, UserId);
+        
         UserContactView = await userContactService.GetByUserId(1, 10, UserId);
         StateHasChanged();
     }
