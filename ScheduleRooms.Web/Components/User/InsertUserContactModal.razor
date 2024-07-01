@@ -5,7 +5,10 @@
             <EditForm Model="@UserContactCreateDto" OnValidSubmit="Create">
                 <DataAnnotationsValidator />
                 @{
-                    UserContactCreateDto.UserId = UserId;
+                    if (UserContactCreateDto is not null)
+                    {
+                        UserContactCreateDto.UserId = UserId;
+                    }                    
                 }
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">Contato Colaborador</h1>
@@ -18,14 +21,14 @@
                             <span>@UserId - @UserName</span>
                         </div>
                         <div class="col-6">
-                            <label for="inType-@UserId" class="form-label">Tipo</label>
-                            <InputText class="form-control" id="inType-@UserId" @bind-Value="UserContactCreateDto!.Type" placeholder="Tipo" />
+                            <label for="inType" class="form-label">Tipo</label>
+                            <InputText class="form-control" id="inType" @bind-Value="UserContactCreateDto!.Type" placeholder="Tipo" />
                             <ValidationMessage For="@(() => UserContactCreateDto.Type)" />
                         </div>
 
                         <div class="col-6">
-                            <label for="inNumber-@UserId" class="form-label">Número</label>
-                            <InputText class="form-control" id="inNumber-@UserId" @bind-Value="UserContactCreateDto!.Number" placeholder="Número" />
+                            <label for="inNumber" class="form-label">Número</label>
+                            <InputText class="form-control" id="inNumber" @bind-Value="UserContactCreateDto!.Number" placeholder="Número" />
                             <ValidationMessage For="@(() => UserContactCreateDto.Number)" />
                         </div>
 
@@ -50,9 +53,7 @@
     private UserContactCreateDto? UserContactCreateDto { get; set; }
     private UserDto? UserDto { get; set; }
     private UserView? UserView { get; set; }
-
-    private string modal = "";
-
+    
     protected override async Task OnInitializedAsync()
     {
         UserContactCreateDto ??= new();

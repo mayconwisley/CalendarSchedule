@@ -208,7 +208,7 @@ public class UserContactService : IUserContactService
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
             //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
-            using var response = await httpClient.GetAsync($"{apiEndPoint}/UserContactByUserId/{userId}?page={page}&size={size}");
+            using var response = await httpClient.GetAsync($"{apiEndPoint}/UserContactByUserId/{userId}");
 
             if (response.IsSuccessStatusCode)
             {

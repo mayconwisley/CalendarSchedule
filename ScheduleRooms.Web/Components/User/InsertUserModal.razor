@@ -62,8 +62,7 @@
     public Action? DataUpdated { get; set; }
 
     private UserDto? UserDto { get; set; }
-    private string modal = "";
-
+   
     protected override async Task OnInitializedAsync()
     {
         UserDto ??= new();
