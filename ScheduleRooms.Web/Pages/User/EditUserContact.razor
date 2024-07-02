@@ -11,14 +11,7 @@
         <div class="row g-3">
             <div class="col-12">
                 <label for="inColaborador" class="form-label">Colaborador: </label>
-
-                @{
-                    UserContactDto.UserDto = new();
-
-                    var userContactId = UserContactDto.UserDto.Id;
-                    var userConectName = UserContactDto.UserDto.Username;
-                }
-                <span>@userContactId - @userConectName</span>
+                <span>@UserContactDto.UserDto.Id - @UserContactDto.UserName</span>
             </div>
             <div class="col-6">
                 <label for="inType" class="form-label">Tipo</label>
