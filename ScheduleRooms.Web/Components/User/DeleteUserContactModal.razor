@@ -1,10 +1,10 @@
-﻿@inject IUserService userService
+﻿@inject IUserContactService userContactService
 
-<div class="modal fade" id="deleteUser-@UserId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="deleteUserContact-@UserContactId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <EditForm Model="@UserDto" OnValidSubmit="@Delete">
-                <InputNumber hidden @bind-Value="UserDto!.Id" />
+            <EditForm Model="@UserContactDto" OnValidSubmit="@Delete">
+                <InputNumber hidden @bind-Value="UserContactDto!.Id" />
                 <DataAnnotationsValidator />
 
                 <div class="modal-header">
@@ -15,7 +15,8 @@
 
                     <div class="row g-3">
                         <div class="col-12">
-                            <p>Colaborador: @UserDto.Name</p>
+                            <p>Tipo: @UserContactDto.Type</p>
+                            <p>Número: @UserContactDto.Number</p>
                         </div>
                     </div>
                 </div>
@@ -30,31 +31,31 @@
 
 @code {
     [Parameter]
-    public Action? DataUpdated { get; set; }
+    public EventCallback DataUpdated { get; set; }
 
-    private UserDto? UserDto { get; set; } = new();
+    private UserContactDto? UserContactDto { get; set; } = new();
 
     [Parameter]
-    public int UserId { get; set; }
+    public int UserContactId { get; set; }
 
 
     protected override async Task OnInitializedAsync()
     {
-        UserDto = await userService.GetById(UserId);
+        UserContactDto = await userContactService.GetById(UserContactId);
         await base.OnInitializedAsync();
     }
 
     private async Task Delete()
     {
-        if (UserDto is not null)
+        if (UserContactDto is not null)
         {
-            var room = await userService.Delete(UserId);
+            await userContactService.Delete(UserContactId);
             UpdateData();
         }
     }
 
-    private void UpdateData()
+    private async Task UpdateData()
     {
-        DataUpdated?.Invoke();
+        DataUpdated.InvokeAsync(null);
     }
 }

@@ -4,7 +4,7 @@
 @inject IUserContactService userContactService
 @inject IUserService userService
 
-<h1>Consulta Contato - <strong>@UserDto.Id - @UserDto.Username</strong> </h1>
+<h1>Consulta Contato - @UserDto.Id - @UserDto.Username </h1>
 <div class="border">
     <table class="table table-striped">
         <thead>
@@ -32,9 +32,10 @@
                                 <NavLink href=@($"/UserContactEdit/{@userContactDto.Id}") class="btn btn-info">
                                     Editar
                                 </NavLink>
-                                <button data-bs-toggle="modal" data-bs-target="#deleteContact-@userContactDto.Id" class="btn btn-danger">
+                                <button data-bs-toggle="modal" data-bs-target="#deleteUserContact-@userContactDto.Id" class="btn btn-danger">
                                     Excluir
                                 </button>
+                                <DeleteUserContactModal UserContactId="@userContactDto.Id" DataUpdated="@DataUpdate" />
                             </td>
                         </tr>
                     }
