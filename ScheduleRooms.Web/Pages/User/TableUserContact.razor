@@ -35,7 +35,7 @@
                                 <button data-bs-toggle="modal" data-bs-target="#deleteUserContact-@userContactDto.Id" class="btn btn-danger">
                                     Excluir
                                 </button>
-                                <DeleteUserContactModal UserContactId="@userContactDto.Id" DataUpdated="@( () =>  DataUpdate())" />
+                                <DeleteUserContactModal UserContactId="@userContactDto.Id" DataUpdated="@(() => DataUpdate())" />
                             </td>
                         </tr>
                     }
