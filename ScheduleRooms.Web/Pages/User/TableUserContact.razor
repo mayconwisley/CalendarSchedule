@@ -35,7 +35,7 @@
                                 <button data-bs-toggle="modal" data-bs-target="#deleteUserContact-@userContactDto.Id" class="btn btn-danger">
                                     Excluir
                                 </button>
-                                <DeleteUserContactModal UserContactId="@userContactDto.Id" DataUpdated="@DataUpdate" />
+                                <DeleteUserContactModal UserContactId="@userContactDto.Id" DataUpdated="@( () =>  DataUpdate())" />
                             </td>
                         </tr>
                     }
@@ -51,7 +51,7 @@
 @code {
 
     [Parameter]
-    public EventCallback DataUpdated { get; set; }
+    public Action? DataUpdated { get; set; }
 
     [Parameter]
     public UserContactView? UserContactView { get; set; } = new();
@@ -62,14 +62,13 @@
     UserDto UserDto { get; set; } = new();
     protected async override Task OnInitializedAsync()
     {
-        UserContactView = await userContactService.GetByUserId(1, 10, int.Parse(UserId));
-        UserDto = await userService.GetById(int.Parse(UserId));
         await DataUpdate();
     }
 
     private async Task DataUpdate()
     {
-        await DataUpdated.InvokeAsync(null);
+        UserContactView = await userContactService.GetByUserId(1, 10, int.Parse(UserId));
+        UserDto = await userService.GetById(int.Parse(UserId));
         StateHasChanged();
     }
 }
