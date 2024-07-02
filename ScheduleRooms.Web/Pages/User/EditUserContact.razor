@@ -1,0 +1,81 @@
+﻿@page "/UserContactEdit/{UserContactId}"
+
+@inject IUserContactService userContactService
+@inject NavigationManager navigationManager
+
+<div>
+    <h1>Editar Colaborador</h1>
+    <EditForm Model="@UserContactDto" OnValidSubmit="@Edit">
+        <InputNumber hidden @bind-Value="UserContactDto!.Id" />
+        <DataAnnotationsValidator />
+        <div class="row g-3">
+            <div class="col-12">
+                <label for="inColaborador" class="form-label">Colaborador: </label>
+
+                @{
+                    UserContactDto.UserDto = new();
+
+                    var userContactId = UserContactDto.UserDto.Id;
+                    var userConectName = UserContactDto.UserDto.Username;
+                }
+                <span>@userContactId - @userConectName</span>
+            </div>
+            <div class="col-6">
+                <label for="inType" class="form-label">Tipo</label>
+                <InputText class="form-control" id="inType" @bind-Value="UserContactDto!.Type" placeholder="Tipo" />
+                <ValidationMessage For="@(() => UserContactDto.Type)" />
+            </div>
+
+            <div class="col-6">
+                <label for="inNumber" class="form-label">Número</label>
+                <InputText class="form-control" id="inNumber" @bind-Value="UserContactDto!.Number" placeholder="Número" />
+                <ValidationMessage For="@(() => UserContactDto.Number)" />
+            </div>
+
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </div>
+    </EditForm>
+
+    <NavLink href=@($"/User") class="btn btn-info">
+        Voltar
+    </NavLink>
+</div>
+@code {
+    [Parameter]
+    public EventCallback DataUpdated { get; set; }
+    [Parameter]
+    public string UserContactId { get; set; } = string.Empty;
+
+    private UserContactCreateDto? UserContactCreateDto { get; set; } = new();
+    private UserContactDto? UserContactDto { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        UserContactDto = await userContactService.GetById(int.Parse(UserContactId));
+    }
+
+    private async Task Edit()
+    {
+        UserContactCreateDto = new()
+            {
+                Id = UserContactDto.Id,
+                Number = UserContactDto.Number,
+                Type = UserContactDto.Type,
+                UserId = UserContactDto.UserId
+            };
+
+        if (UserContactCreateDto is not null)
+        {
+            await userContactService.Update(UserContactCreateDto);
+            await UpdateData();
+        }
+        navigationManager.NavigateTo("/User");
+    }
+
+    private async Task UpdateData()
+    {
+        await DataUpdated.InvokeAsync(null);
+    }
+}

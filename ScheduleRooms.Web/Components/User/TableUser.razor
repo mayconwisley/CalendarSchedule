@@ -46,10 +46,9 @@
                                 </button>
                                 <InsertUserContactModal UserId="@user.Id" UserName="@user.Name" DataUpdated="@DataUpdated" />
 
-                                <button data-bs-toggle="modal" data-bs-target="#tableUserContact-@user.Id" class="btn btn-info">
+                                <NavLink href=@($"/DetailsUserContact/{user.Id}") class="btn btn-info">
                                     Detalhe
-                                </button>
-                                <TableUserContactModal UserId="@user.Id" UserName="@user.Name" />
+                                </NavLink>
 
                                 <button data-bs-toggle="modal" data-bs-target="#deleteUser-@user.Id" class="btn btn-danger">
                                     Excluir

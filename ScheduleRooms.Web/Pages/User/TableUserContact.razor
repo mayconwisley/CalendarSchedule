@@ -1,0 +1,74 @@
+﻿@page "/DetailsUserContact/{UserId}"
+
+@using System.Globalization
+@inject IUserContactService userContactService
+@inject IUserService userService
+
+<h1>Consulta Contato - <strong>@UserDto.Id - @UserDto.Username</strong> </h1>
+<div class="border">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Tipo</th>
+                <th>Número</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (UserContactView is not null)
+            {
+                var userContacts = UserContactView.UserContactsDto;
+
+                if (userContacts is not null)
+                {
+                    @foreach (var userContactDto in userContacts)
+                    {
+                        <tr>
+                            <td>@userContactDto.Id</td>
+                            <td>@userContactDto.Type</td>
+                            <td>@userContactDto.Number</td>
+                            <td>
+                                <NavLink href=@($"/UserContactEdit/{@userContactDto.Id}") class="btn btn-info">
+                                    Editar
+                                </NavLink>
+                                <button data-bs-toggle="modal" data-bs-target="#deleteContact-@userContactDto.Id" class="btn btn-danger">
+                                    Excluir
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+    <NavLink href=@($"/User") class="btn btn-info">
+        Voltar
+    </NavLink>
+</div>
+
+@code {
+
+    [Parameter]
+    public EventCallback DataUpdated { get; set; }
+
+    [Parameter]
+    public UserContactView? UserContactView { get; set; } = new();
+
+    [Parameter]
+    public string UserId { get; set; } = string.Empty;
+
+    UserDto UserDto { get; set; } = new();
+    protected async override Task OnInitializedAsync()
+    {
+        UserContactView = await userContactService.GetByUserId(1, 10, int.Parse(UserId));
+        UserDto = await userService.GetById(int.Parse(UserId));
+        await DataUpdate();
+    }
+
+    private async Task DataUpdate()
+    {
+        await DataUpdated.InvokeAsync(null);
+        StateHasChanged();
+    }
+}
