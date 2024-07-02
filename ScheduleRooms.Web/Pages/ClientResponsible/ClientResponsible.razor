@@ -1,0 +1,56 @@
+﻿@page "/ClientResponsible"
+@layout NewLayout
+@inject ITokenStorageService tokenStorageService
+@inject IClientResponsibleService clientResponsibleService
+@inject NavigationManager navigationManager
+
+<h3>Cadastro de Cliente</h3>
+<button data-bs-toggle="modal" data-bs-target="#newClient" class="btn btn-info">
+    Novo Responsável
+</button>
+
+@if (clientResponsibleView is null)
+{
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+}
+else
+{
+    <TableClient ClientResponsibleView="@clientResponsibleView" />
+    <PaginationTable PageCurrent="@ReceberPagina"
+                     TotalData="@clientResponsibleView.TotalData"
+                     Page="@clientResponsibleView.Page"
+                     TotalPage="@clientResponsibleView.TotalPage" />
+    <InsertClientModal DataUpdated="@(() => DataUpdated())" />
+}
+
+@code {
+    private ClientResponsibleView? clientResponsibleView;
+    private LoginDto? LoginDto { get; set; } = new();
+    protected override async Task OnInitializedAsync()
+    {
+        var token = await tokenStorageService.GetToken(LoginDto!);
+        if (token.Bearer is null)
+        {
+            await tokenStorageService.RemoverToken();
+            navigationManager.NavigateTo("/Login", true);
+        }
+
+        if (token.Bearer is not null)
+        {
+            clientResponsibleView = await clientResponsibleService.GetAll();
+        }
+    }
+
+    private async void DataUpdated()
+    {
+        clientResponsibleView = await clientResponsibleService.GetAll();
+        StateHasChanged();
+    }
+    private async Task ReceberPagina(int pageCurrent)
+    {
+        clientResponsibleView = await clientResponsibleService.GetAll(pageCurrent);
+
+    }
+}
