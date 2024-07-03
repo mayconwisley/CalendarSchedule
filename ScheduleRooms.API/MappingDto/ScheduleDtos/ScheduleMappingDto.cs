@@ -17,8 +17,7 @@ public static class ScheduleMappingDto
                     MeetingType = schedule.MeetingType,
                     StatusSchedule = schedule.StatusSchedule,
                     ClientId = schedule?.Client?.Id,
-                    Particular = schedule.Particular
-
+                    Particular = schedule.Particular,
                 }).ToList();
     }
     public static IEnumerable<Schedule> ConvertScheduleToDto(this IEnumerable<ScheduleDto> scheduleDtos)
@@ -33,7 +32,7 @@ public static class ScheduleMappingDto
                     MeetingType = schedule.MeetingType,
                     StatusSchedule = schedule.StatusSchedule,
                     ClientId = schedule.ClientId,
-                    Particular = schedule.Particular
+                    Particular = schedule.Particular,
                 }).ToList();
     }
     public static ScheduleDto ConvertScheduleToDto(this Schedule schedule)
@@ -47,7 +46,7 @@ public static class ScheduleMappingDto
             MeetingType = schedule.MeetingType,
             StatusSchedule = schedule.StatusSchedule,
             ClientId = schedule?.Client?.Id,
-            Particular = schedule.Particular
+            Particular = schedule.Particular,
         };
     }
     public static Schedule ConvertDtoToSchedule(this ScheduleDto scheduleDto)
@@ -61,7 +60,36 @@ public static class ScheduleMappingDto
             MeetingType = scheduleDto.MeetingType,
             StatusSchedule = scheduleDto.StatusSchedule,
             ClientId = scheduleDto.ClientId,
-            Particular = scheduleDto.Particular
+            Particular = scheduleDto.Particular,
+        };
+    }
+
+    public static ScheduleCreateDto ConvertScheduleCreateToDto(this Schedule schedule)
+    {
+        return new ScheduleCreateDto
+        {
+            Id = schedule.Id,
+            Description = schedule.Description,
+            DateStart = schedule.DateStart,
+            DateFinal = schedule.DateFinal,
+            MeetingType = schedule.MeetingType,
+            StatusSchedule = schedule.StatusSchedule,
+            ClientId = schedule?.Client?.Id,
+            Particular = schedule.Particular,
+        };
+    }
+    public static Schedule ConvertDtoToScheduleCreate(this ScheduleCreateDto scheduleCreateDto)
+    {
+        return new Schedule
+        {
+            Id = scheduleCreateDto.Id,
+            Description = scheduleCreateDto.Description,
+            DateStart = scheduleCreateDto.DateStart,
+            DateFinal = scheduleCreateDto.DateFinal,
+            MeetingType = scheduleCreateDto.MeetingType,
+            StatusSchedule = scheduleCreateDto.StatusSchedule,
+            ClientId = scheduleCreateDto.ClientId,
+            Particular = scheduleCreateDto.Particular,
         };
     }
 }

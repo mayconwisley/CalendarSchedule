@@ -18,7 +18,9 @@ public class ScheduleRepository(ScheduleContext scheduleContext) : IScheduleRepo
                 // Verifique se existe uma schedule que se sobrepõe no mesmo usuário
                 var overlappingSchedule = await _scheduleContext.Schedules
                     .Where(a => a.DateStart < schedule.DateFinal &&
-                                a.DateFinal > schedule.DateStart)
+                                a.DateFinal > schedule.DateStart &&
+                                a.ClientId == schedule.ClientId &&
+                                a.Particular == false)
                     .AnyAsync();
                 if (overlappingSchedule)
                 {

@@ -33,7 +33,7 @@
 
             if (token.Bearer is not null)
             {
-                navigationManager.NavigateTo("/ScheduleUser", true);
+                navigationManager.NavigateTo("/Schedule", true);
             }
             await base.OnInitializedAsync();
         }
@@ -51,7 +51,7 @@
             var user = await userStorageService.GetUserSession(LoginDto);
             if (token.Bearer is not null)
             {
-                navigationManager.NavigateTo("/ScheduleUser", true);
+                navigationManager.NavigateTo("/Schedule", true);
             }
         }
     }

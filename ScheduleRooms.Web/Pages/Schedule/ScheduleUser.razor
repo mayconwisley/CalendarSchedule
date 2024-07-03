@@ -1,13 +1,13 @@
-﻿@page "/ScheduleUser"
+﻿@page "/Schedule"
 @layout NewLayout
 
 @inject IScheduleUserService scheduleUserService
 @inject IUserService userService
 
 <h3>Cadastro Agenda do Colaborador</h3>
-<button data-bs-toggle="modal" data-bs-target="#newScheduleUser" class="btn btn-info">
+<NavLink href="ScheduleCreate" class="btn btn-info">
     Nova Agenda
-</button>
+</NavLink>
 
 @if (scheduleUserView is null)
 {
@@ -19,14 +19,14 @@ else
 {
 
     <MensageError Message="@Message" ShowMessage="@ShowMessage" Key="@MessageKey" />
-    <TableScheduleUser ScheduleUserView="scheduleUserView" UserViewManager="userViewManager" />
+    <TableSchedule ScheduleUserView="scheduleUserView" UserViewManager="userViewManager" />
 
     <PaginationTable PageCurrent="@ReceberPagina"
                      TotalData="@scheduleUserView.TotalData"
                      Page="@scheduleUserView.Page"
                      TotalPage="@scheduleUserView.TotalPage" />
 
-    <InsertScheduleUserModal ErroRetornado="ReceiveError" DataUpdated="@(() => DataUpdated())" />
+    
 }
 
 @code {

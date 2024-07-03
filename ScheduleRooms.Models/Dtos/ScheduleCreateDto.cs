@@ -2,7 +2,7 @@
 
 namespace ScheduleRooms.Models.Dtos;
 
-public class ScheduleDto
+public class ScheduleCreateDto
 {
     public int Id { get; set; }
     public string? Description { get; set; } = null;
@@ -13,7 +13,6 @@ public class ScheduleDto
     public bool MeetingType { get; set; } = false;
     public bool StatusSchedule { get; set; } = false;
     public bool Particular { get; set; } = false;
-    public int? UserId { get; set; }
+    public int? UserId { get; set; } = null;
     public int? ClientId { get; set; } = null;
-    public ClientDto? ClienteDto { get; set; }
 }

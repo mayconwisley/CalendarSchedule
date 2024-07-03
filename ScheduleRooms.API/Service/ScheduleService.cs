@@ -9,9 +9,9 @@ public class ScheduleService(IScheduleRepository scheduleUserRepository) : ISche
 {
     private readonly IScheduleRepository _scheduleUserRepository = scheduleUserRepository;
 
-    public async Task<ScheduleDto> Create(ScheduleDto scheduleDto)
+    public async Task<ScheduleDto> Create(ScheduleCreateDto scheduleCreateDto)
     {
-        var schedule = await _scheduleUserRepository.Create(scheduleDto.ConvertDtoToSchedule());
+        var schedule = await _scheduleUserRepository.Create(scheduleCreateDto.ConvertDtoToScheduleCreate());
         return schedule.ConvertScheduleToDto();
     }
 
@@ -60,9 +60,9 @@ public class ScheduleService(IScheduleRepository scheduleUserRepository) : ISche
         return totalScheduleUser;
     }
 
-    public async Task<ScheduleDto> Update(ScheduleDto scheduleDto)
+    public async Task<ScheduleDto> Update(ScheduleCreateDto scheduleCreateDto)
     {
-        var schedule = await _scheduleUserRepository.Update(scheduleDto.ConvertDtoToSchedule());
+        var schedule = await _scheduleUserRepository.Update(scheduleCreateDto.ConvertDtoToScheduleCreate());
         return schedule.ConvertScheduleToDto();
     }
 }

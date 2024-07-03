@@ -91,13 +91,13 @@ public class ScheduleController(IScheduleService scheduleService) : ControllerBa
     }
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<ScheduleDto>> Post([FromBody] ScheduleDto scheduleDto)
+    public async Task<ActionResult<ScheduleDto>> Post([FromBody] ScheduleCreateDto scheduleCreateDto)
     {
-        if (scheduleDto is not null)
+        if (scheduleCreateDto is not null)
         {
             try
             {
-                scheduleDto = await _scheduleService.Create(scheduleDto);
+                var scheduleDto = await _scheduleService.Create(scheduleCreateDto);
 
                 return new CreatedAtRouteResult("GetScheduleId", new { id = scheduleDto.Id }, scheduleDto);
             }
@@ -118,18 +118,18 @@ public class ScheduleController(IScheduleService scheduleService) : ControllerBa
     }
     [Authorize]
     [HttpPut("{id:int}")]
-    public async Task<ActionResult<ScheduleDto>> Put(int id, [FromBody] ScheduleDto scheduleDto)
+    public async Task<ActionResult<ScheduleDto>> Put(int id, [FromBody] ScheduleCreateDto scheduleCreateDto)
     {
-        if (id != scheduleDto.Id)
+        if (id != scheduleCreateDto.Id)
         {
             return BadRequest("Dados inválidos");
         }
-        if (scheduleDto is null)
+        if (scheduleCreateDto is null)
         {
             return BadRequest("Dados inválidos");
         }
 
-        scheduleDto = await _scheduleService.Update(scheduleDto);
+        var scheduleDto = await _scheduleService.Update(scheduleCreateDto);
         return Ok(scheduleDto);
     }
     [Authorize]

@@ -1,4 +1,4 @@
-﻿@inject IScheduleUserService scheduleUserService
+﻿@inject IScheduleService scheduleService
 @inject IUserService userService
 
 <div class="border mt-2">
@@ -73,7 +73,7 @@
 
     private async void DataUpdated()
     {
-        ScheduleUserView = await scheduleUserService.GetAll();
+        //ScheduleUserView = await scheduleService.GetAll();
         //UserViewManager = await userService.GetManagerAll();
 
         StateHasChanged();
