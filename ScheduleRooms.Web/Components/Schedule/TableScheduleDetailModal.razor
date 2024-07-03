@@ -48,7 +48,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ScheduleUserView = await scheduleUserService.GetById(ScheduleUserId);
+       // ScheduleUserView = await scheduleUserService.GetById(ScheduleUserId);
         StateHasChanged();
     }
 }

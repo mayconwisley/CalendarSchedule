@@ -138,7 +138,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ScheduleDto = await scheduleUserService.GetById(ScheduleId);
+        //ScheduleDto = await scheduleUserService.GetById(ScheduleId);
         UserView = await userService.GetAll();
         UserViewManager = await userService.GetManagerAll();
         ClientView = await clientService.GetAll();
@@ -147,7 +147,7 @@
     {
         if (ScheduleDto is not null)
         {
-            var user = await scheduleUserService.Update(ScheduleDto);
+            //var user = await scheduleUserService.Update(ScheduleDto);
             UpdateData();
             ScheduleDto = new();
         }

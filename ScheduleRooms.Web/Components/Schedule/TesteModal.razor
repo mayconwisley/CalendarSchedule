@@ -54,7 +54,7 @@
     public int ScheduleId { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        ScheduleDto = await scheduleUserService.GetById(ScheduleId);
+        //ScheduleDto = await scheduleUserService.GetById(ScheduleId);
         UserDto = await userService.GetById(UserId);
         StateHasChanged();
     }

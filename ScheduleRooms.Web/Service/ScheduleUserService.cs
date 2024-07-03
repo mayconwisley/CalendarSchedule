@@ -23,7 +23,7 @@ public class ScheduleUserService : IScheduleUserService
         _tokenStorageService = tokenStorageService;
     }
 
-    public async Task<ScheduleDto> Create(ScheduleDto scheduleUserDto)
+    public async Task<ScheduleUserDto> Create(ScheduleUserCreateDto scheduleUserCreateDto)
     {
         try
         {
@@ -37,14 +37,14 @@ public class ScheduleUserService : IScheduleUserService
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
 
-            StringContent stringContent = new(JsonSerializer.Serialize(scheduleUserDto), Encoding.UTF8, "application/json");
+            StringContent stringContent = new(JsonSerializer.Serialize(scheduleUserCreateDto), Encoding.UTF8, "application/json");
 
             using (var response = await httpClient.PostAsync(apiEndPoint, stringContent))
             {
                 if (response.IsSuccessStatusCode)
                 {
                     using Stream resApi = await response.Content.ReadAsStreamAsync();
-                    var scheduleUser = await JsonSerializer.DeserializeAsync<ScheduleDto>(resApi, _serializerOptions);
+                    var scheduleUser = await JsonSerializer.DeserializeAsync<ScheduleUserDto>(resApi, _serializerOptions);
                     if (scheduleUser is not null)
                     {
                         return scheduleUser;
@@ -127,7 +127,7 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
-    public async Task<ScheduleDto> GetById(int id)
+    public async Task<ScheduleUserDto> GetById(int id)
     {
         try
         {
@@ -144,7 +144,7 @@ public class ScheduleUserService : IScheduleUserService
 
             if (response.IsSuccessStatusCode)
             {
-                var scheduleUserDto = await response.Content.ReadFromJsonAsync<ScheduleDto>(_serializerOptions);
+                var scheduleUserDto = await response.Content.ReadFromJsonAsync<ScheduleUserDto>(_serializerOptions);
                 return scheduleUserDto ??= new();
             }
             else
@@ -315,7 +315,7 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
-    public async Task<ScheduleDto> Update(ScheduleDto scheduleUserDto)
+    public async Task<ScheduleUserDto> Update(ScheduleUserCreateDto scheduleUserCreateDto)
     {
         try
         {
@@ -328,14 +328,14 @@ public class ScheduleUserService : IScheduleUserService
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
-            StringContent stringContent = new(JsonSerializer.Serialize(scheduleUserDto), Encoding.UTF8, "application/json");
+            StringContent stringContent = new(JsonSerializer.Serialize(scheduleUserCreateDto), Encoding.UTF8, "application/json");
 
-            using (var response = await httpClient.PutAsync($"{apiEndPoint}/{scheduleUserDto.Id}", stringContent))
+            using (var response = await httpClient.PutAsync($"{apiEndPoint}/{scheduleUserCreateDto.ScheduleId}", stringContent))
             {
                 if (response.IsSuccessStatusCode)
                 {
                     using Stream resApi = await response.Content.ReadAsStreamAsync();
-                    var scheduleUser = await JsonSerializer.DeserializeAsync<ScheduleDto>(resApi, _serializerOptions);
+                    var scheduleUser = await JsonSerializer.DeserializeAsync<ScheduleUserDto>(resApi, _serializerOptions);
                     if (scheduleUser is not null)
                     {
                         return scheduleUser;

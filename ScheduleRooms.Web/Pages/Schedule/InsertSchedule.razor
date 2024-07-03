@@ -62,7 +62,7 @@
             </div>
         }
     </div>
-    <button type="submit" data-bs-dismiss="modal" class="btn btn-primary">Salvar</button>
+    <button type="submit" data-bs-dismiss="modal" class="btn btn-primary">Próximo</button>
     <NavLink href="Schedule" class="btn btn-primary">Voltar</NavLink>
 </EditForm>
 
@@ -89,11 +89,13 @@
 
     private async Task Create()
     {
+        ScheduleDto scheduleDto = new();
+
         if (ScheduleCreateDto is not null)
         {
             try
             {
-                await scheduleService.Create(ScheduleCreateDto);
+                scheduleDto = await scheduleService.Create(ScheduleCreateDto);
                 UpdateData();
                 ScheduleCreateDto = new();
             }
@@ -103,7 +105,7 @@
                 ScheduleCreateDto = new();
             }
         }
-        navigationManager.NavigateTo("/Schedule");
+        navigationManager.NavigateTo($"/ScheduleUserCreate/{scheduleDto.Id}");
         StateHasChanged();
     }
 
