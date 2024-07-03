@@ -14,7 +14,7 @@ public class ClientContactController(IClientContactService clientContactService)
     [Route("All")]
     public async Task<ActionResult<IEnumerable<ClientContactDto>>> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
     {
-        var clientContactDtos = await _clientContactService.GetAll(page, size, search);
+        var clientContactsDto = await _clientContactService.GetAll(page, size, search);
         decimal totalData = (decimal)await _clientContactService.TotalClientContact(search);
         decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
 
@@ -23,7 +23,7 @@ public class ClientContactController(IClientContactService clientContactService)
             totalPage = totalData;
         }
 
-        if (!clientContactDtos.Any())
+        if (!clientContactsDto.Any())
         {
             return NotFound("Sem dados");
         }
@@ -33,7 +33,7 @@ public class ClientContactController(IClientContactService clientContactService)
             page,
             totalPage,
             size,
-            clientContactDtos
+            clientContactsDto
         });
 
     }
@@ -56,16 +56,27 @@ public class ClientContactController(IClientContactService clientContactService)
     [HttpGet("ContactByClientId/{clientId:int}")]
     public async Task<ActionResult<ClientContactDto>> GetByClientId([FromQuery] int page = 1, [FromQuery] int size = 10, int clientId = 0)
     {
+        var clientContactsDto = await _clientContactService.GetByClientId(page, size, clientId);
+        decimal totalData = (decimal)await _clientContactService.TotalClientContact(clientId.ToString());
+        decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
+
+        if (size == 1)
         {
-            var clientContactDto = await _clientContactService.GetByClientId(page, size, clientId);
-
-            if (clientContactDto is not null)
-            {
-                return Ok(clientContactDto);
-            }
-            return NotFound("Sem dados");
-
+            totalPage = totalData;
         }
+
+        if (!clientContactsDto.Any())
+        {
+            return NotFound("Sem dados");
+        }
+        return Ok(new
+        {
+            totalData,
+            page,
+            totalPage,
+            size,
+            clientContactsDto
+        });
     }
     [Authorize]
     [HttpPost]

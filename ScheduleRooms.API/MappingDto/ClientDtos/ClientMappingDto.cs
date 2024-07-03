@@ -12,12 +12,13 @@ public static class ClientMappingDto
                 {
                     Id = client.Id,
                     Name = client.Name,
-
                     Telephone = client.Telephone,
-
-                    Description = client.Description,
+                    State = client.State,
                     City = client.City,
-
+                    Road = client.Road,
+                    Number = client.Number,
+                    Garden = client.Garden,
+                    Description = client.Description,
                     Active = client.Active,
                     Prospection = client.Prospection != null && client.Prospection
 
@@ -31,12 +32,13 @@ public static class ClientMappingDto
                 {
                     Id = client.Id,
                     Name = client.Name,
-
                     Telephone = client.Telephone,
-
-                    Description = client.Description,
+                    State = client.State,
                     City = client.City,
-
+                    Road = client.Road,
+                    Number = client.Number,
+                    Garden = client.Garden,
+                    Description = client.Description,
                     Active = client.Active,
                     Prospection = client.Prospection != null && client.Prospection
 
@@ -48,12 +50,13 @@ public static class ClientMappingDto
         {
             Id = client.Id,
             Name = client.Name,
-
             Telephone = client.Telephone,
-            Description = client.Description,
-
+            State = client.State,
             City = client.City,
-
+            Road = client.Road,
+            Number = client.Number,
+            Garden = client.Garden,
+            Description = client.Description,
             Active = client.Active,
             Prospection = client.Prospection != null && client.Prospection
 
@@ -65,12 +68,13 @@ public static class ClientMappingDto
         {
             Id = clientDto.Id,
             Name = clientDto.Name,
-
             Telephone = clientDto.Telephone,
-
-            Description = clientDto.Description,
+            State = clientDto.State,
             City = clientDto.City,
-
+            Road = clientDto.Road,
+            Number = clientDto.Number,
+            Garden = clientDto.Garden,
+            Description = clientDto.Description,
             Active = clientDto.Active,
             Prospection = clientDto.Prospection != null && clientDto.Prospection
         };

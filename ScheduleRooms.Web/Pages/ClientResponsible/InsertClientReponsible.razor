@@ -1,0 +1,73 @@
+﻿@page "/ClientResponsibleCreate"
+
+@inject IClientResponsibleService clientResponsibleService
+@inject NavigationManager navigationManager
+
+<h1>Cadastro Reponsável do Cliente</h1>
+<EditForm Model="@ClientResponsibleCreateDto" OnValidSubmit="Create">
+    <DataAnnotationsValidator />
+
+    <div class="row g-3">
+        <div class="col-12">
+            <label for="inNome" class="form-label">Nome</label>
+            <InputText class="form-control" id="inNome" @bind-Value="ClientResponsibleCreateDto!.Name" placeholder="Nome" />
+            <ValidationMessage For="@(() => ClientResponsibleCreateDto.Name)" />
+        </div>
+
+        <div class="col-6">
+            <label for="inEmail" class="form-label">E-mail</label>
+            <InputText class="form-control" id="inEmail" @bind-Value="ClientResponsibleCreateDto!.Email" placeholder="E-mail" />
+            <ValidationMessage For="@(() => ClientResponsibleCreateDto.Email)" />
+
+
+        </div>
+        <div class="col-6">
+            <label for="inPosition" class="form-label">Cargo</label>
+            <InputText class="form-control" id="inPosition" @bind-Value="ClientResponsibleCreateDto!.Position" placeholder="Cargo" />
+        </div>
+        <div class="col-12">
+            <label for="inDescription" class="form-label">Descrição</label>
+            <InputText class="form-control" id="inDescription" @bind-Value="ClientResponsibleCreateDto!.Description" placeholder="Descrição" />
+        </div>
+        <div class="col-6">
+            <div class="form-check">
+                <InputCheckbox class="form-check-input" id="inActive" @bind-Value="ClientResponsibleCreateDto!.Active" />
+                <label for="inActive" class="form-label">Ativo</label>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Salvar</button>
+    <NavLink href="ClientResponsible" class="btn btn-info">
+        Voltar
+    </NavLink>
+</EditForm>
+
+@code {
+    [Parameter]
+    public Action? DataUpdated { get; set; }
+
+    private ClientResponsibleCreateDto? ClientResponsibleCreateDto { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ClientResponsibleCreateDto ??= new();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task Create()
+    {
+        if (ClientResponsibleCreateDto is not null)
+        {
+            await clientResponsibleService.Create(ClientResponsibleCreateDto);
+            UpdateData();
+            ClientResponsibleCreateDto = new();
+        }
+        navigationManager.NavigateTo("/ClientResponsible");
+        StateHasChanged();
+    }
+
+    private void UpdateData()
+    {
+        DataUpdated?.Invoke();
+    }
+}

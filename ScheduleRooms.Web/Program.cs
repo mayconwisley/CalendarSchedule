@@ -27,6 +27,8 @@ builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ITokenStorageService, TokenStorageService>();
 builder.Services.AddScoped<IUserStorageService, UserStorageService>();
 builder.Services.AddScoped<IUserContactService, UserContactService>();
+builder.Services.AddScoped<IClientResponsibleService, ClientResponsibleService>();
+builder.Services.AddScoped<IClientContactService, ClientContactService>();
 
 
 await builder.Build().RunAsync();

@@ -26,14 +26,11 @@
             </div>
 
         </div>
-        <div>
-            <button type="submit" class="btn btn-primary">Salvar</button>
-        </div>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <NavLink href=@($"/User") class="btn btn-info">Voltar</NavLink>
     </EditForm>
 
-    <NavLink href=@($"/User") class="btn btn-info">
-        Voltar
-    </NavLink>
+
 </div>
 @code {
     [Parameter]

@@ -1,0 +1,86 @@
+﻿@page "/ClientResponsibleEdit/{ClientResponsibleId}"
+
+@inject IClientResponsibleService clientResponsibleService
+@inject NavigationManager navigationManager
+
+<h1>Editar Reponsável do Cliente</h1>
+<EditForm Model="@ClientResponsibleDto" OnValidSubmit="Edit">
+    <DataAnnotationsValidator />
+    <InputNumber hidden @bind-Value="ClientResponsibleDto!.Id" />
+    <div class="row g-3">
+        <div class="col-12">
+            <label for="inNome" class="form-label">Nome</label>
+            <InputText class="form-control" id="inNome" @bind-Value="ClientResponsibleDto!.Name" placeholder="Nome" />
+            <ValidationMessage For="@(() => ClientResponsibleDto.Name)" />
+        </div>
+
+        <div class="col-6">
+            <label for="inEmail" class="form-label">E-mail</label>
+            <InputText class="form-control" id="inEmail" @bind-Value="ClientResponsibleDto!.Email" placeholder="E-mail" />
+            <ValidationMessage For="@(() => ClientResponsibleDto.Email)" />
+
+
+        </div>
+        <div class="col-6">
+            <label for="inPosition" class="form-label">Cargo</label>
+            <InputText class="form-control" id="inPosition" @bind-Value="ClientResponsibleDto!.Position" placeholder="Cargo" />
+        </div>
+        <div class="col-12">
+            <label for="inDescription" class="form-label">Descrição</label>
+            <InputText class="form-control" id="inDescription" @bind-Value="ClientResponsibleDto!.Description" placeholder="Descrição" />
+        </div>
+        <div class="col-6">
+            <div class="form-check">
+                <InputCheckbox class="form-check-input" id="inActive" @bind-Value="ClientResponsibleDto!.Active" />
+                <label for="inActive" class="form-label">Ativo</label>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Salvar</button>
+    <NavLink href="ClientResponsible" class="btn btn-info">
+        Voltar
+    </NavLink>
+</EditForm>
+
+@code {
+    [Parameter]
+    public Action? DataUpdated { get; set; }
+    [Parameter]
+    public string ClientResponsibleId { get; set; } = string.Empty;
+
+    private ClientResponsibleCreateDto? ClientResponsibleCreateDto { get; set; }
+    private ClientResponsibleDto? ClientResponsibleDto { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ClientResponsibleDto = await clientResponsibleService.GetById(int.Parse(ClientResponsibleId));
+    }
+
+    private async Task Edit()
+    {
+        ClientResponsibleCreateDto = new()
+            {
+                Id = ClientResponsibleDto.Id,
+                Name = ClientResponsibleDto.Name,
+                Email = ClientResponsibleDto.Email,
+                Description = ClientResponsibleDto.Description,
+                Position = ClientResponsibleDto.Position,
+                Active = ClientResponsibleDto.Active
+            };
+
+
+        if (ClientResponsibleCreateDto is not null)
+        {
+            await clientResponsibleService.Update(ClientResponsibleCreateDto);
+            UpdateData();
+            ClientResponsibleCreateDto = new();
+        }
+        navigationManager.NavigateTo("/ClientResponsible");
+        StateHasChanged();
+    }
+
+    private void UpdateData()
+    {
+        DataUpdated?.Invoke();
+    }
+}

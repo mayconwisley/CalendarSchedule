@@ -5,9 +5,9 @@
 @inject NavigationManager navigationManager
 
 <h3>Cadastro de Cliente</h3>
-<button data-bs-toggle="modal" data-bs-target="#newClient" class="btn btn-info">
+<NavLink href="ClientCreate" class="btn btn-info">
     Novo Cliente
-</button>
+</NavLink>
 
 @if (clientView is null)
 {
@@ -22,7 +22,6 @@ else
                      TotalData="@clientView.TotalData"
                      Page="@clientView.Page"
                      TotalPage="@clientView.TotalPage" />
-    <InsertClientModal DataUpdated="@(() => DataUpdated())" />
 }
 
 @code {

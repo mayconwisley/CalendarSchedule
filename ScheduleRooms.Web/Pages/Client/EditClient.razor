@@ -1,0 +1,99 @@
+﻿@page "/ClientEdit/{ClientId}"
+
+@inject IClientService clientService
+@inject NavigationManager navigationManager
+<h1>Editar Cliente</h1>
+
+<EditForm Model="@ClientDto" OnValidSubmit="@Edit">
+    <InputNumber hidden @bind-Value="ClientDto.Id" />
+    <DataAnnotationsValidator />
+
+    <div class="row g-3">
+        <div class="col-12">
+            <label for="inName" class="form-label">Nome</label>
+            <InputText class="form-control" id="inName" @bind-Value="ClientDto!.Name" placeholder="Nome" />
+            <ValidationMessage For="@(() => ClientDto.Name)" />
+        </div>
+        <div class="col-6">
+            <label for="inTelephone" class="form-label">Telefone</label>
+            <InputText type="tel" class="form-control" id="inTelephone" @bind-Value="ClientDto!.Telephone" placeholder="Telefone" />
+            <ValidationMessage For="@(() => ClientDto.Telephone)" />
+        </div>
+        <div class="col-6">
+            <label for="inState" class="form-label">Estado</label>
+            <InputText type="text" class="form-control" id="inState" @bind-Value="ClientDto!.State" placeholder="Estado" />
+            <ValidationMessage For="@(() => ClientDto.State)" />
+        </div>
+        <div class="col-6">
+            <label for="inCity" class="form-label">Cidade</label>
+            <InputText class="form-control" id="inCity" @bind-Value="ClientDto!.City" placeholder="Cidade" />
+            <ValidationMessage For="@(() => ClientDto.City)" />
+        </div>
+        <div class="col-6">
+
+            <label for="inGarden" class="form-label">Jardim</label>
+            <InputText class="form-control" id="inGarden" @bind-Value="ClientDto!.Garden" placeholder="Jardim" />
+            <ValidationMessage For="@(() => ClientDto.Garden)" />
+        </div>
+        <div class="col-9">
+            <label for="inRoad" class="form-label">Rua</label>
+            <InputText class="form-control" id="inRoad" @bind-Value="ClientDto!.Road" placeholder="Rua" />
+            <ValidationMessage For="@(() => ClientDto.Road)" />
+        </div>
+        <div class="col-3">
+
+            <label for="inNumber" class="form-label">Número</label>
+            <InputText class="form-control" id="inNumber" @bind-Value="ClientDto!.Number" placeholder="Número" />
+            <ValidationMessage For="@(() => ClientDto.Number)" />
+        </div>
+        <div class="col-12">
+            <label for="inDescription" class="form-label">Descrição</label>
+            <InputText class="form-control" id="inDescription" @bind-Value="ClientDto!.Description" placeholder="Descrição" />
+        </div>
+        <div class="col-6">
+            <div class="form-check">
+                <InputCheckbox class="form-check-input" id="inActive" @bind-Value="ClientDto!.Active" />
+                <label for="inActive" class="form-label">Ativo</label>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="form-check">
+                <InputCheckbox class="form-check-input" id="inProspection" @bind-Value="ClientDto!.Prospection" />
+                <label for="inProspection" class="form-label">Prospecção</label>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Salvar</button>
+    <NavLink href="Client" class="btn btn-info">Voltar</NavLink>
+</EditForm>
+
+@code {
+    [Parameter]
+    public Action? DataUpdated { get; set; }
+
+    private ClientDto? ClientDto { get; set; } = new();
+
+    [Parameter]
+    public string ClientId { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ClientDto = await clientService.GetById(int.Parse(ClientId));
+    }
+
+    private async Task Edit()
+    {
+        if (ClientDto is not null)
+        {
+            var room = await clientService.Update(ClientDto);
+            UpdateData();
+        }
+        navigationManager.NavigateTo("/Client");
+        StateHasChanged();
+    }
+
+    private void UpdateData()
+    {
+        DataUpdated?.Invoke();
+    }
+}

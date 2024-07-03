@@ -1,21 +1,22 @@
-﻿@inject IClientService clientService
+﻿@inject IClientResponsibleService clientResponsibleService
 
-<div class="modal fade" id="deleteClient-@ClientId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="deleteClientResponsible-@ClientResponsibleId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <EditForm Model="@ClientDto" OnValidSubmit="@Delete">
-                <InputNumber hidden @bind-Value="ClientDto!.Id" />
+            <EditForm Model="@ClientResponsibleDto" OnValidSubmit="@Delete">
+                <InputNumber hidden @bind-Value="ClientResponsibleDto!.Id" />
                 <DataAnnotationsValidator />
 
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Excluir Cliente</h1>
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Excluir Responsável</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
 
                     <div class="row g-3">
                         <div class="col-12">
-                            <p>Cliente: @ClientDto.Name</p>
+                            <p>Reponsável: @ClientResponsibleDto.Name</p>
+                            <p>E-mail: @ClientResponsibleDto.Email</p>
                         </div>
                     </div>
                 </div>
@@ -32,28 +33,27 @@
     [Parameter]
     public Action? DataUpdated { get; set; }
 
-    private ClientDto? ClientDto { get; set; } = new();
+    private ClientResponsibleDto? ClientResponsibleDto { get; set; } = new();
 
     [Parameter]
-    public int ClientId { get; set; }
+    public int ClientResponsibleId { get; set; }
 
 
     protected override async Task OnInitializedAsync()
     {
-        ClientDto = await clientService.GetById(ClientId);
-        await base.OnInitializedAsync();
+        ClientResponsibleDto = await clientResponsibleService.GetById(ClientResponsibleId);
     }
 
     private async Task Delete()
     {
-        if (ClientDto is not null)
+        if (ClientResponsibleDto is not null)
         {
-            await clientService.Delete(ClientId);
-            await UpdateData();
+            var room = await clientResponsibleService.Delete(ClientResponsibleId);
+            UpdateData();
         }
     }
 
-    private async Task UpdateData()
+    private void UpdateData()
     {
         DataUpdated?.Invoke();
     }

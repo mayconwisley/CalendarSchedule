@@ -53,10 +53,17 @@
                                 @(client.Active ? "Sim" : "Não")
                             </td>
                             <td>
-                                <button data-bs-toggle="modal" data-bs-target="#editClient-@client.Id" class="btn btn-info">
+                                <NavLink href=@($"ClientEdit/{client.Id}") class="btn btn-info">
                                     Editar
+                                </NavLink>
+                                <button data-bs-toggle="modal" data-bs-target="#newContactClient-@client.Id" class="btn btn-info">
+                                    Contato
                                 </button>
-                                <EditClientModal ClientId="@client.Id" DataUpdated="@(() => DataUpdated())" />
+                                <InsertClientContactModal ClientId="@client.Id" ClientName="@client.Name" DataUpdated="@(() => DataUpdated())" />
+
+                                <NavLink href=@($"DetailsClientContact/{client.Id}") class="btn btn-info">
+                                    Detalhe
+                                </NavLink>
                                 <button data-bs-toggle="modal" data-bs-target="#deleteClient-@client.Id" class="btn btn-danger">
                                     Excluir
                                 </button>

@@ -9,21 +9,21 @@ using System.Text.Json;
 
 namespace ScheduleRooms.Web.Service;
 
-public class ClientService : IClientService
+public class ClientResponsibleService : IClientResponsibleService
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ITokenStorageService _tokenStorageService;
     private readonly JsonSerializerOptions _serializerOptions;
-    private const string? apiEndPoint = "api/Client";
+    private const string? apiEndPoint = "api/ClientResponsible";
 
-    public ClientService(IHttpClientFactory httpClientFactory, ITokenStorageService tokenStorageService)
+    public ClientResponsibleService(IHttpClientFactory httpClientFactory, ITokenStorageService tokenStorageService)
     {
         _httpClientFactory = httpClientFactory;
-        _serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         _tokenStorageService = tokenStorageService;
+        _serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
     }
 
-    public async Task<ClientDto> Create(ClientDto clientDto)
+    public async Task<ClientResponsibleDto> Create(ClientResponsibleCreateDto clientResponsibleCreateDto)
     {
         try
         {
@@ -37,7 +37,7 @@ public class ClientService : IClientService
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
 
-            StringContent stringContent = new(JsonSerializer.Serialize(clientDto), Encoding.UTF8, "application/json");
+            StringContent stringContent = new(JsonSerializer.Serialize(clientResponsibleCreateDto), Encoding.UTF8, "application/json");
 
             using (var response = await httpClient.PostAsync(apiEndPoint, stringContent))
             {
@@ -45,10 +45,10 @@ public class ClientService : IClientService
                 {
                     using Stream resApi = await response.Content.ReadAsStreamAsync();
 
-                    var client = await JsonSerializer.DeserializeAsync<ClientDto>(resApi, _serializerOptions);
-                    if (client is not null)
+                    var clientResponsible = await JsonSerializer.DeserializeAsync<ClientResponsibleDto>(resApi, _serializerOptions);
+                    if (clientResponsible is not null)
                     {
-                        return client;
+                        return clientResponsible;
                     }
                 }
                 else
@@ -64,6 +64,7 @@ public class ClientService : IClientService
             throw;
         }
     }
+
     public async Task<bool> Delete(int id)
     {
         try
@@ -80,16 +81,9 @@ public class ClientService : IClientService
 
             using var response = await httpClient.DeleteAsync($"{apiEndPoint}/{id}");
 
-           
-
             if (response.IsSuccessStatusCode)
             {
                 return true;
-            }
-
-            if (response.StatusCode == HttpStatusCode.InternalServerError)
-            {
-                throw new Exception(response.StatusCode.ToString());
             }
             return new();
         }
@@ -98,7 +92,8 @@ public class ClientService : IClientService
             throw;
         }
     }
-    public async Task<ClientView> GetAll(int page = 1, int size = 10, string search = "")
+
+    public async Task<ClientResponsibleView> GetAll(int page = 1, int size = 10, string search = "")
     {
         try
         {
@@ -115,8 +110,8 @@ public class ClientService : IClientService
 
             if (response.IsSuccessStatusCode)
             {
-                ClientView? clientView = await response.Content.ReadFromJsonAsync<ClientView>(_serializerOptions);
-                return clientView ??= new();
+                ClientResponsibleView? clientResponsibleView = await response.Content.ReadFromJsonAsync<ClientResponsibleView>(_serializerOptions);
+                return clientResponsibleView ??= new();
             }
             else
             {
@@ -134,7 +129,8 @@ public class ClientService : IClientService
             throw;
         }
     }
-    public async Task<ClientDto> GetById(int id)
+
+    public async Task<ClientResponsibleDto> GetById(int id)
     {
         try
         {
@@ -152,8 +148,8 @@ public class ClientService : IClientService
 
             if (response.IsSuccessStatusCode)
             {
-                var clientDto = await response.Content.ReadFromJsonAsync<ClientDto>(_serializerOptions);
-                return clientDto ??= new();
+                var clientResponsibleDto = await response.Content.ReadFromJsonAsync<ClientResponsibleDto>(_serializerOptions);
+                return clientResponsibleDto ??= new();
             }
             else
             {
@@ -170,7 +166,8 @@ public class ClientService : IClientService
             throw;
         }
     }
-    public async Task<ClientDto> Update(ClientDto clientDto)
+
+    public async Task<ClientResponsibleDto> Update(ClientResponsibleCreateDto clientResponsibleCreateDto)
     {
         try
         {
@@ -184,17 +181,17 @@ public class ClientService : IClientService
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
 
-            StringContent stringContent = new StringContent(JsonSerializer.Serialize(clientDto), Encoding.UTF8, "application/json");
+            StringContent stringContent = new StringContent(JsonSerializer.Serialize(clientResponsibleCreateDto), Encoding.UTF8, "application/json");
 
-            using (var response = await httpClient.PutAsync($"{apiEndPoint}/{clientDto.Id}", stringContent))
+            using (var response = await httpClient.PutAsync($"{apiEndPoint}/{clientResponsibleCreateDto.Id}", stringContent))
             {
                 if (response.IsSuccessStatusCode)
                 {
                     using Stream resApi = await response.Content.ReadAsStreamAsync();
-                    var client = await JsonSerializer.DeserializeAsync<ClientDto>(resApi, _serializerOptions);
-                    if (client is not null)
+                    var clientResponsible = await JsonSerializer.DeserializeAsync<ClientResponsibleDto>(resApi, _serializerOptions);
+                    if (clientResponsible is not null)
                     {
-                        return client;
+                        return clientResponsible;
                     }
                 }
             }

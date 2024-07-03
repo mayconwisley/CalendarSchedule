@@ -9,26 +9,26 @@ using System.Text.Json;
 
 namespace ScheduleRooms.Web.Service;
 
-public class ClientService : IClientService
+public class ClientContactService : IClientContactService
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ITokenStorageService _tokenStorageService;
     private readonly JsonSerializerOptions _serializerOptions;
-    private const string? apiEndPoint = "api/Client";
 
-    public ClientService(IHttpClientFactory httpClientFactory, ITokenStorageService tokenStorageService)
+    private const string apiEndPoint = "api/ClientContact";
+
+    public ClientContactService(IHttpClientFactory httpClientFactory, ITokenStorageService tokenStorageService)
     {
         _httpClientFactory = httpClientFactory;
-        _serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         _tokenStorageService = tokenStorageService;
+        _serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
     }
 
-    public async Task<ClientDto> Create(ClientDto clientDto)
+    public async Task<ClientContactDto> Create(ClientContactCreateDto clientContactCreateDto)
     {
         try
         {
             var token = await _tokenStorageService.GetToken();
-
             if (token.Bearer is null)
             {
                 return new();
@@ -37,24 +37,19 @@ public class ClientService : IClientService
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
 
-            StringContent stringContent = new(JsonSerializer.Serialize(clientDto), Encoding.UTF8, "application/json");
+            StringContent stringContent = new(JsonSerializer.Serialize(clientContactCreateDto), Encoding.UTF8, "application/json");
 
             using (var response = await httpClient.PostAsync(apiEndPoint, stringContent))
             {
-                if ((response.IsSuccessStatusCode))
+                if (response.IsSuccessStatusCode)
                 {
                     using Stream resApi = await response.Content.ReadAsStreamAsync();
+                    var clientContact = await JsonSerializer.DeserializeAsync<ClientContactDto>(resApi, _serializerOptions);
 
-                    var client = await JsonSerializer.DeserializeAsync<ClientDto>(resApi, _serializerOptions);
-                    if (client is not null)
+                    if (clientContact is not null)
                     {
-                        return client;
+                        return clientContact;
                     }
-                }
-                else
-                {
-                    response.EnsureSuccessStatusCode();
-                    return new();
                 }
             }
             return new();
@@ -64,12 +59,12 @@ public class ClientService : IClientService
             throw;
         }
     }
+
     public async Task<bool> Delete(int id)
     {
         try
         {
             var token = await _tokenStorageService.GetToken();
-
             if (token.Bearer is null)
             {
                 return new();
@@ -79,26 +74,19 @@ public class ClientService : IClientService
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
 
             using var response = await httpClient.DeleteAsync($"{apiEndPoint}/{id}");
-
-           
-
             if (response.IsSuccessStatusCode)
             {
                 return true;
             }
-
-            if (response.StatusCode == HttpStatusCode.InternalServerError)
-            {
-                throw new Exception(response.StatusCode.ToString());
-            }
-            return new();
+            return false;
         }
         catch (Exception)
         {
             throw;
         }
     }
-    public async Task<ClientView> GetAll(int page = 1, int size = 10, string search = "")
+
+    public async Task<ClientContactView> GetAll(int page = 1, int size = 10, string search = "")
     {
         try
         {
@@ -108,15 +96,15 @@ public class ClientService : IClientService
             //{
             //    return new();
             //}
+
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
             //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
-
             using var response = await httpClient.GetAsync($"{apiEndPoint}/All?page={page}&size={size}&search={search}");
 
             if (response.IsSuccessStatusCode)
             {
-                ClientView? clientView = await response.Content.ReadFromJsonAsync<ClientView>(_serializerOptions);
-                return clientView ??= new();
+                ClientContactView? clientContactView = await response.Content.ReadFromJsonAsync<ClientContactView>(_serializerOptions);
+                return clientContactView ??= new();
             }
             else
             {
@@ -130,11 +118,11 @@ public class ClientService : IClientService
         }
         catch (Exception)
         {
-
             throw;
         }
     }
-    public async Task<ClientDto> GetById(int id)
+
+    public async Task<ClientContactDto> GetById(int id)
     {
         try
         {
@@ -147,13 +135,12 @@ public class ClientService : IClientService
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
             //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
-
             using var response = await httpClient.GetAsync($"{apiEndPoint}/{id}");
 
             if (response.IsSuccessStatusCode)
             {
-                var clientDto = await response.Content.ReadFromJsonAsync<ClientDto>(_serializerOptions);
-                return clientDto ??= new();
+                var clientContactDto = await response.Content.ReadFromJsonAsync<ClientContactDto>(_serializerOptions);
+                return clientContactDto ??= new();
             }
             else
             {
@@ -167,10 +154,48 @@ public class ClientService : IClientService
         }
         catch (Exception)
         {
+
             throw;
         }
     }
-    public async Task<ClientDto> Update(ClientDto clientDto)
+
+    public async Task<ClientContactView> GetByClientId(int page = 1, int size = 10, int userId = 0)
+    {
+        try
+        {
+            //var token = await _tokenStorageService.GetToken();
+
+            //if (token.Bearer is null)
+            //{
+            //    return new();
+            //}
+
+            using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+            using var response = await httpClient.GetAsync($"{apiEndPoint}/ContactByClientId/{userId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var clientContactDtos = await response.Content.ReadFromJsonAsync<ClientContactView>(_serializerOptions);
+                return clientContactDtos ??= new();
+            }
+            else
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return new();
+                }
+                response.EnsureSuccessStatusCode();
+                return new();
+            }
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public async Task<ClientContactDto> Update(ClientContactCreateDto clientContactCreateDto)
     {
         try
         {
@@ -184,17 +209,16 @@ public class ClientService : IClientService
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
 
-            StringContent stringContent = new StringContent(JsonSerializer.Serialize(clientDto), Encoding.UTF8, "application/json");
-
-            using (var response = await httpClient.PutAsync($"{apiEndPoint}/{clientDto.Id}", stringContent))
+            StringContent stringContent = new(JsonSerializer.Serialize(clientContactCreateDto), Encoding.UTF8, "application/json");
+            using (var response = await httpClient.PutAsync($"{apiEndPoint}/{clientContactCreateDto.Id}", stringContent))
             {
                 if (response.IsSuccessStatusCode)
                 {
                     using Stream resApi = await response.Content.ReadAsStreamAsync();
-                    var client = await JsonSerializer.DeserializeAsync<ClientDto>(resApi, _serializerOptions);
-                    if (client is not null)
+                    var clientContactDto = await JsonSerializer.DeserializeAsync<ClientContactDto>(resApi, _serializerOptions);
+                    if (clientContactDto is not null)
                     {
-                        return client;
+                        return clientContactDto;
                     }
                 }
             }

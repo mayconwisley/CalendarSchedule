@@ -20,7 +20,7 @@ public class ClientResponsibleCreateDto
     [Required]
     [MaxLength(150)]
     public string? Position { get; set; }
-    
+
     [Required]
-    public bool Active { get; set; }
+    public bool Active { get; set; } = true;
 }

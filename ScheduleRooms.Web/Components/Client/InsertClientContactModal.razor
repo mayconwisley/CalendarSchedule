@@ -1,0 +1,90 @@
+﻿@inject IClientContactService clientContactService
+@inject IClientService clientService
+@inject IClientResponsibleService clientResponsibleService
+
+<div class="modal fade" id="newContactClient-@ClientId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <EditForm Model="@ClientContactCreateDto" OnValidSubmit="Create">
+                @{
+                    ClientContactCreateDto.ClientId = @ClientId;
+                }
+                <DataAnnotationsValidator />
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Contato Cliente</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label for="inColaborador" class="form-label">Cliente: </label>
+                            <span>@ClientId - @ClientName</span>
+                        </div>
+                        <div class="col-12">
+                            <label for="inResponsible" class="form-label">Responsável</label>
+                            <InputSelect class="form-select" id="inResponsible" @bind-Value="ClientContactCreateDto!.ClientResponsibleId">
+                                @if (ClientResponsibleView?.ClientsResponsibleDto is not null)
+                                {
+                                    <option value="0">Selecione uma Opção</option>
+                                    @foreach (var responsible in ClientResponsibleView.ClientsResponsibleDto)
+                                    {
+                                        <option value="@responsible.Id"> @responsible.Name</option>
+                                    }
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => ClientContactCreateDto.ClientResponsibleId)" />
+                        </div>
+                        <div class="col-6">
+                            <label for="inType" class="form-label">Tipo</label>
+                            <InputText class="form-control" id="inType" @bind-Value="ClientContactCreateDto!.Type" placeholder="Tipo" />
+                            <ValidationMessage For="@(() => ClientContactCreateDto.Type)" />
+                        </div>
+                        <div class="col-6">
+                            <label for="inNumber" class="form-label">Número</label>
+                            <InputText class="form-control" id="inNumber" @bind-Value="ClientContactCreateDto!.Number" placeholder="Número" />
+                            <ValidationMessage For="@(() => ClientContactCreateDto.Number)" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback DataUpdated { get; set; }
+
+    [Parameter]
+    public int ClientId { get; set; }
+    [Parameter]
+    public string? ClientName { get; set; }
+
+    private ClientContactCreateDto? ClientContactCreateDto { get; set; }
+    private ClientResponsibleView ClientResponsibleView { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ClientContactCreateDto ??= new();
+        ClientResponsibleView = await clientResponsibleService.GetAll();
+    }
+
+    private async Task Create()
+    {
+        if (ClientContactCreateDto is not null)
+        {
+            await clientContactService.Create(ClientContactCreateDto);
+            await UpdateData();
+            ClientContactCreateDto = new();
+        }
+    }
+
+    private async Task UpdateData()
+    {
+        await DataUpdated.InvokeAsync(null);
+        StateHasChanged();
+    }
+}

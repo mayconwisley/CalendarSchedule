@@ -4,10 +4,10 @@
 @inject IClientResponsibleService clientResponsibleService
 @inject NavigationManager navigationManager
 
-<h3>Cadastro de Cliente</h3>
-<button data-bs-toggle="modal" data-bs-target="#newClient" class="btn btn-info">
+<h3>Cadastro Responsável</h3>
+<NavLink href="ClientResponsibleCreate" class="btn btn-info">
     Novo Responsável
-</button>
+</NavLink>
 
 @if (clientResponsibleView is null)
 {
@@ -17,12 +17,11 @@
 }
 else
 {
-    <TableClient ClientResponsibleView="@clientResponsibleView" />
+    <TableClientResponsible ClientResponsibleView="@clientResponsibleView" />
     <PaginationTable PageCurrent="@ReceberPagina"
                      TotalData="@clientResponsibleView.TotalData"
                      Page="@clientResponsibleView.Page"
                      TotalPage="@clientResponsibleView.TotalPage" />
-    <InsertClientModal DataUpdated="@(() => DataUpdated())" />
 }
 
 @code {
@@ -39,11 +38,11 @@ else
 
         if (token.Bearer is not null)
         {
-            clientResponsibleView = await clientResponsibleService.GetAll();
+            await DataUpdated();
         }
     }
 
-    private async void DataUpdated()
+    private async Task DataUpdated()
     {
         clientResponsibleView = await clientResponsibleService.GetAll();
         StateHasChanged();

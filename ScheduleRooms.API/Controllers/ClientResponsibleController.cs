@@ -14,7 +14,7 @@ public class ClientResponsibleController(IClientResponsibleService clientRespons
     [Route("All")]
     public async Task<ActionResult<IEnumerable<ClientResponsibleDto>>> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
     {
-        var clientResponsibleDtos = await _clientResponsibleService.GetAll(page, size, search);
+        var clientsResponsibleDto = await _clientResponsibleService.GetAll(page, size, search);
         decimal totalData = (decimal)await _clientResponsibleService.TotalClientResponsible(search);
         decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
 
@@ -23,7 +23,7 @@ public class ClientResponsibleController(IClientResponsibleService clientRespons
             totalPage = totalData;
         }
 
-        if (!clientResponsibleDtos.Any())
+        if (!clientsResponsibleDto.Any())
         {
             return NotFound("Sem dados");
         }
@@ -33,7 +33,7 @@ public class ClientResponsibleController(IClientResponsibleService clientRespons
             page,
             totalPage,
             size,
-            clientResponsibleDtos
+            clientsResponsibleDto
         });
 
     }
