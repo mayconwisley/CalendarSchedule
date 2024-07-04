@@ -59,6 +59,7 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
             var scheduleUsers = await _scheduleContext.ScheduleUsers
                 .Include(i => i.User)
                 .Include(i => i.Schedule)
+                .Include(i => i.Schedule.Client)
                 .OrderByDescending(o => o.ScheduleId)
                 .Skip((page - 1) * size)
                 .Take(size)

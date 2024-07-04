@@ -11,14 +11,14 @@
     <DataAnnotationsValidator />
     <div class="row g-3">
         <div class="col-9">
-            <label for="inClient" class="form-label">Colaborador</label>
-            <InputSelect class="form-select" id="inClient" @bind-Value="ScheduleUserCreateDto!.UserId">
-                @if (ClientView?.ClientsDto is not null)
+            <label for="inUser" class="form-label">Colaborador</label>
+            <InputSelect class="form-select" id="inUser" @bind-Value="ScheduleUserCreateDto!.UserId">
+                @if (UserView?.UsersDto is not null)
                 {
                     <option value="0">Selecione uma Opção</option>
-                    @foreach (var client in ClientView.ClientsDto)
+                    @foreach (var user in UserView?.UsersDto)
                     {
-                        <option value="@client.Id"> @client.Name</option>
+                        <option value="@user.Id"> @user.Name</option>
                     }
                 }
             </InputSelect>
@@ -27,6 +27,14 @@
         <div class="col-3">
             <button type="button" @onclick="@AddUser" data-bs-dismiss="modal" class="btn btn-primary">Adicionar</button>
         </div>
+
+        <div class="col-12">
+            @foreach(var item in UserIdList)
+            {
+                <p>@item</p>
+            }
+        </div>
+
     </div>
 
     <button type="submit" data-bs-dismiss="modal" class="btn btn-primary">Salvar</button>

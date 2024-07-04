@@ -5,7 +5,6 @@
 @inject IClientService clientService
 @inject NavigationManager navigationManager
 
-
 <h1>Cadastro de Agenda</h1>
 <EditForm Model="@ScheduleCreateDto" OnValidSubmit="@Create">
     <DataAnnotationsValidator />
@@ -62,10 +61,11 @@
             </div>
         }
     </div>
-    <button type="submit" data-bs-dismiss="modal" class="btn btn-primary">Próximo</button>
-    <NavLink href="Schedule" class="btn btn-primary">Voltar</NavLink>
+    <div>
+        <button type="submit" data-bs-dismiss="modal" class="btn btn-primary">Próximo</button>
+        <NavLink href="Schedule" class="btn btn-primary">Voltar</NavLink>
+    </div>
 </EditForm>
-
 
 @code {
     [Parameter]
