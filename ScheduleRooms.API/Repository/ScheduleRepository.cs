@@ -75,6 +75,7 @@ public class ScheduleRepository(ScheduleContext scheduleContext) : IScheduleRepo
         {
             var schedules = await _scheduleContext.Schedules
                 .Include(i => i.Client)
+                .Include(i => i.ScheduleUsers)
                 .OrderByDescending(o => o.DateFinal)
                 .Skip((page - 1) * size)
                 .Take(size)

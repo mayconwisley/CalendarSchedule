@@ -29,7 +29,6 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
             throw;
         }
     }
-
     public async Task<ScheduleUser> Delete(int scheduleId, int userId)
     {
         try
@@ -51,7 +50,6 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
             throw;
         }
     }
-
     public async Task<IEnumerable<ScheduleUser>> GetAll(int page, int size, string search)
     {
         try

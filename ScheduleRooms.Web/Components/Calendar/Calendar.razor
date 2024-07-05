@@ -147,7 +147,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ScheduleDto = await scheculeUserService.GetByScheduleUser();
+        var teste = await scheculeUserService.GetAll();
 
         await base.OnInitializedAsync();
     }
