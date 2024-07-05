@@ -12,8 +12,8 @@ public interface IScheduleUserService
     Task<IEnumerable<ScheduleDto>> GetByScheduleUserDateUserId(int userId, DateTime dateSelected);
     Task<IEnumerable<ScheduleDto>> GetByScheduleUserActiveClientId(int clientId, DateTime dateSelected);
     Task<IEnumerable<ScheduleDto>> GetByScheduleUserActiveClinetIdUserId(int clientId, int userId, DateTime dateSelected);
-    Task<ScheduleUserDto> GetById(int id);
+    Task<ScheduleUserDto> GetById(int scheduleId, int userId);
     Task<ScheduleUserDto> Create(ScheduleUserCreateDto scheduleUserDto);
     Task<ScheduleUserDto> Update(ScheduleUserCreateDto scheduleUserDto);
-    Task<bool> Delete(int id);
+    Task<bool> Delete(int scheduleId, int userId);
 }

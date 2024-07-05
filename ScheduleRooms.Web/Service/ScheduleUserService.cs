@@ -63,7 +63,7 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
-    public async Task<bool> Delete(int id)
+    public async Task<bool> Delete(int scheduleId, int userId)
     {
         try
         {
@@ -76,7 +76,7 @@ public class ScheduleUserService : IScheduleUserService
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
-            using var response = await httpClient.DeleteAsync($"{apiEndPoint}/{id}");
+            using var response = await httpClient.DeleteAsync($"{apiEndPoint}/{scheduleId}/{userId}");
             if (response.IsSuccessStatusCode)
             {
                 return true;
@@ -127,7 +127,7 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
-    public async Task<ScheduleUserDto> GetById(int id)
+    public async Task<ScheduleUserDto> GetById(int scheduleId, int userId)
     {
         try
         {
@@ -140,7 +140,7 @@ public class ScheduleUserService : IScheduleUserService
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
             //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
-            using var response = await httpClient.GetAsync($"{apiEndPoint}/{id}");
+            using var response = await httpClient.GetAsync($"{apiEndPoint}/{scheduleId}/{userId}");
 
             if (response.IsSuccessStatusCode)
             {

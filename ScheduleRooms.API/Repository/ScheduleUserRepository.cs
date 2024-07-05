@@ -30,11 +30,11 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
         }
     }
 
-    public async Task<IEnumerable<ScheduleUser>> Delete(int scheduleId)
+    public async Task<ScheduleUser> Delete(int scheduleId, int userId)
     {
         try
         {
-            var scheduleUsers = await GetByScheduleId(scheduleId);
+            var scheduleUsers = await GetById(scheduleId, userId);
 
             if (scheduleUsers is not null)
             {
@@ -43,7 +43,7 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
                 return scheduleUsers;
             }
 
-            return [];
+            return new();
         }
         catch (Exception)
         {
@@ -81,6 +81,7 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
             var scheduleUsers = await _scheduleContext.ScheduleUsers
                 .Include(i => i.User)
                 .Include(i => i.Schedule)
+                  .Include(i => i.Schedule.Client)
                 .OrderByDescending(o => o.Schedule.DateFinal)
                 .Skip((page - 1) * size)
                 .Take(size)
@@ -100,13 +101,14 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
         }
     }
 
-    public async Task<ScheduleUser> GetById(int userId, int scheduleId)
+    public async Task<ScheduleUser> GetById(int scheduleId, int userId)
     {
         try
         {
             var scheduleUser = await _scheduleContext.ScheduleUsers
                 .Include(i => i.User)
                 .Include(i => i.Schedule)
+                .Include(i => i.Schedule.Client)
                 .Where(w => w.ScheduleId == scheduleId &&
                             w.UserId == userId)
                 .FirstOrDefaultAsync();
@@ -131,6 +133,7 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
             var scheduleUsers = await _scheduleContext.ScheduleUsers
                 .Include(i => i.User)
                 .Include(i => i.Schedule)
+                  .Include(i => i.Schedule.Client)
                 .Where(w => w.ScheduleId == scheduleId)
                 .ToListAsync();
             return scheduleUsers;

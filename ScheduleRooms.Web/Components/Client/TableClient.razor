@@ -59,7 +59,7 @@
                                 <button data-bs-toggle="modal" data-bs-target="#newContactClient-@client.Id" class="btn btn-info">
                                     Contato
                                 </button>
-                                <InsertClientContactModal ClientId="@client.Id" ClientName="@client.Name" DataUpdated="@(() => DataUpdated())" />
+                                <InsertClientContactModal ClientId="@client.Id" ClientName="@client.Name" DataUpdated="@(() => DataUpdate())" />
 
                                 <NavLink href=@($"DetailsClientContact/{client.Id}") class="btn btn-info">
                                     Detalhe
@@ -67,7 +67,7 @@
                                 <button data-bs-toggle="modal" data-bs-target="#deleteClient-@client.Id" class="btn btn-danger">
                                     Excluir
                                 </button>
-                                <DeleteClientModal ClientId="@client.Id" DataUpdated="@(() => DataUpdated())" />
+                                <DeleteClientModal ClientId="@client.Id" DataUpdated="@(() => DataUpdate())" />
                             </td>
                         </tr>
 
@@ -82,9 +82,11 @@
 @code {
     [Parameter]
     public ClientView? ClientView { get; set; }
-    private async void DataUpdated()
+    [Parameter]
+    public EventCallback DataUpdated { get; set; }
+
+    private async Task DataUpdate()
     {
-        ClientView = await clientService.GetAll();
-        StateHasChanged();
+        await DataUpdated.InvokeAsync(null);
     }
 }

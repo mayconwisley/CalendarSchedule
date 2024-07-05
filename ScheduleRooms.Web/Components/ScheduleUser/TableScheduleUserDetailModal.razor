@@ -1,0 +1,88 @@
+﻿@inject IScheduleUserService scheduleUserService
+@if (ScheduleUserDto.ScheduleDto is not null)
+{
+    <div class="modal fade" id="tableScheduleUserDatail-@ScheduleId-@UserId" tabindex="-1" aria-labelledby="tableScheduleLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="tableScheduleLabel">Detalhes da Agenda</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="border">
+                        @if (ScheduleUserDto.ScheduleDto.Particular)
+                        {
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Agenda Id</th>
+                                        <th>Colaborador Id</th>
+                                        <th>Particular</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (ScheduleUserDto is not null)
+                                    {
+                                        <tr>
+                                            <td>@ScheduleUserDto.ScheduleId</td>
+                                            <td>@ScheduleUserDto.UserId</td>
+                                            <td>@(ScheduleUserDto.ScheduleDto.Particular ? "Sim" : "Não")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Schedule Id</th>
+                                        <th>Colaborador Id</th>
+                                        <th>Remoto</th>
+                                        <th>Reservada</th>
+                                        <th>Particular</th>
+                                        <th>Prospecção</th>
+                                        <th>Cidade</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (ScheduleUserDto is not null)
+                                    {
+                                        <tr>
+                                            <td>@ScheduleUserDto.ScheduleId</td>
+                                            <td>@ScheduleUserDto.UserId</td>
+                                            <td>@(ScheduleUserDto.ScheduleDto.MeetingType ? "Sim" : "Não")</td>
+                                            <td>@(ScheduleUserDto.ScheduleDto.StatusSchedule ? "Sim" : "Não")</td>
+                                            <td>@(ScheduleUserDto.ScheduleDto.Particular ? "Sim" : "Não")</td>
+                                            <td>@(ScheduleUserDto.ScheduleDto.ClientDto.Prospection ? "Sim" : "Não")</td>
+                                            <td>@(ScheduleUserDto.ScheduleDto.ClientDto == null ? "" : ScheduleUserDto.ScheduleDto.ClientDto.City)</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@code {
+    private ScheduleUserDto? ScheduleUserDto { get; set; }
+
+    [Parameter]
+    public int ScheduleId { get; set; }
+    [Parameter]
+    public int UserId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ScheduleUserDto = new();
+        ScheduleUserDto = await scheduleUserService.GetById(ScheduleId, UserId);
+        StateHasChanged();
+    }
+}

@@ -17,7 +17,7 @@
 }
 else
 {
-    <TableClient ClientView="@clientView" />
+    <TableClient ClientView="@clientView" DataUpdated="@DataUpdated" />
     <PaginationTable PageCurrent="@ReceberPagina"
                      TotalData="@clientView.TotalData"
                      Page="@clientView.Page"
@@ -27,6 +27,7 @@ else
 @code {
     private ClientView? clientView;
     private LoginDto? LoginDto { get; set; } = new();
+    
     protected override async Task OnInitializedAsync()
     {
         var token = await tokenStorageService.GetToken(LoginDto!);
@@ -38,18 +39,18 @@ else
 
         if (token.Bearer is not null)
         {
-            clientView = await clientService.GetAll();
+            await DataUpdated();
         }
     }
 
-    private async void DataUpdated()
+    private async Task DataUpdated()
     {
         clientView = await clientService.GetAll();
         StateHasChanged();
     }
+   
     private async Task ReceberPagina(int pageCurrent)
     {
         clientView = await clientService.GetAll(pageCurrent);
-
     }
 }

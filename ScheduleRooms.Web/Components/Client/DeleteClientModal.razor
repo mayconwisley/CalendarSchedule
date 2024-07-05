@@ -30,7 +30,7 @@
 
 @code {
     [Parameter]
-    public Action? DataUpdated { get; set; }
+    public EventCallback DataUpdated { get; set; }
 
     private ClientDto? ClientDto { get; set; } = new();
 
@@ -41,7 +41,6 @@
     protected override async Task OnInitializedAsync()
     {
         ClientDto = await clientService.GetById(ClientId);
-        await base.OnInitializedAsync();
     }
 
     private async Task Delete()
@@ -55,6 +54,6 @@
 
     private async Task UpdateData()
     {
-        DataUpdated?.Invoke();
+        await DataUpdated.InvokeAsync(null);
     }
 }

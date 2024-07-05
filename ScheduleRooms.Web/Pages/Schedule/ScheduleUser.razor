@@ -19,32 +19,31 @@ else
 {
 
     <MensageError Message="@Message" ShowMessage="@ShowMessage" Key="@MessageKey" />
-    <TableSchedule ScheduleUserView="scheduleUserView" />
+    
+    
+    <TableSchedule ScheduleUserView="@scheduleUserView" DataUpdated="@DataUpdated" />
 
     <PaginationTable PageCurrent="@ReceberPagina"
                      TotalData="@scheduleUserView.TotalData"
                      Page="@scheduleUserView.Page"
                      TotalPage="@scheduleUserView.TotalPage" />
 
-    
+
 }
 
 @code {
     private ScheduleUserView? scheduleUserView;
-    private UserView? userViewManager;
     private string? Message { get; set; }
     private int MessageKey { get; set; } = 0;
     public string? ShowMessage { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        scheduleUserView = await scheduleUserService.GetAll();
-        userViewManager = await userService.GetManagerAll();
+        await DataUpdated();
     }
-    private async void DataUpdated()
+    private async Task DataUpdated()
     {
         scheduleUserView = await scheduleUserService.GetAll();
-        userViewManager = await userService.GetManagerAll();
         StateHasChanged();
     }
     private async Task ReceberPagina(int pageCurrent)

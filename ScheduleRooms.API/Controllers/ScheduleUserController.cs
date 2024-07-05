@@ -39,9 +39,20 @@ public class ScheduleUserController(IScheduleUserService scheduleUserService) : 
     }
 
     [HttpGet("{scheduleId:int}", Name = "GetScheduleUserId")]
-    public async Task<ActionResult<ScheduleUserDto>> GetById(int scheduleId)
+    public async Task<ActionResult<ScheduleUserDto>> GetByScheduleId(int scheduleId)
     {
         var scheduleUserDto = await _scheduleUserService.GetByScheduleId(scheduleId);
+        if (scheduleUserDto is not null)
+        {
+            return Ok(scheduleUserDto);
+        }
+        return NotFound("Sem dados");
+
+    }
+    [HttpGet("{scheduleId:int}/{userId:int}", Name = "GetScheduleIdUserId")]
+    public async Task<ActionResult<ScheduleUserDto>> GetById(int scheduleId, int userId)
+    {
+        var scheduleUserDto = await _scheduleUserService.GetById(scheduleId, userId);
         if (scheduleUserDto is not null)
         {
             return Ok(scheduleUserDto);
@@ -75,21 +86,6 @@ public class ScheduleUserController(IScheduleUserService scheduleUserService) : 
             size,
             scheduleUserDto
         });
-
-
-
-
-
-        if (!scheduleUserDto.Any())
-        {
-            return NotFound("Sem dados");
-        }
-        if (scheduleUserDto is not null)
-        {
-            return Ok(scheduleUserDto);
-        }
-        return NotFound("Sem dados");
-
     }
     [Authorize]
     [HttpPost]
@@ -135,15 +131,15 @@ public class ScheduleUserController(IScheduleUserService scheduleUserService) : 
         return Ok(scheduleUserDto);
     }
     [Authorize]
-    [HttpDelete("{scheduleId:int}")]
-    public async Task<ActionResult<ScheduleUserDto>> Delete(int scheduleId)
+    [HttpDelete("{scheduleId:int}/{userId:int}")]
+    public async Task<ActionResult<ScheduleUserDto>> Delete(int scheduleId, int userId)
     {
-        var scheduleDto = await _scheduleUserService.GetByScheduleId(scheduleId);
-        if (!scheduleDto.Any())
+        var scheduleDto = await _scheduleUserService.GetById(scheduleId, userId);
+        if (scheduleDto is null)
         {
             return NotFound("Sem dados");
         }
-        await _scheduleUserService.Delete(scheduleId);
+        await _scheduleUserService.Delete(scheduleId, userId);
         return Ok(scheduleDto);
     }
 }

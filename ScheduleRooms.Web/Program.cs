@@ -1,6 +1,7 @@
 using Blazored.SessionStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using ScheduleRooms.Models.Dtos;
 using ScheduleRooms.Web;
 using ScheduleRooms.Web.Service;
 using ScheduleRooms.Web.Service.Interface;
@@ -30,6 +31,6 @@ builder.Services.AddScoped<IUserStorageService, UserStorageService>();
 builder.Services.AddScoped<IUserContactService, UserContactService>();
 builder.Services.AddScoped<IClientResponsibleService, ClientResponsibleService>();
 builder.Services.AddScoped<IClientContactService, ClientContactService>();
-
+builder.Services.AddSingleton<ScheduleShareService>();
 
 await builder.Build().RunAsync();

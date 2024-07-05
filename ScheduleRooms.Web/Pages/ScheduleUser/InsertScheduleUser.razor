@@ -1,46 +1,73 @@
-﻿@page "/ScheduleUserCreate/{ScheduleId}"
+﻿@page "/ScheduleUserCreate"
 
+@inject ScheduleShareService scheduleShareService
 @inject IScheduleUserService scheduleUserService
+@inject IScheduleService scheduleService
 @inject IUserService userService
-@inject IClientService clientService
 @inject NavigationManager navigationManager
 
-
 <h1>Adicionar Colaborador na Agenda</h1>
-<EditForm Model="@ScheduleUserCreateDto" OnValidSubmit="@Create">
-    <DataAnnotationsValidator />
-    <div class="row g-3">
-        <div class="col-9">
-            <label for="inUser" class="form-label">Colaborador</label>
-            <InputSelect class="form-select" id="inUser" @bind-Value="ScheduleUserCreateDto!.UserId">
-                @if (UserView?.UsersDto is not null)
-                {
-                    <option value="0">Selecione uma Opção</option>
-                    @foreach (var user in UserView?.UsersDto)
+<div class="border mt-2">
+    <EditForm Model="@ScheduleUserCreateDto" OnValidSubmit="@Create">
+        <DataAnnotationsValidator />
+        <div class="row g-3">
+            <div class="col-12">
+                <label for="inUser" class="form-label">Colaborador</label>
+            </div>
+            <div class="col-9">
+                <InputSelect class="form-select" id="inUser" @bind-Value="ScheduleUserCreateDto!.UserId">
+                    @if (UserView?.UsersDto is not null)
                     {
-                        <option value="@user.Id"> @user.Name</option>
+                        <option value="0">Selecione uma Opção</option>
+                        @foreach (var user in UserView!.UsersDto)
+                        {
+                            <option value="@user.Id"> @user.Name</option>
+                        }
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => ScheduleUserCreateDto.UserId)" />
+            </div>
+            <div class="col-3">
+                <label class="form-label"></label>
+                <button type="button" @onclick="@(() => AddUser(ScheduleUserCreateDto.UserId))" class="btn btn-primary">
+                    Adicionar
+                </button>
+            </div>
+        </div>
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Colaborador</th>
+                    <th class="text-center">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (UserIdList is not null)
+                {
+                    @foreach (var item in UserIdList)
+                    {
+                        <tr>
+                            <td>@item.Key</td>
+                            <td>@item.Value</td>
+                            <td class="text-center">
+                                <button data-bs-toggle="modal" @onclick="@(() => RemoveUser(item.Key))" class="btn btn-info">
+                                    Remover
+                                </button>
+                            </td>
+                        </tr>
                     }
                 }
-            </InputSelect>
-            <ValidationMessage For="@(() => ScheduleUserCreateDto.UserId)" />
-        </div>
-        <div class="col-3">
-            <button type="button" @onclick="@AddUser" data-bs-dismiss="modal" class="btn btn-primary">Adicionar</button>
-        </div>
-
-        <div class="col-12">
-            @foreach(var item in UserIdList)
-            {
-                <p>@item</p>
-            }
-        </div>
-
-    </div>
-
-    <button type="submit" data-bs-dismiss="modal" class="btn btn-primary">Salvar</button>
-    <NavLink href="Schedule" class="btn btn-primary">Voltar</NavLink>
-</EditForm>
-
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-primary">
+            Salvar
+        </button>
+        <NavLink href="Schedule" class="btn btn-primary">
+            Voltar
+        </NavLink>
+    </EditForm>
+</div>
 
 @code {
     [Parameter]
@@ -49,30 +76,35 @@
     public EventCallback<string> ErroRetornado { get; set; }
     [Parameter]
     public string ScheduleId { get; set; } = string.Empty;
-
-
     private ScheduleUserCreateDto? ScheduleUserCreateDto { get; set; }
     private UserView? UserView { get; set; } = new();
-    private ClientView? ClientView { get; set; } = new();
-    private List<int> UserIdList = [];
-
+    private IDictionary<int, string> UserIdList = new Dictionary<int, string>();
 
     protected override async Task OnInitializedAsync()
     {
         ScheduleUserCreateDto = new();
         UserView = await userService.GetAll();
-        ClientView = await clientService.GetAll();
-        await base.OnInitializedAsync();
     }
 
-    private async Task AddUser()
+    private async Task AddUser(int userId)
     {
-        UserIdList.Add(ScheduleUserCreateDto!.UserId);
+        var userDto = await userService.GetById(userId);
+        UserIdList.Add(userDto.Id, userDto.Name);
+    }
 
+    private async Task RemoveUser(int userId)
+    {
+        await Task.FromResult(UserIdList.Remove(userId));
     }
 
     private async Task Create()
     {
+        ScheduleDto scheduleDto = new();
+        if (scheduleShareService.ScheduleCreateDto is not null)
+        {
+            scheduleDto = await scheduleService.Create(scheduleShareService.ScheduleCreateDto);
+        }
+
         if (ScheduleUserCreateDto is not null)
         {
             try
@@ -81,14 +113,11 @@
                 {
                     ScheduleUserCreateDto = new()
                         {
-                            UserId = item,
-                            ScheduleId = int.Parse(ScheduleId)
-
+                            UserId = item.Key,
+                            ScheduleId = scheduleDto.Id
                         };
                     await scheduleUserService.Create(ScheduleUserCreateDto);
                 }
-
-
                 UpdateData();
                 ScheduleUserCreateDto = new();
             }
@@ -106,9 +135,6 @@
     {
         DataUpdated?.Invoke();
     }
-
-
-
     private async Task Error(string error)
     {
         await ErroRetornado.InvokeAsync(error);

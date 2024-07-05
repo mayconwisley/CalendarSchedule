@@ -18,7 +18,7 @@ public static class ScheduleMappingDto
                     MeetingType = schedule.MeetingType,
                     StatusSchedule = schedule.StatusSchedule,
                     ClientId = schedule?.Client?.Id,
-                    ClientDto = schedule.Client.ConvertClientToDto(),
+                    ClientDto = schedule.Client == null ? null : schedule.Client.ConvertClientToDto(),
                     Particular = schedule.Particular,
                 }).ToList();
     }
@@ -34,7 +34,7 @@ public static class ScheduleMappingDto
                     MeetingType = schedule.MeetingType,
                     StatusSchedule = schedule.StatusSchedule,
                     ClientId = schedule.ClientId,
-                    Client = schedule.ClientDto.ConvertDtoToClient(),
+                    Client = schedule.ClientDto == null ? null : schedule.ClientDto.ConvertDtoToClient(),
                     Particular = schedule.Particular,
                 }).ToList();
     }
@@ -49,7 +49,7 @@ public static class ScheduleMappingDto
             MeetingType = schedule.MeetingType,
             StatusSchedule = schedule.StatusSchedule,
             ClientId = schedule?.Client?.Id,
-            ClientDto = schedule.Client.ConvertClientToDto(),
+            ClientDto = schedule.Client == null ? null : schedule.Client.ConvertClientToDto(),
             Particular = schedule.Particular,
         };
     }
@@ -64,7 +64,7 @@ public static class ScheduleMappingDto
             MeetingType = scheduleDto.MeetingType,
             StatusSchedule = scheduleDto.StatusSchedule,
             ClientId = scheduleDto.ClientId,
-            Client = scheduleDto.ClientDto.ConvertDtoToClient(),
+            Client = scheduleDto.ClientDto == null ? null : scheduleDto.ClientDto.ConvertDtoToClient(),
             Particular = scheduleDto.Particular,
         };
     }

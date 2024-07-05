@@ -12,7 +12,7 @@ public static class ScheduleUserMappingDto
                 select new ScheduleUserDto
                 {
                     ScheduleId = scheduleUser.ScheduleId,
-                    ScheduleDto = new ScheduleDto
+                    ScheduleDto = scheduleUser.Schedule == null ? null : new ScheduleDto
                     {
                         Id = scheduleUser.Schedule.Id,
                         Description = scheduleUser.Schedule.Description,
@@ -22,7 +22,7 @@ public static class ScheduleUserMappingDto
                         StatusSchedule = scheduleUser.Schedule.StatusSchedule,
                         Particular = scheduleUser.Schedule.Particular,
                         ClientId = scheduleUser.Schedule.ClientId,
-                        ClientDto = new ClientDto
+                        ClientDto = scheduleUser.Schedule.Client == null ? null : new ClientDto
                         {
                             Id = scheduleUser.Schedule.Client.Id,
                             Name = scheduleUser.Schedule.Client.Name,
@@ -39,7 +39,7 @@ public static class ScheduleUserMappingDto
                         }
                     },
                     UserId = scheduleUser.UserId,
-                    UserDto = new UserDto
+                    UserDto = scheduleUser.User == null ? null : new UserDto
                     {
                         Id = scheduleUser.User.Id,
                         Description = scheduleUser.User.Description,
@@ -59,7 +59,7 @@ public static class ScheduleUserMappingDto
                 select new ScheduleUser
                 {
                     ScheduleId = scheduleUserDto.ScheduleId,
-                    Schedule = new Schedule
+                    Schedule = scheduleUserDto.ScheduleDto == null ? null : new Schedule
                     {
                         Id = scheduleUserDto.ScheduleDto.Id,
                         Description = scheduleUserDto.ScheduleDto.Description,
@@ -69,7 +69,7 @@ public static class ScheduleUserMappingDto
                         StatusSchedule = scheduleUserDto.ScheduleDto.StatusSchedule,
                         Particular = scheduleUserDto.ScheduleDto.Particular,
                         ClientId = scheduleUserDto.ScheduleDto.ClientId,
-                        Client = new Client
+                        Client = scheduleUserDto.ScheduleDto.ClientDto == null ? null : new Client
                         {
                             Id = scheduleUserDto.ScheduleDto.ClientDto.Id,
                             Name = scheduleUserDto.ScheduleDto.ClientDto.Name,
@@ -86,7 +86,7 @@ public static class ScheduleUserMappingDto
                         }
                     },
                     UserId = scheduleUserDto.UserId,
-                    User = new User
+                    User = scheduleUserDto.UserDto == null ? null : new User
                     {
                         Id = scheduleUserDto.UserDto.Id,
                         Description = scheduleUserDto.UserDto.Description,
@@ -107,7 +107,7 @@ public static class ScheduleUserMappingDto
         return new ScheduleUser
         {
             ScheduleId = scheduleUserDto.ScheduleId,
-            Schedule = new Schedule
+            Schedule = scheduleUserDto.ScheduleDto == null ? null : new Schedule
             {
                 Id = scheduleUserDto.ScheduleDto.Id,
                 Description = scheduleUserDto.ScheduleDto.Description,
@@ -117,7 +117,7 @@ public static class ScheduleUserMappingDto
                 StatusSchedule = scheduleUserDto.ScheduleDto.StatusSchedule,
                 Particular = scheduleUserDto.ScheduleDto.Particular,
                 ClientId = scheduleUserDto.ScheduleDto.ClientId,
-                Client = new Client
+                Client = scheduleUserDto.ScheduleDto.ClientDto == null ? null : new Client
                 {
                     Id = scheduleUserDto.ScheduleDto.ClientDto.Id,
                     Name = scheduleUserDto.ScheduleDto.ClientDto.Name,
@@ -134,7 +134,7 @@ public static class ScheduleUserMappingDto
                 }
             },
             UserId = scheduleUserDto.UserId,
-            User = new User
+            User = scheduleUserDto.UserDto == null ? null : new User
             {
                 Id = scheduleUserDto.UserDto.Id,
                 Description = scheduleUserDto.UserDto.Description,
@@ -152,7 +152,7 @@ public static class ScheduleUserMappingDto
         return new ScheduleUserDto
         {
             ScheduleId = scheduleUser.ScheduleId,
-            ScheduleDto = new ScheduleDto
+            ScheduleDto = scheduleUser.Schedule == null ? null : new ScheduleDto
             {
                 Id = scheduleUser.Schedule.Id,
                 Description = scheduleUser.Schedule.Description,
@@ -162,7 +162,7 @@ public static class ScheduleUserMappingDto
                 StatusSchedule = scheduleUser.Schedule.StatusSchedule,
                 Particular = scheduleUser.Schedule.Particular,
                 ClientId = scheduleUser.Schedule.ClientId,
-                ClientDto = new ClientDto
+                ClientDto = scheduleUser.Schedule.Client == null ? null : new ClientDto
                 {
                     Id = scheduleUser.Schedule.Client.Id,
                     Name = scheduleUser.Schedule.Client.Name,
@@ -175,11 +175,10 @@ public static class ScheduleUserMappingDto
                     Telephone = scheduleUser.Schedule.Client.Telephone,
                     Prospection = scheduleUser.Schedule.Client.Prospection,
                     Active = scheduleUser.Schedule.Client.Active
-
                 }
             },
             UserId = scheduleUser.UserId,
-            UserDto = new UserDto
+            UserDto = scheduleUser.User == null ? null : new UserDto
             {
                 Id = scheduleUser.User.Id,
                 Description = scheduleUser.User.Description,

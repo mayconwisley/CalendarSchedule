@@ -2,47 +2,37 @@
     <table class="table table-striped align-middle">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>User Id</th>
                 <th>Colaborador</th>
                 <th>Cliente</th>
                 <th>Data/Hora Inicio</th>
                 <th>Data/Hora Fim</th>
                 <th>Descrição</th>
-                <th>Cidade</th>
                 <th class="text-center">Ações</th>
             </tr>
         </thead>
         <tbody>
             @if (ScheduleUserView is not null)
             {
-                if (ScheduleUserView is not null)
+                if (ScheduleUserView.ScheduleUsersDto is not null)
                 {
-
-                    @foreach (var schedule in ScheduleUsersDto)
+                    @foreach (var schedule in ScheduleUserView.ScheduleUsersDto)
                     {
                         <tr>
-                            <td>@schedule.ScheduleDto.Id</td>
-                            <td>@schedule.UserDto.Id</td>
                             <td>@schedule.UserDto.Name</td>
-                            <td>@schedule.ScheduleDto.ClientDto.Name</td>
+                            <td>@(schedule.ScheduleDto.ClientDto == null ? "" : schedule.ScheduleDto.ClientDto.Name)</td>
                             <td>@schedule.ScheduleDto.DateStart.ToString("dd/MM/yyyy HH:mm")</td>
                             <td>@schedule.ScheduleDto.DateFinal.ToString("dd/MM/yyyy HH:mm")</td>
                             <td>@schedule.ScheduleDto.Description</td>
-                            <td>@schedule.ScheduleDto.ClientDto.City</td>
                             <td>
-                                <button data-bs-toggle="modal" data-bs-target="#tableScheduleDatail-" class="btn btn-info">
+                                <button data-bs-toggle="modal" data-bs-target="#tableScheduleUserDatail-@schedule.ScheduleId-@schedule.UserId" class="btn btn-info">
                                     Detalhe
                                 </button>
-                                @* <TableScheduleDetailModal ScheduleUserId="@schedule.Id" /> *@
-                                <button data-bs-toggle="modal" data-bs-target="#editSchedule-" class="btn btn-info">
-                                    Editar
-                                </button>
-                                @* <EditScheduleUserModal Particular="@schedule.Particular" ScheduleId="@schedule.Id" DataUpdated="@(() => DataUpdated())" /> *@
-                                <button data-bs-toggle="modal" data-bs-target="#deleteUser-" class="btn btn-danger">
+                                <TableScheduleUserDetailModal ScheduleId="@schedule.ScheduleId" UserId="@schedule.UserId" />
+
+                                <button data-bs-toggle="modal" data-bs-target="#deleteScheduleUser-@schedule.ScheduleId-@schedule.UserId" class="btn btn-danger">
                                     Excluir
                                 </button>
-                                @* <DeleteScheduleUserModal ScheduleId="@schedule.Id" DataUpdated="@(() => DataUpdated())" /> *@
+                                <DeleteScheduleUserModal ScheduleId="@schedule.ScheduleId" UserId="@schedule.UserId" DataUpdated="@(() => UpdateData())" />
                             </td>
                         </tr>
                     }
@@ -53,14 +43,15 @@
 </div>
 
 @code {
+
     [Parameter]
     public ScheduleUserView? ScheduleUserView { get; set; }
 
-    private IEnumerable<ScheduleUserDto>? ScheduleUsersDto { get; set; } = [];
-    protected override Task OnInitializedAsync()
+    [Parameter]
+    public EventCallback DataUpdated { get; set; }
+   
+    private async void UpdateData()
     {
-        ScheduleUsersDto = ScheduleUserView.ScheduleUsersDto;
-
-        return base.OnInitializedAsync();
+        await DataUpdated.InvokeAsync(null);
     }
 }

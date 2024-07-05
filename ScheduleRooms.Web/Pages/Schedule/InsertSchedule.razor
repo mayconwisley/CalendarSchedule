@@ -1,7 +1,5 @@
 ﻿@page "/ScheduleCreate"
-
-@inject IScheduleService scheduleService
-@inject IUserService userService
+@inject ScheduleShareService scheduleShareService
 @inject IClientService clientService
 @inject NavigationManager navigationManager
 
@@ -62,8 +60,12 @@
         }
     </div>
     <div>
-        <button type="submit" data-bs-dismiss="modal" class="btn btn-primary">Próximo</button>
-        <NavLink href="Schedule" class="btn btn-primary">Voltar</NavLink>
+        <button type="submit" data-bs-dismiss="modal" class="btn btn-primary">
+            Próximo
+        </button>
+        <NavLink href="Schedule" class="btn btn-primary">
+            Voltar
+        </NavLink>
     </div>
 </EditForm>
 
@@ -74,7 +76,6 @@
     public EventCallback<string> ErroRetornado { get; set; }
 
     private ScheduleCreateDto? ScheduleCreateDto { get; set; }
-    private UserView? UserView { get; set; } = new();
     private ClientView? ClientView { get; set; } = new();
 
     private bool particular = false;
@@ -82,20 +83,17 @@
     protected override async Task OnInitializedAsync()
     {
         ScheduleCreateDto = new();
-        UserView = await userService.GetAll();
         ClientView = await clientService.GetAll();
         await base.OnInitializedAsync();
     }
 
     private async Task Create()
     {
-        ScheduleDto scheduleDto = new();
-
         if (ScheduleCreateDto is not null)
         {
             try
             {
-                scheduleDto = await scheduleService.Create(ScheduleCreateDto);
+                scheduleShareService.ScheduleCreateDto = ScheduleCreateDto;
                 UpdateData();
                 ScheduleCreateDto = new();
             }
@@ -105,7 +103,7 @@
                 ScheduleCreateDto = new();
             }
         }
-        navigationManager.NavigateTo($"/ScheduleUserCreate/{scheduleDto.Id}");
+        navigationManager.NavigateTo($"/ScheduleUserCreate");
         StateHasChanged();
     }
 

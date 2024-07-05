@@ -15,9 +15,9 @@ public class ScheduleUserService(IScheduleUserRepository scheduleUserRepository)
         return scheduleUser.ConvertScheduleUserDto();
     }
 
-    public async Task Delete(int scheduleId)
+    public async Task Delete(int scheduleId, int userId)
     {
-        await _scheduleUserRepository.Delete(scheduleId);
+        await _scheduleUserRepository.Delete(scheduleId, userId);
     }
 
     public async Task<IEnumerable<ScheduleUserDto>> GetAll(int page, int size, string search)
@@ -30,6 +30,12 @@ public class ScheduleUserService(IScheduleUserRepository scheduleUserRepository)
     {
         var scheduleUserDtos = await _scheduleUserRepository.GetByDateStart(page, size, dateStart);
         return scheduleUserDtos.ConvertSchedulesUserDto();
+    }
+
+    public async Task<ScheduleUserDto> GetById(int scheduleId, int userId)
+    {
+        var scheduleUserDto = await _scheduleUserRepository.GetById(scheduleId, userId);
+        return scheduleUserDto.ConvertScheduleUserDto();
     }
 
     public async Task<IEnumerable<ScheduleUserDto>> GetByScheduleId(int scheduleId)
