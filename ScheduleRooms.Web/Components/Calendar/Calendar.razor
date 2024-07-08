@@ -9,116 +9,114 @@
 
 @attribute [StreamRendering(true)]
 
-@if (ScheduleUserView is not null)
-{
 
-
-
-    <div class="teste">
-        <div class="calendario">
-            <div class="desc-mes">
-                <div class="titulo">
-                    <p>Agenda JS Maringá</p>
-                </div>
-
-                <nav>
-                    <ul class="pagination">
-                        <li class="page-room">
-                            <button class="page-link pn-mes" @onclick="PreviousMonth">
-                                <span aria-hidden="true">&laquo;</span>
-                            </button>
-                        </li>
-                        <li class="page-room nome-mes">
-                            <p class="page-link">@competence.ToString("MMMM/yyyy", cultureInfo)</p>
-                        </li>
-                        <li class="page-room">
-                            <button class="page-link pn-mes" @onclick="NextMonth">
-                                <span aria-hidden="true">&raquo;</span>
-                            </button>
-                        </li>
-                    </ul>
-                </nav>
-                <div>
-                    <NavLink class="nav-link" href="Login" Match="NavLinkMatch.Prefix">Menu</NavLink>
-                </div>
-
+<div class="teste">
+    <div class="calendario">
+        <div class="desc-mes">
+            <div class="titulo">
+                <p>Agenda JS Maringá</p>
             </div>
-            <div class="dia-semana">
-                <span>Domingo</span>
-                <span>Segunda-feira</span>
-                <span>Terça-feira</span>
-                <span>Quarta-feira</span>
-                <span>Quinta-feira</span>
-                <span>Sexta-feira</span>
-                <span>Sábado</span>
+
+            <nav>
+                <ul class="pagination">
+                    <li class="page-room">
+                        <button class="page-link pn-mes" @onclick="PreviousMonth">
+                            <span aria-hidden="true">&laquo;</span>
+                        </button>
+                    </li>
+                    <li class="page-room nome-mes">
+                        <p class="page-link">@competence.ToString("MMMM/yyyy", cultureInfo)</p>
+                    </li>
+                    <li class="page-room">
+                        <button class="page-link pn-mes" @onclick="NextMonth">
+                            <span aria-hidden="true">&raquo;</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+            <div>
+                <NavLink class="nav-link" href="Login" Match="NavLinkMatch.Prefix">Menu</NavLink>
             </div>
-            <div class="centro-mes">
-                <div class="dia-mes">
-                    @for (int i = 0; i < dateEndMonth.Day; i++)
+
+        </div>
+        <div class="dia-semana">
+            <span>Domingo</span>
+            <span>Segunda-feira</span>
+            <span>Terça-feira</span>
+            <span>Quarta-feira</span>
+            <span>Quinta-feira</span>
+            <span>Sexta-feira</span>
+            <span>Sábado</span>
+        </div>
+        <div class="centro-mes">
+            <div class="dia-mes">
+                @for (int i = 0; i < dateEndMonth.Day; i++)
+                {
+                    Task.FromResult(LoadDados(dateStartMonth.AddDays(i)));
+
+                    int numWeek = ((int)dateStartMonth.AddDays(i).DayOfWeek);
+                    @if (@dateStartMonth.AddDays(i).Day == 1)
                     {
-                        int numWeek = ((int)dateStartMonth.AddDays(i).DayOfWeek);
-                        @if (@dateStartMonth.AddDays(i).Day == 1)
+                        @for (int y = 0; y < numWeek; y++)
                         {
-                            @for (int y = 0; y < numWeek; y++)
-                            {
-                                <span class="vazio"></span>
-                            }
+                            <span class="vazio"></span>
                         }
-                        <span class="@(numWeek == 0 && dateStartMonth.AddDays(i).Date == DateTime.Now.Date ? "dia-atual dia" :
+                    }
+                    <span class="@(numWeek == 0 && dateStartMonth.AddDays(i).Date == DateTime.Now.Date ? "dia-atual dia" :
                                   (numWeek == 0 ? "domingo dia" :
                                   (numWeek == 6 && dateStartMonth.AddDays(i).Date == DateTime.Now.Date ? "dia-atual dia" :
                                   (numWeek == 6 ? "sabado dia" :
                                   (dateStartMonth.AddDays(i).Date == DateTime.Now.Date ? "dia-atual dia" :
                                   "dia" )))))">
-                            <b>
-                                @dateStartMonth.AddDays(i).Day
-                            </b>
+                        <b>
+                            @dateStartMonth.AddDays(i).Day
+                        </b>
 
-                            @if (ScheduleUserView.ScheduleUsersDto is null)
-                            {
-                                <div class="spinner-border spinner-border-sm" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                            }
-                            else
-                            {
-                                var scheduleUsers = ScheduleUserView.ScheduleUsersDto;
+                        @if (ScheduleUserView.ScheduleUsersDto is null)
+                        {
+                            <div class="spinner-border spinner-border-sm" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        }
+                        else
+                        {
+                            var scheduleUsers = ScheduleUserView.ScheduleUsersDto;
 
-                                @foreach (var scheduleUser in scheduleUsers)
+                            @foreach (var scheduleUser in scheduleUsers)
+                            {
+                                if (scheduleUser.ScheduleDto.DateStart.Date == dateStartMonth.AddDays(i).Date)
                                 {
-                                    if (scheduleUser.ScheduleDto.DateStart.Date == dateStartMonth.AddDays(i).Date)
-                                    {
-                                        <a href="#" data-bs-toggle="modal" data-bs-target="#tableScheduleUser-@scheduleUser.UserDto.Id-@scheduleUser.ScheduleDto.ClientId-@dateStartMonth.AddDays(i).Date.ToString("ddMMyyyy")">
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#tableScheduleUser-@scheduleUser.UserDto.Id-@scheduleUser.ScheduleDto.ClientId-@dateStartMonth.AddDays(i).Date.ToString("ddMMyyyy")">
 
-                                            @{
-                                                string dado = string.Empty;
+                                        @{
+                                            string dado = string.Empty;
 
-                                                if (scheduleUser.ScheduleDto.Particular)
-                                                {
-                                                    dado = $"{scheduleUser.UserDto.Name} - Particular";
-                                                }
-                                                else
-                                                {
-                                                    dado = string.Join(", ", scheduleUser.UserDto.Name, scheduleUser.UserDto.Manager);
-                                                }
+                                            if (scheduleUser.ScheduleDto.Particular)
+                                            {
+                                                dado = $"{scheduleUser.UserDto.Name} - Particular";
                                             }
-                                            @dado
-                                        </a>
-                                        {
-                                            UserId = @scheduleUser.UserId;
+                                            else
+                                            {
+                                                dado = string.Join(", ", scheduleUser.UserDto.Name);
+                                            }
                                         }
-                                        @* <TableScheduleUserModal UserId="@user.UserId" ClientId="@user.ClientId" DateSelected="@dateStartMonth.AddDays(i).Date" /> *@
+                                        @dado
+                                    </a>
+                                    {
+                                        UserId = @scheduleUser.UserId;
                                     }
+                                    @* <TableScheduleUserModal UserId="@user.UserId" ClientId="@user.ClientId" DateSelected="@dateStartMonth.AddDays(i).Date" /> *@
                                 }
                             }
-                        </span>
-                    }
-                </div>
+                        }
+                    </span>
+                }
             </div>
         </div>
     </div>
+</div>
 
-}
+
 @code {
 
     DateTime competence = DateTime.Now.Date;
@@ -127,13 +125,17 @@
 
     private int UserId { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     DateTime dateStartMonth = new DateTime(competence.Year, competence.Month, 1);
+    //     await LoadDados(dateStartMonth);
+    // }
+
+    private async Task LoadDados(DateTime dateSchedule)
     {
         ScheduleUserView = new();
-
-        ScheduleUserView = await scheculeUserService.GetAll();
-
-        await base.OnInitializedAsync();
+        ScheduleUserView = await scheculeUserService.GetByScheduleUserDateStart(dateSchedule);
+        
     }
 
     private void NextMonth()

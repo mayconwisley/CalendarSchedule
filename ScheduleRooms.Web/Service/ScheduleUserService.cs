@@ -277,7 +277,7 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
-    public async Task<IEnumerable<ScheduleDto>> GetByScheduleUserDateUserId(int userId, DateTime dateSelected)
+    public async Task<ScheduleUserView> GetByScheduleUserDateStart(DateTime dateSelected)
     {
         try
         {
@@ -290,22 +290,22 @@ public class ScheduleUserService : IScheduleUserService
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
             //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
-            using var response = await httpClient.GetAsync($"{apiEndPoint}/ScheduleDateUserId/{userId}/{dateSelected.ToString("dd/MM/yyyy").Replace("/", "%2F")}");
+            using var response = await httpClient.GetAsync($"{apiEndPoint}/DateStart/{dateSelected.ToString("dd/MM/yyyy").Replace("/", "%2F")}");
 
             if (response.IsSuccessStatusCode)
             {
-                var scheduleUserDto = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleDto>>(_serializerOptions);
-                return scheduleUserDto ??= [];
+                var scheduleUserDto = await response.Content.ReadFromJsonAsync<ScheduleUserView>(_serializerOptions);
+                return scheduleUserDto ??= new();
 
             }
             else
             {
                 if (response.StatusCode == HttpStatusCode.NotFound)
                 {
-                    return [];
+                    return new();
                 }
                 response.EnsureSuccessStatusCode();
-                return [];
+                return new();
             }
 
         }
