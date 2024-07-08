@@ -174,9 +174,15 @@
 
         var ids = await scheculeUserService.GetByScheduleUserDateStart(competence);
 
-        ids.GroupBy(g => g.ScheduleId).ToList();
+        var t = ids.Select(s => s.ScheduleId)
+         .GroupBy(g => g)
+         .ToList();
 
-
+        foreach (var item in t)
+        {
+            SchedulesId.Add(item.Key);
+        }
+        
     }
 
     private async Task NextMonth()
