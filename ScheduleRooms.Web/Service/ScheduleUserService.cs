@@ -163,121 +163,7 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
-    public async Task<IEnumerable<ScheduleDto>> GetByScheduleUserActive()
-    {
-        try
-        {
-            //var token = await _tokenStorageService.GetToken();
-
-            //if (token.Bearer is null)
-            //{
-            //    return [];
-            //}
-
-            using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
-            using var response = await httpClient.GetAsync($"{apiEndPoint}/ScheduleActive");
-
-            if (response.IsSuccessStatusCode)
-            {
-                var scheduleUserDto = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleDto>>(_serializerOptions);
-                return scheduleUserDto ??= [];
-
-            }
-            else
-            {
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return [];
-                }
-                response.EnsureSuccessStatusCode();
-                return [];
-            }
-
-        }
-        catch (Exception)
-        {
-
-            throw;
-        }
-    }
-    public async Task<IEnumerable<ScheduleDto>> GetByScheduleUserActiveClientId(int clientId, DateTime dateSelected)
-    {
-        try
-        {
-            //var token = await _tokenStorageService.GetToken();
-
-            //if (token.Bearer is null)
-            //{
-            //    return [];
-            //}
-
-            using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
-            using var response = await httpClient.GetAsync($"{apiEndPoint}/ScheduleActiveClientId/{clientId}/{dateSelected.ToString("dd/MM/yyyy").Replace("/", "%2F")}");
-
-            if (response.IsSuccessStatusCode)
-            {
-                var scheduleUserDto = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleDto>>(_serializerOptions);
-                return scheduleUserDto ??= [];
-
-            }
-            else
-            {
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return [];
-                }
-                response.EnsureSuccessStatusCode();
-                return [];
-            }
-
-        }
-        catch (Exception)
-        {
-
-            throw;
-        }
-    }
-    public async Task<IEnumerable<ScheduleDto>> GetByScheduleUserActiveClinetIdUserId(int clientId, int userId, DateTime dateSelected)
-    {
-        try
-        {
-            //var token = await _tokenStorageService.GetToken();
-
-            //if (token.Bearer is null)
-            //{
-            //    return [];
-            //}
-
-            using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
-            using var response = await httpClient.GetAsync($"{apiEndPoint}/ScheduleActiveClientIdUserId/{clientId}/{userId}/{dateSelected.ToString("dd/MM/yyyy").Replace("/", "%2F")}");
-
-            if (response.IsSuccessStatusCode)
-            {
-                var scheduleUserDto = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleDto>>(_serializerOptions);
-                return scheduleUserDto ??= [];
-
-            }
-            else
-            {
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return [];
-                }
-                response.EnsureSuccessStatusCode();
-                return [];
-            }
-
-        }
-        catch (Exception)
-        {
-
-            throw;
-        }
-    }
-    public async Task<ScheduleUserView> GetByScheduleUserDateStart(DateTime dateSelected)
+    public async Task<IEnumerable<ScheduleUserDto>> GetByScheduleUserDateStart(DateTime dateSelected)
     {
         try
         {
@@ -294,18 +180,18 @@ public class ScheduleUserService : IScheduleUserService
 
             if (response.IsSuccessStatusCode)
             {
-                var scheduleUserDto = await response.Content.ReadFromJsonAsync<ScheduleUserView>(_serializerOptions);
-                return scheduleUserDto ??= new();
+                var scheduleUserDto = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleUserDto>>(_serializerOptions);
+                return scheduleUserDto ??= [];
 
             }
             else
             {
                 if (response.StatusCode == HttpStatusCode.NotFound)
                 {
-                    return new();
+                    return [];
                 }
                 response.EnsureSuccessStatusCode();
-                return new();
+                return [];
             }
 
         }
@@ -346,82 +232,6 @@ public class ScheduleUserService : IScheduleUserService
         }
         catch (Exception)
         {
-            throw;
-        }
-    }
-    public async Task<IEnumerable<ScheduleDto>> GetByScheduleUserId(int userId)
-    {
-        try
-        {
-            //var token = await _tokenStorageService.GetToken();
-
-            //if (token.Bearer is null)
-            //{
-            //    return [];
-            //}
-
-            using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
-            using var response = await httpClient.GetAsync($"{apiEndPoint}/ScheduleUserId/{userId}");
-
-            if (response.IsSuccessStatusCode)
-            {
-                var scheduleUserDto = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleDto>>(_serializerOptions);
-                return scheduleUserDto ??= [];
-
-            }
-            else
-            {
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return [];
-                }
-                response.EnsureSuccessStatusCode();
-                return [];
-            }
-
-        }
-        catch (Exception)
-        {
-
-            throw;
-        }
-    }
-    public async Task<IEnumerable<ScheduleDto>> GetByScheduleUser()
-    {
-        try
-        {
-            //var token = await _tokenStorageService.GetToken();
-
-            //if (token.Bearer is null)
-            //{
-            //    return [];
-            //}
-
-            using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
-            using var response = await httpClient.GetAsync($"{apiEndPoint}/Schedule");
-
-            if (response.IsSuccessStatusCode)
-            {
-                var scheduleUserDto = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleDto>>(_serializerOptions);
-                return scheduleUserDto ??= [];
-
-            }
-            else
-            {
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return [];
-                }
-                response.EnsureSuccessStatusCode();
-                return [];
-            }
-
-        }
-        catch (Exception)
-        {
-
             throw;
         }
     }

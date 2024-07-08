@@ -5,7 +5,6 @@ using ScheduleRooms.Models.Dtos;
 
 namespace ScheduleRooms.API.Controllers;
 
-
 [Route("api/[controller]")]
 [ApiController]
 public class ScheduleController(IScheduleService scheduleService) : ControllerBase
@@ -38,41 +37,6 @@ public class ScheduleController(IScheduleService scheduleService) : ControllerBa
             scheduleDto
         });
 
-    }
-    [HttpGet("Schedule")]
-    public async Task<ActionResult<IEnumerable<ScheduleDto>>> GetBySchedule()
-    {
-        var scheduleDto = await _scheduleService.GetBySchedule();
-
-        if (!scheduleDto.Any())
-        {
-            return NotFound("Sem dados");
-        }
-        return Ok(scheduleDto);
-    }
-    [HttpGet("ScheduleActive")]
-    public async Task<ActionResult<IEnumerable<ScheduleDto>>> GetByScheduleActive()
-    {
-        var scheduleDto = await _scheduleService.GetByScheduleActive();
-
-        if (!scheduleDto.Any())
-        {
-            return NotFound("Sem dados");
-        }
-        return Ok(scheduleDto);
-    }
-    [HttpGet("ScheduleByClientDateFinal/{clientId:int}/{strDateSalected}")]
-    public async Task<ActionResult<IEnumerable<ScheduleDto>>> GetByScheduleByClientDateFinal(int clientId, string strDateSalected)
-    {
-        DateTime dateSalected = DateTime.Parse(strDateSalected.Replace("%2F", "/"));
-
-        var scheduleDto = await _scheduleService.GetByScheduleActiveClientId(clientId, dateSalected);
-
-        if (!scheduleDto.Any())
-        {
-            return NotFound("Sem dados");
-        }
-        return Ok(scheduleDto);
     }
     [HttpGet("{id:int}", Name = "GetScheduleId")]
     public async Task<ActionResult<ScheduleDto>> GetById(int id)

@@ -71,18 +71,15 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
             throw;
         }
     }
-
-    public async Task<IEnumerable<ScheduleUser>> GetByDateStart(int page, int size, DateTime dateStart)
+    public async Task<IEnumerable<ScheduleUser>> GetByDateStart(DateTime dateStart)
     {
         try
         {
             var scheduleUsers = await _scheduleContext.ScheduleUsers
                 .Include(i => i.User)
                 .Include(i => i.Schedule)
-                  .Include(i => i.Schedule.Client)
+                .Include(i => i.Schedule.Client)
                 .OrderByDescending(o => o.Schedule.DateFinal)
-                .Skip((page - 1) * size)
-                .Take(size)
                 .Where(w => w.Schedule.DateStart.Date == dateStart.Date)
                 .ToListAsync();
 
@@ -98,7 +95,6 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
             throw;
         }
     }
-
     public async Task<ScheduleUser> GetById(int scheduleId, int userId)
     {
         try
@@ -123,7 +119,6 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
             throw;
         }
     }
-
     public async Task<IEnumerable<ScheduleUser>> GetByScheduleId(int scheduleId)
     {
         try
@@ -141,7 +136,6 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
             throw;
         }
     }
-
     public async Task<int> TotalScheduleUser(string search)
     {
         var totalScheduleUser = await _scheduleContext.ScheduleUsers
@@ -149,7 +143,6 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
                 .CountAsync();
         return totalScheduleUser;
     }
-
     public async Task<ScheduleUser> Update(ScheduleUser scheduleUser)
     {
         try

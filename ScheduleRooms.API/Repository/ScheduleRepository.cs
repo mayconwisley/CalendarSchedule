@@ -48,7 +48,6 @@ public class ScheduleRepository(ScheduleContext scheduleContext) : IScheduleRepo
             throw new Exception(ex.Message);
         }
     }
-
     public async Task<Schedule> Delete(int id)
     {
         try
@@ -68,7 +67,6 @@ public class ScheduleRepository(ScheduleContext scheduleContext) : IScheduleRepo
             throw;
         }
     }
-
     public async Task<IEnumerable<Schedule>> GetAll(int page, int size, string search)
     {
         try
@@ -88,7 +86,6 @@ public class ScheduleRepository(ScheduleContext scheduleContext) : IScheduleRepo
             throw;
         }
     }
-
     public async Task<Schedule> GetById(int id)
     {
         try
@@ -109,92 +106,6 @@ public class ScheduleRepository(ScheduleContext scheduleContext) : IScheduleRepo
             throw;
         }
     }
-
-    public async Task<IEnumerable<Schedule>> GetBySchedule()
-    {
-        try
-        {
-            var schedules = await (
-                        from s in _scheduleContext.Schedules
-                        join c in _scheduleContext.Clients on s.ClientId equals c.Id into sc
-                        from c in sc.DefaultIfEmpty()
-                        select new Schedule
-                        {
-                            Id = s.Id,
-
-                            ClientId = s.ClientId,
-                            DateStart = s.DateStart,
-                            DateFinal = s.DateFinal,
-                            Description = s.Description,
-
-                            MeetingType = s.MeetingType,
-                            Particular = s.Particular,
-                            StatusSchedule = s.StatusSchedule,
-
-                            Client = c == null ? null : new Client
-                            {
-                                Id = c.Id,
-                                Name = c.Name,
-                                Active = c.Active,
-                                City = c.City,
-                                Description = c.Description,
-
-                                Telephone = c.Telephone,
-                            }
-
-
-                        })
-                .OrderBy(o => o.DateFinal)
-                .ToListAsync();
-
-            return schedules;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
-
-    public async Task<IEnumerable<Schedule>> GetByScheduleActive()
-    {
-        try
-        {
-            var schedules = await _scheduleContext.Schedules
-                .Include(i => i.Client)
-
-                .Where(w => w.DateFinal >= DateTime.Now)
-                .OrderBy(o => o.DateFinal)
-                .ToListAsync();
-
-            return schedules;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
-
-    public async Task<IEnumerable<Schedule>> GetByScheduleActiveClientId(int clientId, DateTime dateSalected)
-    {
-        try
-        {
-            var schedules = await _scheduleContext.Schedules
-
-                .Include(i => i.Client)
-                .Where(w => w.DateFinal >= DateTime.Now &&
-                            w.DateFinal.Date == dateSalected.Date &&
-                            w.ClientId == clientId)
-                .OrderBy(o => o.DateStart)
-                .ToListAsync();
-
-            return schedules;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
-
     public async Task<int> TotalSchedules(string search)
     {
         var totalSchedule = await _scheduleContext.Schedules
@@ -203,7 +114,6 @@ public class ScheduleRepository(ScheduleContext scheduleContext) : IScheduleRepo
 
         return totalSchedule;
     }
-
     public async Task<Schedule> Update(Schedule schedule)
     {
         try

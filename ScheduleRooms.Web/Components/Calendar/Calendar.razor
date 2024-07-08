@@ -6,9 +6,7 @@
 }
 
 @inject IScheduleUserService scheculeUserService
-
-@attribute [StreamRendering(true)]
-
+@inject IScheduleService scheduleService
 
 <div class="teste">
     <div class="calendario">
@@ -16,7 +14,6 @@
             <div class="titulo">
                 <p>Agenda JS Maringá</p>
             </div>
-
             <nav>
                 <ul class="pagination">
                     <li class="page-room">
@@ -37,7 +34,6 @@
             <div>
                 <NavLink class="nav-link" href="Login" Match="NavLinkMatch.Prefix">Menu</NavLink>
             </div>
-
         </div>
         <div class="dia-semana">
             <span>Domingo</span>
@@ -52,9 +48,9 @@
             <div class="dia-mes">
                 @for (int i = 0; i < dateEndMonth.Day; i++)
                 {
-                    Task.FromResult(LoadDados(dateStartMonth.AddDays(i)));
-
                     int numWeek = ((int)dateStartMonth.AddDays(i).DayOfWeek);
+                    DateTime currentDate = dateStartMonth.AddDays(i);
+
                     @if (@dateStartMonth.AddDays(i).Day == 1)
                     {
                         @for (int y = 0; y < numWeek; y++)
@@ -72,7 +68,7 @@
                             @dateStartMonth.AddDays(i).Day
                         </b>
 
-                        @if (ScheduleUserView.ScheduleUsersDto is null)
+                        @if (!dailyScheduleData.ContainsKey(currentDate) || dailyScheduleData[currentDate] is null)
                         {
                             <div class="spinner-border spinner-border-sm" role="status">
                                 <span class="visually-hidden">Loading...</span>
@@ -80,24 +76,42 @@
                         }
                         else
                         {
-                            var scheduleUsers = ScheduleUserView.ScheduleUsersDto;
+                            var scheduleUsers = dailyScheduleData[currentDate];
+                            var scheduleIdAnterior = 0;
+                            string dado = string.Empty;
 
                             @foreach (var scheduleUser in scheduleUsers)
                             {
+                                var scheduleId = scheduleUser.ScheduleId;
+
                                 if (scheduleUser.ScheduleDto.DateStart.Date == dateStartMonth.AddDays(i).Date)
                                 {
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#tableScheduleUser-@scheduleUser.UserDto.Id-@scheduleUser.ScheduleDto.ClientId-@dateStartMonth.AddDays(i).Date.ToString("ddMMyyyy")">
 
                                         @{
-                                            string dado = string.Empty;
-
                                             if (scheduleUser.ScheduleDto.Particular)
                                             {
+                                                dado = string.Empty;
                                                 dado = $"{scheduleUser.UserDto.Name} - Particular";
                                             }
                                             else
                                             {
-                                                dado = string.Join(", ", scheduleUser.UserDto.Name);
+                                                if (scheduleId != scheduleIdAnterior)
+                                                {
+                                                    dado = string.Empty;
+                                                }
+                                                else
+                                                {
+
+                                                    dado += scheduleUser.UserDto.Name;
+
+                                                    // dado = string.Join(", ",
+                                                    // scheduleUser.UserDto.Name,
+                                                    // $"Das: {scheduleUser.ScheduleDto.DateStart.ToString("HH:mm")} " +
+                                                    // $"as {scheduleUser.ScheduleDto.DateFinal.ToString("HH:mm")}");
+                                                    //continue;
+                                                }
+
                                             }
                                         }
                                         @dado
@@ -107,6 +121,7 @@
                                     }
                                     @* <TableScheduleUserModal UserId="@user.UserId" ClientId="@user.ClientId" DateSelected="@dateStartMonth.AddDays(i).Date" /> *@
                                 }
+                                scheduleIdAnterior = scheduleId;
                             }
                         }
                     </span>
@@ -121,31 +136,61 @@
 
     DateTime competence = DateTime.Now.Date;
 
-    public ScheduleUserView? ScheduleUserView { get; set; }
+    private ScheduleUserView? ScheduleUserView { get; set; } = new();
+    private ScheduleView? ScheduleView { get; set; } = new();
+    private List<int>? SchedulesId { get; set; } = new();
+
+
+    private Dictionary<DateTime, IEnumerable<ScheduleUserDto>> dailyScheduleData = new Dictionary<DateTime, IEnumerable<ScheduleUserDto>>();
 
     private int UserId { get; set; }
 
-    // protected override async Task OnInitializedAsync()
-    // {
-    //     DateTime dateStartMonth = new DateTime(competence.Year, competence.Month, 1);
-    //     await LoadDados(dateStartMonth);
-    // }
-
-    private async Task LoadDados(DateTime dateSchedule)
+    protected override async Task OnInitializedAsync()
     {
-        ScheduleUserView = new();
-        ScheduleUserView = await scheculeUserService.GetByScheduleUserDateStart(dateSchedule);
-        
+        await LoadDataMonth(competence);
     }
 
-    private void NextMonth()
+    private async Task<IEnumerable<ScheduleUserDto>> LoadDados(DateTime dateSchedule)
+    {
+        return await scheculeUserService.GetByScheduleUserDateStart(dateSchedule);
+    }
+
+    private async Task LoadDataMonth(DateTime competence)
+    {
+        DateTime dateStartMonth = new DateTime(competence.Year, competence.Month, 1);
+        DateTime dateEndMonth = new DateTime(competence.Year, competence.Month, DateTime.DaysInMonth(competence.Year, competence.Month));
+
+        for (int i = 0; i < dateEndMonth.Day; i++)
+        {
+            DateTime currentDate = dateStartMonth.AddDays(i);
+            await ScheduleId(currentDate);
+            dailyScheduleData[currentDate] = await LoadDados(currentDate);
+
+        }
+    }
+
+    private async Task ScheduleId(DateTime competence)
+    {
+
+        var ids = await scheculeUserService.GetByScheduleUserDateStart(competence);
+
+        ids.GroupBy(g => g.ScheduleId).ToList();
+
+
+    }
+
+    private async Task NextMonth()
     {
         DateTime competenceAdd = competence.AddMonths(1);
         competence = competenceAdd;
+
+        await LoadDataMonth(competence);
     }
-    private void PreviousMonth()
+    private async Task PreviousMonth()
     {
         DateTime competenceRemove = competence.AddMonths(-1);
         competence = competenceRemove;
+
+        await LoadDataMonth(competence);
     }
 }

@@ -61,31 +61,17 @@ public class ScheduleUserController(IScheduleUserService scheduleUserService) : 
 
     }
     [HttpGet("DateStart/{dateStart}")]
-    public async Task<ActionResult<IEnumerable<ScheduleUserDto>>> GetByDateStart([FromQuery] int page = 1, [FromQuery] int size = 10, string dateStart = "")
+    public async Task<ActionResult<IEnumerable<ScheduleUserDto>>> GetByDateStart(string dateStart = "")
     {
         DateTime dateSalected = DateTime.Parse(dateStart.Replace("%2F", "/"));
 
-        var scheduleUserDto = await _scheduleUserService.GetByDateStart(page, size, dateSalected);
-        decimal totalData = (decimal)await _scheduleUserService.TotalScheduleUser(dateSalected.Date.ToString("yyyy-MM-dd"));
-        decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
-
-        if (size == 1)
-        {
-            totalPage = totalData;
-        }
+        var scheduleUserDto = await _scheduleUserService.GetByDateStart(dateSalected);
 
         if (!scheduleUserDto.Any())
         {
             return NotFound("Sem dados");
         }
-        return Ok(new
-        {
-            totalData,
-            page,
-            totalPage,
-            size,
-            scheduleUserDto
-        });
+        return Ok(scheduleUserDto);
     }
     [Authorize]
     [HttpPost]
