@@ -235,4 +235,41 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
+
+    public async Task<IEnumerable<ScheduleUserDto>> GetByScheduleId(int scheduleId)
+    {
+        try
+        {
+            //var token = await _tokenStorageService.GetToken();
+
+            //if (token.Bearer is null)
+            //{
+            //    return new();
+            //}
+
+            using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+            using var response = await httpClient.GetAsync($"{apiEndPoint}/{scheduleId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var scheduleUserDto = await response.Content.ReadFromJsonAsync<IEnumerable<ScheduleUserDto>>(_serializerOptions);
+                return scheduleUserDto ??= [];
+            }
+            else
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return [];
+                }
+                response.EnsureSuccessStatusCode();
+            }
+            return [];
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
 }
