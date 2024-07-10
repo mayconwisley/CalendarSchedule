@@ -1,6 +1,6 @@
 ﻿@using System.Globalization
 @{
-    CultureInfo cultureInfo = new("pr-BR");
+    CultureInfo cultureInfo = new("pt-BR");
     DateTime dateStartMonth = new DateTime(competence.Year, competence.Month, 1);
     DateTime dateEndMonth = new DateTime(competence.Year, competence.Month, DateTime.DaysInMonth(competence.Year, competence.Month));
 }
@@ -77,19 +77,17 @@
                         else
                         {
                             var scheduleUsers = dailyScheduleData[currentDate];
-
-                            var scheduleIdAnterior = 0;
                             string dado = string.Empty;
 
                             @foreach (var scheduleUser in scheduleUsers)
                             {
                                 var scheduleId = scheduleUser.ScheduleId;
-                               
+
+                                @(async () => await SearchUserSchedue(scheduleId))
+
                                 if (scheduleUser.ScheduleDto.DateStart.Date == dateStartMonth.AddDays(i).Date)
                                 {
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#tableScheduleUser-@dateStartMonth.AddDays(i).Date.ToString("ddMMyyyy")">
-
-                                        @scheduleId;
 
                                         @foreach (var item in ScheduleUserDtos)
                                         {
@@ -103,30 +101,8 @@
                                                 dado += $"{item.UserDto.Name}, ";
                                             }
                                         }
-
-                                        @{
-                                            // if (scheduleUser.ScheduleDto.Particular)
-                                            // {
-                                            //     dado = string.Empty;
-                                            //     dado = $"{scheduleUser.UserDto.Name} - Particular";
-                                            // }
-                                            // else
-                                            // {
-                                            //     if (scheduleId != scheduleIdAnterior)
-                                            //     {
-                                            //         dado = string.Empty;
-                                            //     }
-
-                                            //     dado = string.Join(", ",
-                                            //     scheduleUser.UserDto.Name,
-                                            //     $"Das: {scheduleUser.ScheduleDto.DateStart.ToString("HH:mm")} " +
-                                            //     $"as {scheduleUser.ScheduleDto.DateFinal.ToString("HH:mm")}");
-                                            // }
-                                        }
                                         @dado
                                     </a>
-
-                                    @* <TableScheduleUserModal UserId="@user.UserId" ClientId="@user.ClientId" DateSelected="@dateStartMonth.AddDays(i).Date" /> *@
                                 }
                             }
                         }
@@ -141,22 +117,15 @@
 @code {
 
     DateTime competence = DateTime.Now.Date;
-
-    private ScheduleUserView? ScheduleUserView { get; set; } = new();
-    private ScheduleView? ScheduleView { get; set; } = new();
-    private List<int>? SchedulesId { get; set; } = new();
-    public IEnumerable<ScheduleUserDto>? ScheduleUserDtos { get; set; } = [];
-
+    private List<ScheduleUserDto>? ScheduleUserDtos { get; set; } = [];
     private Dictionary<DateTime, IEnumerable<ScheduleUserDto>> dailyScheduleData = new Dictionary<DateTime, IEnumerable<ScheduleUserDto>>();
-
-    private int UserId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         await LoadDataMonth(competence);
     }
 
-    private async Task<List<ScheduleUserDto>> LoadDatas(DateTime dateSchedule)
+    private async Task<List<ScheduleUserDto>> LoadScheduleUserDtoDates(DateTime dateSchedule)
     {
         var scheduleUserDtos = await scheculeUserService.GetByScheduleUserDateStart(dateSchedule);
 
@@ -166,7 +135,6 @@
         {
             SchedulesId = g.ScheduleId,
             DateStart = g.ScheduleDto.DateStart
-
         })
         .Select(s => new ScheduleUserDto
             {
@@ -180,9 +148,9 @@
         return scheduleUserDtosDates;
     }
 
-    private async Task SearchUserSchedue(int scheduleId)
+    private async Task<IEnumerable<ScheduleUserDto>> SearchUserSchedue(int scheduleId)
     {
-        ScheduleUserDtos = await scheculeUserService.GetByScheduleId(scheduleId);
+        return await scheculeUserService.GetByScheduleId(scheduleId);
     }
 
     private async Task LoadDataMonth(DateTime competence)
@@ -193,7 +161,7 @@
         for (int i = 0; i < dateEndMonth.Day; i++)
         {
             DateTime currentDate = dateStartMonth.AddDays(i);
-            dailyScheduleData[currentDate] = await LoadDatas(currentDate);
+            dailyScheduleData[currentDate] = await LoadScheduleUserDtoDates(currentDate);
         }
     }
     private async Task NextMonth()
