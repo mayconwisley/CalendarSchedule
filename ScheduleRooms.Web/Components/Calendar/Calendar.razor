@@ -77,34 +77,27 @@
                         else
                         {
                             var scheduleUsers = dailyScheduleData[currentDate];
-
                             string dado = string.Empty;
 
-                            @foreach (var scheduleUser in scheduleUsers)
-                            {
-                                if (scheduleUser.ScheduleDto.DateStart.Date == dateStartMonth.AddDays(i).Date)
-                               {
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#tableScheduleUser-@dateStartMonth.AddDays(i).Date.ToString("ddMMyyyy")">
 
-                                        @scheduleUser.ScheduleId - @scheduleUser.ScheduleDto.DateStart
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#tableScheduleUser-@dateStartMonth.AddDays(i).Date.ToString("ddMMyyyy")">
 
-                                        @{
-                                            var s = ScheduleUserDtos
-                                                            .Select(s => new { })
-                                                            .Where(w => w.ScheduleDto.DateStart == scheduleUser.ScheduleDto.DateStart)
-                                            .Select(s => new UserDto
-                            {
-                                Name = s.UserDto.Name
+                                @*  @scheduleUser.ScheduleId - @scheduleUser.ScheduleDto.DateStart *@
 
-                            })
-                                            .ToList();
-                                            dado = string.Join(",", s);
+                                @{
+                                    var s = ScheduleUserDtos
+                                    .Where(w => w.ScheduleDto.DateStart.Date == currentDate.Date)
+                                    .Select(w => w.UserDto.Name)
+                                    .ToList();
 
-                                        }
-                                        @dado
-                                    </a>
+                                    dado = string.Join(",", s);
+
                                 }
-                            }
+                                @dado
+                            </a>
+
+
+                           
                         }
                     </span>
                 }
@@ -117,7 +110,7 @@
 @code {
 
     DateTime competence = DateTime.Now.Date;
-    private List<IEnumerable<ScheduleUserDto>>? ScheduleUserDtos { get; set; } = [];
+    private IEnumerable<ScheduleUserDto>? ScheduleUserDtos { get; set; } = [];
     private Dictionary<DateTime, IEnumerable<ScheduleUserDto>> dailyScheduleData = new Dictionary<DateTime, IEnumerable<ScheduleUserDto>>();
     private Dictionary<int, IEnumerable<ScheduleUserDto>> dailyScheduleData1 = new Dictionary<int, IEnumerable<ScheduleUserDto>>();
 
@@ -165,7 +158,7 @@
             dailyScheduleData[currentDate] = await LoadScheduleUserDtoDates(currentDate);
             foreach (var item in dailyScheduleData[currentDate])
             {
-                ScheduleUserDtos.Add(await SearchUserSchedule(item.ScheduleId));
+                ScheduleUserDtos = await SearchUserSchedule(item.ScheduleId);
             }
         }
     }
