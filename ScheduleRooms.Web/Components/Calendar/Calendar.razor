@@ -6,8 +6,6 @@
 }
 
 @inject IScheduleUserService scheculeUserService
-@inject IScheduleService scheduleService
-
 <div class="teste">
     <div class="calendario">
         <div class="desc-mes">
@@ -46,6 +44,7 @@
         </div>
         <div class="centro-mes">
             <div class="dia-mes">
+
                 @for (int i = 0; i < dateEndMonth.Day; i++)
                 {
                     int numWeek = ((int)dateStartMonth.AddDays(i).DayOfWeek);
@@ -77,27 +76,7 @@
                         else
                         {
                             var scheduleUsers = dailyScheduleData[currentDate];
-                            string dado = string.Empty;
-
-
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#tableScheduleUser-@dateStartMonth.AddDays(i).Date.ToString("ddMMyyyy")">
-
-                                @*  @scheduleUser.ScheduleId - @scheduleUser.ScheduleDto.DateStart *@
-
-                                @{
-                                    var s = ScheduleUserDtos
-                                    .Where(w => w.ScheduleDto.DateStart.Date == currentDate.Date)
-                                    .Select(w => w.UserDto.Name)
-                                    .ToList();
-
-                                    dado = string.Join(",", s);
-
-                                }
-                                @dado
-                            </a>
-
-
-                           
+                            <CalendarUser ScheduleUserDtos="@scheduleUsers" CurrenteDate="@currentDate" />
                         }
                     </span>
                 }
@@ -110,41 +89,33 @@
 @code {
 
     DateTime competence = DateTime.Now.Date;
-    private IEnumerable<ScheduleUserDto>? ScheduleUserDtos { get; set; } = [];
-    private Dictionary<DateTime, IEnumerable<ScheduleUserDto>> dailyScheduleData = new Dictionary<DateTime, IEnumerable<ScheduleUserDto>>();
-    private Dictionary<int, IEnumerable<ScheduleUserDto>> dailyScheduleData1 = new Dictionary<int, IEnumerable<ScheduleUserDto>>();
+    Dictionary<DateTime, IEnumerable<ScheduleUserDto>> dailyScheduleData = new Dictionary<DateTime, IEnumerable<ScheduleUserDto>>();
 
     protected override async Task OnInitializedAsync()
     {
         await LoadDataMonth(competence);
     }
 
-    private async Task<List<ScheduleUserDto>> LoadScheduleUserDtoDates(DateTime dateSchedule)
+    private async Task<IEnumerable<ScheduleUserDto>> LoadScheduleUserDtoDates(DateTime dateSchedule)
     {
         var scheduleUserDtos = await scheculeUserService.GetByScheduleUserDateStart(dateSchedule);
 
-        var scheduleUserDtosDates = scheduleUserDtos
-        .Where(w => w.ScheduleDto.DateStart.Date == dateSchedule.Date)
-        .GroupBy(g => new
-        {
-            SchedulesId = g.ScheduleId,
-            DateStart = g.ScheduleDto.DateStart
-        })
-        .Select(s => new ScheduleUserDto
-            {
-                ScheduleId = s.Key.SchedulesId,
-                ScheduleDto = new()
-                {
-                    DateStart = s.Key.DateStart
-                }
-            })
-            .ToList();
-        return scheduleUserDtosDates;
-    }
-
-    private async Task<IEnumerable<ScheduleUserDto>> SearchUserSchedule(int scheduleId)
-    {
-        return await scheculeUserService.GetByScheduleId(scheduleId);
+        return scheduleUserDtos
+         .Where(w => w.ScheduleDto.DateStart.Date == dateSchedule.Date)
+         .GroupBy(g => new
+         {
+             SchedulesId = g.ScheduleId,
+             DateStart = g.ScheduleDto.DateStart
+         })
+         .Select(s => new ScheduleUserDto
+             {
+                 ScheduleId = s.Key.SchedulesId,
+                 ScheduleDto = new()
+                 {
+                     DateStart = s.Key.DateStart
+                 }
+             })
+             .ToList();
     }
 
     private async Task LoadDataMonth(DateTime competence)
@@ -156,24 +127,19 @@
         {
             DateTime currentDate = dateStartMonth.AddDays(i);
             dailyScheduleData[currentDate] = await LoadScheduleUserDtoDates(currentDate);
-            foreach (var item in dailyScheduleData[currentDate])
-            {
-                ScheduleUserDtos = await SearchUserSchedule(item.ScheduleId);
-            }
         }
+        StateHasChanged();
     }
     private async Task NextMonth()
     {
         DateTime competenceAdd = competence.AddMonths(1);
         competence = competenceAdd;
-
         await LoadDataMonth(competence);
     }
     private async Task PreviousMonth()
     {
         DateTime competenceRemove = competence.AddMonths(-1);
         competence = competenceRemove;
-
         await LoadDataMonth(competence);
     }
 }

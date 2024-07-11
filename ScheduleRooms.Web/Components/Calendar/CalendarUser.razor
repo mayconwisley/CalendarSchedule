@@ -1,0 +1,21 @@
+﻿<a href="#">
+    @{
+        string dado = string.Empty;
+        var userDto = ScheduleUserDtos
+        .Where(w => w.ScheduleDto.DateStart.Date == CurrenteDate.Date)
+        .Select(w => w.UserDto.Name)
+        .ToList();
+
+        dado = string.Join(",", userDto);
+
+    }
+    @dado
+</a>
+
+@code {
+    [Parameter]
+    public IEnumerable<ScheduleUserDto>? ScheduleUserDtos { get; set; }
+
+    [Parameter]
+    public DateTime CurrenteDate { get; set; }
+}
