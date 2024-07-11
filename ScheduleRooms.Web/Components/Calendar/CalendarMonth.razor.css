@@ -36,7 +36,7 @@
     justify-content: center;
 }
 
-    .dia-semana span {
+    .dia-semana div {
         display: inline-block;
         font-weight: bold;
         width: 13.5%;
@@ -54,7 +54,7 @@
     width: 100%;
 }
 
-    .dia-mes span {
+    .dia-mes div {
         display: inline-block;
         width: 13%;
         height: 13vh;
@@ -62,7 +62,7 @@
         color: #000;
     }
 
-        .dia-mes span p {
+        .dia-mes div p {
             font-weight: bold;
         }
 

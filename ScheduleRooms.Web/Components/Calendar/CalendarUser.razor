@@ -1,21 +1,31 @@
-﻿<a href="#">
-    @{
-        string dado = string.Empty;
-        var userDto = ScheduleUserDtos
-        .Where(w => w.ScheduleDto.DateStart.Date == CurrenteDate.Date)
-        .Select(w => w.UserDto.Name)
-        .ToList();
+﻿@if (Teste is not null)
+{
+    <a href="#">
+        @{
+            string dado = string.Empty;
+            dado = string.Join(",", Teste);
+        }
+        @dado
+    </a>
+}
 
-        dado = string.Join(",", userDto);
-
-    }
-    @dado
-</a>
 
 @code {
     [Parameter]
-    public IEnumerable<ScheduleUserDto>? ScheduleUserDtos { get; set; }
-
+    public IEnumerable<ScheduleUserDto> ScheduleUserDtos { get; set; } = [];
     [Parameter]
     public DateTime CurrenteDate { get; set; }
+
+    List<string> Teste { get; set; } = [];
+
+    protected override Task OnInitializedAsync()
+    {
+        foreach (var item in ScheduleUserDtos)
+        {
+            Teste.Add(item.UserDto.Name);
+        }
+
+        return base.OnInitializedAsync();
+    }
+
 }

@@ -34,13 +34,13 @@
             </div>
         </div>
         <div class="dia-semana">
-            <span>Domingo</span>
-            <span>Segunda-feira</span>
-            <span>Terça-feira</span>
-            <span>Quarta-feira</span>
-            <span>Quinta-feira</span>
-            <span>Sexta-feira</span>
-            <span>Sábado</span>
+            <div>Domingo</div>
+            <div>Segunda-feira</div>
+            <div>Terça-feira</div>
+            <div>Quarta-feira</div>
+            <div>Quinta-feira</div>
+            <div>Sexta-feira</div>
+            <div>Sábado</div>
         </div>
         <div class="centro-mes">
             <div class="dia-mes">
@@ -54,10 +54,10 @@
                     {
                         @for (int y = 0; y < numWeek; y++)
                         {
-                            <span class="vazio"></span>
+                            <div class="vazio"></div>
                         }
                     }
-                    <span class="@(numWeek == 0 && dateStartMonth.AddDays(i).Date == DateTime.Now.Date ? "dia-atual dia" :
+                    <div class="@(numWeek == 0 && dateStartMonth.AddDays(i).Date == DateTime.Now.Date ? "dia-atual dia" :
                                   (numWeek == 0 ? "domingo dia" :
                                   (numWeek == 6 && dateStartMonth.AddDays(i).Date == DateTime.Now.Date ? "dia-atual dia" :
                                   (numWeek == 6 ? "sabado dia" :
@@ -69,16 +69,16 @@
 
                         @if (!dailyScheduleData.ContainsKey(currentDate) || dailyScheduleData[currentDate] is null)
                         {
-                            <div class="spinner-border spinner-border-sm" role="status">
+                            <span class="spinner-border spinner-border-sm" role="status">
                                 <span class="visually-hidden">Loading...</span>
-                            </div>
+                            </span>
                         }
                         else
                         {
-                            var scheduleUsers = dailyScheduleData[currentDate];
-                            <CalendarUser ScheduleUserDtos="@scheduleUsers" CurrenteDate="@currentDate" />
+                            ScheduleUserDtos = dailyScheduleData[currentDate];
+                            <CalendarUser ScheduleUserDtos="@ScheduleUserDtos" CurrenteDate="@currentDate" />
                         }
-                    </span>
+                    </div>
                 }
             </div>
         </div>
@@ -90,6 +90,7 @@
 
     DateTime competence = DateTime.Now.Date;
     Dictionary<DateTime, IEnumerable<ScheduleUserDto>> dailyScheduleData = new Dictionary<DateTime, IEnumerable<ScheduleUserDto>>();
+    public IEnumerable<ScheduleUserDto> ScheduleUserDtos { get; set; } = [];
 
     protected override async Task OnInitializedAsync()
     {
@@ -101,11 +102,11 @@
         var scheduleUserDtos = await scheculeUserService.GetByScheduleUserDateStart(dateSchedule);
 
         return scheduleUserDtos
-         .Where(w => w.ScheduleDto.DateStart.Date == dateSchedule.Date)
+         .Where(w => w.ScheduleDto!.DateStart.Date == dateSchedule.Date)
          .GroupBy(g => new
          {
              SchedulesId = g.ScheduleId,
-             DateStart = g.ScheduleDto.DateStart
+             DateStart = g.ScheduleDto!.DateStart
          })
          .Select(s => new ScheduleUserDto
              {
@@ -128,7 +129,6 @@
             DateTime currentDate = dateStartMonth.AddDays(i);
             dailyScheduleData[currentDate] = await LoadScheduleUserDtoDates(currentDate);
         }
-        StateHasChanged();
     }
     private async Task NextMonth()
     {
