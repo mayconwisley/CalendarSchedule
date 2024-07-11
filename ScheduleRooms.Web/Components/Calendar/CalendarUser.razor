@@ -1,12 +1,44 @@
-﻿@if (Teste is not null)
+﻿@inject IScheduleUserService scheduleUserService
+
+
+@if (ScheduleUserDtos is not null)
 {
-    <a href="#">
-        @{
-            string dado = string.Empty;
-            dado = string.Join(",", Teste);
-        }
-        @dado
-    </a>
+    @foreach (var t in ScheduleUserDtos)
+    {
+        string dado = string.Empty;
+        UserDtos.Clear();
+        <a href="#" class="calenderUser">
+            @foreach (var item in ScheduleUserDtos1)
+            {
+
+               @*  if (item.ScheduleDto!.Particular)
+                {
+
+                    UserDtos.Add($"{item.UserDto!.Name} - Particular");
+                }
+                else
+                {
+                    UserDtos.Add($"{item.UserDto!.Name}");
+                }
+                 *@
+                
+                
+                @foreach (var i in item)
+                {
+                    if (i.ScheduleDto!.Particular)
+                    {
+                        
+                        UserDtos.Add($"{i.UserDto!.Name} - Particular");
+                    }
+                    else
+                    {
+                        UserDtos.Add($"{i.UserDto!.Name}");
+                    }
+                }
+            }
+            @string.Join(",", UserDtos)
+        </a>
+    }
 }
 
 
@@ -16,16 +48,27 @@
     [Parameter]
     public DateTime CurrenteDate { get; set; }
 
-    List<string> Teste { get; set; } = [];
+    List<string> UserDtos { get; set; } = [];
 
-    protected override Task OnInitializedAsync()
+    private List<IEnumerable<ScheduleUserDto>> ScheduleUserDtos1 { get; set; } = [];
+    private IEnumerable<ScheduleUserDto> ScheduleUserDtos2 { get; set; } = [];
+
+    protected override async Task OnInitializedAsync()
     {
-        foreach (var item in ScheduleUserDtos)
+        var scheduleUserList = await Teste(ScheduleUserDtos);
+        foreach (var item in scheduleUserList)
         {
-            Teste.Add(item.UserDto.Name);
+            ScheduleUserDtos2 = await scheduleUserService.GetByScheduleId(item.ScheduleId);
+            ScheduleUserDtos1.Add(await scheduleUserService.GetByScheduleId(item.ScheduleId));
         }
+    }
+    private Task<List<ScheduleUserDto>> Teste(IEnumerable<ScheduleUserDto> scheduleUserDtos)
+    {
+        var scheduleId = scheduleUserDtos
+        .Where(w => w.ScheduleDto!.DateStart.Date == CurrenteDate.Date)
+        .ToList();
 
-        return base.OnInitializedAsync();
+        return Task.FromResult(scheduleId);
     }
 
 }
