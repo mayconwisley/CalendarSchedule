@@ -7,6 +7,8 @@
 @inject NavigationManager navigationManager
 
 <h1>Adicionar Colaborador na Agenda</h1>
+<MensageError Message="Teste"/>
+
 <div class="border mt-2">
     <EditForm Model="@ScheduleUserCreateDto" OnValidSubmit="@Create">
         <DataAnnotationsValidator />
@@ -102,7 +104,15 @@
         ScheduleDto scheduleDto = new();
         if (scheduleShareService.ScheduleCreateDto is not null)
         {
-            scheduleDto = await scheduleService.Create(scheduleShareService.ScheduleCreateDto);
+            try
+            {
+                scheduleDto = await scheduleService.Create(scheduleShareService.ScheduleCreateDto);
+            }
+            catch (Exception ex)
+            {
+                await Error(ex.Message);
+            }
+
         }
 
         if (ScheduleUserCreateDto is not null)
@@ -124,7 +134,6 @@
             catch (Exception ex)
             {
                 await Error(ex.Message);
-                ScheduleUserCreateDto = new();
             }
         }
         navigationManager.NavigateTo("/Schedule");

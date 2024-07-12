@@ -123,12 +123,14 @@
     {
         DateTime dateStartMonth = new DateTime(competence.Year, competence.Month, 1);
         DateTime dateEndMonth = new DateTime(competence.Year, competence.Month, DateTime.DaysInMonth(competence.Year, competence.Month));
+        dailyScheduleData.Clear();
 
         for (int i = 0; i < dateEndMonth.Day; i++)
         {
             DateTime currentDate = dateStartMonth.AddDays(i);
             dailyScheduleData[currentDate] = await LoadScheduleUserDtoDates(currentDate);
         }
+        StateHasChanged();
     }
     private async Task NextMonth()
     {

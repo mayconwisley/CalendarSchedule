@@ -53,7 +53,8 @@ public class ScheduleService : IScheduleService
                 {
                     var errorContent = await response.Content.ReadAsStringAsync();
                     var cod = (int)response.StatusCode;
-                    var tes = errorContent;
+
+                    throw new Exception($"{cod} - {errorContent}");
                 }
             }
             return new();
