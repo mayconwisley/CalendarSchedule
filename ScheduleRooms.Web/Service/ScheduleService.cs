@@ -49,6 +49,12 @@ public class ScheduleService : IScheduleService
                         return schedule;
                     }
                 }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    var cod = (int)response.StatusCode;
+                    var tes = errorContent;
+                }
             }
             return new();
         }

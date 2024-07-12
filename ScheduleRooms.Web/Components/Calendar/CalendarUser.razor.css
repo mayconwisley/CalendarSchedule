@@ -5,7 +5,7 @@
     text-decoration: none;
 }
 
-calenderUser:hover {
+.calenderUser:hover {
     background-color: #4F6363;
     color: white;
 }

@@ -3,41 +3,28 @@
 
 @if (ScheduleUserDtos is not null)
 {
-    @foreach (var t in ScheduleUserDtos)
+    @for (int i = 0; i < ScheduleUserDtos.Count(); i++)
     {
-        string dado = string.Empty;
-        UserDtos.Clear();
-        <a href="#" class="calenderUser">
-            @foreach (var item in ScheduleUserDtos1)
-            {
+        @if (ScheduleUserDtosList.Count() != 0)
+        {
+            string dado = string.Empty;
 
-               @*  if (item.ScheduleDto!.Particular)
+            UserDtos.Clear();
+            <a href="#" class="calenderUser">
+                @foreach (var item in ScheduleUserDtosList[i])
                 {
-
-                    UserDtos.Add($"{item.UserDto!.Name} - Particular");
-                }
-                else
-                {
-                    UserDtos.Add($"{item.UserDto!.Name}");
-                }
-                 *@
-                
-                
-                @foreach (var i in item)
-                {
-                    if (i.ScheduleDto!.Particular)
+                    @if (item.ScheduleDto!.Particular)
                     {
-                        
-                        UserDtos.Add($"{i.UserDto!.Name} - Particular");
+                        UserDtos.Add($"{item.UserDto!.Name} - Particular");
                     }
                     else
                     {
-                        UserDtos.Add($"{i.UserDto!.Name}");
+                        UserDtos.Add($"{item.UserDto!.Name}");
                     }
                 }
-            }
-            @string.Join(",", UserDtos)
-        </a>
+                @string.Join(", ", UserDtos)
+            </a>
+        }
     }
 }
 
@@ -49,20 +36,17 @@
     public DateTime CurrenteDate { get; set; }
 
     List<string> UserDtos { get; set; } = [];
-
-    private List<IEnumerable<ScheduleUserDto>> ScheduleUserDtos1 { get; set; } = [];
-    private IEnumerable<ScheduleUserDto> ScheduleUserDtos2 { get; set; } = [];
+    private List<IEnumerable<ScheduleUserDto>> ScheduleUserDtosList { get; set; } = [];
 
     protected override async Task OnInitializedAsync()
     {
-        var scheduleUserList = await Teste(ScheduleUserDtos);
+        var scheduleUserList = await GetScheduleIdLists(ScheduleUserDtos);
         foreach (var item in scheduleUserList)
         {
-            ScheduleUserDtos2 = await scheduleUserService.GetByScheduleId(item.ScheduleId);
-            ScheduleUserDtos1.Add(await scheduleUserService.GetByScheduleId(item.ScheduleId));
+            ScheduleUserDtosList.Add(await scheduleUserService.GetByScheduleId(item.ScheduleId));
         }
     }
-    private Task<List<ScheduleUserDto>> Teste(IEnumerable<ScheduleUserDto> scheduleUserDtos)
+    private Task<List<ScheduleUserDto>> GetScheduleIdLists(IEnumerable<ScheduleUserDto> scheduleUserDtos)
     {
         var scheduleId = scheduleUserDtos
         .Where(w => w.ScheduleDto!.DateStart.Date == CurrenteDate.Date)
