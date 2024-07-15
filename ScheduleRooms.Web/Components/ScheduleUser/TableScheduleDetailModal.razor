@@ -1,5 +1,6 @@
 ﻿@inject IScheduleUserService scheduleUserService
-<div class="modal fade" id="tableScheduleDatail-@ScheduleUserId" tabindex="-1" aria-labelledby="tableScheduleLabel" aria-hidden="true">
+
+<div class="modal fade" id="tableScheduleDatail-@ScheduleId" tabindex="-1" aria-labelledby="tableScheduleLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -44,7 +45,7 @@
     private ScheduleDto? ScheduleUserView { get; set; }
 
     [Parameter]
-    public int ScheduleUserId { get; set; }
+    public int ScheduleId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

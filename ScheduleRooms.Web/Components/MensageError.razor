@@ -1,30 +1,15 @@
 ﻿@if (!string.IsNullOrEmpty(Message))
 {
-    <div class="alert alert-danger d-flex align-items-center m-2 @ShowMessage" role="alert">
-        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill" /></svg>
+    <div class="alert alert-danger d-flex align-items-center m-2" role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+            <use xlink:href="#exclamation-triangle-fill" />
+        </svg>
         <div>
             <p>@Message</p>
-            <button @onclick="HideMessageWarning" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                x
-                <span class="visually-hidden">unread messages</span>
-            </button>
         </div>
     </div>
 }
 @code {
     [Parameter]
     public string? Message { get; set; }
-    [Parameter]
-    public string? ShowMessage { get; set; }
-    [Parameter]
-    public int Key { get; set; }
-
-    protected override void OnParametersSet()
-    {
-        StateHasChanged();
-    }
-    private void HideMessageWarning()
-    {
-        ShowMessage = "d-none";
-    }
 }

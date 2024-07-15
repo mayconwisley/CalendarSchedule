@@ -7,10 +7,23 @@
     {
         @if (ScheduleUserDtosList.Count() != 0)
         {
+            var scheduleId = ScheduleUserDtosList[i]
+                          .Where(w => w.ScheduleDto!.DateStart.Date == CurrenteDate.Date)
+                          .Select(s => s.ScheduleId)
+                          .FirstOrDefault();
+            var hourStart = ScheduleUserDtosList[i]
+                          .Where(w => w.ScheduleDto!.DateStart.Date == CurrenteDate.Date)
+                          .Select(s => s.ScheduleDto!.DateStart)
+                          .FirstOrDefault();
+            var hourFinal = ScheduleUserDtosList[i]
+                          .Where(w => w.ScheduleDto!.DateStart.Date == CurrenteDate.Date)
+                          .Select(s => s.ScheduleDto!.DateFinal)
+                          .FirstOrDefault();
+
             string dado = string.Empty;
 
             UserDtos.Clear();
-            <a href="#" class="calenderUser">
+            <a href="#" data-bs-toggle="modal" data-bs-target="#tableScheduleUser-@scheduleId-@CurrenteDate.ToString("ddMMyyyy")" class="calenderUser">
                 @foreach (var item in ScheduleUserDtosList[i])
                 {
                     @if (item.ScheduleDto!.Particular)
@@ -22,8 +35,14 @@
                         UserDtos.Add($"{item.UserDto!.Name}");
                     }
                 }
+                @{
+                    UserDtos.Add($"{hourStart.ToString("HH:mm")} - {hourFinal.ToString("HH:mm")}");
+                }
+
+
                 @string.Join(", ", UserDtos)
             </a>
+            <TableScheduleUserModal ScheduleId="scheduleId" DateSelected="@CurrenteDate.Date" />
         }
     }
 }

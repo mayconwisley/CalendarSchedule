@@ -1,7 +1,6 @@
 using Blazored.SessionStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using ScheduleRooms.Models.Dtos;
 using ScheduleRooms.Web;
 using ScheduleRooms.Web.Service;
 using ScheduleRooms.Web.Service.Interface;

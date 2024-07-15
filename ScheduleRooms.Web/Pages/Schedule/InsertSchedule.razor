@@ -8,7 +8,7 @@
     <DataAnnotationsValidator />
     <div class="col-12">
         <div class="form-check">
-            <InputCheckbox class="form-check-input" @onclick=(Particular) @bind-Value="ScheduleCreateDto.Particular" id="inParticular" />
+            <InputCheckbox class="form-check-input" @onclick=(Particular) @bind-Value="ScheduleCreateDto!.Particular" id="inParticular" />
             <label for="inParticular" class="form-check-label">Particular?</label>
         </div>
     </div>
@@ -59,11 +59,11 @@
             </div>
         }
     </div>
-    <div>
+    <div class="my-2">
         <button type="submit" data-bs-dismiss="modal" class="btn btn-primary">
             Próximo
         </button>
-        <NavLink href="Schedule" class="btn btn-primary">
+        <NavLink href="Schedule" class="mx-1 btn btn-info">
             Voltar
         </NavLink>
     </div>
@@ -72,9 +72,6 @@
 @code {
     [Parameter]
     public Action? DataUpdated { get; set; }
-    [Parameter]
-    public EventCallback<string> ErroRetornado { get; set; }
-
     private ScheduleCreateDto? ScheduleCreateDto { get; set; }
     private ClientView? ClientView { get; set; } = new();
 
@@ -99,12 +96,11 @@
             }
             catch (Exception ex)
             {
-                await Error(ex.Message);
-                ScheduleCreateDto = new();
+                throw new Exception(ex.Message);
+
             }
+            navigationManager.NavigateTo($"/ScheduleUserCreate");
         }
-        navigationManager.NavigateTo($"/ScheduleUserCreate");
-        StateHasChanged();
     }
 
     private void UpdateData()
@@ -116,10 +112,5 @@
     {
         particular = !particular;
         StateHasChanged();
-    }
-
-    private async Task Error(string error)
-    {
-        await ErroRetornado.InvokeAsync(error);
     }
 }

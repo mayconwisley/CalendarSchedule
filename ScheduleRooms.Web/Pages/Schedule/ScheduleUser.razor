@@ -17,26 +17,16 @@
 }
 else
 {
-
-    <MensageError Message="@Message" ShowMessage="@ShowMessage" Key="@MessageKey" />
-    
-    
     <TableSchedule ScheduleUserView="@scheduleUserView" DataUpdated="@DataUpdated" />
 
     <PaginationTable PageCurrent="@ReceberPagina"
                      TotalData="@scheduleUserView.TotalData"
                      Page="@scheduleUserView.Page"
                      TotalPage="@scheduleUserView.TotalPage" />
-
-
 }
 
 @code {
     private ScheduleUserView? scheduleUserView;
-    private string? Message { get; set; }
-    private int MessageKey { get; set; } = 0;
-    public string? ShowMessage { get; set; }
-
     protected override async Task OnInitializedAsync()
     {
         await DataUpdated();
@@ -49,20 +39,5 @@ else
     private async Task ReceberPagina(int pageCurrent)
     {
         scheduleUserView = await scheduleUserService.GetAll(pageCurrent);
-    }
-    private async Task ReceiveError(string message)
-    {
-        Message = await Task.FromResult(message);
-
-        if (message is not null)
-        {
-            ShowMessage = "";
-        }
-        else
-        {
-            ShowMessage = "d-none";
-        }
-        MessageKey++;
-        StateHasChanged();
     }
 }

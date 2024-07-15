@@ -18,8 +18,8 @@
                     @foreach (var schedule in ScheduleUserView.ScheduleUsersDto)
                     {
                         <tr>
-                            <td>@schedule.UserDto.Name</td>
-                            <td>@(schedule.ScheduleDto.ClientDto == null ? "" : schedule.ScheduleDto.ClientDto.Name)</td>
+                            <td>@schedule.UserDto!.Name</td>
+                            <td>@(schedule.ScheduleDto!.ClientDto == null ? "" : schedule.ScheduleDto.ClientDto.Name)</td>
                             <td>@schedule.ScheduleDto.DateStart.ToString("dd/MM/yyyy HH:mm")</td>
                             <td>@schedule.ScheduleDto.DateFinal.ToString("dd/MM/yyyy HH:mm")</td>
                             <td>@schedule.ScheduleDto.Description</td>

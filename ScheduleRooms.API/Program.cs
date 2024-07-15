@@ -62,8 +62,13 @@ builder.Services.AddSwaggerGen(
 builder.Services.AddCors();
 
 var passDatabase = Environment.GetEnvironmentVariable("SQLSenha", EnvironmentVariableTarget.Machine);
+var userDB = Environment.GetEnvironmentVariable("SQLUser", EnvironmentVariableTarget.Machine);
 
-var strDataBase = builder.Configuration.GetConnectionString("ScheduleConect")!.Replace("{{pass}}", passDatabase);
+var strDataBase = builder.Configuration
+                 .GetConnectionString("ScheduleConect")!
+                 .Replace("{{pass}}", passDatabase)
+                 .Replace("{{userDB}}", userDB);
+
 builder.Services.AddDbContext<ScheduleContext>(cd => cd.UseSqlServer(strDataBase));
 builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();

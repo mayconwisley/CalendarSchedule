@@ -7,9 +7,9 @@
 @inject NavigationManager navigationManager
 
 <h1>Adicionar Colaborador na Agenda</h1>
-<MensageError Message="Teste"/>
+<MensageError Message="@ErrorMensage" />
 
-<div class="border mt-2">
+<div class="border my-2">
     <EditForm Model="@ScheduleUserCreateDto" OnValidSubmit="@Create">
         <DataAnnotationsValidator />
         <div class="row g-3">
@@ -31,9 +31,13 @@
             </div>
             <div class="col-3">
                 <label class="form-label"></label>
-                <button type="button" @onclick="@(() => AddUser(ScheduleUserCreateDto.UserId))" class="btn btn-primary">
-                    Adicionar
-                </button>
+
+                @if (Particular == true)
+                {
+                    <button type="button" @onclick="@(() => AddUser(ScheduleUserCreateDto.UserId))" class="btn btn-primary">
+                        Adicionar
+                    </button>
+                }
             </div>
         </div>
         <table class="table table-striped align-middle">
@@ -62,12 +66,17 @@
                 }
             </tbody>
         </table>
-        <button type="submit" class="btn btn-primary">
-            Salvar
-        </button>
-        <NavLink href="Schedule" class="btn btn-primary">
-            Voltar
-        </NavLink>
+        <div class="my-1">
+            @if (UserIdList!.Count > 0)
+            {
+                <button type="submit" class="btn btn-primary">
+                    Salvar
+                </button>
+            }
+            <NavLink href="Schedule" class="mx-1 btn btn-info">
+                Voltar
+            </NavLink>
+        </div>
     </EditForm>
 </div>
 
@@ -75,12 +84,13 @@
     [Parameter]
     public Action? DataUpdated { get; set; }
     [Parameter]
-    public EventCallback<string> ErroRetornado { get; set; }
-    [Parameter]
     public string ScheduleId { get; set; } = string.Empty;
+    private string ErrorMensage { get; set; } = string.Empty;
     private ScheduleUserCreateDto? ScheduleUserCreateDto { get; set; }
     private UserView? UserView { get; set; } = new();
     private IDictionary<int, string> UserIdList = new Dictionary<int, string>();
+    private bool Particular { get; set; } = true;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -90,13 +100,19 @@
 
     private async Task AddUser(int userId)
     {
+        if (scheduleShareService.ScheduleCreateDto!.Particular)
+        {
+            Particular = false;
+        }
+
         var userDto = await userService.GetById(userId);
-        UserIdList.Add(userDto.Id, userDto.Name);
+        UserIdList.Add(userDto.Id, userDto.Name!);
     }
 
     private async Task RemoveUser(int userId)
     {
         await Task.FromResult(UserIdList.Remove(userId));
+        Particular = true;
     }
 
     private async Task Create()
@@ -110,9 +126,9 @@
             }
             catch (Exception ex)
             {
-                await Error(ex.Message);
+                ErrorMensage = ex.Message;
+                return;
             }
-
         }
 
         if (ScheduleUserCreateDto is not null)
@@ -133,7 +149,8 @@
             }
             catch (Exception ex)
             {
-                await Error(ex.Message);
+                ErrorMensage = ex.Message;
+                return;
             }
         }
         navigationManager.NavigateTo("/Schedule");
@@ -143,9 +160,5 @@
     private void UpdateData()
     {
         DataUpdated?.Invoke();
-    }
-    private async Task Error(string error)
-    {
-        await ErroRetornado.InvokeAsync(error);
     }
 }

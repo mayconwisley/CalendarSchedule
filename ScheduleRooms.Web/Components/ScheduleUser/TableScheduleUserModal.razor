@@ -1,0 +1,123 @@
+﻿@inject IScheduleUserService scheduleUserService
+<div class="modal fade" id="tableScheduleUser-@ScheduleId-@DateSelected.ToString("ddMMyyyy")" tabindex="-1" aria-labelledby="tableScheduleLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="tableScheduleLabel">
+                    Consulta do dia - <strong>@DateSelected.Date.ToString("dd/MM/yyyy")</strong>
+                </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="border">
+                    @{
+                        var particular = ScheduleUserDtos
+                        .Where(w => w.ScheduleId == ScheduleId)
+                        .Select(s => s.ScheduleDto!.Particular)
+                        .FirstOrDefault();
+                        @if (particular)
+                        {
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Colaborador</th>
+                                        <th>Descrição</th>
+                                        <th>Data/Hora Inicio</th>
+                                        <th>Data/Hora Fim</th>
+                                        <th>Particular</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (ScheduleUserDtos is not null)
+                                    {
+                                        var scheuduleDtos = ScheduleUserDtos;
+
+                                        if (scheuduleDtos is not null)
+                                        {
+                                            @foreach (var schedule in scheuduleDtos)
+                                            {
+                                                <tr>
+                                                    <td>@schedule.UserId</td>
+                                                    <td>@schedule.UserDto!.Name</td>
+                                                    <td>@schedule.ScheduleDto!.Description</td>
+                                                    <td>@schedule.ScheduleDto!.DateStart.ToString("dd/MM/yyyy HH:mm")</td>
+                                                    <td>@schedule.ScheduleDto!.DateFinal.ToString("dd/MM/yyyy HH:mm")</td>
+                                                    <td>@(schedule.ScheduleDto!.Particular ? "Sim" : "Não")</td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Colaborador</th>
+                                        <th>Cliente</th>
+                                        <th>Prospecção</th>
+                                        <th>Descrição</th>
+                                        <th>Data/Hora Inicio</th>
+                                        <th>Data/Hora Fim</th>
+                                        <th>Remoto</th>
+                                        <th>Reservada</th>
+                                        <th>Particular</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (ScheduleUserDtos is not null)
+                                    {
+                                        var scheuduleDtos = ScheduleUserDtos;
+
+                                        if (scheuduleDtos is not null)
+                                        {
+                                            @foreach (var schedule in scheuduleDtos)
+                                            {
+                                                <tr>
+                                                    <td>@schedule.UserId</td>
+                                                    <td>@schedule.UserDto!.Name</td>
+                                                    <td>@schedule.ScheduleDto!.ClientDto!.Name</td>
+                                                    <td>@(schedule.ScheduleDto.ClientDto.Prospection ? "Sim" : "Não")</td>
+                                                    <td>@schedule.ScheduleDto!.Description</td>
+                                                    <td>@schedule.ScheduleDto!.DateStart.ToString("dd/MM/yyyy HH:mm")</td>
+                                                    <td>@schedule.ScheduleDto!.DateFinal.ToString("dd/MM/yyyy HH:mm")</td>
+                                                    <td>@(schedule.ScheduleDto!.MeetingType ? "Sim" : "Não")</td>
+                                                    <td>@(schedule.ScheduleDto!.StatusSchedule ? "Sim" : "Não")</td>
+                                                    <td>@(schedule.ScheduleDto!.Particular ? "Sim" : "Não")</td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+    private IEnumerable<ScheduleUserDto> ScheduleUserDtos { get; set; } = [];
+
+    [Parameter]
+    public int ScheduleId { get; set; }
+
+    [Parameter]
+    public DateTime DateSelected { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        ScheduleUserDtos = await scheduleUserService.GetByScheduleId(ScheduleId);
+        StateHasChanged();
+    }
+}
