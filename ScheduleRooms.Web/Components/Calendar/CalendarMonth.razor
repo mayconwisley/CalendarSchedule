@@ -1,11 +1,12 @@
 ﻿@using System.Globalization
+@inject IScheduleUserService scheculeUserService
+
 @{
     CultureInfo cultureInfo = new("pt-BR");
     DateTime dateStartMonth = new DateTime(competence.Year, competence.Month, 1);
     DateTime dateEndMonth = new DateTime(competence.Year, competence.Month, DateTime.DaysInMonth(competence.Year, competence.Month));
 }
 
-@inject IScheduleUserService scheculeUserService
 <div class="teste">
     <div class="calendario">
         <div class="desc-mes">
@@ -47,25 +48,20 @@
 
                 @for (int i = 0; i < dateEndMonth.Day; i++)
                 {
-                    int numWeek = ((int)dateStartMonth.AddDays(i).DayOfWeek);
                     DateTime currentDate = dateStartMonth.AddDays(i);
+                    int numWeek = ((int)currentDate.DayOfWeek);
+                    bool isToday = currentDate.Date == DateTime.Now.Date;
 
-                    @if (@dateStartMonth.AddDays(i).Day == 1)
+
+                    @if (@currentDate.Day == 1)
                     {
                         @for (int y = 0; y < numWeek; y++)
                         {
                             <div class="vazio"></div>
                         }
                     }
-                    <div class="@(numWeek == 0 && dateStartMonth.AddDays(i).Date == DateTime.Now.Date ? "dia-atual dia" :
-                                  (numWeek == 0 ? "domingo dia" :
-                                  (numWeek == 6 && dateStartMonth.AddDays(i).Date == DateTime.Now.Date ? "dia-atual dia" :
-                                  (numWeek == 6 ? "sabado dia" :
-                                  (dateStartMonth.AddDays(i).Date == DateTime.Now.Date ? "dia-atual dia" :
-                                  "dia" )))))">
-                        <b>
-                            @dateStartMonth.AddDays(i).Day
-                        </b>
+                    <div class="@GetDayClass(numWeek, isToday)">
+                        <b>@currentDate.Day</b>
 
                         @if (!dailyScheduleData.ContainsKey(currentDate) || dailyScheduleData[currentDate] is null)
                         {
@@ -77,7 +73,6 @@
                         {
                             ScheduleUserDtos = dailyScheduleData[currentDate];
                             <CalendarUser ScheduleUserDtos="@ScheduleUserDtos" CurrenteDate="@currentDate" />
-
                         }
                     </div>
                 }
@@ -132,7 +127,6 @@
             DateTime currentDate = dateStartMonth.AddDays(i);
             dailyScheduleData[currentDate] = await LoadScheduleUserDtoDates(currentDate);
         }
-        StateHasChanged();
     }
     private async Task NextMonth()
     {
@@ -145,5 +139,14 @@
         DateTime competenceRemove = competence.AddMonths(-1);
         competence = competenceRemove;
         await LoadDataMonth(competence);
+    }
+    private string GetDayClass(int dayOfWeek, bool isToday)
+    {
+        return dayOfWeek switch
+        {
+            0 => isToday ? "dia-atual dia" : "domingo dia",
+            6 => isToday ? "dia-atual dia" : "sabado dia",
+            _ => isToday ? "dia-atual dia" : "dia"
+        };
     }
 }
