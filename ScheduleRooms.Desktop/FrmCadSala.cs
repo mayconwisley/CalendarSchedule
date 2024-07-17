@@ -1,4 +1,4 @@
-﻿using ScheduleRooms.Models;
+﻿using CalendarSchedule.Models;
 using ScheduleRooms.Repository;
 using System;
 using System.Windows.Forms;

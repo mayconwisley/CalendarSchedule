@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ScheduleRooms.Models;
+namespace CalendarSchedule.Models;
 
 public class Room
 {

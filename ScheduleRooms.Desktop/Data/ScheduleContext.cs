@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ScheduleRooms.Models;
+using CalendarSchedule.Models;
 
 namespace ScheduleRooms.Data;
 

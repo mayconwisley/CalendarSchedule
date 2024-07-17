@@ -20,7 +20,7 @@ namespace ScheduleRooms.Desktop.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.10");
 
-            modelBuilder.Entity("ScheduleRooms.Models.Room", b =>
+            modelBuilder.Entity("CalendarSchedule.Models.Room", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -40,7 +40,7 @@ namespace ScheduleRooms.Desktop.Migrations
                     b.ToTable("Rooms");
                 });
 
-            modelBuilder.Entity("ScheduleRooms.Models.Schedule", b =>
+            modelBuilder.Entity("CalendarSchedule.Models.Schedule", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -72,9 +72,9 @@ namespace ScheduleRooms.Desktop.Migrations
                     b.ToTable("Schedules");
                 });
 
-            modelBuilder.Entity("ScheduleRooms.Models.Schedule", b =>
+            modelBuilder.Entity("CalendarSchedule.Models.Schedule", b =>
                 {
-                    b.HasOne("ScheduleRooms.Models.Room", "Room")
+                    b.HasOne("CalendarSchedule.Models.Room", "Room")
                         .WithMany()
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)

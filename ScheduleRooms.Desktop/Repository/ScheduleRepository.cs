@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ScheduleRooms.Data;
-using ScheduleRooms.Models;
+using CalendarSchedule.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
