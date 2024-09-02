@@ -61,7 +61,9 @@
                         }
                     }
                     <div class="@GetDayClass(numWeek, isToday)">
-                        <b>@currentDate.Day</b>
+                        <div class="DiaDireita">
+                            <b>@currentDate.Day</b>
+                        </div>
 
                         @if (!dailyScheduleData.ContainsKey(currentDate) || dailyScheduleData[currentDate] is null)
                         {
