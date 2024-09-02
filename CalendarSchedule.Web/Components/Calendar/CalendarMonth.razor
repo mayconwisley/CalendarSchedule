@@ -30,7 +30,9 @@
                     </li>
                 </ul>
             </nav>
-            <span>data atual</span>
+            <div>
+                <button class="btn btn-outline-info" @onclick="CompetenceCurrent"> @DateTime.Now.ToString("dd/MM/yyyy") </button>
+            </div>
             <div>
                 <NavLink class="nav-link" href="Login" Match="NavLinkMatch.Prefix">Menu</NavLink>
             </div>
@@ -93,6 +95,11 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadDataMonth(competence);
+    }
+    private async Task CompetenceCurrent()
+    {
+        competence = DateTime.Now.Date;
         await LoadDataMonth(competence);
     }
 
