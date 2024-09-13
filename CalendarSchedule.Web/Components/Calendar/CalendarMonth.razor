@@ -103,12 +103,11 @@
         await LoadDataMonth(competence);
     }
 
-    private async Task<IEnumerable<ScheduleUserDto>> LoadScheduleUserDtoDates(DateTime dateSchedule)
+    private async Task<IEnumerable<ScheduleUserDto>> LoadScheduleUserDtoDates(DateTime dateStart, DateTime dateEnd)
     {
-        var scheduleUserDtos = await scheculeUserService.GetByScheduleUserDateStart(dateSchedule);
+        var scheduleUserDtos = await scheculeUserService.GetByScheduleUserDatePeriod(dateStart, dateEnd);
 
         return scheduleUserDtos
-         .Where(w => w.ScheduleDto!.DateStart.Date == dateSchedule.Date)
          .OrderBy(o => o.ScheduleDto!.DateStart)
          .GroupBy(g => new
          {
@@ -131,11 +130,11 @@
         DateTime dateStartMonth = new DateTime(competence.Year, competence.Month, 1);
         DateTime dateEndMonth = new DateTime(competence.Year, competence.Month, DateTime.DaysInMonth(competence.Year, competence.Month));
         dailyScheduleData.Clear();
-
+        var teste = await LoadScheduleUserDtoDates(dateStartMonth, dateEndMonth);
         for (int i = 0; i < dateEndMonth.Day; i++)
         {
             DateTime currentDate = dateStartMonth.AddDays(i);
-            dailyScheduleData[currentDate] = await LoadScheduleUserDtoDates(currentDate);
+            dailyScheduleData[currentDate] = await LoadScheduleUserDtoDates(dateStartMonth, dateEndMonth);
         }
     }
     private async Task NextMonth()

@@ -82,7 +82,7 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
                                             .Include(i => i.Schedule.Client)
                                             .OrderByDescending(o => o.Schedule.DateFinal)
                                             .Where(w => w.Schedule.DateStart.Date >= dateStart.Date &&
-                                                        w.Schedule.DataStart.Date <= dateEnd.Date)
+                                                        w.Schedule.DateStart.Date <= dateEnd.Date)
                                             .ToListAsync();
 
             if (scheduleUsers is not null)
