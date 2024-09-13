@@ -73,6 +73,20 @@ public class ScheduleUserController(IScheduleUserService scheduleUserService) : 
         }
         return Ok(scheduleUserDto);
     }
+    [HttpGet("Period/{dateStart}/{dateEnd}")]
+    public async Task<ActionResult<IEnumerable<ScheduleUserDto>>> GetByDatePeriod(string dateStart = "", string dateEnd = "")
+    {
+        DateTime dtDateStart = DateTime.Parse(dateStart.Replace("%2F", "/"));
+        DateTime dtDateEnd = DateTime.Parse(dateEnd.Replace("%2F", "/"));
+
+        var scheduleUserDto = await _scheduleUserService.GetByDatePeriod(dtDateStart, dtDateEnd);
+
+        if (!scheduleUserDto.Any())
+        {
+            return NotFound("Sem dados");
+        }
+        return Ok(scheduleUserDto);
+    }
     [Authorize]
     [HttpPost]
     public async Task<ActionResult<ScheduleUserDto>> Post([FromBody] ScheduleUserCreateDto scheduleUserCreateDto)

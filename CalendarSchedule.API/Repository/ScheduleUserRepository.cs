@@ -71,6 +71,33 @@ public class ScheduleUserRepository(ScheduleContext scheduleContext) : ISchedule
             throw;
         }
     }
+
+    public async Task<IEnumerable<ScheduleUser>> GetByDatePeriod(DateTime dateStart, DateTime dateEnd)
+    {
+        try
+        {
+            var scheduleUsers = await _scheduleContext.ScheduleUsers
+                                            .Include(i => i.User)
+                                            .Include(i => i.Schedule)
+                                            .Include(i => i.Schedule.Client)
+                                            .OrderByDescending(o => o.Schedule.DateFinal)
+                                            .Where(w => w.Schedule.DateStart.Date >= dateStart.Date &&
+                                                        w.Schedule.DataStart.Date <= dateEnd.Date)
+                                            .ToListAsync();
+
+            if (scheduleUsers is not null)
+            {
+                return scheduleUsers;
+            }
+
+            return [];
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
     public async Task<IEnumerable<ScheduleUser>> GetByDateStart(DateTime dateStart)
     {
         try

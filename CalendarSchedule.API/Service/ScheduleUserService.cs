@@ -22,6 +22,13 @@ public class ScheduleUserService(IScheduleUserRepository scheduleUserRepository)
         var scheduleUserDtos = await _scheduleUserRepository.GetAll(page, size, search);
         return scheduleUserDtos.ConvertSchedulesUserDto();
     }
+
+    public async Task<IEnumerable<ScheduleUserDto>> GetByDatePeriod(DateTime dateStart, DateTime dateEnd)
+    {
+        var scheduleUserDtos = await _scheduleUserRepository.GetByDatePeriod(dateStart, dateEnd);
+        return scheduleUserDtos.ConvertSchedulesUserDto();
+    }
+
     public async Task<IEnumerable<ScheduleUserDto>> GetByDateStart(DateTime dateStart)
     {
         var scheduleUserDtos = await _scheduleUserRepository.GetByDateStart(dateStart);
