@@ -67,8 +67,9 @@
                         <div class="DiaDireita">
                             <b>@currentDate.Day</b>
                         </div>
+                        <p>@dailyScheduleData[currentDate].ScheduleDto.DateStart</p>
 
-                        @if (!dailyScheduleData.ContainsKey(currentDate) || dailyScheduleData[currentDate] is null)
+                      @*   @if (!dailyScheduleData.ContainsKey(currentDate) || dailyScheduleData[currentDate] is null)
                         {
                             <span class="spinner-border spinner-border-sm" role="status">
                                 <span class="visually-hidden">Loading...</span>
@@ -76,9 +77,10 @@
                         }
                         else
                         {
-                            ScheduleUserDtos = dailyScheduleData[currentDate];
                             <CalendarUser ScheduleUserDtos="@ScheduleUserDtos" CurrenteDate="@currentDate" />
-                        }
+                        } *@
+
+
                     </div>
                 }
             </div>
@@ -90,7 +92,8 @@
 @code {
 
     DateTime competence = DateTime.Now.Date;
-    Dictionary<DateTime, IEnumerable<ScheduleUserDto>> dailyScheduleData = new Dictionary<DateTime, IEnumerable<ScheduleUserDto>>();
+    Dictionary<DateTime, IEnumerable<ScheduleUserDto>> dailyScheduleData1 = new Dictionary<DateTime, IEnumerable<ScheduleUserDto>>();
+    Dictionary<DateTime, ScheduleUserDto> dailyScheduleData = new Dictionary<DateTime, ScheduleUserDto>();
     public IEnumerable<ScheduleUserDto> ScheduleUserDtos { get; set; } = [];
 
     protected override async Task OnInitializedAsync()
@@ -127,15 +130,26 @@
 
     private async Task LoadDataMonth(DateTime competence)
     {
+        dailyScheduleData.Clear();
         DateTime dateStartMonth = new DateTime(competence.Year, competence.Month, 1);
         DateTime dateEndMonth = new DateTime(competence.Year, competence.Month, DateTime.DaysInMonth(competence.Year, competence.Month));
-        dailyScheduleData.Clear();
+
         var teste = await LoadScheduleUserDtoDates(dateStartMonth, dateEndMonth);
-        for (int i = 0; i < dateEndMonth.Day; i++)
+
+        foreach (var item in teste)
         {
-            DateTime currentDate = dateStartMonth.AddDays(i);
-            dailyScheduleData[currentDate] = await LoadScheduleUserDtoDates(dateStartMonth, dateEndMonth);
+            if (item.ScheduleDto is not null)
+            {
+                dailyScheduleData[item.ScheduleDto.DateStart.Date] = item;
+            }
         }
+
+
+        // for (int i = 0; i < dateEndMonth.Day; i++)
+        // {
+        //     DateTime currentDate = dateStartMonth.AddDays(i);
+        //     dailyScheduleData[currentDate] = await LoadScheduleUserDtoDates(dateStartMonth, dateEndMonth);
+        // }
     }
     private async Task NextMonth()
     {

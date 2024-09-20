@@ -3,14 +3,12 @@
     "Name": "ProjetoWeb",
     "Projects": [
       {
-        "Name": "ScheduleRooms.API\\ScheduleRooms.API.csproj",
-        "Action": "Start",
-        "DebugTarget": "https"
+        "Path": "CalendarSchedule.API\\CalendarSchedule.API.csproj",
+        "Action": "Start"
       },
       {
-        "Name": "ScheduleRooms.Web\\ScheduleRooms.Web.csproj",
-        "Action": "Start",
-        "DebugTarget": "https"
+        "Path": "CalendarSchedule.Web\\CalendarSchedule.Web.csproj",
+        "Action": "Start"
       }
     ]
   }
