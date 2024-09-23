@@ -1,6 +1,5 @@
 ﻿@inject IScheduleUserService scheduleUserService
 
-
 @if (ScheduleUserDtos is not null && ScheduleUserDtosList.Count() != 0)
 {
     @for (int i = 0; i < ScheduleUserDtos.Count(); i++)
@@ -38,31 +37,63 @@
     }
 }
 
-
 @code {
-    [Parameter]
-    public IEnumerable<ScheduleUserDto> ScheduleUserDtos { get; set; } = [];
+
     [Parameter]
     public DateTime CurrenteDate { get; set; }
+
+    private IEnumerable<ScheduleUserDto> ScheduleUserDtos = [];
 
     List<string> UserDtos { get; set; } = [];
     private List<IEnumerable<ScheduleUserDto>> ScheduleUserDtosList { get; set; } = [];
 
     protected override async Task OnInitializedAsync()
     {
-        var scheduleUserList = await GetScheduleIdLists(ScheduleUserDtos);
-        foreach (var item in scheduleUserList)
+        var scheduleUserList = await GetScheduleIdLists(CurrenteDate.Date);
+
+        if (scheduleUserList is not null)
         {
-            ScheduleUserDtosList.Add(await scheduleUserService.GetByScheduleId(item.ScheduleId));
+            foreach (var item in scheduleUserList)
+            {
+                ScheduleUserDtosList.Add(await scheduleUserService.GetByScheduleId(item.ScheduleId));
+            }
         }
     }
-    private Task<List<ScheduleUserDto>> GetScheduleIdLists(IEnumerable<ScheduleUserDto> scheduleUserDtos)
+    protected async override Task OnParametersSetAsync()
     {
-        var scheduleId = scheduleUserDtos
-        .Where(w => w.ScheduleDto!.DateStart.Date == CurrenteDate.Date)
-        .ToList();
+        var scheduleUserList = await GetScheduleIdLists(CurrenteDate.Date);
 
-        return Task.FromResult(scheduleId);
+        if (scheduleUserList is not null)
+        {
+            foreach (var item in scheduleUserList)
+            {
+                ScheduleUserDtosList.Add(await scheduleUserService.GetByScheduleId(item.ScheduleId));
+            }
+        }
     }
+    private async Task<IEnumerable<ScheduleUserDto>> GetScheduleIdLists(DateTime currentDate)
+    {
+        var schedule = await scheduleUserService.GetByScheduleUserDateStart(currentDate.Date);
+
+        if (schedule is not null)
+        {
+            var scheduleId = schedule
+                            .Where(w => w.ScheduleDto!.DateStart.Date == CurrenteDate.Date)
+                            .ToList();
+
+            return await Task.FromResult(scheduleId);
+        }
+
+        return await Task.FromResult(new List<ScheduleUserDto>());
+    }
+
+    private void GetScheduleUserDtos()
+    {
+        // DateTime dateStartMonth = new DateTime(CurrenteDate.Year, CurrenteDate.Month, 1);
+        // DateTime dateEndMonth = new DateTime(CurrenteDate.Year, CurrenteDate.Month, DateTime.DaysInMonth(CurrenteDate.Year, CurrenteDate.Month));
+        // ScheduleUserDtos = await scheduleUserService.GetByScheduleUserDatePeriod(dateStartMonth, dateEndMonth);
+
+    }
+
 
 }

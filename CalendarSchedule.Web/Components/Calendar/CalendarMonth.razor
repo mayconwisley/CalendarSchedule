@@ -1,5 +1,4 @@
 ﻿@using System.Globalization
-@inject IScheduleUserService scheculeUserService
 
 @{
     CultureInfo cultureInfo = new("pt-BR");
@@ -67,19 +66,8 @@
                         <div class="DiaDireita">
                             <b>@currentDate.Day</b>
                         </div>
-                        <p>@dailyScheduleData[currentDate].ScheduleDto.DateStart</p>
 
-                      @*   @if (!dailyScheduleData.ContainsKey(currentDate) || dailyScheduleData[currentDate] is null)
-                        {
-                            <span class="spinner-border spinner-border-sm" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </span>
-                        }
-                        else
-                        {
-                            <CalendarUser ScheduleUserDtos="@ScheduleUserDtos" CurrenteDate="@currentDate" />
-                        } *@
-
+                        <CalendarUser CurrenteDate="@currentDate.Date" />
 
                     </div>
                 }
@@ -88,80 +76,34 @@
     </div>
 </div>
 
-
 @code {
 
     DateTime competence = DateTime.Now.Date;
-    Dictionary<DateTime, IEnumerable<ScheduleUserDto>> dailyScheduleData1 = new Dictionary<DateTime, IEnumerable<ScheduleUserDto>>();
-    Dictionary<DateTime, ScheduleUserDto> dailyScheduleData = new Dictionary<DateTime, ScheduleUserDto>();
-    public IEnumerable<ScheduleUserDto> ScheduleUserDtos { get; set; } = [];
-
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        await LoadDataMonth(competence);
+        LoadDataMonth(competence);
     }
-    private async Task CompetenceCurrent()
+    private void CompetenceCurrent()
     {
         competence = DateTime.Now.Date;
-        await LoadDataMonth(competence);
+        LoadDataMonth(competence);
     }
-
-    private async Task<IEnumerable<ScheduleUserDto>> LoadScheduleUserDtoDates(DateTime dateStart, DateTime dateEnd)
+    private void LoadDataMonth(DateTime competence)
     {
-        var scheduleUserDtos = await scheculeUserService.GetByScheduleUserDatePeriod(dateStart, dateEnd);
-
-        return scheduleUserDtos
-         .OrderBy(o => o.ScheduleDto!.DateStart)
-         .GroupBy(g => new
-         {
-             SchedulesId = g.ScheduleId,
-             DateStart = g.ScheduleDto!.DateStart
-         })
-         .Select(s => new ScheduleUserDto
-             {
-                 ScheduleId = s.Key.SchedulesId,
-                 ScheduleDto = new()
-                 {
-                     DateStart = s.Key.DateStart
-                 }
-             })
-             .ToList();
-    }
-
-    private async Task LoadDataMonth(DateTime competence)
-    {
-        dailyScheduleData.Clear();
         DateTime dateStartMonth = new DateTime(competence.Year, competence.Month, 1);
         DateTime dateEndMonth = new DateTime(competence.Year, competence.Month, DateTime.DaysInMonth(competence.Year, competence.Month));
-
-        var teste = await LoadScheduleUserDtoDates(dateStartMonth, dateEndMonth);
-
-        foreach (var item in teste)
-        {
-            if (item.ScheduleDto is not null)
-            {
-                dailyScheduleData[item.ScheduleDto.DateStart.Date] = item;
-            }
-        }
-
-
-        // for (int i = 0; i < dateEndMonth.Day; i++)
-        // {
-        //     DateTime currentDate = dateStartMonth.AddDays(i);
-        //     dailyScheduleData[currentDate] = await LoadScheduleUserDtoDates(dateStartMonth, dateEndMonth);
-        // }
     }
-    private async Task NextMonth()
+    private void NextMonth()
     {
         DateTime competenceAdd = competence.AddMonths(1);
         competence = competenceAdd;
-        await LoadDataMonth(competence);
+        LoadDataMonth(competence);
     }
-    private async Task PreviousMonth()
+    private void PreviousMonth()
     {
         DateTime competenceRemove = competence.AddMonths(-1);
         competence = competenceRemove;
-        await LoadDataMonth(competence);
+        LoadDataMonth(competence);
     }
     private string GetDayClass(int dayOfWeek, bool isToday)
     {
@@ -172,4 +114,5 @@
             _ => isToday ? "dia-atual dia" : "dia"
         };
     }
+
 }

@@ -31,5 +31,6 @@ builder.Services.AddScoped<IUserContactService, UserContactService>();
 builder.Services.AddScoped<IClientResponsibleService, ClientResponsibleService>();
 builder.Services.AddScoped<IClientContactService, ClientContactService>();
 builder.Services.AddSingleton<ScheduleShareService>();
+builder.Services.AddSingleton<ScheduleUserShareService>();
 
 await builder.Build().RunAsync();
