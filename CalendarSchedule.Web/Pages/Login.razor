@@ -2,20 +2,19 @@
 @inject ITokenStorageService tokenStorageService
 @inject IUserStorageService userStorageService
 @inject NavigationManager navigationManager
-
-<div class="login-container">
-    <h2>Login</h2>
-    <EditForm Model="@LoginDto" OnValidSubmit="Log_in">
+<div class="formulario-login">
+    <EditForm Model="@LoginDto" OnValidSubmit="Log_in" >
+        <h2>Login</h2>
         <DataAnnotationsValidator />
-        <div>
+        
             <InputText @bind-Value="LoginDto!.Username" type="text" placeholder="Usuário" />
-        </div>
-        <div>
+        
+        
             <InputText @bind-Value="LoginDto!.Password" type="password" placeholder="Senha" />
-        </div>
-        <div>
+        
+        
             <button type="submit">Entrar</button>
-        </div>
+
     </EditForm>
 </div>
 

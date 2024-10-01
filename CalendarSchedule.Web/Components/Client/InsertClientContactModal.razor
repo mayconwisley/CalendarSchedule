@@ -7,7 +7,7 @@
         <div class="modal-content">
             <EditForm Model="@ClientContactCreateDto" OnValidSubmit="Create">
                 @{
-                    ClientContactCreateDto.ClientId = @ClientId;
+                    ClientContactCreateDto!.ClientId = @ClientId;
                 }
                 <DataAnnotationsValidator />
                 <div class="modal-header">

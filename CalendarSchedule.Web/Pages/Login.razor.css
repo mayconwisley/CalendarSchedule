@@ -1,12 +1,76 @@
-﻿.login-container {
-    height: 90vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f0f0f0;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+﻿.formulario-login {
+    background: #F3F3F3;
+    margin: auto;
+    width: 50%;
+    max-width: 400px;
+    padding: 30px;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-bottom: 5px solid rgba(0, 124, 255);
+    border-radius: 15px;
 }
-div{
-    padding: 5px;
+
+    .formulario-login h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: rgba(0,0,0,0.5);
+    }
+
+    .formulario-login input {
+        display: block;
+        width: 100%;
+        background: #f3f3f3;
+        border: none;
+        margin: 30px 0;
+        padding: 10px;
+        border-bottom: 1px solid rgba(0,0,0,0.2);
+        outline: none;
+    }
+
+        .formulario-login input[type="text"]:focus, [type="password"]:focus {
+            border-bottom: 2px solid rgba(0,0,0,0.9);
+        }
+
+        .formulario-login input[type="submit"] {
+            background: rgba(0, 124, 255);
+            opacity: 0.9;
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+            .formulario-login input[type="submit"]:hover {
+                opacity: 1;
+                transition: .2s;
+            }
+
+            .formulario-login input[type="submit"]:active {
+                transform: scale(0.95);
+            }
+
+    .formulario-login a {
+        display: block;
+        text-align: center;
+        text-decoration: none;
+        color: rgba(0,0,0,0.5);
+    }
+
+        .formulario-login a:hover {
+            text-decoration: underline;
+            color: rgba(0,0,0,0.8);
+        }
+
+@media(max-width:780px) {
+
+    .formualrio-login {
+        width: 75%;
+    }
+}
+
+@media(max-width:480px) {
+
+    .formulario-login {
+        width: 95%;
+    }
 }

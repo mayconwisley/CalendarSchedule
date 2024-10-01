@@ -1,66 +1,54 @@
 ﻿@inject IScheduleUserService scheduleUserService
 
-@if (ScheduleUserDtos is not null && ScheduleUserDtosList.Count() != 0)
-{
-    @for (int i = 0; i < ScheduleUserDtos.Count(); i++)
+@if (ScheduleUserDtosList is not null)
+{    @if (ScheduleUserDtosList.Count() != 0)
     {
-        var currentSchedule = ScheduleUserDtosList[i]
-                     .Where(w => w.ScheduleDto!.DateStart.Date == CurrenteDate.Date)
-                     .ToList();
-
-        @if (currentSchedule.Any())
+        @for (int i = 0; i < ScheduleUserDtosList.Count(); i++)
         {
-            var scheduleId = currentSchedule
-                                        .Select(s => s.ScheduleId)
-                                        .FirstOrDefault();
-            var hourStart = currentSchedule
-                                .Select(s => s.ScheduleDto!.DateStart)
-                                .FirstOrDefault();
-            var hourFinal = currentSchedule
-                                .Select(s => s.ScheduleDto!.DateFinal)
-                                .FirstOrDefault();
-            UserDtos.Clear();
-            <a href="#" data-bs-toggle="modal" data-bs-target="#tableScheduleUser-@scheduleId-@CurrenteDate.ToString("ddMMyyyy")" class="calenderUser">
+            var currentSchedule = ScheduleUserDtosList[i]
+                         .Where(w => w.ScheduleDto!.DateStart.Date == CurrenteDate.Date)
+                         .ToList();
 
-                @foreach (var item in currentSchedule)
-                {
-                    string? userDisplay = item.ScheduleDto!.Particular ? $"{item.UserDto!.Name} - Particular" : item.UserDto!.Name;
-                    UserDtos.Add(userDisplay!);
-                }
-                @{
-                    UserDtos.Add($"{hourStart:HH:mm} - {hourFinal:HH:mm}");
-                }
-                @string.Join(", ", UserDtos)
-            </a>
-            <TableScheduleUserModal ScheduleId="scheduleId" DateSelected="@CurrenteDate.Date" />
+            @if (currentSchedule.Any())
+            {
+                var scheduleId = currentSchedule
+                                            .Select(s => s.ScheduleId)
+                                            .FirstOrDefault();
+                var hourStart = currentSchedule
+                                    .Select(s => s.ScheduleDto!.DateStart)
+                                    .FirstOrDefault();
+                var hourFinal = currentSchedule
+                                    .Select(s => s.ScheduleDto!.DateFinal)
+                                    .FirstOrDefault();
+                UserDtos.Clear();
+                <a href="#" data-bs-toggle="modal" data-bs-target="#tableScheduleUser-@scheduleId-@CurrenteDate.ToString("ddMMyyyy")" class="calenderUser">
+
+                    @foreach (var item in currentSchedule)
+                    {
+                        string? userDisplay = item.ScheduleDto!.Particular ? $"{item.UserDto!.Name} - Particular" : item.UserDto!.Name;
+                        UserDtos.Add(userDisplay!);
+                    }
+                    @{
+                        UserDtos.Add($"{hourStart:HH:mm} - {hourFinal:HH:mm}");
+                    }
+                    @string.Join(", ", UserDtos)
+                </a>
+                <TableScheduleUserModal ScheduleId="scheduleId" DateSelected="@CurrenteDate.Date" />
+            }
         }
     }
 }
+
 
 @code {
 
     [Parameter]
     public DateTime CurrenteDate { get; set; }
-
-    private IEnumerable<ScheduleUserDto> ScheduleUserDtos = [];
-
     List<string> UserDtos { get; set; } = [];
     private List<IEnumerable<ScheduleUserDto>> ScheduleUserDtosList { get; set; } = [];
-
-    protected override async Task OnInitializedAsync()
-    {
-        var scheduleUserList = await GetScheduleIdLists(CurrenteDate.Date);
-
-        if (scheduleUserList is not null)
-        {
-            foreach (var item in scheduleUserList)
-            {
-                ScheduleUserDtosList.Add(await scheduleUserService.GetByScheduleId(item.ScheduleId));
-            }
-        }
-    }
     protected async override Task OnParametersSetAsync()
     {
+        ScheduleUserDtosList.Clear();
         var scheduleUserList = await GetScheduleIdLists(CurrenteDate.Date);
 
         if (scheduleUserList is not null)
@@ -79,6 +67,11 @@
         {
             var scheduleId = schedule
                             .Where(w => w.ScheduleDto!.DateStart.Date == CurrenteDate.Date)
+                            .GroupBy(g => g.ScheduleId)
+                            .Select(s => new ScheduleUserDto
+                                {
+                                    ScheduleId = s.Key
+                                })
                             .ToList();
 
             return await Task.FromResult(scheduleId);
@@ -86,14 +79,4 @@
 
         return await Task.FromResult(new List<ScheduleUserDto>());
     }
-
-    private void GetScheduleUserDtos()
-    {
-        // DateTime dateStartMonth = new DateTime(CurrenteDate.Year, CurrenteDate.Month, 1);
-        // DateTime dateEndMonth = new DateTime(CurrenteDate.Year, CurrenteDate.Month, DateTime.DaysInMonth(CurrenteDate.Year, CurrenteDate.Month));
-        // ScheduleUserDtos = await scheduleUserService.GetByScheduleUserDatePeriod(dateStartMonth, dateEndMonth);
-
-    }
-
-
 }
