@@ -25,7 +25,6 @@
         border-bottom: 1px solid rgba(0,0,0,0.2);
         outline: none;
     }
-
         .formulario-login input[type="text"]:focus, [type="password"]:focus {
             border-bottom: 2px solid rgba(0,0,0,0.9);
         }
@@ -39,12 +38,10 @@
             font-size: 1em;
             cursor: pointer;
         }
-
             .formulario-login input[type="submit"]:hover {
                 opacity: 1;
                 transition: .2s;
             }
-
             .formulario-login input[type="submit"]:active {
                 transform: scale(0.95);
             }
@@ -55,12 +52,10 @@
         text-decoration: none;
         color: rgba(0,0,0,0.5);
     }
-
         .formulario-login a:hover {
             text-decoration: underline;
             color: rgba(0,0,0,0.8);
         }
-
 @media(max-width:780px) {
 
     .formualrio-login {

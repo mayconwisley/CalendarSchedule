@@ -2,21 +2,20 @@
 @inject ITokenStorageService tokenStorageService
 @inject IUserStorageService userStorageService
 @inject NavigationManager navigationManager
-<div class="formulario-login">
-    <EditForm Model="@LoginDto" OnValidSubmit="Log_in" >
-        <h2>Login</h2>
-        <DataAnnotationsValidator />
-        
-            <InputText @bind-Value="LoginDto!.Username" type="text" placeholder="Usuário" />
-        
-        
-            <InputText @bind-Value="LoginDto!.Password" type="password" placeholder="Senha" />
-        
-        
-            <button type="submit">Entrar</button>
 
-    </EditForm>
-</div>
+<EditForm Model="@LoginDto" OnValidSubmit="Log_in" class="formulario-login">
+    <h2>Login</h2>
+    <DataAnnotationsValidator />
+    <div>
+        <InputText @bind-Value="LoginDto!.Username" type="text" placeholder="Usuário" />
+    </div>
+    <div>
+        <InputText @bind-Value="LoginDto!.Password" type="password" placeholder="Senha" />
+    </div>
+    <div>
+        <button class="btn btn-primary">Entrar</button>
+    </div>
+</EditForm>
 
 @code {
     private LoginDto? LoginDto { get; set; } = new();
