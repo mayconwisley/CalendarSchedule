@@ -46,10 +46,4 @@
 
     [Parameter]
     public int ScheduleId { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-       // ScheduleUserView = await scheduleUserService.GetById(ScheduleUserId);
-        StateHasChanged();
-    }
 }

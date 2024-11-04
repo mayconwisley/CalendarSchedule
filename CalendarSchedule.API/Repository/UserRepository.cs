@@ -31,6 +31,20 @@ public class UserRepository(ScheduleContext scheduleContext) : IUserRepository
     {
         try
         {
+            var listUser = await GetAll(1, 15, "");
+            var countManager = listUser
+                            .Where(w => w.Manager == true)
+                            .Count();
+            var countUser = listUser
+                            .Where(w => w.Manager == false)
+                            .Count();
+
+            if (countManager == 1 && countUser == 0)
+            {
+                throw new Exception("Não é possivel excluir o ultimo usuário Gestor");
+            }
+
+
             var user = await GetById(id);
             if (user is not null)
             {

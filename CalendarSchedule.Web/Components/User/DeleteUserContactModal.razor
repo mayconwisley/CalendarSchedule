@@ -50,12 +50,12 @@
         if (UserContactDto is not null)
         {
             await userContactService.Delete(UserContactId);
-            UpdateData();
+            await UpdateData();
         }
     }
 
     private async Task UpdateData()
     {
-        DataUpdated.InvokeAsync(null);
+        await DataUpdated.InvokeAsync(null);
     }
 }

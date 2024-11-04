@@ -126,7 +126,7 @@ a, .btn-link {
         color: rgba(0,0,0,0.5);
     }
 
-    .formulario-login input {
+    .formulario-login input, .btnLogin {
         display: block;
         width: 100%;
         background: #f3f3f3;
@@ -141,7 +141,7 @@ a, .btn-link {
             border-bottom: 2px solid rgba(0,0,0,0.9);
         }
 
-    .formulario-login button {
+    .formulario-login .btnLogin {
         background: rgba(0, 124, 255);
         opacity: 0.9;
         border: none;
@@ -151,25 +151,13 @@ a, .btn-link {
         cursor: pointer;
     }
 
-        .formulario-login button:hover {
+        .formulario-login .btnLogin:hover {
             opacity: 1;
             transition: .2s;
         }
 
-        .formulario-login button:active {
+        .formulario-login .btnLogin:active {
             transform: scale(0.95);
-        }
-
-    .formulario-login button {
-        display: block;
-        text-align: center;
-        text-decoration: none;
-        color: rgba(0,0,0,0.5);
-    }
-
-        .formulario-login button:hover {
-            text-decoration: underline;
-            color: rgba(0,0,0,0.8);
         }
 
 @media(max-width:780px) {

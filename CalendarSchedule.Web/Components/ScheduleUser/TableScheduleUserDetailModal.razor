@@ -1,5 +1,5 @@
 ﻿@inject IScheduleUserService scheduleUserService
-@if (ScheduleUserDto.ScheduleDto is not null)
+@if (ScheduleUserDto!.ScheduleDto is not null)
 {
     <div class="modal fade" id="tableScheduleUserDatail-@ScheduleId-@UserId" tabindex="-1" aria-labelledby="tableScheduleLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
@@ -55,7 +55,7 @@
                                             <td>@(ScheduleUserDto.ScheduleDto.MeetingType ? "Sim" : "Não")</td>
                                             <td>@(ScheduleUserDto.ScheduleDto.StatusSchedule ? "Sim" : "Não")</td>
                                             <td>@(ScheduleUserDto.ScheduleDto.Particular ? "Sim" : "Não")</td>
-                                            <td>@(ScheduleUserDto.ScheduleDto.ClientDto.Prospection ? "Sim" : "Não")</td>
+                                            <td>@(ScheduleUserDto.ScheduleDto.ClientDto!.Prospection ? "Sim" : "Não")</td>
                                             <td>@(ScheduleUserDto.ScheduleDto.ClientDto == null ? "" : ScheduleUserDto.ScheduleDto.ClientDto.City)</td>
                                         </tr>
                                     }

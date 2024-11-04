@@ -5,7 +5,7 @@
 <h1>Editar Cliente</h1>
 
 <EditForm Model="@ClientDto" OnValidSubmit="@Edit">
-    <InputNumber hidden @bind-Value="ClientDto.Id" />
+    <InputNumber hidden @bind-Value="ClientDto!.Id" />
     <DataAnnotationsValidator />
 
     <div class="row g-3">

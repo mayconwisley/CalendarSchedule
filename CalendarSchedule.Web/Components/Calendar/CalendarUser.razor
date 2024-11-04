@@ -8,7 +8,6 @@
             var currentSchedule = ScheduleUserDtosList[i]
                          .Where(w => w.ScheduleDto!.DateStart.Date == CurrenteDate.Date)
                          .ToList();
-
             @if (currentSchedule.Any())
             {
                 var scheduleId = currentSchedule

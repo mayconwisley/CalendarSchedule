@@ -6,7 +6,7 @@
 <div>
     <h1>Editar Contato Colaborador</h1>
     <EditForm Model="@UserContactDto" OnValidSubmit="@Edit">
-        <InputNumber hidden @bind-Value="UserContactDto.Id" />
+        <InputNumber hidden @bind-Value="UserContactDto!.Id" />
         <DataAnnotationsValidator />
         <div class="row g-3">
             <div class="col-12">
@@ -45,17 +45,17 @@
     protected override async Task OnInitializedAsync()
     {
         UserContactDto = await userContactService.GetById(int.Parse(UserContactId));
-        UserDto = UserContactDto.UserDto;
+        UserDto = UserContactDto.UserDto!;
     }
 
     private async Task Edit()
     {
         UserContactCreateDto = new()
             {
-                Id = UserContactDto.Id,
+                Id = UserContactDto!.Id,
                 Number = UserContactDto.Number,
                 Type = UserContactDto.Type,
-                UserId = UserContactDto.UserDto.Id
+                UserId = UserContactDto!.UserDto!.Id
             };
 
         if (UserContactCreateDto is not null)
