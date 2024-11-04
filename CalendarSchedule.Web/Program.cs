@@ -1,17 +1,17 @@
 using Blazored.SessionStorage;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using CalendarSchedule.Web;
 using CalendarSchedule.Web.Service;
 using CalendarSchedule.Web.Service.Interface;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-var baseUrl = "https://localhost:7244";
+//var baseUrl = "https://localhost:7244";
 
-//var baseUrl = "http://192.168.0.102:5050";
+var baseUrl = "http://192.168.0.102:5050";
 //var baseUrl = "http://192.168.10.149:5050";
 
 
