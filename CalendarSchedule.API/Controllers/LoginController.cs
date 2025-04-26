@@ -1,27 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CalendarSchedule.API.Abstractions;
 using CalendarSchedule.API.Service.Interface;
 using CalendarSchedule.Models.Dtos;
+using Microsoft.AspNetCore.Mvc;
 
-namespace CalendarSchedule.API.Controllers
+namespace CalendarSchedule.API.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+[Produces("application/json")]
+[Consumes("application/json")]
+public class LoginController(IGetTokenService _getTokenService) : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class LoginController(IGetTokenService getTokenService) : ControllerBase
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TokenDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    public async Task<IActionResult> Login([FromBody] LoginDto login)
     {
-        private readonly IGetTokenService _getTokenService = getTokenService;
+        var token = await _getTokenService.Token(login);
+        if (token.IsFailure)
+            return BadRequest(token.Error);
 
-        [HttpPost]
-        public async Task<ActionResult<TokenDto>> Login([FromBody] LoginDto login)
-        {
-            if (login is not null)
-            {
-                var token = await _getTokenService.Token(login);
-                if (token != null)
-                {
-                    return Ok(token);
-                }
-            }
-            return BadRequest();
-        }
+        return Ok(token.Value);
     }
 }

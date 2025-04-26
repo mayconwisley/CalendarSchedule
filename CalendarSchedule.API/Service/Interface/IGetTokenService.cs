@@ -1,8 +1,9 @@
-﻿using CalendarSchedule.Models.Dtos;
+﻿using CalendarSchedule.API.Abstractions;
+using CalendarSchedule.Models.Dtos;
 
 namespace CalendarSchedule.API.Service.Interface;
 
 public interface IGetTokenService
 {
-    public Task<TokenDto> Token(LoginDto login);
+    public Task<Result<TokenDto>> Token(LoginDto login);
 }

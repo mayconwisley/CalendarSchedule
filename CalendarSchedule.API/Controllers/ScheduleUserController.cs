@@ -1,15 +1,16 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using CalendarSchedule.API.Service.Interface;
+﻿using CalendarSchedule.API.Service.Interface;
 using CalendarSchedule.Models.Dtos;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CalendarSchedule.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ScheduleUserController(IScheduleUserService scheduleUserService) : ControllerBase
+[Produces("application/json")]
+[Consumes("application/json")]
+public class ScheduleUserController(IScheduleUserService _scheduleUserService) : ControllerBase
 {
-    private readonly IScheduleUserService _scheduleUserService = scheduleUserService;
     [HttpGet]
     [Route("All")]
     public async Task<ActionResult<IEnumerable<ScheduleUserDto>>> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")

@@ -8,6 +8,8 @@ namespace CalendarSchedule.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Produces("application/json")]
+[Consumes("application/json")]
 public class ClientContactController(IClientContactService _clientContactService) : ControllerBase
 {
     [HttpGet]
