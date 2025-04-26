@@ -1,49 +1,72 @@
-﻿using CalendarSchedule.API.MappingDto.ClientDtos;
+﻿using CalendarSchedule.API.Abstractions;
+using CalendarSchedule.API.MappingDto.ClientDtos;
 using CalendarSchedule.API.Repository.Interface;
 using CalendarSchedule.API.Service.Interface;
 using CalendarSchedule.Models.Dtos;
 
 namespace CalendarSchedule.API.Service;
 
-public class ClientService(IClientRepository clientRepository) : IClientService
+public class ClientService(IClientRepository _clientRepository) : IClientService
 {
-    private readonly IClientRepository _clientRepository = clientRepository;
-
-    public async Task Create(ClientDto clientDto)
+    public async Task<Result<ClientDto>> Create(ClientDto clientDto)
     {
-        await _clientRepository.Create(clientDto.ConvertDtoToClient());
+        var clientCreate = await _clientRepository.Create(clientDto.ConvertDtoToClient());
+        if (clientCreate.Id == 0)
+            return Result.Failure<ClientDto>(Error.Internal("Erro ao criar cliente"));
+
+        var dto = clientCreate.ConvertClientToDto();
+        return Result.Success(dto);
     }
 
-    public async Task Delete(int id)
+    public async Task<Result> Delete(int id)
     {
         var userEntity = await GetById(id);
-        if (userEntity is not null)
-        {
-            await _clientRepository.Delete(userEntity.Id);
-        }
+        if (userEntity.IsFailure)
+            return Result.Failure<ClientDto>(userEntity.Error);
+
+        await _clientRepository.Delete(userEntity.Value.Id);
+        return Result.Success();
     }
 
-    public async Task<IEnumerable<ClientDto>> GetAll(int page, int size, string search)
+    public async Task<Result<IEnumerable<ClientDto>>> GetAll(int page, int size, string search)
     {
         var userEntity = await _clientRepository.GetAll(page, size, search);
-        return userEntity.ConvertClientsToDto();
+        if (userEntity is null)
+            return Result.Failure<IEnumerable<ClientDto>>(Error.NotFound("Nenhum cliente encontrado"));
+
+        var dto = userEntity.ConvertClientsToDto();
+
+        return Result.Success(dto);
     }
 
-    public async Task<ClientDto> GetById(int id)
+    public async Task<Result<ClientDto>> GetById(int id)
     {
         var userEntity = await _clientRepository.GetById(id);
-        return userEntity.ConvertClientToDto();
+        if (userEntity is null)
+            return Result.Failure<ClientDto>(Error.NotFound("Nenhum cliente encontrado"));
+
+        var dto = userEntity.ConvertClientToDto();
+
+        return Result.Success(dto);
     }
 
-    public async Task<int> TotalClients(string search)
+    public async Task<Result<int>> TotalClients(string search)
     {
         var totalUser = await _clientRepository.TotalClients(search);
-        return totalUser;
+
+        if (totalUser <= 0)
+            return Result.Failure<int>(Error.NotFound("Nenhum cliente encontrado"));
+
+        return Result.Success(totalUser);
     }
 
-    public async Task Update(ClientDto clientDto)
+    public async Task<Result<ClientDto>> Update(ClientDto clientDto)
     {
-        await _clientRepository.Update(clientDto.ConvertDtoToClient());
-    }
+        var client = await _clientRepository.Update(clientDto.ConvertDtoToClient());
+        if (client is null)
+            return Result.Failure<ClientDto>(Error.NotFound("Nenhum cliente encontrado"));
 
+        var dto = client.ConvertClientToDto();
+        return Result.Success(dto);
+    }
 }

@@ -7,7 +7,7 @@ public static class ClientContactMappingDto
 {
     public static IEnumerable<ClientContactDto> ConvertClientContactsToDto(this IEnumerable<ClientContact> clientContacts)
     {
-        return (from clientContact in clientContacts
+        return [.. (from clientContact in clientContacts
                 select new ClientContactDto
                 {
                     Id = clientContact.Id,
@@ -16,7 +16,7 @@ public static class ClientContactMappingDto
                     ClientId = clientContact.ClientId,
                     ClientDto = new()
                     {
-                        Id = clientContact.Client.Id,
+                        Id = clientContact.Client!.Id,
                         Name = clientContact.Client.Name,
                         Telephone = clientContact.Client.Telephone,
                         State = clientContact.Client.State,
@@ -31,7 +31,7 @@ public static class ClientContactMappingDto
                     ClientResponsibleId = clientContact.ClientResponsibleId,
                     ClientResponsibleDto = new()
                     {
-                        Id = clientContact.ClientResponsible.Id,
+                        Id = clientContact.ClientResponsible!.Id,
                         Name = clientContact.ClientResponsible.Name,
                         Email = clientContact.ClientResponsible.Email,
                         Description = clientContact.ClientResponsible.Description,
@@ -39,12 +39,12 @@ public static class ClientContactMappingDto
                         Active = clientContact.ClientResponsible.Active,
                     }
 
-                }).ToList();
+                })];
 
     }
     public static IEnumerable<ClientContact> ConvertDtoToClientContacts(this IEnumerable<ClientContactDto> clientContactDtos)
     {
-        return (from clientContact in clientContactDtos
+        return [.. (from clientContact in clientContactDtos
                 select new ClientContact
                 {
                     Id = clientContact.Id,
@@ -53,7 +53,7 @@ public static class ClientContactMappingDto
                     ClientId = clientContact.ClientId,
                     Client = new()
                     {
-                        Id = clientContact.ClientDto.Id,
+                        Id = clientContact.ClientDto!.Id,
                         Name = clientContact.ClientDto.Name,
                         Telephone = clientContact.ClientDto.Telephone,
                         State = clientContact.ClientDto.State,
@@ -68,14 +68,14 @@ public static class ClientContactMappingDto
                     ClientResponsibleId = clientContact.ClientResponsibleId,
                     ClientResponsible = new()
                     {
-                        Id = clientContact.ClientResponsibleDto.Id,
+                        Id = clientContact.ClientResponsibleDto!.Id,
                         Name = clientContact.ClientResponsibleDto.Name,
                         Email = clientContact.ClientResponsibleDto.Email,
                         Description = clientContact.ClientResponsibleDto.Description,
                         Position = clientContact.ClientResponsibleDto.Position,
                         Active = clientContact.ClientResponsibleDto.Active,
                     }
-                }).ToList();
+                })];
     }
     public static ClientContactDto ConvertClientContactToDto(this ClientContact clientContact)
     {
@@ -87,7 +87,7 @@ public static class ClientContactMappingDto
             ClientId = clientContact.ClientId,
             ClientDto = new()
             {
-                Id = clientContact.Client.Id,
+                Id = clientContact.Client!.Id,
                 Name = clientContact.Client.Name,
                 Telephone = clientContact.Client.Telephone,
                 State = clientContact.Client.State,
@@ -102,7 +102,7 @@ public static class ClientContactMappingDto
             ClientResponsibleId = clientContact.ClientResponsibleId,
             ClientResponsibleDto = new()
             {
-                Id = clientContact.ClientResponsible.Id,
+                Id = clientContact.ClientResponsible!.Id,
                 Name = clientContact.ClientResponsible.Name,
                 Email = clientContact.ClientResponsible.Email,
                 Description = clientContact.ClientResponsible.Description,
@@ -122,7 +122,7 @@ public static class ClientContactMappingDto
             ClientId = clientContactDto.ClientId,
             Client = new()
             {
-                Id = clientContactDto.ClientDto.Id,
+                Id = clientContactDto.ClientDto!.Id,
                 Name = clientContactDto.ClientDto.Name,
                 Telephone = clientContactDto.ClientDto.Telephone,
                 State = clientContactDto.ClientDto.State,
@@ -137,7 +137,7 @@ public static class ClientContactMappingDto
             ClientResponsibleId = clientContactDto.ClientResponsibleId,
             ClientResponsible = new()
             {
-                Id = clientContactDto.ClientResponsibleDto.Id,
+                Id = clientContactDto.ClientResponsibleDto!.Id,
                 Name = clientContactDto.ClientResponsibleDto.Name,
                 Email = clientContactDto.ClientResponsibleDto.Email,
                 Description = clientContactDto.ClientResponsibleDto.Description,

@@ -18,6 +18,9 @@ public class ClientContactController(IClientContactService _clientContactService
     public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
     {
         var clientContactsDto = await _clientContactService.GetAll(page, size, search);
+        if (clientContactsDto.IsFailure)
+            return NotFound(clientContactsDto.Error);
+
         var totalClientContact = await _clientContactService.TotalClientContact(search);
         if (totalClientContact.IsFailure)
             return NotFound(totalClientContact.Error);
@@ -25,8 +28,7 @@ public class ClientContactController(IClientContactService _clientContactService
         decimal totalData = totalClientContact.Value;
         decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
 
-        if (clientContactsDto.IsFailure)
-            return NotFound(clientContactsDto.Error);
+        var clientContacts = clientContactsDto.Value;
 
         if (size == 1)
             totalPage = totalData;
@@ -37,7 +39,7 @@ public class ClientContactController(IClientContactService _clientContactService
             page,
             totalPage,
             size,
-            clientContactsDto.Value
+            clientContacts
         });
 
     }
@@ -56,7 +58,7 @@ public class ClientContactController(IClientContactService _clientContactService
     }
 
     [HttpGet("ContactByClientId/{clientId:int}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto[]))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
     public async Task<IActionResult> GetByClientId([FromQuery] int page = 1, [FromQuery] int size = 10, int clientId = 0)
@@ -93,9 +95,6 @@ public class ClientContactController(IClientContactService _clientContactService
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
     public async Task<IActionResult> Post([FromBody] ClientContactCreateDto clientContactCreateDto)
     {
-        if (clientContactCreateDto is null)
-            return BadRequest("Dados invalidos");
-
         var createResult = await _clientContactService.Create(clientContactCreateDto);
         if (createResult.IsFailure)
             return BadRequest(createResult.Error);
@@ -138,6 +137,10 @@ public class ClientContactController(IClientContactService _clientContactService
         if (id <= 0)
             return BadRequest("Id inválido");
 
+        var result = await _clientContactService.Delete(id);
+        if (result.IsFailure)
+            return BadRequest(result.Error);
+
         var clientContactDto = await _clientContactService.GetById(id);
         if (clientContactDto.IsFailure)
             if (clientContactDto.Error.Code == "NotFound")
@@ -145,9 +148,7 @@ public class ClientContactController(IClientContactService _clientContactService
             else
                 return BadRequest(clientContactDto.Error);
 
-        var result = await _clientContactService.Delete(id);
-        if (result.IsFailure)
-            return BadRequest(result.Error);
+
 
         return Ok(clientContactDto);
     }

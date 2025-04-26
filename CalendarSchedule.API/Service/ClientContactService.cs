@@ -6,10 +6,8 @@ using CalendarSchedule.Models.Dtos;
 
 namespace CalendarSchedule.API.Service;
 
-public class ClientContactService(IClientContactRepository clientContactRepository) : IClientContactService
+public class ClientContactService(IClientContactRepository _clientContactRepository) : IClientContactService
 {
-    readonly IClientContactRepository _clientContactRepository = clientContactRepository;
-
     public async Task<Result<ClientContactDto>> Create(ClientContactCreateDto clientContactCreateDto)
     {
         var clientContact = await _clientContactRepository.Create(clientContactCreateDto.ConvertDtoToClientContactCreate());
@@ -33,10 +31,10 @@ public class ClientContactService(IClientContactRepository clientContactReposito
     public async Task<Result<IEnumerable<ClientContactDto>>> GetAll(int page, int size, string search)
     {
         var clientContacts = await _clientContactRepository.GetAll(page, size, search);
-        var dto = clientContacts.ConvertClientContactsToDto();
-
-        if (!dto.Any())
+        if (clientContacts is null)
             return Result.Failure<IEnumerable<ClientContactDto>>(Error.NotFound("Nenhum contato encontrado"));
+
+        var dto = clientContacts!.ConvertClientContactsToDto();
 
         return Result.Success(dto);
     }
@@ -44,10 +42,10 @@ public class ClientContactService(IClientContactRepository clientContactReposito
     public async Task<Result<IEnumerable<ClientContactDto>>> GetByClientId(int page, int size, int clientId)
     {
         var clientContacts = await _clientContactRepository.GetByClientId(page, size, clientId);
-        var dto = clientContacts.ConvertClientContactsToDto();
-
-        if (!dto.Any())
+        if (clientContacts is null)
             return Result.Failure<IEnumerable<ClientContactDto>>(Error.NotFound("Nenhum contato encontrado"));
+
+        var dto = clientContacts!.ConvertClientContactsToDto();
 
         return Result.Success(dto);
     }

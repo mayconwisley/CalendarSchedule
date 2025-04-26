@@ -7,7 +7,7 @@ public static class ClientMappingDto
 {
     public static IEnumerable<ClientDto> ConvertClientsToDto(this IEnumerable<Client> clients)
     {
-        return (from client in clients
+        return [.. (from client in clients
                 select new ClientDto
                 {
                     Id = client.Id,
@@ -20,14 +20,14 @@ public static class ClientMappingDto
                     Garden = client.Garden,
                     Description = client.Description,
                     Active = client.Active,
-                    Prospection = client.Prospection != null && client.Prospection
+                    Prospection = client.Prospection
 
-                }).ToList();
+                })];
 
     }
     public static IEnumerable<Client> ConvertDtoToClients(this IEnumerable<ClientDto> clientDtos)
     {
-        return (from client in clientDtos
+        return [.. (from client in clientDtos
                 select new Client
                 {
                     Id = client.Id,
@@ -40,9 +40,9 @@ public static class ClientMappingDto
                     Garden = client.Garden,
                     Description = client.Description,
                     Active = client.Active,
-                    Prospection = client.Prospection != null && client.Prospection
+                    Prospection = client.Prospection
 
-                }).ToList();
+                })];
     }
     public static ClientDto ConvertClientToDto(this Client client)
     {
@@ -58,7 +58,7 @@ public static class ClientMappingDto
             Garden = client.Garden,
             Description = client.Description,
             Active = client.Active,
-            Prospection = client.Prospection != null && client.Prospection
+            Prospection = client.Prospection
 
         };
     }
@@ -76,7 +76,7 @@ public static class ClientMappingDto
             Garden = clientDto.Garden,
             Description = clientDto.Description,
             Active = clientDto.Active,
-            Prospection = clientDto.Prospection != null && clientDto.Prospection
+            Prospection = clientDto.Prospection
         };
     }
 }
