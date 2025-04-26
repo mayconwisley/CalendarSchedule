@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using CalendarSchedule.API.Data;
+﻿using CalendarSchedule.API.Data;
 using CalendarSchedule.API.Model;
 using CalendarSchedule.API.Repository.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace CalendarSchedule.API.Repository;
 
@@ -11,137 +11,68 @@ public class ClientContactRepository(ScheduleContext scheduleContext) : IClientC
 
     public async Task<ClientContact> Create(ClientContact clientContact)
     {
-        try
-        {
-            if (clientContact is not null)
-            {
-                _scheduleContext.ClientContacts.Add(clientContact);
-                await _scheduleContext.SaveChangesAsync();
-
-                clientContact = await GetById(clientContact.Id);
-
-                return clientContact;
-            }
-            return new();
-        }
-        catch (Exception)
-        {
-
-            throw;
-        }
+        _scheduleContext.ClientContacts.Add(clientContact);
+        await _scheduleContext.SaveChangesAsync();
+        clientContact = await GetById(clientContact.Id);
+        return clientContact;
     }
 
     public async Task<ClientContact> Delete(int id)
     {
-        try
-        {
-            var clientContact = await GetById(id);
-            if (clientContact is not null)
-            {
-                _scheduleContext.ClientContacts.Remove(clientContact);
-                await _scheduleContext.SaveChangesAsync();
-                return clientContact;
-            }
-            return new();
-        }
-        catch (Exception)
-        {
-
-            throw;
-        }
+        var clientContact = await GetById(id);
+        _scheduleContext.ClientContacts.Remove(clientContact);
+        await _scheduleContext.SaveChangesAsync();
+        return clientContact;
     }
 
     public async Task<IEnumerable<ClientContact>> GetAll(int page, int size, string search)
     {
-        try
-        {
-            var clientContacts = await _scheduleContext.ClientContacts
-                .Include(i => i.Client)
-                .Include(i => i.ClientResponsible)
-                .Skip((page - 1) * size)
-                .Take(size)
-                .OrderBy(o => o.Client.Name)
-                .ToListAsync();
-            return clientContacts;
-        }
-        catch (Exception)
-        {
-
-            throw;
-        }
+        var clientContacts = await _scheduleContext.ClientContacts
+              .Include(i => i.Client)
+              .Include(i => i.ClientResponsible)
+              .Skip((page - 1) * size)
+              .Take(size)
+              .OrderBy(o => o.Client!.Name)
+              .ToListAsync();
+        return clientContacts;
     }
 
     public async Task<IEnumerable<ClientContact>> GetByClientId(int page, int size, int clientId)
     {
-        try
-        {
-            var clientContacts = await _scheduleContext.ClientContacts
-                            .Include(i => i.Client)
-                            .Include(i => i.ClientResponsible)
-                            .Where(o => o.ClientId == clientId)
-                            .ToListAsync();
-            if (clientContacts is not null)
-            {
-                return clientContacts;
-            }
-
-            return [];
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        var clientContacts = await _scheduleContext.ClientContacts
+                        .Include(i => i.Client)
+                        .Include(i => i.ClientResponsible)
+                        .Where(o => o.ClientId == clientId)
+                        .ToListAsync();
+        return clientContacts;
     }
 
     public async Task<ClientContact> GetById(int id)
     {
-        try
-        {
-            var clientContact = await _scheduleContext.ClientContacts
-                            .Include(i => i.Client)
-                            .Include(i => i.ClientResponsible)
-                            .Where(o => o.Id == id)
-                            .FirstOrDefaultAsync();
-            if (clientContact is not null)
-            {
-                return clientContact;
-            }
-
-            return new();
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        var clientContact = await _scheduleContext.ClientContacts
+                        .Include(i => i.Client)
+                        .Include(i => i.ClientResponsible)
+                        .Where(o => o.Id == id)
+                        .FirstOrDefaultAsync();
+        return clientContact!;
     }
 
     public async Task<int> TotalClientContact(string search)
     {
         var totalClientContact = await _scheduleContext.ClientContacts
-             .Where(w => w.Client.Name.Contains(search) ||
-                         w.ClientResponsible.Name.Contains(search))
+             .Where(w => w.Client!.Name!.Contains(search) ||
+                         w.ClientResponsible!.Name!.Contains(search))
              .CountAsync();
         return totalClientContact;
     }
 
     public async Task<ClientContact> Update(ClientContact clientContact)
     {
-        try
-        {
-            if (clientContact is not null)
-            {
-                _scheduleContext.ClientContacts.Entry(clientContact).State = EntityState.Modified;
-                await _scheduleContext.SaveChangesAsync();
+        _scheduleContext.ClientContacts.Entry(clientContact).State = EntityState.Modified;
+        await _scheduleContext.SaveChangesAsync();
 
-                clientContact = await GetById(clientContact.Id);
+        clientContact = await GetById(clientContact.Id);
 
-                return clientContact;
-            }
-            return new();
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        return clientContact;
     }
 }

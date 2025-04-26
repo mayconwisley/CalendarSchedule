@@ -1,74 +1,81 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using CalendarSchedule.API.Abstractions;
 using CalendarSchedule.API.Service.Interface;
 using CalendarSchedule.Models.Dtos;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CalendarSchedule.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ClientContactController(IClientContactService clientContactService) : ControllerBase
+public class ClientContactController(IClientContactService _clientContactService) : ControllerBase
 {
-    readonly IClientContactService _clientContactService = clientContactService;
     [HttpGet]
     [Route("All")]
-    public async Task<ActionResult<IEnumerable<ClientContactDto>>> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto[]))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
     {
         var clientContactsDto = await _clientContactService.GetAll(page, size, search);
-        decimal totalData = (decimal)await _clientContactService.TotalClientContact(search);
+        var totalClientContact = await _clientContactService.TotalClientContact(search);
+        if (totalClientContact.IsFailure)
+            return NotFound(totalClientContact.Error);
+
+        decimal totalData = totalClientContact.Value;
         decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
 
-        if (size == 1)
-        {
-            totalPage = totalData;
-        }
+        if (clientContactsDto.IsFailure)
+            return NotFound(clientContactsDto.Error);
 
-        if (!clientContactsDto.Any())
-        {
-            return NotFound("Sem dados");
-        }
+        if (size == 1)
+            totalPage = totalData;
+
         return Ok(new
         {
             totalData,
             page,
             totalPage,
             size,
-            clientContactsDto
+            clientContactsDto.Value
         });
 
     }
+
     [HttpGet("{id:int}", Name = "GetClientContactId")]
-    public async Task<ActionResult<ClientContactDto>> GetById(int id)
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    public async Task<IActionResult> GetById(int id)
     {
         var clientContactDto = await _clientContactService.GetById(id);
-        if (clientContactDto.Id <= 0)
-        {
-            return NotFound("Sem dados");
-        }
-        if (clientContactDto is not null)
-        {
-            return Ok(clientContactDto);
-        }
-        return NotFound("Sem dados");
+        if (clientContactDto.IsFailure)
+            return NotFound(clientContactDto.Error);
 
+        return Ok(clientContactDto.Value);
     }
 
     [HttpGet("ContactByClientId/{clientId:int}")]
-    public async Task<ActionResult<ClientContactDto>> GetByClientId([FromQuery] int page = 1, [FromQuery] int size = 10, int clientId = 0)
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    public async Task<IActionResult> GetByClientId([FromQuery] int page = 1, [FromQuery] int size = 10, int clientId = 0)
     {
         var clientContactsDto = await _clientContactService.GetByClientId(page, size, clientId);
-        decimal totalData = (decimal)await _clientContactService.TotalClientContact(clientId.ToString());
+        var totalClientContact = await _clientContactService.TotalClientContact(clientId.ToString());
+        if (totalClientContact.IsFailure)
+            return NotFound(totalClientContact.Error);
+
+        decimal totalData = totalClientContact.Value;
         decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
 
-        if (size == 1)
-        {
-            totalPage = totalData;
-        }
+        if (clientContactsDto.IsFailure)
+            return NotFound(clientContactsDto.Error);
 
-        if (!clientContactsDto.Any())
-        {
-            return NotFound("Sem dados");
-        }
+
+        if (size == 1)
+            totalPage = totalData;
+
         return Ok(new
         {
             totalData,
@@ -78,47 +85,70 @@ public class ClientContactController(IClientContactService clientContactService)
             clientContactsDto
         });
     }
+
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<ClientContactDto>> Post([FromBody] ClientContactCreateDto clientContactCreateDto)
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ClientContactDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    public async Task<IActionResult> Post([FromBody] ClientContactCreateDto clientContactCreateDto)
     {
-        if (clientContactCreateDto is not null)
-        {
-            var clientContactDto = await _clientContactService.Create(clientContactCreateDto);
-            return new CreatedAtRouteResult("GetClientContactId", new { id = clientContactDto.Id }, clientContactDto);
-        }
-        return BadRequest("Dados inválidos");
+        if (clientContactCreateDto is null)
+            return BadRequest("Dados invalidos");
+
+        var createResult = await _clientContactService.Create(clientContactCreateDto);
+        if (createResult.IsFailure)
+            return BadRequest(createResult.Error);
+        var createdContact = createResult.Value;
+
+        return new CreatedAtRouteResult(
+            "GetClientContactId",
+            new { id = createdContact.Id },
+            createdContact
+        );
     }
+
     [Authorize]
     [HttpPut("{id:int}")]
-    public async Task<ActionResult<ClientContactDto>> Put(int id, [FromBody] ClientContactCreateDto clientContactCreateDto)
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    public async Task<IActionResult> Put(int id, [FromBody] ClientContactCreateDto clientContactCreateDto)
     {
         if (id != clientContactCreateDto.Id)
-        {
             return BadRequest("Dados inválidos");
-        }
+
         if (clientContactCreateDto is null)
-        {
-            return BadRequest("Dados inválidos");
-        }
+            return NotFound($"Objeto {nameof(ClientContactCreateDto)} nulo");
 
         var clientContactDto = await _clientContactService.Update(clientContactCreateDto);
+        if (clientContactDto.IsFailure)
+            return BadRequest(clientContactDto.Error);
+
         return Ok(clientContactDto);
     }
+
     [Authorize]
     [HttpDelete("{id:int}")]
-    public async Task<ActionResult<ClientContactDto>> Delete(int id)
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    public async Task<IActionResult> Delete(int id)
     {
+        if (id <= 0)
+            return BadRequest("Id inválido");
+
         var clientContactDto = await _clientContactService.GetById(id);
-        if (clientContactDto is null)
-        {
-            return NotFound("Sem dados");
-        }
-        if (clientContactDto.Id <= 0)
-        {
-            return NotFound("Sem dados");
-        }
-        await _clientContactService.Delete(id);
+        if (clientContactDto.IsFailure)
+            if (clientContactDto.Error.Code == "NotFound")
+                return NotFound(clientContactDto.Error);
+            else
+                return BadRequest(clientContactDto.Error);
+
+        var result = await _clientContactService.Delete(id);
+        if (result.IsFailure)
+            return BadRequest(result.Error);
+
         return Ok(clientContactDto);
     }
 }
