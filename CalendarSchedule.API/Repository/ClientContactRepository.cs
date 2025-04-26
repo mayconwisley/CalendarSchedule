@@ -5,74 +5,81 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CalendarSchedule.API.Repository;
 
-public class ClientContactRepository(ScheduleContext scheduleContext) : IClientContactRepository
+public class ClientContactRepository(ScheduleContext _scheduleContext) : IClientContactRepository
 {
-    private readonly ScheduleContext _scheduleContext = scheduleContext;
-
     public async Task<ClientContact> Create(ClientContact clientContact)
     {
         _scheduleContext.ClientContacts.Add(clientContact);
         await _scheduleContext.SaveChangesAsync();
-        clientContact = await GetById(clientContact.Id);
         return clientContact;
     }
 
-    public async Task<ClientContact> Delete(int id)
+    public async Task<ClientContact?> Delete(int id)
     {
         var clientContact = await GetById(id);
+
+        if (clientContact == null)
+            return null;
+
         _scheduleContext.ClientContacts.Remove(clientContact);
         await _scheduleContext.SaveChangesAsync();
         return clientContact;
     }
 
-    public async Task<IEnumerable<ClientContact>> GetAll(int page, int size, string search)
+    public async Task<IEnumerable<ClientContact>?> GetAll(int page, int size, string search)
     {
-        var clientContacts = await _scheduleContext.ClientContacts
-              .Include(i => i.Client)
-              .Include(i => i.ClientResponsible)
-              .Skip((page - 1) * size)
-              .Take(size)
-              .OrderBy(o => o.Client!.Name)
-              .ToListAsync();
+        var clientContacts =
+        await _scheduleContext.ClientContacts
+                .AsNoTracking()
+                .Include(i => i.Client)
+                .Include(i => i.ClientResponsible)
+                .Skip((page - 1) * size)
+                .Take(size)
+                .OrderBy(o => o.Client!.Name)
+                .ToListAsync();
         return clientContacts;
     }
 
-    public async Task<IEnumerable<ClientContact>> GetByClientId(int page, int size, int clientId)
+    public async Task<IEnumerable<ClientContact>?> GetByClientId(int page, int size, int clientId)
     {
-        var clientContacts = await _scheduleContext.ClientContacts
-                        .Include(i => i.Client)
-                        .Include(i => i.ClientResponsible)
-                        .Where(o => o.ClientId == clientId)
-                        .ToListAsync();
+        var clientContacts =
+        await _scheduleContext.ClientContacts
+                .AsNoTracking()
+                .Include(i => i.Client)
+                .Include(i => i.ClientResponsible)
+                .Where(o => o.ClientId == clientId)
+                .ToListAsync();
         return clientContacts;
     }
 
-    public async Task<ClientContact> GetById(int id)
+    public async Task<ClientContact?> GetById(int id)
     {
-        var clientContact = await _scheduleContext.ClientContacts
-                        .Include(i => i.Client)
-                        .Include(i => i.ClientResponsible)
-                        .Where(o => o.Id == id)
-                        .FirstOrDefaultAsync();
-        return clientContact!;
+        var clientContact =
+        await _scheduleContext.ClientContacts
+                .Include(i => i.Client)
+                .Include(i => i.ClientResponsible)
+                .Where(o => o.Id == id)
+                .FirstOrDefaultAsync();
+        return clientContact;
     }
 
     public async Task<int> TotalClientContact(string search)
     {
-        var totalClientContact = await _scheduleContext.ClientContacts
-             .Where(w => w.Client!.Name!.Contains(search) ||
-                         w.ClientResponsible!.Name!.Contains(search))
-             .CountAsync();
+        var totalClientContact =
+        await _scheduleContext.ClientContacts
+              .CountAsync(w => w.Client!.Name!.Contains(search) ||
+                            w.ClientResponsible!.Name!.Contains(search));
         return totalClientContact;
     }
 
-    public async Task<ClientContact> Update(ClientContact clientContact)
+    public async Task<ClientContact?> Update(ClientContact clientContact)
     {
-        _scheduleContext.ClientContacts.Entry(clientContact).State = EntityState.Modified;
+        var existingClientContact = await GetById(clientContact.Id);
+        if (existingClientContact == null)
+            return null;
+
+        _scheduleContext.ClientContacts.Entry(existingClientContact).CurrentValues.SetValues(clientContact);
         await _scheduleContext.SaveChangesAsync();
-
-        clientContact = await GetById(clientContact.Id);
-
-        return clientContact;
+        return existingClientContact;
     }
 }

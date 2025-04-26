@@ -1,112 +1,85 @@
-﻿using Microsoft.EntityFrameworkCore;
-using CalendarSchedule.API.Data;
+﻿using CalendarSchedule.API.Data;
 using CalendarSchedule.API.Model;
 using CalendarSchedule.API.Repository.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace CalendarSchedule.API.Repository;
 
-public class ClientRepository(ScheduleContext scheduleContext) : IClientRepository
+public class ClientRepository(ScheduleContext _scheduleContext) : IClientRepository
 {
-    private readonly ScheduleContext _scheduleContext = scheduleContext;
-
     public async Task<Client> Create(Client client)
     {
-        try
-        {
-            if (client is not null)
-            {
-                _scheduleContext.Clients.Add(client);
-                await _scheduleContext.SaveChangesAsync();
-                return client;
-            }
-            return new();
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        _scheduleContext.Clients.Add(client);
+        await _scheduleContext.SaveChangesAsync();
+        return client;
     }
 
-    public async Task<Client> Delete(int id)
+    public async Task<Client?> Delete(int id)
     {
-        try
-        {
-            var client = await GetById(id);
-            if (client is not null)
-            {
-                _scheduleContext.Clients.Remove(client);
-                await _scheduleContext.SaveChangesAsync();
-                return client;
-            }
-            return new();
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        var client = await GetById(id);
+        if (client == null)
+            return null;
+
+        _scheduleContext.Clients.Remove(client);
+        await _scheduleContext.SaveChangesAsync();
+        return client;
     }
 
-    public async Task<IEnumerable<Client>> GetAll(int page, int size, string search)
+    public async Task<IEnumerable<Client>?> GetAll(int page, int size, string search)
     {
-        try
-        {
-            var users = await _scheduleContext.Clients
+        var users =
+        await _scheduleContext.Clients
+                .AsNoTracking()
+                .Where(w => w.Name!.Contains(search) ||
+                            w.Telephone!.Contains(search) ||
+                            w.State!.Contains(search) ||
+                            w.City!.Contains(search) ||
+                            w.Road!.Contains(search) ||
+                            w.Number!.Contains(search) ||
+                            w.Garden!.Contains(search) ||
+                            w.Description!.Contains(search))
                 .Skip((page - 1) * size)
                 .Take(size)
                 .OrderBy(o => o.Name)
                 .ToListAsync();
-            return users;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        return users;
     }
 
-    public async Task<Client> GetById(int id)
+    public async Task<Client?> GetById(int id)
     {
-        try
-        {
-            var client = await _scheduleContext.Clients
+        var client =
+        await _scheduleContext.Clients
                 .Where(w => w.Id == id)
                 .FirstOrDefaultAsync();
 
-            if (client is not null)
-            {
-                return client;
-            }
-            return new();
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        return client;
     }
 
     public async Task<int> TotalClients(string search)
     {
-        var totalClient = await _scheduleContext.Clients
-            .Where(w => w.Name!.Contains(search))
-            .CountAsync();
+        var totalClient =
+        await _scheduleContext.Clients
+                .AsNoTracking()
+                .Where(w => w.Name!.Contains(search) ||
+                            w.Telephone!.Contains(search) ||
+                            w.State!.Contains(search) ||
+                            w.City!.Contains(search) ||
+                            w.Road!.Contains(search) ||
+                            w.Number!.Contains(search) ||
+                            w.Garden!.Contains(search) ||
+                            w.Description!.Contains(search))
+                .CountAsync();
         return totalClient;
     }
 
-    public async Task<Client> Update(Client client)
+    public async Task<Client?> Update(Client client)
     {
-        try
-        {
-            if (client is not null)
-            {
-                _scheduleContext.Clients.Entry(client).State = EntityState.Modified;
-                await _scheduleContext.SaveChangesAsync();
-                return client;
-            }
-            return new();
-        }
-        catch (Exception)
-        {
+        var exisingClient = await GetById(client.Id);
+        if (exisingClient == null)
+            return null;
 
-            throw;
-        }
+        _scheduleContext.Clients.Entry(exisingClient).CurrentValues.SetValues(client);
+        await _scheduleContext.SaveChangesAsync();
+        return exisingClient;
     }
 }
