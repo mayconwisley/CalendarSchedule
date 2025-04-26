@@ -1,14 +1,14 @@
-﻿using CalendarSchedule.Models.Dtos;
+﻿using CalendarSchedule.API.Abstractions;
+using CalendarSchedule.Models.Dtos;
 
-namespace CalendarSchedule.API.Service.Interface
+namespace CalendarSchedule.API.Service.Interface;
+
+public interface IClientResponsibleService
 {
-    public interface IClientResponsibleService
-    {
-        Task<IEnumerable<ClientResponsibleDto>> GetAll(int page, int size, string search);
-        Task<ClientResponsibleDto> GetById(int id);
-        Task<ClientResponsibleDto> Create(ClientResponsibleCreateDto clientResponsibleCreateDto);
-        Task<ClientResponsibleDto> Update(ClientResponsibleCreateDto clientResponsibleCreateDto);
-        Task Delete(int id);
-        Task<int> TotalClientResponsible(string search);
-    }
+    Task<Result<IEnumerable<ClientResponsibleDto>>> GetAll(int page, int size, string search);
+    Task<Result<ClientResponsibleDto>> GetById(int id);
+    Task<Result<ClientResponsibleDto>> Create(ClientResponsibleCreateDto clientResponsibleCreateDto);
+    Task<Result<ClientResponsibleDto>> Update(ClientResponsibleCreateDto clientResponsibleCreateDto);
+    Task<Result> Delete(int id);
+    Task<Result<int>> TotalClientResponsible(string search);
 }
