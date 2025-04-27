@@ -18,36 +18,57 @@ public class ClientContactService(IClientContactRepository _clientContactReposit
         return Result.Success(dto);
     }
 
-    public async Task<Result> Delete(int id)
+    public async Task<Result<ClientContactDto>> Delete(int id)
     {
-        var clientContact = await GetById(id);
-        if (clientContact.IsFailure)
-            return Result.Failure(clientContact.Error);
+        var deleted = await _clientContactRepository.Delete(id);
+        if (deleted is null)
+            return Result.Failure<ClientContactDto>(Error.NotFound("Nenhum contato encontrado para ser excluido"));
 
-        await _clientContactRepository.Delete(clientContact.Value.Id);
-        return Result.Success();
+        var deletedClientContact = deleted.ConvertClientContactToDto();
+
+        return Result.Success(deletedClientContact);
     }
 
-    public async Task<Result<IEnumerable<ClientContactDto>>> GetAll(int page, int size, string search)
+    public async Task<Result<PagedResult<ClientContactDto>>> GetAll(int page, int size, string search)
     {
         var clientContacts = await _clientContactRepository.GetAll(page, size, search);
         if (clientContacts is null)
-            return Result.Failure<IEnumerable<ClientContactDto>>(Error.NotFound("Nenhum contato encontrado"));
+            return Result.Failure<PagedResult<ClientContactDto>>(Error.NotFound("Nenhum contato encontrado"));
+
+        var totalClientContact = await _clientContactRepository.TotalClientContact(search);
+        if (totalClientContact <= 0)
+            return Result.Failure<PagedResult<ClientContactDto>>(Error.NotFound("Nenhum contato encontrado"));
+
+        decimal totalData = totalClientContact;
+        decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
+        if (size == 1)
+            totalPage = totalData;
 
         var dto = clientContacts!.ConvertClientContactsToDto();
+        var clientContactDto = new PagedResult<ClientContactDto>(dto, totalData, page, size, totalPage);
 
-        return Result.Success(dto);
+        return Result.Success(clientContactDto);
     }
 
-    public async Task<Result<IEnumerable<ClientContactDto>>> GetByClientId(int page, int size, int clientId)
+    public async Task<Result<PagedResult<ClientContactDto>>> GetByClientId(int page, int size, int clientId)
     {
         var clientContacts = await _clientContactRepository.GetByClientId(page, size, clientId);
         if (clientContacts is null)
-            return Result.Failure<IEnumerable<ClientContactDto>>(Error.NotFound("Nenhum contato encontrado"));
+            return Result.Failure<PagedResult<ClientContactDto>>(Error.NotFound("Nenhum contato encontrado"));
+
+        var totalClientContact = await _clientContactRepository.TotalClientContact(clientId.ToString());
+        if (totalClientContact <= 0)
+            return Result.Failure<PagedResult<ClientContactDto>>(Error.NotFound("Nenhum contato encontrado"));
+
+        decimal totalData = totalClientContact;
+        decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
+
+        if (size == 1)
+            totalPage = totalData;
 
         var dto = clientContacts!.ConvertClientContactsToDto();
-
-        return Result.Success(dto);
+        var clientContactDto = new PagedResult<ClientContactDto>(dto, totalData, page, size, totalPage);
+        return Result.Success(clientContactDto);
     }
 
     public async Task<Result<ClientContactDto>> GetById(int id)
@@ -69,9 +90,9 @@ public class ClientContactService(IClientContactRepository _clientContactReposit
         return Result.Success(totalClientContact);
     }
 
-    public async Task<Result<ClientContactDto>> Update(ClientContactCreateDto clientContactCreateDto)
+    public async Task<Result<ClientContactDto>> Update(ClientContactDto clientContactDto)
     {
-        var clientContact = await _clientContactRepository.Update(clientContactCreateDto.ConvertDtoToClientContactCreate());
+        var clientContact = await _clientContactRepository.Update(clientContactDto.ConvertDtoToClientContact());
         if (clientContact is null)
             return Result.Failure<ClientContactDto>(Error.Internal("Erro ao atualizar contato"));
 

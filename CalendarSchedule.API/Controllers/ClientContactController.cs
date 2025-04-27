@@ -14,36 +14,17 @@ public class ClientContactController(IClientContactService _clientContactService
 {
     [HttpGet]
     [Route("All")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto[]))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResult<ClientContactDto>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
     public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
     {
-        var clientContactsDto = await _clientContactService.GetAll(page, size, search);
-        if (clientContactsDto.IsFailure)
-            return NotFound(clientContactsDto.Error);
+        var clientContactList = await _clientContactService.GetAll(page, size, search);
+        if (clientContactList.IsFailure)
+            return NotFound(clientContactList.Error);
 
-        var totalClientContact = await _clientContactService.TotalClientContact(search);
-        if (totalClientContact.IsFailure)
-            return NotFound(totalClientContact.Error);
+        var clientContacts = clientContactList.Value;
 
-        decimal totalData = totalClientContact.Value;
-        decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
-
-        var clientContacts = clientContactsDto.Value;
-
-        if (size == 1)
-            totalPage = totalData;
-
-        return Ok(new
-        {
-            totalData,
-            page,
-            totalPage,
-            size,
-            clientContacts
-        });
-
+        return Ok(clientContacts);
     }
 
     [HttpGet("{id:int}", Name = "GetClientContactId")]
@@ -52,42 +33,37 @@ public class ClientContactController(IClientContactService _clientContactService
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
     public async Task<IActionResult> GetById(int id)
     {
-        var clientContactDto = await _clientContactService.GetById(id);
-        if (clientContactDto.IsFailure)
-            return NotFound(clientContactDto.Error);
+        if (id <= 0)
+        {
+            var error = Result.Failure(Error.BadRequest($"Id inválido: {id}"));
+            return BadRequest(error);
+        }
 
-        return Ok(clientContactDto.Value);
+        var clientContact = await _clientContactService.GetById(id);
+        if (clientContact.IsFailure)
+            return NotFound(clientContact.Error);
+
+        return Ok(clientContact.Value);
     }
 
     [HttpGet("ContactByClientId/{clientId:int}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto[]))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResult<ClientContactDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
     public async Task<IActionResult> GetByClientId([FromQuery] int page = 1, [FromQuery] int size = 10, int clientId = 0)
     {
-        var clientContactsDto = await _clientContactService.GetByClientId(page, size, clientId);
-        var totalClientContact = await _clientContactService.TotalClientContact(clientId.ToString());
-        if (totalClientContact.IsFailure)
-            return NotFound(totalClientContact.Error);
-
-        decimal totalData = totalClientContact.Value;
-        decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
-
-        if (clientContactsDto.IsFailure)
-            return NotFound(clientContactsDto.Error);
-
-
-        if (size == 1)
-            totalPage = totalData;
-
-        return Ok(new
+        if (clientId <= 0)
         {
-            totalData,
-            page,
-            totalPage,
-            size,
-            clientContactsDto
-        });
+            var error = Result.Failure(Error.BadRequest($"Id ({clientId}) inválido"));
+            return BadRequest(error);
+        }
+
+        var clientContactList = await _clientContactService.GetByClientId(page, size, clientId);
+        if (clientContactList.IsFailure)
+            return NotFound(clientContactList.Error);
+
+        var clientContacts = clientContactList.Value;
+        return Ok(clientContacts);
     }
 
     [Authorize]
@@ -96,12 +72,30 @@ public class ClientContactController(IClientContactService _clientContactService
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Result))]
     public async Task<IActionResult> Post([FromBody] ClientContactCreateDto clientContactCreateDto)
     {
-        var createResult = await _clientContactService.Create(clientContactCreateDto);
-        if (createResult.IsFailure)
-            return BadRequest(createResult.Error);
-        var createdContact = createResult.Value;
+        if (!ModelState.IsValid)
+        {
+            var errorMessage = ErroMoldeState();
+
+            var error = Result.Failure(Error.BadRequest($"Erro de validação no objeto ({nameof(ClientContactCreateDto)}): {errorMessage}"));
+            return BadRequest(error);
+        }
+
+        var createdClientContact = await _clientContactService.Create(clientContactCreateDto);
+        if (createdClientContact.IsFailure)
+        {
+            return createdClientContact.Error.Code switch
+            {
+                "NotFound" => NotFound(createdClientContact.Error),
+                "BadRequest" => BadRequest(createdClientContact.Error),
+                "Internal" => StatusCode(StatusCodes.Status500InternalServerError, createdClientContact.Error),
+                _ => StatusCode(StatusCodes.Status500InternalServerError, createdClientContact.Error) // fallback para erro desconhecido
+            };
+        }
+
+        var createdContact = createdClientContact.Value;
 
         return new CreatedAtRouteResult(
             "GetClientContactId",
@@ -116,19 +110,41 @@ public class ClientContactController(IClientContactService _clientContactService
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
-    public async Task<IActionResult> Put(int id, [FromBody] ClientContactCreateDto clientContactCreateDto)
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Result))]
+    public async Task<IActionResult> Put(int id, [FromBody] ClientContactDto clientContactDto)
     {
-        if (id != clientContactCreateDto.Id)
-            return BadRequest("Dados inválidos");
+        if (id <= 0)
+        {
+            var error = Result.Failure(Error.BadRequest($"Id ({id}) inválido"));
+            return BadRequest(error);
+        }
 
-        if (clientContactCreateDto is null)
-            return NotFound($"Objeto {nameof(ClientContactCreateDto)} nulo");
+        if (!ModelState.IsValid)
+        {
+            var errorMessage = ErroMoldeState();
+            var error = Result.Failure(Error.BadRequest($"Erro de validação do objeto ({nameof(ClientContactDto)}): {errorMessage}"));
+            return BadRequest(error);
+        }
 
-        var clientContactDto = await _clientContactService.Update(clientContactCreateDto);
-        if (clientContactDto.IsFailure)
-            return BadRequest(clientContactDto.Error);
+        if (id != clientContactDto.Id)
+        {
+            var error = Result.Failure(Error.BadRequest($"Id ({id}) da rota diferente do Id ({clientContactDto.Id}) objeto"));
+            return BadRequest(error);
+        }
 
-        return Ok(clientContactDto);
+        var updateClientContact = await _clientContactService.Update(clientContactDto);
+        if (updateClientContact.IsFailure)
+        {
+            return updateClientContact.Error.Code switch
+            {
+                "NotFound" => NotFound(updateClientContact.Error),
+                "BadRequest" => BadRequest(updateClientContact.Error),
+                "Internal" => StatusCode(StatusCodes.Status500InternalServerError, updateClientContact.Error),
+                _ => StatusCode(StatusCodes.Status500InternalServerError, updateClientContact.Error) // fallback para erro desconhecido
+            };
+        }
+
+        return Ok(updateClientContact.Value);
     }
 
     [Authorize]
@@ -140,21 +156,31 @@ public class ClientContactController(IClientContactService _clientContactService
     public async Task<IActionResult> Delete(int id)
     {
         if (id <= 0)
-            return BadRequest("Id inválido");
+        {
+            var error = Result.Failure(Error.BadRequest($"Id ({id}) inválido"));
+            return BadRequest(error);
+        }
 
-        var result = await _clientContactService.Delete(id);
-        if (result.IsFailure)
-            return BadRequest(result.Error);
+        var deletedClientContact = await _clientContactService.Delete(id);
+        if (deletedClientContact.IsFailure)
+        {
+            return deletedClientContact.Error.Code switch
+            {
+                "NotFound" => NotFound(deletedClientContact.Error),
+                "BadRequest" => BadRequest(deletedClientContact.Error),
+                "Internal" => StatusCode(StatusCodes.Status500InternalServerError, deletedClientContact.Error),
+                _ => StatusCode(StatusCodes.Status500InternalServerError, deletedClientContact.Error) // fallback para erro desconhecido
+            };
+        }
 
-        var clientContactDto = await _clientContactService.GetById(id);
-        if (clientContactDto.IsFailure)
-            if (clientContactDto.Error.Code == "NotFound")
-                return NotFound(clientContactDto.Error);
-            else
-                return BadRequest(clientContactDto.Error);
+        return Ok(deletedClientContact.Value);
+    }
 
-
-
-        return Ok(clientContactDto);
+    private string ErroMoldeState()
+    {
+        var errorMessage = string.Join("; ", ModelState.Values
+                                 .SelectMany(x => x.Errors)
+                                 .Select(x => x.ErrorMessage));
+        return errorMessage;
     }
 }

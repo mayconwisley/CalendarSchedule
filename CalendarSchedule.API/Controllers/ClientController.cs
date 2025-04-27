@@ -82,6 +82,7 @@ public class ClientController(IClientService _clientService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Result))]
     public async Task<IActionResult> Put(int id, [FromBody] ClientDto clientDto)
     {
         if (id <= 0)
