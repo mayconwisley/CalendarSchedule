@@ -15,6 +15,7 @@ public class LoginController(IGetTokenService _getTokenService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TokenDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(Result))]
     public async Task<IActionResult> Login([FromBody] LoginDto login)
     {
         if (!ModelState.IsValid)
@@ -26,20 +27,19 @@ public class LoginController(IGetTokenService _getTokenService) : ControllerBase
         }
 
         var token = await _getTokenService.Token(login);
-
-
         if (token.IsFailure)
         {
             switch (token.Error.Code)
             {
                 case "NotFound":
-                    return NotFound(token);
-                case "BadRequest":
-                    return BadRequest(token);
+                    var notfound = Result.Failure(Error.NotFound(token.Error.Message));
+                    return NotFound(notfound);
+                case "Validation":
+                    var validation = Result.Failure(Error.Validation(token.Error.Message));
+                    return StatusCode(StatusCodes.Status422UnprocessableEntity, validation);
                 default:
                     break;
             }
-
         }
         return Ok(token.Value);
     }
