@@ -1,4 +1,5 @@
-﻿using CalendarSchedule.API.Service.Interface;
+﻿using CalendarSchedule.API.Abstractions;
+using CalendarSchedule.API.Service.Interface;
 using CalendarSchedule.Models.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,103 +14,99 @@ public class ScheduleController(IScheduleService _scheduleService) : ControllerB
 {
     [HttpGet]
     [Route("All")]
-    public async Task<ActionResult<IEnumerable<ScheduleDto>>> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ScheduleDto[]))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
     {
         var scheduleDto = await _scheduleService.GetAll(page, size, search);
-        decimal totalData = (decimal)await _scheduleService.TotalSchedules(search);
+        if (scheduleDto.IsFailure)
+            return NotFound(scheduleDto.Error);
+
+        var totalSchedule = await _scheduleService.TotalSchedules(search);
+        if (totalSchedule.IsFailure)
+            return NotFound(totalSchedule.Error);
+
+        decimal totalData = totalSchedule.Value;
         decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
 
         if (size == 1)
-        {
             totalPage = totalData;
-        }
 
-        if (!scheduleDto.Any())
-        {
-            return NotFound("Sem dados");
-        }
+        var schedule = scheduleDto.Value;
+
         return Ok(new
         {
             totalData,
             page,
             totalPage,
             size,
-            scheduleDto
+            schedule
         });
 
     }
+
     [HttpGet("{id:int}", Name = "GetScheduleId")]
-    public async Task<ActionResult<ScheduleDto>> GetById(int id)
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ScheduleDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    public async Task<IActionResult> GetById(int id)
     {
         var scheduleDto = await _scheduleService.GetById(id);
-        if (scheduleDto.Id <= 0)
-        {
-            return NotFound("Sem dados");
-        }
-        if (scheduleDto is not null)
-        {
-            return Ok(scheduleDto);
-        }
-        return NotFound("Sem dados");
+        if (scheduleDto.IsFailure)
+            return NotFound(scheduleDto.Error);
 
+        return Ok(scheduleDto);
     }
+
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<ScheduleDto>> Post([FromBody] ScheduleCreateDto scheduleCreateDto)
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ScheduleDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    public async Task<IActionResult> Post([FromBody] ScheduleCreateDto scheduleCreateDto)
     {
-        if (scheduleCreateDto is not null)
-        {
-            try
-            {
-                var scheduleDto = await _scheduleService.Create(scheduleCreateDto);
+        var scheduleDto = await _scheduleService.Create(scheduleCreateDto);
+        if (scheduleDto.IsFailure)
+            return NotFound(scheduleDto.Error);
 
-                return new CreatedAtRouteResult("GetScheduleId", new { id = scheduleDto.Id }, scheduleDto);
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message == "409")
-                {
-                    return Conflict("O cadastro da agenda resultaria em uma sobreposição de datas para este usuário.");
-                }
-                if (ex.Message == "400")
-                {
-                    return BadRequest("Datas iguais ou 'Data de Início' é maior que a 'Data Final'.");
+        var createResult = scheduleDto.Value;
 
-                }
-            }
-        }
-        return BadRequest("Dados inválidos");
+        return new CreatedAtRouteResult("GetScheduleId", new { id = createResult.Id }, createResult);
     }
+
     [Authorize]
     [HttpPut("{id:int}")]
-    public async Task<ActionResult<ScheduleDto>> Put(int id, [FromBody] ScheduleCreateDto scheduleCreateDto)
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ScheduleDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    public async Task<IActionResult> Put(int id, [FromBody] ScheduleCreateDto scheduleCreateDto)
     {
-        if (id != scheduleCreateDto.Id)
-        {
+        if (id <= 0)
             return BadRequest("Dados inválidos");
-        }
-        if (scheduleCreateDto is null)
-        {
-            return BadRequest("Dados inválidos");
-        }
 
         var scheduleDto = await _scheduleService.Update(scheduleCreateDto);
-        return Ok(scheduleDto);
+        if (scheduleDto.IsFailure)
+            return NotFound(scheduleDto.Error);
+
+        return Ok(scheduleDto.Value);
     }
     [Authorize]
     [HttpDelete("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ScheduleDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+
     public async Task<ActionResult<ScheduleDto>> Delete(int id)
     {
+        var result = await _scheduleService.Delete(id);
+        if (result.IsFailure)
+            return NotFound(result.Error);
+
         var scheduleDto = await _scheduleService.GetById(id);
-        if (scheduleDto is null)
-        {
-            return NotFound("Sem dados");
-        }
-        if (scheduleDto.Id <= 0)
-        {
-            return NotFound("Sem dados");
-        }
-        await _scheduleService.Delete(id);
+        if (scheduleDto.IsFailure)
+            return NotFound(scheduleDto.Error);
+
         return Ok(scheduleDto);
     }
 }

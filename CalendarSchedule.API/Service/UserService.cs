@@ -1,4 +1,5 @@
-﻿using CalendarSchedule.API.MappingDto.LoginDtos;
+﻿using CalendarSchedule.API.Abstractions;
+using CalendarSchedule.API.MappingDto.LoginDtos;
 using CalendarSchedule.API.MappingDto.UserDtos;
 using CalendarSchedule.API.Repository.Interface;
 using CalendarSchedule.API.Service.Interface;
@@ -7,15 +8,11 @@ using CalendarSchedule.Models.Dtos;
 
 namespace CalendarSchedule.API.Service;
 
-public class UserService(IUserRepository userRepository,
-                         IEncryptionUtility encryptionUtility,
-                         IDecryptionUtility decryptionUtility) : IUserService
+public class UserService(IUserRepository _userRepository,
+                         IEncryptionUtility _encryptionUtility,
+                         IDecryptionUtility _decryptionUtility) : IUserService
 {
-    private readonly IUserRepository _userRepository = userRepository;
-    private readonly IEncryptionUtility _encryptionUtility = encryptionUtility;
-    private readonly IDecryptionUtility _decryptionUtility = decryptionUtility;
-
-    public async Task<UserDto> Create(UserDto userDto)
+    public async Task<Result<UserDto>> Create(UserDto userDto)
     {
         UserDto userDt = new()
         {
@@ -29,27 +26,40 @@ public class UserService(IUserRepository userRepository,
         };
 
         var user = await _userRepository.Create(userDt.ConvertDtoToUser());
-        return user.ConvertUserToDto();
+        if (user.Id == 0)
+            return Result.Failure<UserDto>(Error.Internal("Erro ao criar usuário"));
+
+        var dto = user.ConvertUserToDto();
+
+        return Result.Success(dto);
     }
 
-    public async Task Delete(int id)
+    public async Task<Result> Delete(int id)
     {
         var userEntity = await GetById(id);
-        if (userEntity is not null)
-        {
-            await _userRepository.Delete(userEntity.Id);
-        }
+        if (userEntity.IsFailure)
+            return Result.Failure<UserDto>(userEntity.Error);
+
+        await _userRepository.Delete(userEntity.Value.Id);
+        return Result.Success();
     }
 
-    public async Task<IEnumerable<UserDto>> GetAll(int page, int size, string search)
+    public async Task<Result<IEnumerable<UserDto>>> GetAll(int page, int size, string search)
     {
         var userEntity = await _userRepository.GetAll(page, size, search);
-        return userEntity.ConvertUsersToDto();
+        if (userEntity is null)
+            return Result.Failure<IEnumerable<UserDto>>(Error.NotFound("Nenhum usuário encontrado"));
+
+        var dto = userEntity.ConvertUsersToDto();
+        return Result.Success(dto);
     }
 
-    public async Task<UserDto> GetById(int id)
+    public async Task<Result<UserDto>> GetById(int id)
     {
         var userDto = await _userRepository.GetById(id);
+        if (userDto is null)
+            return Result.Failure<UserDto>(Error.NotFound("Nenhum usuário encontrado"));
+
         UserDto user = new()
         {
             Id = userDto.Id,
@@ -60,46 +70,64 @@ public class UserService(IUserRepository userRepository,
             Manager = userDto.Manager,
             Active = userDto.Active
         };
-        return user;
+
+        return Result.Success(user);
     }
 
-    public async Task<IEnumerable<UserDto>> GetManagerAll(int page, int size, string search)
+    public async Task<Result<IEnumerable<UserDto>>> GetManagerAll(int page, int size, string search)
     {
         var userEntity = await _userRepository.GetManagerAll(page, size, search);
-        return userEntity.ConvertUsersToDto();
+        if (userEntity is null)
+            return Result.Failure<IEnumerable<UserDto>>(Error.NotFound("Nenhum usuário encontrado"));
+        var dto = userEntity.ConvertUsersToDto();
+        return Result.Success(dto);
     }
 
-    public async Task<IEnumerable<UserDto>> GetManagerAllByUserCurrent(int page, int size, string search, string username)
+    public async Task<Result<IEnumerable<UserDto>>> GetManagerAllByUserCurrent(int page, int size, string search, string username)
     {
         var users = await _userRepository.GetManagerAllByUserCurrent(page, size, search, username);
-        return users.ConvertUsersToDto();
+        if (users is null)
+            return Result.Failure<IEnumerable<UserDto>>(Error.NotFound("Nenhum usuário encontrado"));
+
+        var dto = users.ConvertUsersToDto();
+        return Result.Success(dto);
     }
 
-    public async Task<UserDto> GetManagerUsername(string username)
+    public async Task<Result<UserDto>> GetManagerUsername(string username)
     {
         var userEntity = await _userRepository.GetManagerUsername(username);
-        return userEntity.ConvertUserToDto();
+        if (userEntity is null)
+            return Result.Failure<UserDto>(Error.NotFound("Nenhum usuário encontrado"));
+
+        var dto = userEntity.ConvertUserToDto();
+        return Result.Success(dto);
     }
 
-    public async Task<bool> GetPassword(LoginDto login)
+    public async Task<Result<bool>> GetPassword(LoginDto login)
     {
         var pass = await _userRepository.GetPassword(login.ConvertLoginDtoToLoginApi());
+        if (pass is null)
+            return Result.Failure<bool>(Error.NotFound("Nenhum usuário encontrado"));
+
         pass = _decryptionUtility.Dado(pass);
 
         if (pass == login.Password)
         {
-            return true;
+            return Result.Success(true);
         }
-        return false;
+        return Result.Failure<bool>(Error.Validation("Erro ao validar senha"));
     }
 
-    public async Task<int> TotalUsers(string search)
+    public async Task<Result<int>> TotalUsers(string search)
     {
         var totalUser = await _userRepository.TotalUser(search);
-        return totalUser;
+        if (totalUser <= 0)
+            return Result.Failure<int>(Error.NotFound("Nenhum usuário encontrado"));
+
+        return Result.Success(totalUser);
     }
 
-    public async Task Update(UserDto userDto)
+    public async Task<Result<UserDto>> Update(UserDto userDto)
     {
         UserDto user = new()
         {
@@ -112,6 +140,10 @@ public class UserService(IUserRepository userRepository,
             Active = userDto.Active
         };
 
-        await _userRepository.Update(user.ConvertDtoToUser());
+        var result = await _userRepository.Update(user.ConvertDtoToUser());
+        if (result is null)
+            return Result.Failure<UserDto>(Error.NotFound("Nenhum usuário encontrado"));
+        var dto = result.ConvertUserToDto();
+        return Result.Success(dto);
     }
 }

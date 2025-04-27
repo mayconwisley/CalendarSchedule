@@ -1,45 +1,68 @@
-﻿using CalendarSchedule.API.MappingDto.ScheduleDtos;
+﻿using CalendarSchedule.API.Abstractions;
+using CalendarSchedule.API.MappingDto.ScheduleDtos;
 using CalendarSchedule.API.Repository.Interface;
 using CalendarSchedule.API.Service.Interface;
 using CalendarSchedule.Models.Dtos;
 
 namespace CalendarSchedule.API.Service;
 
-public class ScheduleService(IScheduleRepository scheduleUserRepository) : IScheduleService
+public class ScheduleService(IScheduleRepository _scheduleUserRepository) : IScheduleService
 {
-    private readonly IScheduleRepository _scheduleUserRepository = scheduleUserRepository;
-
-    public async Task<ScheduleDto> Create(ScheduleCreateDto scheduleCreateDto)
+    public async Task<Result<ScheduleDto>> Create(ScheduleCreateDto scheduleCreateDto)
     {
         var schedule = await _scheduleUserRepository.Create(scheduleCreateDto.ConvertDtoToScheduleCreate());
-        return schedule.ConvertScheduleToDto();
+        if (schedule.Id == 0)
+            return Result.Failure<ScheduleDto>(Error.Internal("Erro ao criar agenda"));
+
+        var dto = schedule.ConvertScheduleToDto();
+
+        return Result.Success(dto);
     }
-    public async Task Delete(int id)
+    public async Task<Result> Delete(int id)
     {
         var scheduleEntity = await GetById(id);
-        if (scheduleEntity is not null)
-        {
-            await _scheduleUserRepository.Delete(scheduleEntity.Id);
-        }
+        if (scheduleEntity.IsFailure)
+            return Result.Failure<ScheduleDto>(scheduleEntity.Error);
+
+        await _scheduleUserRepository.Delete(scheduleEntity.Value.Id);
+        return Result.Success();
+
     }
-    public async Task<IEnumerable<ScheduleDto>> GetAll(int page, int size, string search)
+    public async Task<Result<IEnumerable<ScheduleDto>>> GetAll(int page, int size, string search)
     {
         var scheduleEntity = await _scheduleUserRepository.GetAll(page, size, search);
-        return scheduleEntity.ConvertSchedulesToDto();
+        if (scheduleEntity is null)
+            return Result.Failure<IEnumerable<ScheduleDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+
+        var dto = scheduleEntity.ConvertSchedulesToDto();
+
+        return Result.Success(dto);
     }
-    public async Task<ScheduleDto> GetById(int id)
+    public async Task<Result<ScheduleDto>> GetById(int id)
     {
         var scheduleEntity = await _scheduleUserRepository.GetById(id);
-        return scheduleEntity.ConvertScheduleToDto();
+        if (scheduleEntity is null)
+            return Result.Failure<ScheduleDto>(Error.NotFound("Nenhum agendamento encontrado"));
+        var dto = scheduleEntity.ConvertScheduleToDto();
+
+        return Result.Success(dto);
     }
-    public async Task<int> TotalSchedules(string search)
+    public async Task<Result<int>> TotalSchedules(string search)
     {
         var totalScheduleUser = await _scheduleUserRepository.TotalSchedules(search);
-        return totalScheduleUser;
+        if (totalScheduleUser <= 0)
+            return Result.Failure<int>(Error.NotFound("Nenhum agendamento encontrado"));
+
+        return Result.Success(totalScheduleUser);
     }
-    public async Task<ScheduleDto> Update(ScheduleCreateDto scheduleCreateDto)
+    public async Task<Result<ScheduleDto>> Update(ScheduleCreateDto scheduleCreateDto)
     {
         var schedule = await _scheduleUserRepository.Update(scheduleCreateDto.ConvertDtoToScheduleCreate());
-        return schedule.ConvertScheduleToDto();
+        if (schedule is null)
+            return Result.Failure<ScheduleDto>(Error.Internal("Erro ao atualizar agenda"));
+
+        var dto = schedule.ConvertScheduleToDto();
+
+        return Result.Success(dto);
     }
 }

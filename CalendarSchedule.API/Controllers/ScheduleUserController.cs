@@ -1,4 +1,5 @@
-﻿using CalendarSchedule.API.Service.Interface;
+﻿using CalendarSchedule.API.Abstractions;
+using CalendarSchedule.API.Service.Interface;
 using CalendarSchedule.Models.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,134 +14,144 @@ public class ScheduleUserController(IScheduleUserService _scheduleUserService) :
 {
     [HttpGet]
     [Route("All")]
-    public async Task<ActionResult<IEnumerable<ScheduleUserDto>>> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto[]))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
     {
         var scheduleUsersDto = await _scheduleUserService.GetAll(page, size, search);
-        decimal totalData = (decimal)await _scheduleUserService.TotalScheduleUser(search);
+        if (scheduleUsersDto.IsFailure)
+            return NotFound(scheduleUsersDto.Error);
+
+        var totalScheduleUser = await _scheduleUserService.TotalScheduleUser(search);
+        if (totalScheduleUser.IsFailure)
+            return NotFound(totalScheduleUser.Error);
+
+        decimal totalData = totalScheduleUser.Value;
         decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
 
         if (size == 1)
-        {
             totalPage = totalData;
-        }
 
-        if (!scheduleUsersDto.Any())
-        {
-            return NotFound("Sem dados");
-        }
+        var scheduleUsers = scheduleUsersDto.Value;
+
         return Ok(new
         {
             totalData,
             page,
             totalPage,
             size,
-            scheduleUsersDto
+            scheduleUsers
         });
 
     }
 
     [HttpGet("{scheduleId:int}", Name = "GetScheduleUserId")]
-    public async Task<ActionResult<ScheduleUserDto>> GetByScheduleId(int scheduleId)
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto[]))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    public async Task<IActionResult> GetByScheduleId(int scheduleId)
     {
         var scheduleUserDto = await _scheduleUserService.GetByScheduleId(scheduleId);
-        if (scheduleUserDto is not null)
-        {
-            return Ok(scheduleUserDto);
-        }
-        return NotFound("Sem dados");
+        if (scheduleUserDto.IsFailure)
+            return NotFound(scheduleUserDto.Error);
+
+        return Ok(scheduleUserDto.Value);
 
     }
+
     [HttpGet("{scheduleId:int}/{userId:int}", Name = "GetScheduleIdUserId")]
-    public async Task<ActionResult<ScheduleUserDto>> GetById(int scheduleId, int userId)
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    public async Task<IActionResult> GetById(int scheduleId, int userId)
     {
         var scheduleUserDto = await _scheduleUserService.GetById(scheduleId, userId);
-        if (scheduleUserDto is not null)
-        {
-            return Ok(scheduleUserDto);
-        }
-        return NotFound("Sem dados");
+        if (scheduleUserDto.IsFailure)
+            return NotFound(scheduleUserDto.Error);
 
+        return Ok(scheduleUserDto.Value);
     }
+
     [HttpGet("DateStart/{dateStart}")]
-    public async Task<ActionResult<IEnumerable<ScheduleUserDto>>> GetByDateStart(string dateStart = "")
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto[]))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    public async Task<IActionResult> GetByDateStart(string dateStart = "")
     {
         DateTime dateSalected = DateTime.Parse(dateStart.Replace("%2F", "/"));
 
         var scheduleUserDto = await _scheduleUserService.GetByDateStart(dateSalected);
+        if (scheduleUserDto.IsFailure)
+            return NotFound(scheduleUserDto.Error);
 
-        if (!scheduleUserDto.Any())
-        {
-            return NotFound("Sem dados");
-        }
-        return Ok(scheduleUserDto);
+        return Ok(scheduleUserDto.Value);
     }
+
     [HttpGet("Period/{dateStart}/{dateEnd}")]
-    public async Task<ActionResult<IEnumerable<ScheduleUserDto>>> GetByDatePeriod(string dateStart = "", string dateEnd = "")
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto[]))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    public async Task<IActionResult> GetByDatePeriod(string dateStart = "", string dateEnd = "")
     {
         DateTime dtDateStart = DateTime.Parse(dateStart.Replace("%2F", "/"));
         DateTime dtDateEnd = DateTime.Parse(dateEnd.Replace("%2F", "/"));
 
         var scheduleUserDto = await _scheduleUserService.GetByDatePeriod(dtDateStart, dtDateEnd);
+        if (scheduleUserDto.IsFailure)
+            return NotFound(scheduleUserDto.Error);
 
-        if (!scheduleUserDto.Any())
-        {
-            return NotFound("Sem dados");
-        }
-        return Ok(scheduleUserDto);
+        return Ok(scheduleUserDto.Value);
     }
+
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<ScheduleUserDto>> Post([FromBody] ScheduleUserCreateDto scheduleUserCreateDto)
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ClientContactDto[]))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    public async Task<IActionResult> Post([FromBody] ScheduleUserCreateDto scheduleUserCreateDto)
     {
-        if (scheduleUserCreateDto is not null)
-        {
-            try
-            {
-                var scheduleUser = await _scheduleUserService.Create(scheduleUserCreateDto);
+        var scheduleUser = await _scheduleUserService.Create(scheduleUserCreateDto);
+        if (scheduleUser.IsFailure)
+            return NotFound(scheduleUser.Error);
 
-                return new CreatedAtRouteResult("GetScheduleUserId", new { scheduleId = scheduleUser.ScheduleId }, scheduleUser);
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message == "409")
-                {
-                    return Conflict("O cadastro da agenda resultaria em uma sobreposição de datas para este usuário.");
-                }
-                if (ex.Message == "400")
-                {
-                    return BadRequest("Datas iguais ou 'Data de Início' é maior que a 'Data Final'.");
+        var createResult = scheduleUser.Value;
+        return new CreatedAtRouteResult("GetScheduleUserId", new { scheduleId = createResult.ScheduleId }, createResult);
 
-                }
-            }
-        }
-        return BadRequest("Dados inválidos");
     }
+
     [Authorize]
     [HttpPut("{id:int}")]
-    public async Task<ActionResult<ScheduleUserDto>> Put(int id, [FromBody] ScheduleUserCreateDto scheduleUserCreateDto)
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    public async Task<IActionResult> Put(int id, [FromBody] ScheduleUserCreateDto scheduleUserCreateDto)
     {
-        if (id != scheduleUserCreateDto.ScheduleId)
-        {
-            return BadRequest("Dados inválidos");
-        }
-        if (scheduleUserCreateDto is null)
-        {
-            return BadRequest("Dados inválidos");
-        }
+        if (id <= 0)
+            return BadRequest("Id inválidos");
 
         var scheduleUserDto = await _scheduleUserService.Update(scheduleUserCreateDto);
-        return Ok(scheduleUserDto);
+        if (scheduleUserDto.IsFailure)
+            return NotFound(scheduleUserDto.Error);
+
+        return Ok(scheduleUserDto.Value);
     }
+
     [Authorize]
     [HttpDelete("{scheduleId:int}/{userId:int}")]
-    public async Task<ActionResult<ScheduleUserDto>> Delete(int scheduleId, int userId)
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    public async Task<IActionResult> Delete(int scheduleId, int userId)
     {
+        var result = await _scheduleUserService.Delete(scheduleId, userId);
+        if (result.IsFailure)
+            return NotFound(result.Error);
+
         var scheduleDto = await _scheduleUserService.GetById(scheduleId, userId);
-        if (scheduleDto is null)
-        {
-            return NotFound("Sem dados");
-        }
-        await _scheduleUserService.Delete(scheduleId, userId);
-        return Ok(scheduleDto);
+        if (scheduleDto.IsFailure)
+            return NotFound(scheduleDto.Error);
+
+        return Ok(scheduleDto.Value);
     }
 }

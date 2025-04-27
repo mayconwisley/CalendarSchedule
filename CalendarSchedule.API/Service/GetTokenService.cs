@@ -19,8 +19,10 @@ public class GetTokenService(IUserService _userService) : IGetTokenService
         if (login.Username is null || login.Password is null)
             return Result.Failure<TokenDto>(Error.BadRequest("Usuário e/ou senha inválidos"));
 
-        if (!await _userService.GetPassword(login))
-            return Result.Failure<TokenDto>(Error.NotFound("Senha não encontrada"));
+        var result = await _userService.GetPassword(login);
+
+        if (result.IsFailure)
+            return Result.Failure<TokenDto>(result.Error);
 
         string? strJWT = _configuration.GetSection("JWT")["Secret"];
         byte[] jwt = Encoding.UTF8.GetBytes(strJWT!);
