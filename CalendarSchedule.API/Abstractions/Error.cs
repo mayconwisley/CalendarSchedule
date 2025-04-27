@@ -22,4 +22,7 @@ public record Error(string Code, string Message)
     public static Error UnsupportedMediaType(string message) => new("UnsupportedMediaType", message);
     public static Error PreconditionFailed(string message) => new("PreconditionFailed", message);
     public static Error MethodNotAllowed(string message) => new("MethodNotAllowed", message);
+    public static Error RequestTimeout(string message) => new("RequestTimeout", message);
+    public static Error Unexpected(string message) => new("Unexpected", message);
 }
+

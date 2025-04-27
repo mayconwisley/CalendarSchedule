@@ -3,6 +3,7 @@ using CalendarSchedule.API.MappingDto.ClientDtos;
 using CalendarSchedule.API.Repository.Interface;
 using CalendarSchedule.API.Service.Interface;
 using CalendarSchedule.Models.Dtos;
+using System.ComponentModel.DataAnnotations;
 
 namespace CalendarSchedule.API.Service;
 
@@ -10,12 +11,21 @@ public class ClientService(IClientRepository _clientRepository) : IClientService
 {
     public async Task<Result<ClientDto>> Create(ClientCreateDto clientCreateDto)
     {
-        var clientCreate = await _clientRepository.Create(clientCreateDto.ConvertDtoCreateToClient());
-        if (clientCreate.Id == 0)
-            return Result.Failure<ClientDto>(Error.Internal("Erro ao criar cliente"));
+        try
+        {
+            var client = clientCreateDto.ConvertDtoCreateToClient();
+            var createdClient = await _clientRepository.Create(client);
 
-        var dto = clientCreate.ConvertClientToDto();
-        return Result.Success(dto);
+            if (createdClient == null)
+                return Result.Failure<ClientDto>(Error.Unexpected("Falha ao criar o cliente."));
+
+            var clientDto = createdClient.ConvertClientToDto();
+            return Result.Success(clientDto);
+        }
+        catch (ValidationException ex)
+        {
+            return Result.Failure<ClientDto>(Error.Internal($"Erro interno: {ex.Message}"));
+        }
     }
 
     public async Task<Result<ClientDto>> Delete(int id)
@@ -26,7 +36,7 @@ public class ClientService(IClientRepository _clientRepository) : IClientService
 
         var clientDto = await _clientRepository.Delete(user.Value.Id);
         if (clientDto is null)
-            return Result.Failure<ClientDto>(Error.NotFound("Nenhum cliente encontrado"));
+            return Result.Failure<ClientDto>(Error.NotFound("Nenhum cliente encontrado para ser excluido"));
 
         var dto = clientDto.ConvertClientToDto();
         return Result.Success(dto);
@@ -59,7 +69,7 @@ public class ClientService(IClientRepository _clientRepository) : IClientService
     {
         var userEntity = await _clientRepository.GetById(id);
         if (userEntity is null)
-            return Result.Failure<ClientDto>(Error.NotFound("Nenhum cliente encontrado"));
+            return Result.Failure<ClientDto>(Error.NotFound("Nenhum cliente encontrado para esse Id"));
 
         var dto = userEntity.ConvertClientToDto();
 
@@ -80,7 +90,7 @@ public class ClientService(IClientRepository _clientRepository) : IClientService
     {
         var client = await _clientRepository.Update(clientDto.ConvertDtoToClient());
         if (client is null)
-            return Result.Failure<ClientDto>(Error.NotFound("Nenhum cliente encontrado"));
+            return Result.Failure<ClientDto>(Error.NotFound("Nenhum cliente encontrado para atualização"));
 
         var dto = client.ConvertClientToDto();
         return Result.Success(dto);

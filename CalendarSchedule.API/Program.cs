@@ -7,6 +7,7 @@ using CalendarSchedule.API.Service.Interface;
 using CalendarSchedule.API.Utility;
 using CalendarSchedule.API.Utility.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
@@ -16,8 +17,10 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 builder.Services.AddControllers().AddJsonOptions(x =>
 {
     x.JsonSerializerOptions.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
@@ -116,6 +119,7 @@ builder.Services.AddAuthentication(opt =>
                 var result = Result.Failure(Error.Forbidden("Acesso negado"));
                 await context.Response.WriteAsJsonAsync(result);
             }
+
         };
 
         opt.RequireHttpsMetadata = false;
