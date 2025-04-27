@@ -109,6 +109,7 @@ public class ScheduleUserController(IScheduleUserService _scheduleUserService) :
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ClientContactDto[]))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
     public async Task<IActionResult> Post([FromBody] ScheduleUserCreateDto scheduleUserCreateDto)
     {
         var scheduleUser = await _scheduleUserService.Create(scheduleUserCreateDto);
@@ -125,6 +126,7 @@ public class ScheduleUserController(IScheduleUserService _scheduleUserService) :
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
     public async Task<IActionResult> Put(int id, [FromBody] ScheduleUserCreateDto scheduleUserCreateDto)
     {
         if (id <= 0)
@@ -142,6 +144,7 @@ public class ScheduleUserController(IScheduleUserService _scheduleUserService) :
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
     public async Task<IActionResult> Delete(int scheduleId, int userId)
     {
         var result = await _scheduleUserService.Delete(scheduleId, userId);

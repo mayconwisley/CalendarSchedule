@@ -14,7 +14,7 @@ public class ClientController(IClientService _clientService) : ControllerBase
 {
     [HttpGet]
     [Route("All")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientDto[]))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResult<ClientDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
     public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
@@ -27,22 +27,7 @@ public class ClientController(IClientService _clientService) : ControllerBase
         if (totalClient.IsFailure)
             return NotFound(totalClient.Error);
 
-        decimal totalData = totalClient.Value;
-        decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
-
-        var clients = clientsDto.Value;
-
-        if (size == 1)
-            totalPage = totalData;
-
-        return Ok(new
-        {
-            totalData,
-            page,
-            totalPage,
-            size,
-            clients
-        });
+        return Ok(clientsDto.Value);
     }
 
     [HttpGet("{id:int}", Name = "GetClient")]
@@ -63,15 +48,16 @@ public class ClientController(IClientService _clientService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ClientDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
-    public async Task<IActionResult> Post([FromBody] ClientDto clientDto)
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
+    public async Task<IActionResult> Post([FromBody] ClientCreateDto clientCreateDto)
     {
-        var clientCreate = await _clientService.Create(clientDto);
-        if (clientCreate.IsFailure)
-            return BadRequest(clientCreate.Error);
+        var create = await _clientService.Create(clientCreateDto);
+        if (create.IsFailure)
+            return BadRequest(create.Error);
 
-        var client = clientCreate.Value;
+        var client = create.Value;
 
-        return new CreatedAtRouteResult("GetClient", new { id = client }, client);
+        return new CreatedAtRouteResult("GetClient", new { id = client.Id }, client);
     }
 
     [Authorize]
@@ -79,6 +65,7 @@ public class ClientController(IClientService _clientService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
     public async Task<IActionResult> Put(int id, [FromBody] ClientDto clientDto)
     {
         if (id != clientDto.Id)
@@ -96,6 +83,7 @@ public class ClientController(IClientService _clientService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
     public async Task<IActionResult> Delete(int id)
     {
         if (id <= 0)
@@ -108,13 +96,6 @@ public class ClientController(IClientService _clientService) : ControllerBase
             else
                 return BadRequest(clientDeleted.Error);
 
-        var clientDto = await _clientService.GetById(id);
-        if (clientDto.IsFailure)
-            if (clientDto.Error.Code == "NotFound")
-                return NotFound(clientDto.Error);
-            else
-                return BadRequest(clientDto.Error);
-
-        return Ok(clientDto);
+        return Ok(clientDeleted);
     }
 }

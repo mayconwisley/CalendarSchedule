@@ -1,8 +1,4 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.Net.Http.Headers;
-using Microsoft.OpenApi.Models;
+using CalendarSchedule.API.Abstractions;
 using CalendarSchedule.API.Data;
 using CalendarSchedule.API.Repository;
 using CalendarSchedule.API.Repository.Interface;
@@ -10,6 +6,11 @@ using CalendarSchedule.API.Service;
 using CalendarSchedule.API.Service.Interface;
 using CalendarSchedule.API.Utility;
 using CalendarSchedule.API.Utility.Interface;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
+using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -98,6 +99,25 @@ builder.Services.AddAuthentication(opt =>
 })
     .AddJwtBearer(opt =>
     {
+        opt.Events = new JwtBearerEvents
+        {
+            OnChallenge = async context =>
+            {
+                context.HandleResponse();
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                context.Response.ContentType = "application/json";
+                var result = Result.Failure(Error.Unauthorized("Token inválido ou expirado"));
+                await context.Response.WriteAsJsonAsync(result);
+            },
+            OnForbidden = async context =>
+            {
+                context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                context.Response.ContentType = "application/json";
+                var result = Result.Failure(Error.Forbidden("Acesso negado"));
+                await context.Response.WriteAsJsonAsync(result);
+            }
+        };
+
         opt.RequireHttpsMetadata = false;
         opt.SaveToken = true;
         opt.TokenValidationParameters = new TokenValidationParameters
@@ -107,7 +127,6 @@ builder.Services.AddAuthentication(opt =>
             ValidateIssuer = false,
             ValidateAudience = false
         };
-
     });
 
 var app = builder.Build();

@@ -144,6 +144,7 @@ public class UserController(IUserService _userService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
     public async Task<IActionResult> Post([FromBody] UserDto userDto)
     {
         var user = await _userService.Create(userDto);
@@ -160,6 +161,7 @@ public class UserController(IUserService _userService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
     public async Task<IActionResult> Put(int id, [FromBody] UserDto userDto)
     {
         if (id <= 0)
@@ -177,6 +179,7 @@ public class UserController(IUserService _userService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
     public async Task<ActionResult<UserDto>> Delete(int id)
     {
         var result = await _userService.Delete(id);

@@ -61,6 +61,7 @@ public class ClientResponsibleController(IClientResponsibleService _clientRespon
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ClientResponsibleDto))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
     public async Task<IActionResult> Post([FromBody] ClientResponsibleCreateDto clientResponsibleCreateDto)
     {
         var clientResponsibleDto = await _clientResponsibleService.Create(clientResponsibleCreateDto);
@@ -77,6 +78,7 @@ public class ClientResponsibleController(IClientResponsibleService _clientRespon
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientResponsibleDto))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
     public async Task<IActionResult> Put(int id, [FromBody] ClientResponsibleCreateDto clientResponsibleCreateDto)
     {
         if (id != clientResponsibleCreateDto.Id)
@@ -95,6 +97,7 @@ public class ClientResponsibleController(IClientResponsibleService _clientRespon
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientResponsibleDto))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
     public async Task<IActionResult> Delete(int id)
     {
         if (id <= 0)

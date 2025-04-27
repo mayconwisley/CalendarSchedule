@@ -64,6 +64,7 @@ public class ScheduleController(IScheduleService _scheduleService) : ControllerB
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ScheduleDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
     public async Task<IActionResult> Post([FromBody] ScheduleCreateDto scheduleCreateDto)
     {
         var scheduleDto = await _scheduleService.Create(scheduleCreateDto);
@@ -80,6 +81,7 @@ public class ScheduleController(IScheduleService _scheduleService) : ControllerB
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ScheduleDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
     public async Task<IActionResult> Put(int id, [FromBody] ScheduleCreateDto scheduleCreateDto)
     {
         if (id <= 0)
@@ -96,6 +98,7 @@ public class ScheduleController(IScheduleService _scheduleService) : ControllerB
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ScheduleDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
 
     public async Task<ActionResult<ScheduleDto>> Delete(int id)
     {
