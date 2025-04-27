@@ -14,7 +14,7 @@ public class ClientResponsibleController(IClientResponsibleService _clientRespon
 {
     [HttpGet]
     [Route("All")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientResponsibleDto[]))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResult<ClientResponsibleDto>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
     public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
     {
@@ -22,34 +22,22 @@ public class ClientResponsibleController(IClientResponsibleService _clientRespon
         if (clientsResponsibleDto.IsFailure)
             return NotFound(clientsResponsibleDto.Error);
 
-        var totalClienteResposible = await _clientResponsibleService.TotalClientResponsible(search);
-        if (totalClienteResposible.IsFailure)
-            return NotFound(totalClienteResposible.Error);
-
-        decimal totalData = totalClienteResposible.Value;
-        decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
-
-        if (size == 1)
-            totalPage = totalData;
-
         var clientsResponsible = clientsResponsibleDto.Value;
 
-        return Ok(new
-        {
-            totalData,
-            page,
-            totalPage,
-            size,
-            clientsResponsible
-        });
-
+        return Ok(clientsResponsible);
     }
 
     [HttpGet("{id:int}", Name = "GetClientResponsibleId")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientResponsibleDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
     public async Task<IActionResult> GetById(int id)
     {
+        if (id <= 0)
+        {
+            var error = Result.Failure(Error.BadRequest($"Id inválido: {id}"));
+            return BadRequest(error);
+        }
         var clientResponsibleDto = await _clientResponsibleService.GetById(id);
         if (clientResponsibleDto.IsFailure)
             return NotFound(clientResponsibleDto.Error);
@@ -60,13 +48,31 @@ public class ClientResponsibleController(IClientResponsibleService _clientRespon
     [Authorize]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ClientResponsibleDto))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Result))]
     public async Task<IActionResult> Post([FromBody] ClientResponsibleCreateDto clientResponsibleCreateDto)
     {
+        if (!ModelState.IsValid)
+        {
+            var errorMessage = ErroMoldeState();
+
+            var error = Result.Failure(Error.BadRequest($"Erro de validação no objeto ({nameof(ClientCreateDto)}): {errorMessage}"));
+            return BadRequest(error);
+        }
+
         var clientResponsibleDto = await _clientResponsibleService.Create(clientResponsibleCreateDto);
         if (clientResponsibleDto.IsFailure)
-            return NotFound(clientResponsibleDto.Error);
+        {
+            return clientResponsibleDto.Error.Code switch
+            {
+                "NotFound" => NotFound(clientResponsibleDto.Error),
+                "BadRequest" => BadRequest(clientResponsibleDto.Error),
+                "Internal" => StatusCode(StatusCodes.Status500InternalServerError, clientResponsibleDto.Error),
+                _ => StatusCode(StatusCodes.Status500InternalServerError, clientResponsibleDto.Error) // fallback para erro desconhecido
+            };
+        }
 
         var createResult = clientResponsibleDto.Value;
 
@@ -76,19 +82,43 @@ public class ClientResponsibleController(IClientResponsibleService _clientRespon
     [Authorize]
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientResponsibleDto))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
-    public async Task<IActionResult> Put(int id, [FromBody] ClientResponsibleCreateDto clientResponsibleCreateDto)
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Result))]
+    public async Task<IActionResult> Put(int id, [FromBody] ClientResponsibleDto clientResponsibleDto)
     {
-        if (id != clientResponsibleCreateDto.Id)
-            return BadRequest("Dados inválidos");
+        if (id <= 0)
+        {
+            var error = Result.Failure(Error.BadRequest($"Id ({id}) inválido"));
+            return BadRequest(error);
+        }
 
-        var clientResponsibleDto = await _clientResponsibleService.Update(clientResponsibleCreateDto);
-        if (clientResponsibleDto.IsFailure)
-            return NotFound(clientResponsibleDto.Error);
+        if (!ModelState.IsValid)
+        {
+            var errorMessage = ErroMoldeState();
+            var error = Result.Failure(Error.BadRequest($"Erro de validação do objeto ({nameof(ClientDto)}): {errorMessage}"));
+            return BadRequest(error);
+        }
 
-        var result = clientResponsibleDto.Value;
+        if (id != clientResponsibleDto.Id)
+        {
+            var error = Result.Failure(Error.BadRequest($"Id ({id}) da rota diferente do Id ({clientResponsibleDto.Id}) objeto"));
+            return BadRequest(error);
+        }
+        var clientResponsible = await _clientResponsibleService.Update(clientResponsibleDto);
+        if (clientResponsible.IsFailure)
+        {
+            return clientResponsible.Error.Code switch
+            {
+                "NotFound" => NotFound(clientResponsible.Error),
+                "BadRequest" => BadRequest(clientResponsible.Error),
+                "Internal" => StatusCode(StatusCodes.Status500InternalServerError, clientResponsible.Error),
+                _ => StatusCode(StatusCodes.Status500InternalServerError, clientResponsible.Error) // fallback para erro desconhecido
+            };
+        }
+
+        var result = clientResponsible.Value;
 
         return Ok(result);
     }
@@ -96,21 +126,37 @@ public class ClientResponsibleController(IClientResponsibleService _clientRespon
     [Authorize]
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientResponsibleDto))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Result))]
     public async Task<IActionResult> Delete(int id)
     {
         if (id <= 0)
-            return BadRequest("Id inválido");
+        {
+            var error = Result.Failure(Error.BadRequest($"Id inválido: {id}"));
+            return BadRequest(error);
+        }
 
         var result = await _clientResponsibleService.Delete(id);
         if (result.IsFailure)
-            return NotFound(result.Error);
+        {
+            return result.Error.Code switch
+            {
+                "NotFound" => NotFound(result.Error),
+                "BadRequest" => BadRequest(result.Error),
+                "Internal" => StatusCode(StatusCodes.Status500InternalServerError, result.Error),
+                _ => StatusCode(StatusCodes.Status500InternalServerError, result.Error) // fallback para erro desconhecido
+            };
+        }
 
-        var clientResponsibleDto = await _clientResponsibleService.GetById(id);
-        if (clientResponsibleDto.IsFailure)
-            return NotFound(clientResponsibleDto.Error);
-
-        return Ok(clientResponsibleDto);
+        return Ok(result.Value);
+    }
+    private string ErroMoldeState()
+    {
+        var errorMessage = string.Join("; ", ModelState.Values
+                                              .SelectMany(x => x.Errors)
+                                              .Select(x => x.ErrorMessage));
+        return errorMessage;
     }
 }

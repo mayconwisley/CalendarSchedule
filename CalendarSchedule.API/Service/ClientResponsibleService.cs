@@ -18,23 +18,35 @@ public class ClientResponsibleService(IClientResponsibleRepository _clientRespon
         return Result.Success(dto);
     }
 
-    public async Task<Result> Delete(int id)
+    public async Task<Result<ClientResponsibleDto>> Delete(int id)
     {
-        var clientResponsible = await GetById(id);
-        if (clientResponsible.IsFailure)
-            return Result.Failure(clientResponsible.Error);
+        var deletedReponsible = await _clientResponsibleRepository.Delete(id);
+        if (deletedReponsible is null)
+            return Result.Failure<ClientResponsibleDto>(Error.NotFound("Cliente responsavel não encontrado"));
 
-        await _clientResponsibleRepository.Delete(clientResponsible.Value.Id);
-        return Result.Success();
+        var deletedClientResponsible = deletedReponsible.ConvertClientResponsibleToDto();
+
+        return Result.Success(deletedClientResponsible);
     }
 
-    public async Task<Result<IEnumerable<ClientResponsibleDto>>> GetAll(int page, int size, string search)
+    public async Task<Result<PagedResult<ClientResponsibleDto>>> GetAll(int page, int size, string search)
     {
         var clientResponsibles = await _clientResponsibleRepository.GetAll(page, size, search);
         if (clientResponsibles is null)
-            return Result.Failure<IEnumerable<ClientResponsibleDto>>(Error.NotFound("Cliente responsavel não encontrado"));
+            return Result.Failure<PagedResult<ClientResponsibleDto>>(Error.NotFound("Cliente responsavel não encontrado"));
+
+        var totalClientResponsible = await _clientResponsibleRepository.TotalClientResponsible(search);
+        if (totalClientResponsible <= 0)
+            return Result.Failure<PagedResult<ClientResponsibleDto>>(Error.NotFound("Nenhum cliente responsavel encontrado"));
+        decimal totalData = totalClientResponsible;
+        decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
+        if (size == 1)
+            totalPage = totalData;
+
         var dto = clientResponsibles.ConvertClientResponsibleToDtos();
-        return Result.Success(dto);
+        var clientResponsibleDto = new PagedResult<ClientResponsibleDto>(dto, totalData, page, size, totalPage);
+
+        return Result.Success(clientResponsibleDto);
     }
 
     public async Task<Result<ClientResponsibleDto>> GetById(int id)
@@ -56,9 +68,9 @@ public class ClientResponsibleService(IClientResponsibleRepository _clientRespon
         return Result.Success(totalClientContact);
     }
 
-    public async Task<Result<ClientResponsibleDto>> Update(ClientResponsibleCreateDto clientResponsibleCreateDto)
+    public async Task<Result<ClientResponsibleDto>> Update(ClientResponsibleDto clientResponsibleDto)
     {
-        var clientResponsible = await _clientResponsibleRepository.Update(clientResponsibleCreateDto.ConvertDtoToClientResponsibleCreate());
+        var clientResponsible = await _clientResponsibleRepository.Update(clientResponsibleDto.ConvertDtoToClientResponsible());
         if (clientResponsible is null)
             return Result.Failure<ClientResponsibleDto>(Error.NotFound("Cliente responsavel não encontrado"));
 
