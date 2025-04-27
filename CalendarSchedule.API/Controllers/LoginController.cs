@@ -38,7 +38,8 @@ public class LoginController(IGetTokenService _getTokenService) : ControllerBase
                     var validation = Result.Failure(Error.Validation(token.Error.Message));
                     return StatusCode(StatusCodes.Status422UnprocessableEntity, validation);
                 default:
-                    break;
+                    var erroDefault = Result.Failure(Error.Internal(token.Error.Message));
+                    return StatusCode(StatusCodes.Status500InternalServerError, erroDefault);
             }
         }
         return Ok(token.Value);
