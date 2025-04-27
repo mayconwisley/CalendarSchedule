@@ -2,5 +2,5 @@
 
 public class TokenDto
 {
-    public string? Bearer { get; set; }
+    public string Bearer { get; set; } = string.Empty;
 }

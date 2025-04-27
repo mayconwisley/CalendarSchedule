@@ -103,19 +103,28 @@ public class UserService(IUserRepository _userRepository,
         return Result.Success(dto);
     }
 
-    public async Task<Result<bool>> GetPassword(LoginDto login)
+    public async Task<Result<bool>> IsPassword(LoginDto login)
     {
-        var pass = await _userRepository.GetPassword(login.ConvertLoginDtoToLoginApi());
-        if (pass is null)
-            return Result.Failure<bool>(Error.NotFound("Nenhum usuário encontrado"));
+        var password = await _userRepository.GetPassword(login.ConvertLoginDtoToLoginApi());
+        if (string.IsNullOrEmpty(password))
+            return Result.Failure<bool>(Error.Validation("Senha inválida"));
 
-        pass = _decryptionUtility.Dado(pass);
+        password = _decryptionUtility.Dado(password);
 
-        if (pass == login.Password)
+        if (password == login.Password)
         {
             return Result.Success(true);
         }
         return Result.Failure<bool>(Error.Validation("Erro ao validar senha"));
+    }
+
+    public async Task<Result<bool>> IsUsername(string username)
+    {
+        var isUsername = await _userRepository.IsUsername(username);
+        if (isUsername)
+            return Result.Success(true);
+
+        return Result.Failure<bool>(Error.NotFound("Usuário não encontrado"));
     }
 
     public async Task<Result<int>> TotalUsers(string search)

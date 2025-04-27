@@ -99,19 +99,28 @@ public class UserRepository(ScheduleContext _scheduleContext) : IUserRepository
         return user;
     }
 
-    public async Task<string> GetPassword(LoginApi login)
+    public async Task<string?> GetPassword(LoginApi login)
     {
         var password =
         await _scheduleContext.Users
+              .AsNoTracking()
               .Where(w => w.Username == login.Username)
               .Select(w => w.Password)
               .FirstOrDefaultAsync();
 
-        if (password is not null)
-        {
-            return password;
-        }
-        return string.Empty;
+        if (password is null)
+            return null;
+
+        return password;
+    }
+
+    public async Task<bool> IsUsername(string username)
+    {
+        var isUsername = await _scheduleContext.Users
+            .AsNoTracking()
+            .AnyAsync(w => w.Username!.Contains(username));
+
+        return isUsername;
     }
 
     public async Task<int> TotalUser(string search)

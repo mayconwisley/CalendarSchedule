@@ -24,10 +24,23 @@ public class LoginController(IGetTokenService _getTokenService) : ControllerBase
             var error = Result.Failure(Error.BadRequest($"Erro de validação no objeto ({nameof(LoginDto)}): {errorMessage}"));
             return BadRequest(error);
         }
-        var token = await _getTokenService.Token(login);
-        if (token.IsFailure)
-            return BadRequest(token.Error);
 
+        var token = await _getTokenService.Token(login);
+
+
+        if (token.IsFailure)
+        {
+            switch (token.Error.Code)
+            {
+                case "NotFound":
+                    return NotFound(token);
+                case "BadRequest":
+                    return BadRequest(token);
+                default:
+                    break;
+            }
+
+        }
         return Ok(token.Value);
     }
     private string ErroMoldeState()
