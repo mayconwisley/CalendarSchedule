@@ -17,10 +17,24 @@ public class LoginController(IGetTokenService _getTokenService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
     public async Task<IActionResult> Login([FromBody] LoginDto login)
     {
+        if (!ModelState.IsValid)
+        {
+            var errorMessage = ErroMoldeState();
+
+            var error = Result.Failure(Error.BadRequest($"Erro de validação no objeto ({nameof(LoginDto)}): {errorMessage}"));
+            return BadRequest(error);
+        }
         var token = await _getTokenService.Token(login);
         if (token.IsFailure)
             return BadRequest(token.Error);
 
         return Ok(token.Value);
+    }
+    private string ErroMoldeState()
+    {
+        var errorMessage = string.Join("; ", ModelState.Values
+                                              .SelectMany(x => x.Errors)
+                                              .Select(x => x.ErrorMessage));
+        return errorMessage;
     }
 }
