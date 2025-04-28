@@ -14,7 +14,7 @@ public class ScheduleUserController(IScheduleUserService _scheduleUserService) :
 {
     [HttpGet]
     [Route("All")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResult<ClientContactDto>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResult<ScheduleUserDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
@@ -27,7 +27,7 @@ public class ScheduleUserController(IScheduleUserService _scheduleUserService) :
     }
 
     [HttpGet("{scheduleId:int}", Name = "GetScheduleUserId")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResult<ClientContactDto>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResult<ScheduleUserDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     public async Task<IActionResult> GetByScheduleId([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "", int scheduleId = default)
@@ -41,7 +41,7 @@ public class ScheduleUserController(IScheduleUserService _scheduleUserService) :
     }
 
     [HttpGet("{scheduleId:int}/{userId:int}", Name = "GetScheduleIdUserId")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ScheduleUserDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     public async Task<IActionResult> GetById(int scheduleId, int userId)
@@ -54,7 +54,7 @@ public class ScheduleUserController(IScheduleUserService _scheduleUserService) :
     }
 
     [HttpGet("DateStart/{dateStart}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResult<ClientContactDto>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResult<ScheduleUserDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     public async Task<IActionResult> GetByDateStart([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "", string dateStart = "")
@@ -69,7 +69,7 @@ public class ScheduleUserController(IScheduleUserService _scheduleUserService) :
     }
 
     [HttpGet("Period/{dateStart}/{dateEnd}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResult<ClientContactDto>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResult<ScheduleUserDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     public async Task<IActionResult> GetByDatePeriod([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "", string dateStart = "", string dateEnd = "")
@@ -86,15 +86,31 @@ public class ScheduleUserController(IScheduleUserService _scheduleUserService) :
 
     [Authorize]
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ClientContactDto))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ScheduleUserDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
     public async Task<IActionResult> Post([FromBody] ScheduleUserCreateDto scheduleUserCreateDto)
     {
+        if (!ModelState.IsValid)
+        {
+            var errorMessage = ErroMoldeState();
+
+            var error = Result.Failure(Error.BadRequest($"Erro de validação no objeto ({nameof(ClientCreateDto)}): {errorMessage}"));
+            return BadRequest(error);
+        }
+
         var scheduleUser = await _scheduleUserService.Create(scheduleUserCreateDto);
         if (scheduleUser.IsFailure)
-            return NotFound(scheduleUser.Error);
+        {
+            return scheduleUser.Error.Code switch
+            {
+                "NotFound" => NotFound(scheduleUser.Error),
+                "BadRequest" => BadRequest(scheduleUser.Error),
+                "Internal" => StatusCode(StatusCodes.Status500InternalServerError, scheduleUser.Error),
+                _ => StatusCode(StatusCodes.Status500InternalServerError, scheduleUser.Error) // fallback para erro desconhecido
+            };
+        }
 
         var createResult = scheduleUser.Value;
         return new CreatedAtRouteResult("GetScheduleUserId", new { scheduleId = createResult.ScheduleId }, createResult);
@@ -102,39 +118,80 @@ public class ScheduleUserController(IScheduleUserService _scheduleUserService) :
     }
 
     [Authorize]
-    [HttpPut("{id:int}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto))]
+    [HttpPut("{scheduleId:int}/{userId:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ScheduleUserDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
-    public async Task<IActionResult> Put(int id, [FromBody] ScheduleUserDto scheduleUserDto)
+    public async Task<IActionResult> Put(int scheduleId, int userId, [FromBody] ScheduleUserDto scheduleUserDto)
     {
-        if (id <= 0)
-            return BadRequest("Id inválidos");
+        if (scheduleId <= 0 || userId <= 0)
+        {
+            var error = Result.Failure(Error.BadRequest($"ScheduleId ({scheduleId}) ou UserId ({userId}) inválido"));
+            return BadRequest(error);
+        }
+
+        if (!ModelState.IsValid)
+        {
+            var errorMessage = ErroMoldeState();
+            var error = Result.Failure(Error.BadRequest($"Erro de validação do objeto ({nameof(ClientDto)}): {errorMessage}"));
+            return BadRequest(error);
+        }
+
+        if (scheduleId != scheduleUserDto.ScheduleId || userId != scheduleUserDto.ScheduleId)
+        {
+            var error = Result.Failure(Error.BadRequest($"ScheduleId ({scheduleId})/UserId ({userId}) da rota diferente dos Ids ({scheduleUserDto.ScheduleId})/({scheduleUserDto.UserId}) objeto"));
+            return BadRequest(error);
+        }
 
         var scheduleUser = await _scheduleUserService.Update(scheduleUserDto);
         if (scheduleUser.IsFailure)
-            return NotFound(scheduleUser.Error);
+        {
+            return scheduleUser.Error.Code switch
+            {
+                "NotFound" => NotFound(scheduleUser.Error),
+                "BadRequest" => BadRequest(scheduleUser.Error),
+                "Internal" => StatusCode(StatusCodes.Status500InternalServerError, scheduleUser.Error),
+                _ => StatusCode(StatusCodes.Status500InternalServerError, scheduleUser.Error) // fallback para erro desconhecido
+            };
+        }
 
         return Ok(scheduleUser.Value);
     }
 
     [Authorize]
     [HttpDelete("{scheduleId:int}/{userId:int}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ScheduleUserDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
     public async Task<IActionResult> Delete(int scheduleId, int userId)
     {
+        if (scheduleId <= 0 || userId <= 0)
+        {
+            var error = Result.Failure(Error.BadRequest($"ScheduleId ({scheduleId}) ou UserId ({userId}) inválido"));
+            return BadRequest(error);
+        }
+
         var result = await _scheduleUserService.Delete(scheduleId, userId);
         if (result.IsFailure)
-            return NotFound(result.Error);
+        {
+            return result.Error.Code switch
+            {
+                "NotFound" => NotFound(result.Error),
+                "BadRequest" => BadRequest(result.Error),
+                "Internal" => StatusCode(StatusCodes.Status500InternalServerError, result.Error),
+                _ => StatusCode(StatusCodes.Status500InternalServerError, result.Error) // fallback para erro desconhecido
+            };
+        }
 
-        var scheduleDto = await _scheduleUserService.GetById(scheduleId, userId);
-        if (scheduleDto.IsFailure)
-            return NotFound(scheduleDto.Error);
-
-        return Ok(scheduleDto.Value);
+        return Ok(result.Value);
+    }
+    private string ErroMoldeState()
+    {
+        var errorMessage = string.Join("; ", ModelState.Values
+                                              .SelectMany(x => x.Errors)
+                                              .Select(x => x.ErrorMessage));
+        return errorMessage;
     }
 }

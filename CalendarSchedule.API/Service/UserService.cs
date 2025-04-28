@@ -34,24 +34,32 @@ public class UserService(IUserRepository _userRepository,
         return Result.Success(dto);
     }
 
-    public async Task<Result> Delete(int id)
+    public async Task<Result<UserDto>> Delete(int id)
     {
-        var userEntity = await GetById(id);
-        if (userEntity.IsFailure)
-            return Result.Failure<UserDto>(userEntity.Error);
-
-        await _userRepository.Delete(userEntity.Value.Id);
-        return Result.Success();
+        var deletedUserDto = await _userRepository.Delete(id);
+        if (deletedUserDto is null)
+            return Result.Failure<UserDto>(Error.NotFound("Nenhum usuário encontrado para ser excluido"));
+        var dto = deletedUserDto.ConvertUserToDto();
+        return Result.Success(dto);
     }
 
-    public async Task<Result<IEnumerable<UserDto>>> GetAll(int page, int size, string search)
+    public async Task<Result<PagedResult<UserDto>>> GetAll(int page, int size, string search)
     {
         var userEntity = await _userRepository.GetAll(page, size, search);
         if (userEntity is null)
-            return Result.Failure<IEnumerable<UserDto>>(Error.NotFound("Nenhum usuário encontrado"));
+            return Result.Failure<PagedResult<UserDto>>(Error.NotFound("Nenhum usuário encontrado"));
+        var totalUser = await _userRepository.TotalUser(search);
+        if (totalUser <= 0)
+            return Result.Failure<PagedResult<UserDto>>(Error.NotFound("Nenhum usuário encontrado"));
+        decimal totalData = totalUser;
+        decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
+        if (size == 1)
+            totalPage = totalData;
 
         var dto = userEntity.ConvertUsersToDto();
-        return Result.Success(dto);
+        var userDto = new PagedResult<UserDto>(dto, page, size, totalData, totalPage);
+
+        return Result.Success(userDto);
     }
 
     public async Task<Result<UserDto>> GetById(int id)
@@ -74,23 +82,42 @@ public class UserService(IUserRepository _userRepository,
         return Result.Success(user);
     }
 
-    public async Task<Result<IEnumerable<UserDto>>> GetManagerAll(int page, int size, string search)
+    public async Task<Result<PagedResult<UserDto>>> GetManagerAll(int page, int size, string search)
     {
         var userEntity = await _userRepository.GetManagerAll(page, size, search);
         if (userEntity is null)
-            return Result.Failure<IEnumerable<UserDto>>(Error.NotFound("Nenhum usuário encontrado"));
+            return Result.Failure<PagedResult<UserDto>>(Error.NotFound("Nenhum usuário encontrado"));
+        var totalUser = await _userRepository.TotalUser(search);
+        if (totalUser <= 0)
+            return Result.Failure<PagedResult<UserDto>>(Error.NotFound("Nenhum usuário encontrado"));
+        decimal totalData = totalUser;
+        decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
+        if (size == 1)
+            totalPage = totalData;
+
         var dto = userEntity.ConvertUsersToDto();
-        return Result.Success(dto);
+        var userDto = new PagedResult<UserDto>(dto, page, size, totalData, totalPage);
+
+        return Result.Success(userDto);
     }
 
-    public async Task<Result<IEnumerable<UserDto>>> GetManagerAllByUserCurrent(int page, int size, string search, string username)
+    public async Task<Result<PagedResult<UserDto>>> GetManagerAllByUserCurrent(int page, int size, string search, string username)
     {
         var users = await _userRepository.GetManagerAllByUserCurrent(page, size, search, username);
         if (users is null)
-            return Result.Failure<IEnumerable<UserDto>>(Error.NotFound("Nenhum usuário encontrado"));
+            return Result.Failure<PagedResult<UserDto>>(Error.NotFound("Nenhum usuário encontrado"));
+        var totalUsers = await _userRepository.TotalUser(search);
+        if (totalUsers <= 0)
+            return Result.Failure<PagedResult<UserDto>>(Error.NotFound("Nenhum usuário encontrado"));
+        decimal totalData = totalUsers;
+        decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
+        if (size == 1)
+            totalPage = totalData;
 
         var dto = users.ConvertUsersToDto();
-        return Result.Success(dto);
+        var userDto = new PagedResult<UserDto>(dto, page, size, totalData, totalPage);
+
+        return Result.Success(userDto);
     }
 
     public async Task<Result<UserDto>> GetManagerUsername(string username)
