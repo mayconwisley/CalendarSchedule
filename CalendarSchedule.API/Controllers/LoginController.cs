@@ -14,34 +14,30 @@ public class LoginController(IGetTokenService _getTokenService) : ControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TokenDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(Error))]
-    public async Task<IActionResult> Login([FromBody] LoginDto login)
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Error))]
+    public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
     {
         if (!ModelState.IsValid)
         {
-            var errorMessage = ErroMoldeState();
-
+            var errorMessage = ErrorMoldeState();
             var error = Result.Failure(Error.BadRequest($"Erro de validação no objeto ({nameof(LoginDto)}): {errorMessage}"));
-            return BadRequest(error);
+            return BadRequest(error.Error);
         }
 
-        var token = await _getTokenService.Token(login);
+        var token = await _getTokenService.Token(loginDto);
         if (token.IsFailure)
         {
-            switch (token.Error.Code)
+            return token.Error.Code switch
             {
-                case "NotFound":
-                    return NotFound(token.Error);
-                case "Validation":
-                    return StatusCode(StatusCodes.Status422UnprocessableEntity, token.Error);
-                default:
-                    return StatusCode(StatusCodes.Status500InternalServerError, token.Error);
-            }
+                "NotFound" => NotFound(token.Error),
+                "Validation" => StatusCode(StatusCodes.Status422UnprocessableEntity, token.Error),
+                _ => StatusCode(StatusCodes.Status500InternalServerError, token.Error),
+            };
         }
         return Ok(token.Value);
     }
-    private string ErroMoldeState()
+    private string ErrorMoldeState()
     {
         var errorMessage = string.Join("; ", ModelState.Values
                                             .SelectMany(x => x.Errors)
