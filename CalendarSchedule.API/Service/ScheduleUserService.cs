@@ -18,64 +18,107 @@ public class ScheduleUserService(IScheduleUserRepository _scheduleUserRepository
 
         return Result.Success(dto);
     }
-    public async Task<Result> Delete(int scheduleId, int userId)
+    public async Task<Result<ScheduleUserDto>> Delete(int scheduleId, int userId)
     {
-        var result = await GetById(scheduleId, userId);
-        if (result.IsFailure)
-            return Result.Failure<ScheduleUserDto>(result.Error);
+        var deletedScheduleUser = await _scheduleUserRepository.Delete(scheduleId, userId);
+        if (deletedScheduleUser is null)
+            return Result.Failure<ScheduleUserDto>(Error.NotFound("Nenhum agendamento encontrado para ser excluido"));
 
-        await _scheduleUserRepository.Delete(result.Value.ScheduleId, result.Value.UserId);
+        var dto = deletedScheduleUser.ConvertScheduleUserDto();
 
-        return Result.Success();
+        return Result.Success(dto);
     }
-    public async Task<Result<IEnumerable<ScheduleUserDto>>> GetAll(int page, int size, string search)
+    public async Task<Result<PagedResult<ScheduleUserDto>>> GetAll(int page, int size, string search)
     {
         var scheduleUserDtos = await _scheduleUserRepository.GetAll(page, size, search);
         if (scheduleUserDtos is null)
-            return Result.Failure<IEnumerable<ScheduleUserDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+            return Result.Failure<PagedResult<ScheduleUserDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+
+        var totalScheduleUser = await _scheduleUserRepository.TotalScheduleUser(search);
+        if (totalScheduleUser <= 0)
+            return Result.Failure<PagedResult<ScheduleUserDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+
+        decimal totalData = totalScheduleUser;
+        decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
+        if (size == 1)
+            totalPage = totalData;
 
         var dto = scheduleUserDtos.ConvertSchedulesUserDto();
 
-        return Result.Success(dto);
-    }
+        var scheduleUser = new PagedResult<ScheduleUserDto>(dto, totalData, page, size, totalPage);
 
-    public async Task<Result<IEnumerable<ScheduleUserDto>>> GetByDatePeriod(DateTime dateStart, DateTime dateEnd)
+        return Result.Success(scheduleUser);
+    }
+    public async Task<Result<PagedResult<ScheduleUserDto>>> GetByDatePeriod(int page, int size, string search, DateTime dateStart, DateTime dateEnd)
     {
         var scheduleUserDtos = await _scheduleUserRepository.GetByDatePeriod(dateStart, dateEnd);
         if (scheduleUserDtos is null)
-            return Result.Failure<IEnumerable<ScheduleUserDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+            return Result.Failure<PagedResult<ScheduleUserDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+
+        var totalScheduleUser = await _scheduleUserRepository.TotalScheduleUser(search);
+        if (totalScheduleUser <= 0)
+            return Result.Failure<PagedResult<ScheduleUserDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+
+        decimal totalData = totalScheduleUser;
+        decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
+        if (size == 1)
+            totalPage = totalData;
 
         var dto = scheduleUserDtos.ConvertSchedulesUserDto();
 
-        return Result.Success(dto);
-    }
+        var scheduleUser = new PagedResult<ScheduleUserDto>(dto, totalData, page, size, totalPage);
 
-    public async Task<Result<IEnumerable<ScheduleUserDto>>> GetByDateStart(DateTime dateStart)
+        return Result.Success(scheduleUser);
+    }
+    public async Task<Result<PagedResult<ScheduleUserDto>>> GetByDateStart(int page, int size, string search, DateTime dateStart)
     {
         var scheduleUserDtos = await _scheduleUserRepository.GetByDateStart(dateStart);
         if (scheduleUserDtos is null)
-            return Result.Failure<IEnumerable<ScheduleUserDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+            return Result.Failure<PagedResult<ScheduleUserDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+
+        var totalScheduleUser = await _scheduleUserRepository.TotalScheduleUser(search);
+        if (totalScheduleUser <= 0)
+            return Result.Failure<PagedResult<ScheduleUserDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+        decimal totalData = totalScheduleUser;
+        decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
+        if (size == 1)
+            totalPage = totalData;
 
         var dto = scheduleUserDtos.ConvertSchedulesUserDto();
-        return Result.Success(dto);
+        var scheduleUser = new PagedResult<ScheduleUserDto>(dto, totalData, page, size, totalPage);
+
+        return Result.Success(scheduleUser);
     }
     public async Task<Result<ScheduleUserDto>> GetById(int scheduleId, int userId)
     {
         var scheduleUserDto = await _scheduleUserRepository.GetById(scheduleId, userId);
         if (scheduleUserDto is null)
             return Result.Failure<ScheduleUserDto>(Error.NotFound("Nenhum agendamento encontrado"));
+
         var dto = scheduleUserDto.ConvertScheduleUserDto();
 
         return Result.Success(dto);
     }
-    public async Task<Result<IEnumerable<ScheduleUserDto>>> GetByScheduleId(int scheduleId)
+    public async Task<Result<PagedResult<ScheduleUserDto>>> GetByScheduleId(int page, int size, string search, int scheduleId)
     {
         var scheduleUserDtos = await _scheduleUserRepository.GetByScheduleId(scheduleId);
         if (scheduleUserDtos is null)
-            return Result.Failure<IEnumerable<ScheduleUserDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+            return Result.Failure<PagedResult<ScheduleUserDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+
+        var totalScheduleUser = await _scheduleUserRepository.TotalScheduleUser(search);
+        if (totalScheduleUser <= 0)
+            return Result.Failure<PagedResult<ScheduleUserDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+
+        decimal totalData = totalScheduleUser;
+        decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
+
+        if (size == 1)
+            totalPage = totalData;
 
         var dto = scheduleUserDtos.ConvertSchedulesUserDto();
-        return Result.Success(dto);
+        var scheduleUser = new PagedResult<ScheduleUserDto>(dto, totalData, page, size, totalPage);
+
+        return Result.Success(scheduleUser);
     }
     public async Task<Result<int>> TotalScheduleUser(string search)
     {
@@ -85,9 +128,9 @@ public class ScheduleUserService(IScheduleUserRepository _scheduleUserRepository
 
         return Result.Success(totalScheduleUser);
     }
-    public async Task<Result<ScheduleUserDto>> Update(ScheduleUserCreateDto scheduleUserCreateDto)
+    public async Task<Result<ScheduleUserDto>> Update(ScheduleUserDto scheduleUserDto)
     {
-        var scheduleUser = await _scheduleUserRepository.Update(scheduleUserCreateDto.ConvertDtoScheduleUserCreate());
+        var scheduleUser = await _scheduleUserRepository.Update(scheduleUserDto.ConvertDtoScheduleUser());
         if (scheduleUser is null)
             return Result.Failure<ScheduleUserDto>(Error.Internal("Erro ao atualizar agendamento"));
 

@@ -14,45 +14,25 @@ public class ScheduleUserController(IScheduleUserService _scheduleUserService) :
 {
     [HttpGet]
     [Route("All")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto[]))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResult<ClientContactDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
     {
         var scheduleUsersDto = await _scheduleUserService.GetAll(page, size, search);
-        if (scheduleUsersDto.IsFailure)
-            return NotFound(scheduleUsersDto.Error);
-
-        var totalScheduleUser = await _scheduleUserService.TotalScheduleUser(search);
-        if (totalScheduleUser.IsFailure)
-            return NotFound(totalScheduleUser.Error);
-
-        decimal totalData = totalScheduleUser.Value;
-        decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
-
-        if (size == 1)
-            totalPage = totalData;
 
         var scheduleUsers = scheduleUsersDto.Value;
 
-        return Ok(new
-        {
-            totalData,
-            page,
-            totalPage,
-            size,
-            scheduleUsers
-        });
-
+        return Ok(scheduleUsers);
     }
 
     [HttpGet("{scheduleId:int}", Name = "GetScheduleUserId")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto[]))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResult<ClientContactDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
-    public async Task<IActionResult> GetByScheduleId(int scheduleId)
+    public async Task<IActionResult> GetByScheduleId([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "", int scheduleId = default)
     {
-        var scheduleUserDto = await _scheduleUserService.GetByScheduleId(scheduleId);
+        var scheduleUserDto = await _scheduleUserService.GetByScheduleId(page, size, search, scheduleId);
         if (scheduleUserDto.IsFailure)
             return NotFound(scheduleUserDto.Error);
 
@@ -74,14 +54,14 @@ public class ScheduleUserController(IScheduleUserService _scheduleUserService) :
     }
 
     [HttpGet("DateStart/{dateStart}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto[]))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResult<ClientContactDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
-    public async Task<IActionResult> GetByDateStart(string dateStart = "")
+    public async Task<IActionResult> GetByDateStart([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "", string dateStart = "")
     {
         DateTime dateSalected = DateTime.Parse(dateStart.Replace("%2F", "/"));
 
-        var scheduleUserDto = await _scheduleUserService.GetByDateStart(dateSalected);
+        var scheduleUserDto = await _scheduleUserService.GetByDateStart(page, size, search, dateSalected);
         if (scheduleUserDto.IsFailure)
             return NotFound(scheduleUserDto.Error);
 
@@ -89,15 +69,15 @@ public class ScheduleUserController(IScheduleUserService _scheduleUserService) :
     }
 
     [HttpGet("Period/{dateStart}/{dateEnd}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto[]))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResult<ClientContactDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
-    public async Task<IActionResult> GetByDatePeriod(string dateStart = "", string dateEnd = "")
+    public async Task<IActionResult> GetByDatePeriod([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "", string dateStart = "", string dateEnd = "")
     {
         DateTime dtDateStart = DateTime.Parse(dateStart.Replace("%2F", "/"));
         DateTime dtDateEnd = DateTime.Parse(dateEnd.Replace("%2F", "/"));
 
-        var scheduleUserDto = await _scheduleUserService.GetByDatePeriod(dtDateStart, dtDateEnd);
+        var scheduleUserDto = await _scheduleUserService.GetByDatePeriod(page, size, search, dtDateStart, dtDateEnd);
         if (scheduleUserDto.IsFailure)
             return NotFound(scheduleUserDto.Error);
 
@@ -106,7 +86,7 @@ public class ScheduleUserController(IScheduleUserService _scheduleUserService) :
 
     [Authorize]
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ClientContactDto[]))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ClientContactDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
@@ -127,16 +107,16 @@ public class ScheduleUserController(IScheduleUserService _scheduleUserService) :
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
-    public async Task<IActionResult> Put(int id, [FromBody] ScheduleUserCreateDto scheduleUserCreateDto)
+    public async Task<IActionResult> Put(int id, [FromBody] ScheduleUserDto scheduleUserDto)
     {
         if (id <= 0)
             return BadRequest("Id inválidos");
 
-        var scheduleUserDto = await _scheduleUserService.Update(scheduleUserCreateDto);
-        if (scheduleUserDto.IsFailure)
-            return NotFound(scheduleUserDto.Error);
+        var scheduleUser = await _scheduleUserService.Update(scheduleUserDto);
+        if (scheduleUser.IsFailure)
+            return NotFound(scheduleUser.Error);
 
-        return Ok(scheduleUserDto.Value);
+        return Ok(scheduleUser.Value);
     }
 
     [Authorize]
