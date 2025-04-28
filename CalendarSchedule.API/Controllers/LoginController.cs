@@ -8,7 +8,6 @@ namespace CalendarSchedule.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [Produces("application/json")]
-[Consumes("application/json")]
 public class LoginController(IGetTokenService _getTokenService) : ControllerBase
 {
     [HttpPost]
