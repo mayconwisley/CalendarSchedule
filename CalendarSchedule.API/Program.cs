@@ -35,6 +35,17 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(
     c =>
     {
+        c.SwaggerDoc("v1", new OpenApiInfo
+        {
+            Title = "Agenda de Visitas a Clientes",
+            Version = "v1",
+            Description = "Documentação da API de Agenda",
+            Contact = new OpenApiContact
+            {
+                Name = "Maycon Wisley",
+                Url = new Uri("https://github.com/mayconwisley")
+            }
+        });
         c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
         {
             Name = "Authorization",
@@ -42,26 +53,23 @@ builder.Services.AddSwaggerGen(
             Type = SecuritySchemeType.ApiKey,
             Scheme = "Bearer"
         });
-
         c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-    {
         {
-            new OpenApiSecurityScheme
             {
-                Reference = new OpenApiReference
+                new OpenApiSecurityScheme
                 {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    },
+                    Scheme = "oauth2",
+                    Name = "Bearer",
+                    In = ParameterLocation.Header,
                 },
-                Scheme = "oauth2",
-                Name = "Bearer",
-                In = ParameterLocation.Header,
-            },
-            new List<string>()
-        }
-    });
-
-
+                new List<string>()
+            }
+        });
     });
 builder.Services.AddCors();
 
