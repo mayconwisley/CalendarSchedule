@@ -18,25 +18,34 @@ public class ScheduleService(IScheduleRepository _scheduleUserRepository) : ISch
 
         return Result.Success(dto);
     }
-    public async Task<Result> Delete(int id)
+    public async Task<Result<ScheduleDto>> Delete(int id)
     {
-        var scheduleEntity = await GetById(id);
-        if (scheduleEntity.IsFailure)
-            return Result.Failure<ScheduleDto>(scheduleEntity.Error);
+        var deletedSchedule = await _scheduleUserRepository.Delete(id);
+        if (deletedSchedule is null)
+            return Result.Failure<ScheduleDto>(Error.NotFound("Nenhum agendamento encontrado para ser excluido"));
+        var dto = deletedSchedule.ConvertScheduleToDto();
 
-        await _scheduleUserRepository.Delete(scheduleEntity.Value.Id);
-        return Result.Success();
-
+        return Result.Success(dto);
     }
-    public async Task<Result<IEnumerable<ScheduleDto>>> GetAll(int page, int size, string search)
+    public async Task<Result<PagedResult<ScheduleDto>>> GetAll(int page, int size, string search)
     {
         var scheduleEntity = await _scheduleUserRepository.GetAll(page, size, search);
         if (scheduleEntity is null)
-            return Result.Failure<IEnumerable<ScheduleDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+            return Result.Failure<PagedResult<ScheduleDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+
+        var totalSchedule = await _scheduleUserRepository.TotalSchedules(search);
+        if (totalSchedule <= 0)
+            return Result.Failure<PagedResult<ScheduleDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+
+        decimal totalData = totalSchedule;
+        decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
+        if (size == 1)
+            totalPage = totalData;
 
         var dto = scheduleEntity.ConvertSchedulesToDto();
+        var scheduleDto = new PagedResult<ScheduleDto>(dto, totalData, page, totalPage, size);
 
-        return Result.Success(dto);
+        return Result.Success(scheduleDto);
     }
     public async Task<Result<ScheduleDto>> GetById(int id)
     {

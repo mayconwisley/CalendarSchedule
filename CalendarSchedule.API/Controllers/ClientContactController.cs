@@ -15,7 +15,7 @@ public class ClientContactController(IClientContactService _clientContactService
     [HttpGet]
     [Route("All")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResult<ClientContactDto>))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
     {
         var clientContactList = await _clientContactService.GetAll(page, size, search);
@@ -29,8 +29,8 @@ public class ClientContactController(IClientContactService _clientContactService
 
     [HttpGet("{id:int}", Name = "GetClientContactId")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     public async Task<IActionResult> GetById(int id)
     {
         if (id <= 0)
@@ -48,8 +48,8 @@ public class ClientContactController(IClientContactService _clientContactService
 
     [HttpGet("ContactByClientId/{clientId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResult<ClientContactDto>))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     public async Task<IActionResult> GetByClientId([FromQuery] int page = 1, [FromQuery] int size = 10, int clientId = 0)
     {
         if (clientId <= 0)
@@ -69,10 +69,10 @@ public class ClientContactController(IClientContactService _clientContactService
     [Authorize]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ClientContactDto))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Error))]
     public async Task<IActionResult> Post([FromBody] ClientContactCreateDto clientContactCreateDto)
     {
         if (!ModelState.IsValid)
@@ -107,10 +107,10 @@ public class ClientContactController(IClientContactService _clientContactService
     [Authorize]
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Error))]
     public async Task<IActionResult> Put(int id, [FromBody] ClientContactDto clientContactDto)
     {
         if (id <= 0)
@@ -150,9 +150,9 @@ public class ClientContactController(IClientContactService _clientContactService
     [Authorize]
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
     public async Task<IActionResult> Delete(int id)
     {
         if (id <= 0)

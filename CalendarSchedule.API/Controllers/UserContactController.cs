@@ -15,8 +15,8 @@ public class UserContactController(IUserContactService _userContactService) : Co
     [HttpGet]
     [Route("All")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserContactDto[]))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
     {
         var userContactsDto = await _userContactService.GetAll(page, size, search);
@@ -47,8 +47,8 @@ public class UserContactController(IUserContactService _userContactService) : Co
     [HttpGet]
     [Route("UserContactByUserId/{userId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserContactDto[]))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     public async Task<IActionResult> UserContactByUserId([FromQuery] int page = 1, [FromQuery] int size = 10, int userId = 0)
     {
         var userContactsDto = await _userContactService.GetByUserId(page, size, userId);
@@ -77,8 +77,8 @@ public class UserContactController(IUserContactService _userContactService) : Co
 
     [HttpGet("{id:int}", Name = "GetUserContactId")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserContactDto))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     public async Task<IActionResult> GetById(int id)
     {
         var userContactDto = await _userContactService.GetById(id);
@@ -91,9 +91,9 @@ public class UserContactController(IUserContactService _userContactService) : Co
     [Authorize]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserContactDto))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
     public async Task<IActionResult> Post([FromBody] UserContactCreateDto userContactCreateDto)
     {
         var userContactDto = await _userContactService.Create(userContactCreateDto);
@@ -106,9 +106,9 @@ public class UserContactController(IUserContactService _userContactService) : Co
     [Authorize]
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserContactDto))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
     public async Task<IActionResult> Put(int id, [FromBody] UserContactCreateDto userContactCreateDto)
     {
         if (id <= 0)
@@ -124,9 +124,9 @@ public class UserContactController(IUserContactService _userContactService) : Co
     [Authorize]
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserContactDto))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
     public async Task<IActionResult> Delete(int id)
     {
         var result = await _userContactService.Delete(id);

@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="CalendarSchedule.API/CalendarSchedule.API.csproj" />
+  <Project Path="CalendarSchedule.Models/CalendarSchedule.Models.csproj" />
+  <Project Path="CalendarSchedule.Web/CalendarSchedule.Web.csproj" />
+  <Project Path="ScheduleRooms.Desktop/ScheduleRooms.Desktop.csproj" />
+</Solution>

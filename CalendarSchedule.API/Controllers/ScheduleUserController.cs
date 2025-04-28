@@ -15,8 +15,8 @@ public class ScheduleUserController(IScheduleUserService _scheduleUserService) :
     [HttpGet]
     [Route("All")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto[]))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
     {
         var scheduleUsersDto = await _scheduleUserService.GetAll(page, size, search);
@@ -48,8 +48,8 @@ public class ScheduleUserController(IScheduleUserService _scheduleUserService) :
 
     [HttpGet("{scheduleId:int}", Name = "GetScheduleUserId")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto[]))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     public async Task<IActionResult> GetByScheduleId(int scheduleId)
     {
         var scheduleUserDto = await _scheduleUserService.GetByScheduleId(scheduleId);
@@ -62,8 +62,8 @@ public class ScheduleUserController(IScheduleUserService _scheduleUserService) :
 
     [HttpGet("{scheduleId:int}/{userId:int}", Name = "GetScheduleIdUserId")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     public async Task<IActionResult> GetById(int scheduleId, int userId)
     {
         var scheduleUserDto = await _scheduleUserService.GetById(scheduleId, userId);
@@ -75,8 +75,8 @@ public class ScheduleUserController(IScheduleUserService _scheduleUserService) :
 
     [HttpGet("DateStart/{dateStart}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto[]))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     public async Task<IActionResult> GetByDateStart(string dateStart = "")
     {
         DateTime dateSalected = DateTime.Parse(dateStart.Replace("%2F", "/"));
@@ -90,8 +90,8 @@ public class ScheduleUserController(IScheduleUserService _scheduleUserService) :
 
     [HttpGet("Period/{dateStart}/{dateEnd}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto[]))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     public async Task<IActionResult> GetByDatePeriod(string dateStart = "", string dateEnd = "")
     {
         DateTime dtDateStart = DateTime.Parse(dateStart.Replace("%2F", "/"));
@@ -107,9 +107,9 @@ public class ScheduleUserController(IScheduleUserService _scheduleUserService) :
     [Authorize]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ClientContactDto[]))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
     public async Task<IActionResult> Post([FromBody] ScheduleUserCreateDto scheduleUserCreateDto)
     {
         var scheduleUser = await _scheduleUserService.Create(scheduleUserCreateDto);
@@ -124,9 +124,9 @@ public class ScheduleUserController(IScheduleUserService _scheduleUserService) :
     [Authorize]
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
     public async Task<IActionResult> Put(int id, [FromBody] ScheduleUserCreateDto scheduleUserCreateDto)
     {
         if (id <= 0)
@@ -142,9 +142,9 @@ public class ScheduleUserController(IScheduleUserService _scheduleUserService) :
     [Authorize]
     [HttpDelete("{scheduleId:int}/{userId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientContactDto))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
     public async Task<IActionResult> Delete(int scheduleId, int userId)
     {
         var result = await _scheduleUserService.Delete(scheduleId, userId);

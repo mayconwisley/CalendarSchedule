@@ -15,7 +15,7 @@ public class ClientResponsibleController(IClientResponsibleService _clientRespon
     [HttpGet]
     [Route("All")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResult<ClientResponsibleDto>))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
     {
         var clientsResponsibleDto = await _clientResponsibleService.GetAll(page, size, search);
@@ -29,8 +29,8 @@ public class ClientResponsibleController(IClientResponsibleService _clientRespon
 
     [HttpGet("{id:int}", Name = "GetClientResponsibleId")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientResponsibleDto))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     public async Task<IActionResult> GetById(int id)
     {
         if (id <= 0)
@@ -48,10 +48,10 @@ public class ClientResponsibleController(IClientResponsibleService _clientRespon
     [Authorize]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ClientResponsibleDto))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Error))]
     public async Task<IActionResult> Post([FromBody] ClientResponsibleCreateDto clientResponsibleCreateDto)
     {
         if (!ModelState.IsValid)
@@ -82,10 +82,10 @@ public class ClientResponsibleController(IClientResponsibleService _clientRespon
     [Authorize]
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientResponsibleDto))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Error))]
     public async Task<IActionResult> Put(int id, [FromBody] ClientResponsibleDto clientResponsibleDto)
     {
         if (id <= 0)
@@ -126,10 +126,10 @@ public class ClientResponsibleController(IClientResponsibleService _clientRespon
     [Authorize]
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientResponsibleDto))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Error))]
     public async Task<IActionResult> Delete(int id)
     {
         if (id <= 0)

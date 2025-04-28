@@ -1,3 +1,5 @@
+using System.Text;
+using System.Text.Json.Serialization;
 using CalendarSchedule.API.Abstractions;
 using CalendarSchedule.API.Data;
 using CalendarSchedule.API.Repository;
@@ -12,8 +14,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
-using System.Text;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -65,7 +65,7 @@ builder.Services.AddSwaggerGen(
     });
 builder.Services.AddCors();
 
-var passDatabase = Environment.GetEnvironmentVariable("SQLSenha", EnvironmentVariableTarget.Machine);
+var passDatabase = Environment.GetEnvironmentVariable("SQLPassword", EnvironmentVariableTarget.Machine);
 var userDB = Environment.GetEnvironmentVariable("SQLUser", EnvironmentVariableTarget.Machine);
 
 var strDataBase = builder.Configuration

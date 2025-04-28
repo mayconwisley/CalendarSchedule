@@ -13,9 +13,9 @@ public class LoginController(IGetTokenService _getTokenService) : ControllerBase
 {
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TokenDto))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Result))]
-    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(Result))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(Error))]
     public async Task<IActionResult> Login([FromBody] LoginDto login)
     {
         if (!ModelState.IsValid)
@@ -32,14 +32,11 @@ public class LoginController(IGetTokenService _getTokenService) : ControllerBase
             switch (token.Error.Code)
             {
                 case "NotFound":
-                    var notfound = Result.Failure(Error.NotFound(token.Error.Message));
-                    return NotFound(notfound);
+                    return NotFound(token.Error);
                 case "Validation":
-                    var validation = Result.Failure(Error.Validation(token.Error.Message));
-                    return StatusCode(StatusCodes.Status422UnprocessableEntity, validation);
+                    return StatusCode(StatusCodes.Status422UnprocessableEntity, token.Error);
                 default:
-                    var erroDefault = Result.Failure(Error.Internal(token.Error.Message));
-                    return StatusCode(StatusCodes.Status500InternalServerError, erroDefault);
+                    return StatusCode(StatusCodes.Status500InternalServerError, token.Error);
             }
         }
         return Ok(token.Value);
@@ -47,8 +44,8 @@ public class LoginController(IGetTokenService _getTokenService) : ControllerBase
     private string ErroMoldeState()
     {
         var errorMessage = string.Join("; ", ModelState.Values
-                                              .SelectMany(x => x.Errors)
-                                              .Select(x => x.ErrorMessage));
+                                            .SelectMany(x => x.Errors)
+                                            .Select(x => x.ErrorMessage));
         return errorMessage;
     }
 }
