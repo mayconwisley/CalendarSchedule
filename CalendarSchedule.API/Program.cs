@@ -118,7 +118,7 @@ builder.Services.AddAuthentication(opt =>
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 context.Response.ContentType = "application/json";
                 var result = Result.Failure(Error.Unauthorized("Token inválido ou expirado"));
-                await context.Response.WriteAsJsonAsync(result);
+                await context.Response.WriteAsJsonAsync(result.Error);
             },
             OnForbidden = async context =>
             {

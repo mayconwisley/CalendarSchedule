@@ -1,4 +1,5 @@
-﻿using CalendarSchedule.API.Abstractions;
+﻿using System.Net;
+using CalendarSchedule.API.Abstractions;
 using CalendarSchedule.API.Service.Interface;
 using CalendarSchedule.Models.Dtos;
 using Microsoft.AspNetCore.Authorization;
@@ -6,11 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CalendarSchedule.API.Controllers;
 
-
 [Route("api/[controller]")]
 [ApiController]
 [Produces("application/json")]
-[Consumes("application/json")]
 public class UserController(IUserService _userService) : ControllerBase
 {
     [HttpGet]
@@ -19,12 +18,11 @@ public class UserController(IUserService _userService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
     {
-        var usersDto = await _userService.GetAll(page, size, search);
-        if (usersDto.IsFailure)
-            return NotFound(usersDto.Error);
+        var dto = await _userService.GetAll(page, size, search);
+        if (dto.IsFailure)
+            return NotFound(dto.Error);
 
-        var users = usersDto.Value;
-
+        var users = dto.Value;
         return Ok(users);
     }
 
@@ -35,12 +33,11 @@ public class UserController(IUserService _userService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     public async Task<IActionResult> GetManagerAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
     {
-        var usersDto = await _userService.GetManagerAll(page, size, search);
-        if (usersDto.IsFailure)
-            return NotFound(usersDto.Error);
+        var dto = await _userService.GetManagerAll(page, size, search);
+        if (dto.IsFailure)
+            return NotFound(dto.Error);
 
-        var users = usersDto.Value;
-
+        var users = dto.Value;
         return Ok(users);
     }
 
@@ -51,12 +48,11 @@ public class UserController(IUserService _userService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     public async Task<IActionResult> GetManagerAllByUserCurrent([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "", [FromQuery] string username = "")
     {
-        var usersDto = await _userService.GetManagerAllByUserCurrent(page, size, search, username);
-        if (usersDto.IsFailure)
-            return NotFound(usersDto.Error);
+        var dto = await _userService.GetManagerAllByUserCurrent(page, size, search, username);
+        if (dto.IsFailure)
+            return NotFound(dto.Error);
 
-        var users = usersDto.Value;
-
+        var users = dto.Value;
         return Ok(users);
     }
 
@@ -72,10 +68,12 @@ public class UserController(IUserService _userService) : ControllerBase
             return BadRequest(error);
         }
 
-        var userDto = await _userService.GetById(id);
-        if (userDto.IsFailure)
-            return NotFound(userDto.Error);
-        return Ok(userDto.Value);
+        var dto = await _userService.GetById(id);
+        if (dto.IsFailure)
+            return NotFound(dto.Error);
+
+        var user = dto.Value;
+        return Ok(user);
     }
 
     [HttpGet("Username/{username}")]
@@ -90,11 +88,12 @@ public class UserController(IUserService _userService) : ControllerBase
             return BadRequest(error);
         }
 
-        var userDto = await _userService.GetManagerUsername(username);
-        if (userDto.IsFailure)
-            return NotFound(userDto.Error);
+        var dto = await _userService.GetManagerUsername(username);
+        if (dto.IsFailure)
+            return NotFound(dto.Error);
 
-        return Ok(userDto.Value);
+        var user = dto.Value;
+        return Ok(user);
     }
 
     [Authorize]
@@ -103,32 +102,32 @@ public class UserController(IUserService _userService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Error))]
-    public async Task<IActionResult> Post([FromBody] UserDto userDto)
+    public async Task<IActionResult> Post([FromBody] UserCreateDto userCreateDto)
     {
         if (!ModelState.IsValid)
         {
-            var errorMessage = ErroMoldeState();
-
+            var errorMessage = ErrorMoldeState();
             var error = Result.Failure(Error.BadRequest($"Erro de validação no objeto ({nameof(UserDto)}): {errorMessage}"));
             return BadRequest(error);
         }
 
-        var user = await _userService.Create(userDto);
-        if (user.IsFailure)
+        var dto = await _userService.Create(userCreateDto);
+        if (dto.IsFailure)
         {
-            return user.Error.Code switch
+            return dto.Error.StatusCode switch
             {
-                "NotFound" => NotFound(user.Error),
-                "BadRequest" => BadRequest(user.Error),
-                "Internal" => StatusCode(StatusCodes.Status500InternalServerError, user.Error),
-                _ => StatusCode(StatusCodes.Status500InternalServerError, user.Error) // fallback para erro desconhecido
+                HttpStatusCode.NotFound => NotFound(dto.Error),
+                HttpStatusCode.BadRequest => BadRequest(dto.Error),
+                HttpStatusCode.Conflict => Conflict(dto.Error),
+                _ => StatusCode(StatusCodes.Status500InternalServerError, dto.Error)
             };
         }
 
-        var createResult = user.Value;
+        var user = dto.Value;
 
-        return new CreatedAtRouteResult("GetUser", new { id = createResult.Id }, createResult);
+        return CreatedAtRoute("GetUser", new { id = user.Id }, user);
     }
 
     [Authorize]
@@ -137,8 +136,9 @@ public class UserController(IUserService _userService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(Error))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Error))]
-    public async Task<IActionResult> Put(int id, [FromBody] UserDto userDto)
+    public async Task<IActionResult> Put(int id, [FromBody] UserUpdateDto userUpdateDto)
     {
         if (id <= 0)
         {
@@ -147,28 +147,68 @@ public class UserController(IUserService _userService) : ControllerBase
         }
         if (!ModelState.IsValid)
         {
-            var errorMessage = ErroMoldeState();
+            var errorMessage = ErrorMoldeState();
             var error = Result.Failure(Error.BadRequest($"Erro de validação do objeto ({nameof(UserDto)}): {errorMessage}"));
             return BadRequest(error);
         }
-        if (userDto.Id != id)
+        if (userUpdateDto.Id != id)
+        {
+            var error = Result.Failure(Error.BadRequest($"Id ({id}) diferente do Id ({userUpdateDto.Id}) do objeto"));
+            return BadRequest(error);
+        }
+        var dto = await _userService.Update(userUpdateDto);
+        if (dto.IsFailure)
+        {
+            return dto.Error.StatusCode switch
+            {
+                HttpStatusCode.NotFound => NotFound(dto.Error),
+                HttpStatusCode.BadRequest => BadRequest(dto.Error),
+                HttpStatusCode.Conflict => Conflict(dto.Error),
+                _ => StatusCode(StatusCodes.Status500InternalServerError, dto.Error)
+            };
+        }
+
+        return Ok(dto.Value);
+    }
+    [Authorize]
+    [HttpPatch("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(Error))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Error))]
+    public async Task<IActionResult> Patch(int id, [FromBody] UserUpdateDto userUpdateDto)
+    {
+        if (id <= 0)
         {
             var error = Result.Failure(Error.BadRequest($"Id ({id}) inválido"));
             return BadRequest(error);
         }
-        var user = await _userService.Update(userDto);
-        if (user.IsFailure)
+        if (!ModelState.IsValid)
         {
-            return user.Error.Code switch
+            var errorMessage = ErrorMoldeState();
+            var error = Result.Failure(Error.BadRequest($"Erro de validação do objeto ({nameof(UserDto)}): {errorMessage}"));
+            return BadRequest(error);
+        }
+        if (userUpdateDto.Id != id)
+        {
+            var error = Result.Failure(Error.BadRequest($"Id ({id}) diferente do Id ({userUpdateDto.Id}) do objeto"));
+            return BadRequest(error);
+        }
+        var dto = await _userService.Update(userUpdateDto);
+        if (dto.IsFailure)
+        {
+            return dto.Error.StatusCode switch
             {
-                "NotFound" => NotFound(user.Error),
-                "BadRequest" => BadRequest(user.Error),
-                "Internal" => StatusCode(StatusCodes.Status500InternalServerError, user.Error),
-                _ => StatusCode(StatusCodes.Status500InternalServerError, user.Error) // fallback para erro desconhecido
+                HttpStatusCode.NotFound => NotFound(dto.Error),
+                HttpStatusCode.BadRequest => BadRequest(dto.Error),
+                HttpStatusCode.Conflict => Conflict(dto.Error),
+                _ => StatusCode(StatusCodes.Status500InternalServerError, dto.Error)
             };
         }
 
-        return Ok(user.Value);
+        return Ok(dto.Value);
     }
 
     [Authorize]
@@ -186,21 +226,21 @@ public class UserController(IUserService _userService) : ControllerBase
             return BadRequest(error);
         }
 
-        var result = await _userService.Delete(id);
-        if (result.IsFailure)
+        var dto = await _userService.Delete(id);
+        if (dto.IsFailure)
         {
-            return result.Error.Code switch
+            return dto.Error.StatusCode switch
             {
-                "NotFound" => NotFound(result.Error),
-                "BadRequest" => BadRequest(result.Error),
-                "Internal" => StatusCode(StatusCodes.Status500InternalServerError, result.Error),
-                _ => StatusCode(StatusCodes.Status500InternalServerError, result.Error) // fallback para erro desconhecido
+                HttpStatusCode.NotFound => NotFound(dto.Error),
+                HttpStatusCode.BadRequest => BadRequest(dto.Error),
+                _ => StatusCode(StatusCodes.Status500InternalServerError, dto.Error)
             };
         }
 
-        return Ok(result.Value);
+        var user = dto.Value;
+        return Ok(user);
     }
-    private string ErroMoldeState()
+    private string ErrorMoldeState()
     {
         var errorMessage = string.Join("; ", ModelState.Values
                                               .SelectMany(x => x.Errors)

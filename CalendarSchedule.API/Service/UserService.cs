@@ -1,4 +1,5 @@
-﻿using CalendarSchedule.API.Abstractions;
+﻿using System.ComponentModel.DataAnnotations;
+using CalendarSchedule.API.Abstractions;
 using CalendarSchedule.API.MappingDto.LoginDtos;
 using CalendarSchedule.API.MappingDto.UserDtos;
 using CalendarSchedule.API.Repository.Interface;
@@ -8,30 +9,37 @@ using CalendarSchedule.Models.Dtos;
 
 namespace CalendarSchedule.API.Service;
 
-public class UserService(IUserRepository _userRepository,
-                         IEncryptionUtility _encryptionUtility,
-                         IDecryptionUtility _decryptionUtility) : IUserService
+public class UserService(IUserRepository _userRepository, IEncryptionUtility _encryptionUtility, IDecryptionUtility _decryptionUtility) : IUserService
 {
-    public async Task<Result<UserDto>> Create(UserDto userDto)
+    public async Task<Result<UserDto>> Create(UserCreateDto userCreateDto)
     {
-        UserDto userDt = new()
+        var exists = await ExistsByNameAsync(userCreateDto.Name!);
+        if (exists.IsSuccess)
+            return Result.Failure<UserDto>(Error.Conflict("Usuário já existe"));
+
+        UserCreateDto userDto = new()
         {
-            Id = userDto.Id,
-            Name = userDto.Name,
-            Description = userDto.Description,
-            Username = userDto.Username,
-            Password = _encryptionUtility.Dado(userDto.Password),
-            Manager = userDto.Manager,
-            Active = userDto.Active
+            Name = userCreateDto.Name,
+            Description = userCreateDto.Description,
+            Username = userCreateDto.Username,
+            Password = _encryptionUtility.Dado(userCreateDto.Password),
+            Manager = userCreateDto.Manager,
+            Active = userCreateDto.Active
         };
 
-        var user = await _userRepository.Create(userDt.ConvertDtoToUser());
-        if (user.Id == 0)
-            return Result.Failure<UserDto>(Error.Internal("Erro ao criar usuário"));
+        try
+        {
+            var user = await _userRepository.Create(userDto.ConvertDtoCreateToUsere());
+            if (user == null)
+                return Result.Failure<UserDto>(Error.Internal("Falha ao criar usuário"));
 
-        var dto = user.ConvertUserToDto();
-
-        return Result.Success(dto);
+            var dto = user.ConvertUserToDto();
+            return Result.Success(dto);
+        }
+        catch (ValidationException ex)
+        {
+            return Result.Failure<UserDto>(Error.Internal($"Erro interno: {ex.Message}"));
+        }
     }
 
     public async Task<Result<UserDto>> Delete(int id)
@@ -41,6 +49,15 @@ public class UserService(IUserRepository _userRepository,
             return Result.Failure<UserDto>(Error.NotFound("Nenhum usuário encontrado para ser excluido"));
         var dto = deletedUserDto.ConvertUserToDto();
         return Result.Success(dto);
+    }
+
+    public async Task<Result<bool>> ExistsByNameAsync(string username)
+    {
+        var exists = await _userRepository.ExistsByNameAsync(username);
+        if (exists)
+            return Result.Success(true);
+
+        return Result.Failure<bool>(Error.NotFound("Usuário não encontrado"));
     }
 
     public async Task<Result<PagedResult<UserDto>>> GetAll(int page, int size, string search)
@@ -57,7 +74,7 @@ public class UserService(IUserRepository _userRepository,
             totalPage = totalData;
 
         var dto = userEntity.ConvertUsersToDto();
-        var userDto = new PagedResult<UserDto>(dto, page, size, totalData, totalPage);
+        var userDto = new PagedResult<UserDto>(dto, totalData, page, totalPage, size);
 
         return Result.Success(userDto);
     }
@@ -96,7 +113,7 @@ public class UserService(IUserRepository _userRepository,
             totalPage = totalData;
 
         var dto = userEntity.ConvertUsersToDto();
-        var userDto = new PagedResult<UserDto>(dto, page, size, totalData, totalPage);
+        var userDto = new PagedResult<UserDto>(dto, totalData, page, totalPage, size);
 
         return Result.Success(userDto);
     }
@@ -115,7 +132,7 @@ public class UserService(IUserRepository _userRepository,
             totalPage = totalData;
 
         var dto = users.ConvertUsersToDto();
-        var userDto = new PagedResult<UserDto>(dto, page, size, totalData, totalPage);
+        var userDto = new PagedResult<UserDto>(dto, totalData, page, totalPage, size);
 
         return Result.Success(userDto);
     }
@@ -163,20 +180,48 @@ public class UserService(IUserRepository _userRepository,
         return Result.Success(totalUser);
     }
 
-    public async Task<Result<UserDto>> Update(UserDto userDto)
+    public async Task<Result<UserDto>> Update(UserUpdateDto userUpdateDto)
     {
-        UserDto user = new()
+        var exists = await ExistsByNameAsync(userUpdateDto.Name!);
+        if (exists.IsSuccess)
+            return Result.Failure<UserDto>(Error.Validation("Usuário já existe"));
+
+        UserUpdateDto user = new()
         {
-            Id = userDto.Id,
-            Name = userDto.Name,
-            Description = userDto.Description,
-            Username = userDto.Username,
-            Password = _encryptionUtility.Dado(userDto.Password),
-            Manager = userDto.Manager,
-            Active = userDto.Active
+            Id = userUpdateDto.Id,
+            Name = userUpdateDto.Name,
+            Description = userUpdateDto.Description,
+            Username = userUpdateDto.Username,
+            Password = _encryptionUtility.Dado(userUpdateDto.Password),
+            Manager = userUpdateDto.Manager,
+            Active = userUpdateDto.Active
         };
 
-        var result = await _userRepository.Update(user.ConvertDtoToUser());
+        var result = await _userRepository.Update(user.ConvertDtoUpdateToUsere());
+        if (result is null)
+            return Result.Failure<UserDto>(Error.NotFound("Nenhum usuário encontrado"));
+        var dto = result.ConvertUserToDto();
+        return Result.Success(dto);
+    }
+
+    public async Task<Result<UserDto>> UpdatePatch(UserUpdateDto userUpdateDto)
+    {
+        var exists = await ExistsByNameAsync(userUpdateDto.Name!);
+        if (exists.IsSuccess)
+            return Result.Failure<UserDto>(Error.Validation("Usuário já existe"));
+
+        UserUpdateDto user = new()
+        {
+            Id = userUpdateDto.Id,
+            Name = userUpdateDto.Name,
+            Description = userUpdateDto.Description,
+            Username = userUpdateDto.Username,
+            Password = _encryptionUtility.Dado(userUpdateDto.Password),
+            Manager = userUpdateDto.Manager,
+            Active = userUpdateDto.Active
+        };
+
+        var result = await _userRepository.UpdatePatch(user.ConvertDtoUpdateToUsere());
         if (result is null)
             return Result.Failure<UserDto>(Error.NotFound("Nenhum usuário encontrado"));
         var dto = result.ConvertUserToDto();

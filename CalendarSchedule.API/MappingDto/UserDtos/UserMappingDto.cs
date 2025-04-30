@@ -65,4 +65,31 @@ public static class UserMappingDto
             Active = userDto.Active
         };
     }
+
+    public static User ConvertDtoCreateToUsere(this UserCreateDto userCreateDto)
+    {
+        return new User
+        {
+            Name = userCreateDto.Name,
+            Description = userCreateDto.Description,
+            Username = userCreateDto.Username,
+            Password = userCreateDto.Password,
+            Manager = userCreateDto.Manager,
+            Active = userCreateDto.Active
+        };
+    }
+
+    public static User ConvertDtoUpdateToUsere(this UserUpdateDto userUpdateDto)
+    {
+        return new User
+        {
+            Id = userUpdateDto.Id,
+            Name = userUpdateDto.Name,
+            Description = userUpdateDto.Description,
+            Username = userUpdateDto.Username,
+            Password = userUpdateDto.Password,
+            Manager = userUpdateDto.Manager,
+            Active = userUpdateDto.Active
+        };
+    }
 }

@@ -1,11 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace CalendarSchedule.Models.Dtos;
 
-public class UserDto
+public class UserCreateDto
 {
-    public int Id { get; set; }
     [Required(ErrorMessage = "Nome obrigatório")]
     public string? Name { get; set; } = string.Empty;
     public string? Description { get; set; } = string.Empty;
@@ -13,8 +11,7 @@ public class UserDto
     [MaxLength(16, ErrorMessage = "Máximo 16 digito")]
     public string? Username { get; set; } = string.Empty;
     [Required(ErrorMessage = "Senha Obrigatória")]
-    [JsonIgnore]
     public string? Password { get; set; } = string.Empty;
-    public bool? Manager { get; set; } = false;
-    public bool? Active { get; set; } = true;
+    public bool Manager { get; set; } = false;
+    public bool Active { get; set; } = true;
 }

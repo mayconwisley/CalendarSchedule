@@ -13,8 +13,7 @@ public class ClientService(IClientRepository _clientRepository) : IClientService
     {
         try
         {
-            var client = clientCreateDto.ConvertDtoCreateToClient();
-            var createdClient = await _clientRepository.Create(client);
+            var createdClient = await _clientRepository.Create(clientCreateDto.ConvertDtoCreateToClient());
 
             if (createdClient == null)
                 return Result.Failure<ClientDto>(Error.Unexpected("Falha ao criar o cliente."));

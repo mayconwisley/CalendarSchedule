@@ -36,6 +36,11 @@ public class UserRepository(ScheduleContext _scheduleContext) : IUserRepository
         return user;
     }
 
+    public async Task<bool> ExistsByNameAsync(string username)
+    {
+        return await _scheduleContext.Users.AnyAsync(f => f.Username == username);
+    }
+
     public async Task<IEnumerable<User>> GetAll(int page, int size, string search)
     {
         var users =
@@ -72,7 +77,7 @@ public class UserRepository(ScheduleContext _scheduleContext) : IUserRepository
     public async Task<IEnumerable<User>> GetManagerAllByUserCurrent(int page, int size, string search, string username)
     {
         IEnumerable<User> users = await _scheduleContext.Users
-              .Where(w => w.Username!.Equals(username, StringComparison.OrdinalIgnoreCase))
+              .Where(w => w.Username!.Equals(username))
               .Skip((page - 1) * size)
               .Take(size)
               .ToListAsync();
@@ -94,7 +99,7 @@ public class UserRepository(ScheduleContext _scheduleContext) : IUserRepository
     {
         var user =
         await _scheduleContext.Users
-              .FirstOrDefaultAsync(w => w.Username!.Equals(username, StringComparison.OrdinalIgnoreCase));
+              .FirstOrDefaultAsync(w => w.Username!.Equals(username));
 
         return user;
     }
@@ -141,5 +146,29 @@ public class UserRepository(ScheduleContext _scheduleContext) : IUserRepository
         _scheduleContext.Users.Entry(existingUser).CurrentValues.SetValues(user);
         await _scheduleContext.SaveChangesAsync();
         return user;
+    }
+
+    public async Task<User?> UpdatePatch(User user)
+    {
+        var entity = await GetById(user.Id);
+        if (entity is null)
+            return null;
+
+        if (user.Username is not null)
+            entity.Username = user.Username;
+        if (user.Name is not null)
+            entity.Name = user.Name;
+        if (user.Description is not null)
+            entity.Description = user.Description;
+        if (user.Password is not null)
+            entity.Password = user.Password;
+        if (user.Active is not null)
+            entity.Active = user.Active;
+        if (user.Manager is not null)
+            entity.Manager = user.Manager;
+
+        _scheduleContext.Users.Update(entity);
+        await _scheduleContext.SaveChangesAsync();
+        return entity;
     }
 }

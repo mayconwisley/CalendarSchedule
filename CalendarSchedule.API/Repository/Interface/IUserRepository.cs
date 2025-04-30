@@ -13,6 +13,8 @@ public interface IUserRepository
     Task<bool> IsUsername(string username);
     Task<User> Create(User user);
     Task<User?> Update(User user);
+    Task<User?> UpdatePatch(User user);
     Task<User?> Delete(int id);
     Task<int> TotalUser(string search);
+    Task<bool> ExistsByNameAsync(string username);
 }
