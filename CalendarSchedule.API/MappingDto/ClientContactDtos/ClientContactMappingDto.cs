@@ -54,7 +54,7 @@ public static class ClientContactMappingDto
                     Client = new()
                     {
                         Id = clientContact.ClientDto!.Id,
-                        Name = clientContact.ClientDto.Name,
+                        Name = clientContact.ClientDto.Name!,
                         Telephone = clientContact.ClientDto.Telephone,
                         State = clientContact.ClientDto.State,
                         City = clientContact.ClientDto.City,
@@ -123,7 +123,7 @@ public static class ClientContactMappingDto
             Client = new()
             {
                 Id = clientContactDto.ClientDto!.Id,
-                Name = clientContactDto.ClientDto.Name,
+                Name = clientContactDto.ClientDto.Name!,
                 Telephone = clientContactDto.ClientDto.Telephone,
                 State = clientContactDto.ClientDto.State,
                 City = clientContactDto.ClientDto.City,
@@ -151,7 +151,6 @@ public static class ClientContactMappingDto
     {
         return new ClientContactCreateDto
         {
-            Id = clientContact.Id,
             Number = clientContact.Number,
             Type = clientContact.Type,
             ClientId = clientContact.ClientId,
@@ -163,11 +162,35 @@ public static class ClientContactMappingDto
     {
         return new ClientContact
         {
-            Id = clientContactCreateDto.Id,
             Number = clientContactCreateDto.Number,
             Type = clientContactCreateDto.Type,
             ClientId = clientContactCreateDto.ClientId,
             ClientResponsibleId = clientContactCreateDto.ClientResponsibleId,
         };
     }
+
+    public static ClientContactUpdateDto ConvertClientContactUpdateToDto(this ClientContact clientContact)
+    {
+        return new ClientContactUpdateDto
+        {
+            Id = clientContact.Id,
+            Number = clientContact.Number,
+            Type = clientContact.Type,
+            ClientId = clientContact.ClientId,
+            ClientResponsibleId = clientContact.ClientResponsibleId,
+
+        };
+    }
+    public static ClientContact ConvertDtoToClientContactUpdate(this ClientContactUpdateDto clientContactUpdateDto)
+    {
+        return new ClientContact
+        {
+            Id = clientContactUpdateDto.Id,
+            Number = clientContactUpdateDto.Number,
+            Type = clientContactUpdateDto.Type,
+            ClientId = clientContactUpdateDto.ClientId,
+            ClientResponsibleId = clientContactUpdateDto.ClientResponsibleId,
+        };
+    }
+
 }

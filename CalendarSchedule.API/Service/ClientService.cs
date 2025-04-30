@@ -1,9 +1,9 @@
-﻿using CalendarSchedule.API.Abstractions;
+﻿using System.ComponentModel.DataAnnotations;
+using CalendarSchedule.API.Abstractions;
 using CalendarSchedule.API.MappingDto.ClientDtos;
 using CalendarSchedule.API.Repository.Interface;
 using CalendarSchedule.API.Service.Interface;
 using CalendarSchedule.Models.Dtos;
-using System.ComponentModel.DataAnnotations;
 
 namespace CalendarSchedule.API.Service;
 
@@ -60,7 +60,7 @@ public class ClientService(IClientRepository _clientRepository) : IClientService
 
         var dto = clientEntity.ConvertClientsToDto();
 
-        var clientDto = new PagedResult<ClientDto>(dto, page, size, totalData, totalPage);
+        var clientDto = new PagedResult<ClientDto>(dto, totalData, page, totalPage, size);
 
         return Result.Success(clientDto);
     }

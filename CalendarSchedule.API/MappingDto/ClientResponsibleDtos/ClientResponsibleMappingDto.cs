@@ -7,32 +7,11 @@ public static class ClientResponsibleMappingDto
 {
     public static IEnumerable<ClientResponsibleDto> ConvertClientResponsibleToDtos(this IEnumerable<ClientResponsible> clientResponsibles)
     {
-        return (from clientResponsible in clientResponsibles
-                select new ClientResponsibleDto
-                {
-                    Id = clientResponsible.Id,
-                    Name = clientResponsible.Name,
-                    Email = clientResponsible.Email,
-                    Description = clientResponsible.Description,
-                    Position = clientResponsible.Position,
-                    Active = clientResponsible.Active,
-
-                }).ToList();
-
+        return clientResponsibles.Select(p => p.ConvertClientResponsibleToDto());
     }
     public static IEnumerable<ClientResponsible> ConvertDtoToClientResponsibles(this IEnumerable<ClientResponsibleDto> clientResponsibleDtos)
     {
-        return (from clientResponsible in clientResponsibleDtos
-                select new ClientResponsible
-                {
-                    Id = clientResponsible.Id,
-                    Name = clientResponsible.Name,
-                    Email = clientResponsible.Email,
-                    Description = clientResponsible.Description,
-                    Position = clientResponsible.Position,
-                    Active = clientResponsible.Active
-
-                }).ToList();
+        return clientResponsibleDtos.Select(p => p.ConvertDtoToClientResponsible());
     }
     public static ClientResponsibleDto ConvertClientResponsibleToDto(this ClientResponsible clientResponsible)
     {
@@ -44,8 +23,6 @@ public static class ClientResponsibleMappingDto
             Description = clientResponsible.Description,
             Position = clientResponsible.Position,
             Active = clientResponsible.Active
-
-
         };
     }
     public static ClientResponsible ConvertDtoToClientResponsible(this ClientResponsibleDto clientResponsibleDto)
@@ -60,27 +37,21 @@ public static class ClientResponsibleMappingDto
             Active = clientResponsibleDto.Active
         };
     }
-
     public static ClientResponsibleCreateDto ConvertClientResponsibleCreateToDto(this ClientResponsible clientResponsible)
     {
         return new ClientResponsibleCreateDto
         {
-
-            Id = clientResponsible.Id,
             Name = clientResponsible.Name,
             Email = clientResponsible.Email,
             Description = clientResponsible.Description,
             Position = clientResponsible.Position,
             Active = clientResponsible.Active
-
         };
     }
     public static ClientResponsible ConvertDtoToClientResponsibleCreate(this ClientResponsibleCreateDto clientResponsibleCreateDto)
     {
         return new ClientResponsible
         {
-
-            Id = clientResponsibleCreateDto.Id,
             Name = clientResponsibleCreateDto.Name,
             Email = clientResponsibleCreateDto.Email,
             Description = clientResponsibleCreateDto.Description,

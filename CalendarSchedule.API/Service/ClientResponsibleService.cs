@@ -44,7 +44,7 @@ public class ClientResponsibleService(IClientResponsibleRepository _clientRespon
             totalPage = totalData;
 
         var dto = clientResponsibles.ConvertClientResponsibleToDtos();
-        var clientResponsibleDto = new PagedResult<ClientResponsibleDto>(dto, totalData, page, size, totalPage);
+        var clientResponsibleDto = new PagedResult<ClientResponsibleDto>(dto, totalData, page, totalPage, size);
 
         return Result.Success(clientResponsibleDto);
     }
