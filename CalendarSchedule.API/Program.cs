@@ -127,7 +127,6 @@ builder.Services.AddAuthentication(opt =>
                 var result = Result.Failure(Error.Forbidden("Acesso negado"));
                 await context.Response.WriteAsJsonAsync(result);
             }
-
         };
 
         opt.RequireHttpsMetadata = false;
@@ -142,23 +141,34 @@ builder.Services.AddAuthentication(opt =>
     });
 
 var app = builder.Build();
+app.Use(async (context, next) =>
+{
+    await next();
 
+    switch (context.Response.StatusCode)
+    {
+        case StatusCodes.Status405MethodNotAllowed:
+            context.Response.ContentType = "application/json";
+            var result = Result.Failure(Error.MethodNotAllowed("Metodo não implementado ou não permitido"));
+            await context.Response.WriteAsJsonAsync(result.Error);
+            break;
+        case StatusCodes.Status500InternalServerError:
+            context.Response.ContentType = "application/json";
+            var error = Result.Failure(Error.Internal("Erro interno no servidor"));
+            await context.Response.WriteAsJsonAsync(error.Error);
+            break;
+        default:
+            break;
+    }
+});
 app.UseCors(policy => policy.WithOrigins("https://localhost:7296",
-                                                "https://192.168.10.149:7296",
-                                                "http://192.168.0.102:5051",
-                                                "http://192.168.10.149:5051",
-                                                "http://localhost:5051")
+                                         "http://192.168.0.102:5051",
+                                         "http://localhost:5051")
     .AllowAnyMethod()
     .AllowAnyHeader()
     .WithHeaders(HeaderNames.ContentType)
 );
-;
-// Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-//    app.UseSwagger();
-//    app.UseSwaggerUI();
-//}
+
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Schedule v1"));
 

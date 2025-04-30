@@ -1,4 +1,5 @@
-﻿using CalendarSchedule.API.Abstractions;
+﻿using System.Net;
+using CalendarSchedule.API.Abstractions;
 using CalendarSchedule.API.Service.Interface;
 using CalendarSchedule.Models.Dtos;
 using Microsoft.AspNetCore.Mvc;
@@ -27,10 +28,10 @@ public class LoginController(IGetTokenService _getTokenService) : ControllerBase
         var token = await _getTokenService.Token(loginDto);
         if (token.IsFailure)
         {
-            return token.Error.Code switch
+            return token.Error.StatusCode switch
             {
-                "NotFound" => NotFound(token.Error),
-                "Validation" => StatusCode(StatusCodes.Status422UnprocessableEntity, token.Error),
+                HttpStatusCode.NotFound => NotFound(token.Error),
+                HttpStatusCode.UnprocessableEntity => StatusCode(StatusCodes.Status422UnprocessableEntity, token.Error),
                 _ => StatusCode(StatusCodes.Status500InternalServerError, token.Error),
             };
         }

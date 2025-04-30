@@ -1,4 +1,5 @@
-﻿using CalendarSchedule.API.Abstractions;
+﻿using System.Net;
+using CalendarSchedule.API.Abstractions;
 using CalendarSchedule.API.Service.Interface;
 using CalendarSchedule.Models.Dtos;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +10,6 @@ namespace CalendarSchedule.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [Produces("application/json")]
-[Consumes("application/json")]
 public class ClientController(IClientService _clientService) : ControllerBase
 {
     [HttpGet]
@@ -18,11 +18,12 @@ public class ClientController(IClientService _clientService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
     {
-        var clientsDto = await _clientService.GetAll(page, size, search);
-        if (clientsDto.IsFailure)
-            return NotFound(clientsDto.Error);
+        var dto = await _clientService.GetAll(page, size, search);
+        if (dto.IsFailure)
+            return NotFound(dto.Error);
 
-        return Ok(clientsDto.Value);
+        var clients = dto.Value;
+        return Ok(clients);
     }
 
     [HttpGet("{id:int}", Name = "GetClient")]
@@ -33,15 +34,15 @@ public class ClientController(IClientService _clientService) : ControllerBase
     {
         if (id <= 0)
         {
-            var error = Result.Failure(Error.BadRequest($"Id ({id}) inválido"));
-            return BadRequest(error);
+            var errorResult = Result.Failure(Error.BadRequest($"Id ({id}) inválido"));
+            return BadRequest(errorResult);
         }
 
-        var clientDto = await _clientService.GetById(id);
-        if (clientDto.IsFailure)
-            return NotFound(clientDto.Error);
-
-        return Ok(clientDto.Value);
+        var dto = await _clientService.GetById(id);
+        if (dto.IsFailure)
+            return NotFound(dto.Error);
+        var client = dto.Value;
+        return Ok(client);
     }
 
     [Authorize]
@@ -60,20 +61,19 @@ public class ClientController(IClientService _clientService) : ControllerBase
             return BadRequest(error);
         }
 
-        var create = await _clientService.Create(clientCreateDto);
-        if (create.IsFailure)
+        var dto = await _clientService.Create(clientCreateDto);
+        if (dto.IsFailure)
         {
-            return create.Error.Code switch
+            return dto.Error.StatusCode switch
             {
-                "NotFound" => NotFound(create.Error),
-                "BadRequest" => BadRequest(create.Error),
-                "Internal" => StatusCode(StatusCodes.Status500InternalServerError, create.Error),
-                _ => StatusCode(StatusCodes.Status500InternalServerError, create.Error) // fallback para erro desconhecido
+                HttpStatusCode.NotFound => NotFound(dto.Error),
+                HttpStatusCode.BadRequest => BadRequest(dto.Error),
+                _ => StatusCode(StatusCodes.Status500InternalServerError, dto.Error)
             };
         }
-        var client = create.Value;
+        var client = dto.Value;
 
-        return new CreatedAtRouteResult("GetClient", new { id = client.Id }, client);
+        return CreatedAtRoute("GetClient", new { id = client.Id }, client);
     }
 
     [Authorize]
@@ -100,22 +100,22 @@ public class ClientController(IClientService _clientService) : ControllerBase
 
         if (id != clientDto.Id)
         {
-            var error = Result.Failure(Error.BadRequest($"Id ({id}) da rota diferente do Id ({clientDto.Id}) objeto"));
+            var error = Result.Failure(Error.BadRequest($"Id ({id}) da rota diferente do Id ({clientDto.Id}) do objeto"));
             return BadRequest(error);
         }
 
-        var client = await _clientService.Update(clientDto);
-        if (client.IsFailure)
+        var dto = await _clientService.Update(clientDto);
+        if (dto.IsFailure)
         {
-            return client.Error.Code switch
+            return dto.Error.StatusCode switch
             {
-                "NotFound" => NotFound(client.Error),
-                "BadRequest" => BadRequest(client.Error),
-                "Internal" => StatusCode(StatusCodes.Status500InternalServerError, client.Error),
-                _ => StatusCode(StatusCodes.Status500InternalServerError, client.Error) // fallback para erro desconhecido
+                HttpStatusCode.NotFound => NotFound(dto.Error),
+                HttpStatusCode.BadRequest => BadRequest(dto.Error),
+                _ => StatusCode(StatusCodes.Status500InternalServerError, dto.Error)
             };
         }
-        return Ok(client.Value);
+        var client = dto.Value;
+        return Ok(client);
     }
 
     [Authorize]
@@ -132,26 +132,25 @@ public class ClientController(IClientService _clientService) : ControllerBase
             var error = Result.Failure(Error.BadRequest($"Id inválido: {id}"));
             return BadRequest(error);
         }
-        var clientDeleted = await _clientService.Delete(id);
-        if (clientDeleted.IsFailure)
+        var dto = await _clientService.Delete(id);
+        if (dto.IsFailure)
         {
-            return clientDeleted.Error.Code switch
+            return dto.Error.StatusCode switch
             {
-                "NotFound" => NotFound(clientDeleted.Error),
-                "BadRequest" => BadRequest(clientDeleted.Error),
-                "Internal" => StatusCode(StatusCodes.Status500InternalServerError, clientDeleted.Error),
-                _ => StatusCode(StatusCodes.Status500InternalServerError, clientDeleted.Error) // fallback para erro desconhecido
+                HttpStatusCode.NotFound => NotFound(dto.Error),
+                HttpStatusCode.BadRequest => BadRequest(dto.Error),
+                _ => StatusCode(StatusCodes.Status500InternalServerError, dto.Error)
             };
         }
-
-        return Ok(clientDeleted.Value);
+        var client = dto.Value;
+        return Ok(client);
     }
 
     private string ErroMoldeState()
     {
         var errorMessage = string.Join("; ", ModelState.Values
-                                              .SelectMany(x => x.Errors)
-                                              .Select(x => x.ErrorMessage));
+                                             .SelectMany(x => x.Errors)
+                                             .Select(x => x.ErrorMessage));
         return errorMessage;
     }
 }
