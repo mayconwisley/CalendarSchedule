@@ -2,8 +2,10 @@
 
 namespace CalendarSchedule.Models.Dtos;
 
-public class ScheduleCreateDto
+public class ScheduleUpdateDto
 {
+	[Required(ErrorMessage = "Id Obrigatório")]
+	public int Id { get; set; }
 	[Required(ErrorMessage = "Data Inicio Obrigatório")]
 	public DateTime DateStart { get; set; } = DateTime.Now;
 	[Required(ErrorMessage = "Data Final Obrigatório")]
