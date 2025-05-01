@@ -52,6 +52,7 @@ public class ScheduleController(IScheduleService _scheduleService) : ControllerB
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
 	[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
+	[ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(Error))]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Error))]
 	public async Task<IActionResult> Post([FromBody] ScheduleCreateDto scheduleCreateDto)
 	{
@@ -70,6 +71,7 @@ public class ScheduleController(IScheduleService _scheduleService) : ControllerB
 			{
 				HttpStatusCode.NotFound => NotFound(scheduleDto.Error),
 				HttpStatusCode.BadRequest => BadRequest(scheduleDto.Error),
+				HttpStatusCode.Conflict => Conflict(scheduleDto.Error),
 				_ => StatusCode(StatusCodes.Status500InternalServerError, scheduleDto.Error)
 			};
 		}
@@ -85,6 +87,7 @@ public class ScheduleController(IScheduleService _scheduleService) : ControllerB
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
 	[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
+	[ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(Error))]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Error))]
 	public async Task<IActionResult> Put(int id, [FromBody] ScheduleUpdateDto scheduleUpdateDto)
 	{
@@ -114,6 +117,7 @@ public class ScheduleController(IScheduleService _scheduleService) : ControllerB
 			{
 				HttpStatusCode.NotFound => NotFound(scheduleDto.Error),
 				HttpStatusCode.BadRequest => BadRequest(scheduleDto.Error),
+				HttpStatusCode.Conflict => Conflict(scheduleDto.Error),
 				_ => StatusCode(StatusCodes.Status500InternalServerError, scheduleDto.Error)
 			};
 		}

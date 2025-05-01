@@ -49,6 +49,7 @@ public static class ScheduleMappingDto
 	{
 		return new Schedule
 		{
+			Id = scheduleUpdateDto.Id,
 			Description = scheduleUpdateDto.Description,
 			DateStart = scheduleUpdateDto.DateStart,
 			DateFinal = scheduleUpdateDto.DateFinal,

@@ -11,4 +11,10 @@ public interface IScheduleService
 	Task<Result<ScheduleDto>> Update(ScheduleUpdateDto scheduleUpdateDto);
 	Task<Result<ScheduleDto>> Delete(int id);
 	Task<Result<int>> TotalSchedules(string search);
+	Task<bool> ExistsOverlapCreate(ScheduleCreateDto scheduleCreateDto);
+	Task<bool> ExistsOverlapUpdate(ScheduleUpdateDto scheduleUpdateDto);
+	bool ValidateDatesCreate(ScheduleCreateDto scheduleCreateDto);
+	bool ValidateDatesUpdate(ScheduleUpdateDto scheduleUpdateDto);
+	bool IsParticularCreate(ScheduleCreateDto scheduleCreateDto);
+	bool IsParticularUpdate(ScheduleUpdateDto scheduleUpdateDto);
 }
