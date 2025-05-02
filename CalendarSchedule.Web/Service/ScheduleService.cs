@@ -181,7 +181,7 @@ public class ScheduleService : IScheduleService
         throw new NotImplementedException();
     }
 
-    public async Task<Result<ScheduleDto>> Update(ScheduleCreateDto scheduleCreateDto)
+    public async Task<Result<ScheduleDto>> Update(ScheduleUpdateDto scheduleUpdateDto)
     {
         try
         {
@@ -192,8 +192,8 @@ public class ScheduleService : IScheduleService
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Value.Bearer);
 
-            StringContent stringContent = new(JsonSerializer.Serialize(scheduleCreateDto), Encoding.UTF8, "application/json");
-            using var response = await httpClient.PutAsync($"{apiEndPoint}/{scheduleCreateDto.Id}", stringContent);
+            StringContent stringContent = new(JsonSerializer.Serialize(scheduleUpdateDto), Encoding.UTF8, "application/json");
+            using var response = await httpClient.PutAsync($"{apiEndPoint}/{scheduleUpdateDto.Id}", stringContent);
             if (response.IsSuccessStatusCode)
             {
                 using Stream resApi = await response.Content.ReadAsStreamAsync();

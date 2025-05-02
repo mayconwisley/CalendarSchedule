@@ -1,4 +1,5 @@
-﻿@inject IScheduleUserService scheduleUserService
+﻿@using CalendarSchedule.Models.Abstractions
+@inject IScheduleUserService scheduleUserService
 
 @if (ScheduleUserDtosList is not null)
 {    @if (ScheduleUserDtosList.Count() != 0)
@@ -44,7 +45,7 @@
     [Parameter]
     public DateTime CurrenteDate { get; set; }
     List<string> UserDtos { get; set; } = [];
-    private List<PagedResultView<ScheduleUserDto>>? ScheduleUserDtosList { get; set; }
+    private List<PagedResultView<ScheduleUserDto>>? ScheduleUserDtosList { get; set; } = new();
     protected async override Task OnParametersSetAsync()
     {
         ScheduleUserDtosList.Clear();
@@ -59,7 +60,7 @@
             }
         }
     }
-    private async Task<IEnumerable<ScheduleUserDto>> GetScheduleIdLists(DateTime currentDate)
+    private async Task<List<ScheduleUserDto>> GetScheduleIdLists(DateTime currentDate)
     {
         var schedule = await scheduleUserService.GetByScheduleUserDateStart(currentDate.Date);
 
@@ -74,9 +75,9 @@
                                 })
                             .ToList();
 
-            return await Task.FromResult(scheduleId);
+            return scheduleId;
         }
 
-        return await Task.FromResult(new List<ScheduleUserDto>());
+        return [];
     }
 }

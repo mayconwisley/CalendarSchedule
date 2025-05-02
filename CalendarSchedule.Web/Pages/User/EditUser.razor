@@ -6,7 +6,7 @@
 
 <h1>Editar Colaborador</h1>
 <EditForm Model="@UserDto" OnValidSubmit="@Edit">
-	<InputNumber hidden @bind-Value="UserDto.Id" />
+	<InputNumber hidden @bind-Value="UserDto!.Id" />
 	<DataAnnotationsValidator />
 
 	<div class="row g-3">
@@ -32,13 +32,19 @@
 		</div>
 		<div class="col-6">
 			<div class="form-check">
-				<InputCheckbox class="form-check-input" id="inManager" @bind-Value="UserDto.Manager" />
+				@{
+					var manager = (bool)UserDto.Manager!;
+				}
+				<InputCheckbox class="form-check-input" id="inManager" @bind-Value="manager" />
 				<label for="inManager" class="form-label">Gestor</label>
 			</div>
 		</div>
 		<div class="col-6">
 			<div class="form-check">
-				<InputCheckbox class="form-check-input" id="inActive" @bind-Value="UserDto.Active" />
+				@{
+					var active = (bool)UserDto.Active!;
+				}
+				<InputCheckbox class="form-check-input" id="inActive" @bind-Value="active" />
 				<label for="inActive" class="form-label">Ativo</label>
 			</div>
 		</div>
@@ -60,22 +66,21 @@
 	[Parameter]
 	public string UserId { get; set; } = string.Empty;
 
-	private UserDto? UserDto { get; set; }
-	
+	private UserDto? UserDto;
+
 	protected override async Task OnInitializedAsync()
 	{
 		var user = await userService.GetById(int.Parse(UserId));
 		UserDto = user.Value;
+
 	}
 
 	private async Task Edit()
 	{
-		if (UserDto is not null)
-		{
-			var	userUpdateDto = new UserUpdateDto
+		var userUpdateDto = new UserUpdateDto
 			{
-				Id = UserDto.Id,
-				Name = UserDto.Name,
+				Id = UserDto!.Id,
+				Name = UserDto.Name!,
 				Username = UserDto.Username,
 				Password = UserDto.Password,
 				Description = UserDto.Description,
@@ -83,10 +88,9 @@
 				Active = UserDto.Active
 			};
 
-			var room = await userService.Update(userUpdateDto);
-			await UpdateData();
-			navigationManager.NavigateTo("/User");
-		}
+		var room = await userService.Update(userUpdateDto);
+		await UpdateData();
+		navigationManager.NavigateTo("/User");
 	}
 
 	private async Task UpdateData()

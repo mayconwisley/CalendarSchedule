@@ -38,7 +38,7 @@ public class UserStorageService(ISessionStorageService sessionStorageService, IU
         UserSessionDto userSession = new()
         {
             Username = user.Value.Username,
-            Manager = user.Value.Manager
+            Manager = (bool)user.Value.Manager!
         };
 
         if (user is not null)

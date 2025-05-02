@@ -4,7 +4,7 @@
         <li class="nav-item">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">Calendário</NavLink>
         </li>
-       
+
         @{
 
             if (UserSessionDto is not null)
@@ -37,8 +37,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        UserSessionDto = new();
-        UserSessionDto = await userStorageService.GetUserSession();
+        var userSession = await userStorageService.GetUserSession();
+        UserSessionDto = userSession.Value;
 
         await base.OnInitializedAsync();
     }

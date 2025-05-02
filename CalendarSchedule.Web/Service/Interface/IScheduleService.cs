@@ -12,7 +12,7 @@ public interface IScheduleService
     Task<Result<PagedResultView<ScheduleDto>>> GetByScheduleActiveClientId(int clientId, DateTime dateSalected);
     Task<Result<ScheduleDto>> GetById(int id);
     Task<Result<ScheduleDto>> Create(ScheduleCreateDto scheduleCreateDto);
-    Task<Result<ScheduleDto>> Update(ScheduleCreateDto scheduleCreateDto);
+    Task<Result<ScheduleDto>> Update(ScheduleUpdateDto scheduleUpdateDto);
     Task<Result<bool>> Delete(int id);
     Task<Result<int>> TotalSchedules(string search);
 }
