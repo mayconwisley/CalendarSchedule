@@ -106,7 +106,7 @@
 	</div>
 </div>
 @code {
-	private PagedResultView<ScheduleUserDto>? ScheduleUserDtos { get; set; }
+	private PagedResultView<ScheduleUserDto>? ScheduleUserDtos { get; set; } = new();
 
 	[Parameter]
 	public int ScheduleId { get; set; }
@@ -117,7 +117,10 @@
 	protected override async Task OnInitializedAsync()
 	{
 		var scheduleUser = await scheduleUserService.GetByScheduleId(ScheduleId);
-		ScheduleUserDtos = scheduleUser.Value;
-		StateHasChanged();
+		if (scheduleUser.IsSuccess)
+		{
+			ScheduleUserDtos = scheduleUser.Value;
+		}
+		//StateHasChanged();
 	}
 }

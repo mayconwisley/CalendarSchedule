@@ -12,7 +12,7 @@
 			@if (currentSchedule.Any())
 			{
 				var scheduleId = currentSchedule
-									.Select(s => s.ScheduleId)
+									.Select(s => s.ScheduleDto!.Id)
 									.FirstOrDefault();
 				var hourStart = currentSchedule
 									.Select(s => s.ScheduleDto!.DateStart)
@@ -71,7 +71,7 @@
 		{
 			var scheduleId = schedule.Value.Data!
 							.Where(w => w.ScheduleDto!.DateStart.Date == dtCurrentDate.Date)
-							.GroupBy(g => g.ScheduleId)
+							.GroupBy(g => g.ScheduleDto.Id)
 							.Select(s => new ScheduleUserDto
 							{
 								ScheduleId = s.Key

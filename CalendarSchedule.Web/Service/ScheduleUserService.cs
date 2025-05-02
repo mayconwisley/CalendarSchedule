@@ -237,9 +237,9 @@ public class ScheduleUserService : IScheduleUserService
     {
         try
         {
-            var token = await _tokenStorageService.GetToken();
-            if (token.IsFailure)
-                return Result.Failure<PagedResultView<ScheduleUserDto>>(token.Error);
+            //var token = await _tokenStorageService.GetToken();
+            //if (token.IsFailure)
+            //    return Result.Failure<PagedResultView<ScheduleUserDto>>(token.Error);
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
             //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Value.Bearer);
