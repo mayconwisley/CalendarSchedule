@@ -12,9 +12,9 @@
 				<div class="border">
 					@{
 						var particular = ScheduleUserDtos.Data
-						.Where(w => w.ScheduleId == ScheduleId)
-						.Select(s => s.ScheduleDto!.Particular)
-						.FirstOrDefault();
+							.Where(w => w.ScheduleId == ScheduleId)
+							.Select(s => s.ScheduleDto!.Particular)
+							.FirstOrDefault();
 						@if (particular)
 						{
 							<table class="table table-striped">
