@@ -95,9 +95,9 @@ public class ScheduleUserService : IScheduleUserService
     {
         try
         {
-            var token = await _tokenStorageService.GetToken();
-            if (token.IsFailure)
-                return Result.Failure<PagedResultView<ScheduleUserDto>>(token.Error);
+            //var token = await _tokenStorageService.GetToken();
+            //if (token.IsFailure)
+            //    return Result.Failure<PagedResultView<ScheduleUserDto>>(token.Error);
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
             //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Value.Bearer);
@@ -130,9 +130,9 @@ public class ScheduleUserService : IScheduleUserService
     {
         try
         {
-            var token = await _tokenStorageService.GetToken();
-            if (token.IsFailure)
-                return Result.Failure<ScheduleUserDto>(token.Error);
+            //var token = await _tokenStorageService.GetToken();
+            //if (token.IsFailure)
+            //    return Result.Failure<ScheduleUserDto>(token.Error);
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
             //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Value.Bearer);
@@ -160,18 +160,18 @@ public class ScheduleUserService : IScheduleUserService
             throw;
         }
     }
-    public async Task<Result<PagedResultView<ScheduleUserDto>>> GetByScheduleUserDateStart(DateTime dateSelected)
+    public async Task<Result<PagedResultView<ScheduleUserDto>>> GetByScheduleUserDateStart(DateOnly dateSelected)
     {
         try
         {
-            var token = await _tokenStorageService.GetToken();
-            if (token.IsFailure)
-                return Result.Failure<PagedResultView<ScheduleUserDto>>(token.Error);
+            //var token = await _tokenStorageService.GetToken();
+            //if (token.IsFailure)
+            //    return Result.Failure<PagedResultView<ScheduleUserDto>>(token.Error);
 
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
             //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Value.Bearer);
 
-            using var response = await httpClient.GetAsync($"{apiEndPoint}/DateStart/{dateSelected.ToString("dd/MM/yyyy").Replace("/", "%2F")}");
+            using var response = await httpClient.GetAsync($"{apiEndPoint}/DateStart/{dateSelected:yyyy-MM-dd}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -268,7 +268,7 @@ public class ScheduleUserService : IScheduleUserService
         }
     }
 
-    public async Task<Result<PagedResultView<ScheduleUserDto>>> GetByScheduleUserDatePeriod(DateTime dateStart, DateTime dateEnd)
+    public async Task<Result<PagedResultView<ScheduleUserDto>>> GetByScheduleUserDatePeriod(DateOnly dateStart, DateOnly dateEnd)
     {
         try
         {
@@ -279,7 +279,7 @@ public class ScheduleUserService : IScheduleUserService
             using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
             //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Value.Bearer);
 
-            using var response = await httpClient.GetAsync($"{apiEndPoint}/Period/{dateStart.ToString("dd/MM/yyyy").Replace("/", "%2F")}/{dateEnd.ToString("dd/MM/yyyy").Replace("/", "%2F")}");
+            using var response = await httpClient.GetAsync($"{apiEndPoint}/Period/{dateStart:yyyy-MM-dd}/{dateEnd:yyyy-MM-dd}");
 
             if (response.IsSuccessStatusCode)
             {
