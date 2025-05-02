@@ -6,51 +6,64 @@
 
 <h3>Cadastro de Cliente</h3>
 <NavLink href="ClientCreate" class="btn btn-info">
-    Novo Cliente
+	Novo Cliente
 </NavLink>
 
 @if (clientView is null)
 {
-    <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
-    </div>
+	<div class="spinner-border" role="status">
+		<span class="visually-hidden">Loading...</span>
+	</div>
 }
 else
 {
-    <TableClient ClientView="@clientView" DataUpdated="@DataUpdated" />
-    <PaginationTable PageCurrent="@ReceberPagina"
-                     TotalData="@clientView.TotalData"
-                     Page="@clientView.Page"
-                     TotalPage="@clientView.TotalPage" />
+	<TableClient ClientView="@clientView" DataUpdated="@DataUpdated" />
+	<PaginationTable PageCurrent="@ReceberPagina"
+	TotalData="@clientView.TotalData"
+	Page="@clientView.Page"
+	TotalPage="@clientView.TotalPage" />
 }
 
 @code {
-    private ClientView? clientView;
-    private LoginDto? LoginDto { get; set; } = new();
-    
-    protected override async Task OnInitializedAsync()
-    {
-        var token = await tokenStorageService.GetToken(LoginDto!);
-        if (token.Bearer is null)
-        {
-            await tokenStorageService.RemoverToken();
-            navigationManager.NavigateTo("/Login", true);
-        }
+	private PagedResultView<ClientDto>? clientView;
+	private LoginDto? LoginDto { get; set; } = new();
 
-        if (token.Bearer is not null)
-        {
-            await DataUpdated();
-        }
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		var token = await tokenStorageService.GetToken(LoginDto!);
+		if (token.IsFailure)
+		{
+			await tokenStorageService.RemoverToken();
+			navigationManager.NavigateTo("/Login", true);
+		}
 
-    private async Task DataUpdated()
-    {
-        clientView = await clientService.GetAll();
-        StateHasChanged();
-    }
+		if (token.IsSuccess)
+		{
+			await DataUpdated();
+		}
+	}
+
+	private async Task DataUpdated()
+	{
+		var client = await clientService.GetAll();
+		if (client.IsFailure)
+		{
+			await tokenStorageService.RemoverToken();
+			return;
+		}
+		clientView = client.Value;
+
+		StateHasChanged();
+	}
    
-    private async Task ReceberPagina(int pageCurrent)
-    {
-        clientView = await clientService.GetAll(pageCurrent);
-    }
+	private async Task ReceberPagina(int pageCurrent)
+	{
+		var client = await clientService.GetAll(pageCurrent);
+		if (client.IsFailure)
+		{
+			await tokenStorageService.RemoverToken();
+			return;
+		}
+		clientView = client.Value;
+	}
 }

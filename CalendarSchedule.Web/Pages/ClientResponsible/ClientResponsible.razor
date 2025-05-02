@@ -6,50 +6,52 @@
 
 <h3>Cadastro Responsável</h3>
 <NavLink href="ClientResponsibleCreate" class="btn btn-info">
-    Novo Responsável
+	Novo Responsável
 </NavLink>
 
 @if (clientResponsibleView is null)
 {
-    <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
-    </div>
+	<div class="spinner-border" role="status">
+		<span class="visually-hidden">Loading...</span>
+	</div>
 }
 else
 {
-    <TableClientResponsible ClientResponsibleView="@clientResponsibleView" />
-    <PaginationTable PageCurrent="@ReceberPagina"
-                     TotalData="@clientResponsibleView.TotalData"
-                     Page="@clientResponsibleView.Page"
-                     TotalPage="@clientResponsibleView.TotalPage" />
+	<TableClientResponsible ClientResponsibleView="@clientResponsibleView" />
+	<PaginationTable PageCurrent="@ReceberPagina"
+					 TotalData="@clientResponsibleView.TotalData"
+					 Page="@clientResponsibleView.Page"
+					 TotalPage="@clientResponsibleView.TotalPage" />
 }
 
 @code {
-    private ClientResponsibleView? clientResponsibleView;
-    private LoginDto? LoginDto { get; set; } = new();
-    protected override async Task OnInitializedAsync()
-    {
-        var token = await tokenStorageService.GetToken(LoginDto!);
-        if (token.Bearer is null)
-        {
-            await tokenStorageService.RemoverToken();
-            navigationManager.NavigateTo("/Login", true);
-        }
+	private PagedResultView<ClientResponsibleDto>? clientResponsibleView;
+	private LoginDto? LoginDto { get; set; } = new();
+	protected override async Task OnInitializedAsync()
+	{
+		var token = await tokenStorageService.GetToken(LoginDto!);
+		if (token.IsFailure)
+		{
+			await tokenStorageService.RemoverToken();
+			navigationManager.NavigateTo("/Login", true);
+		}
 
-        if (token.Bearer is not null)
-        {
-            await DataUpdated();
-        }
-    }
+		if (token.IsSuccess)
+		{
+			await DataUpdated();
+		}
+	}
 
-    private async Task DataUpdated()
-    {
-        clientResponsibleView = await clientResponsibleService.GetAll();
-        StateHasChanged();
-    }
-    private async Task ReceberPagina(int pageCurrent)
-    {
-        clientResponsibleView = await clientResponsibleService.GetAll(pageCurrent);
+	private async Task DataUpdated()
+	{
+		var clientResponsible = await clientResponsibleService.GetAll();
+		clientResponsibleView = clientResponsible.Value;
+		StateHasChanged();
+	}
+	private async Task ReceberPagina(int pageCurrent)
+	{
+		var clientResponsible = await clientResponsibleService.GetAll(pageCurrent);
+		clientResponsibleView = clientResponsible.Value;
 
-    }
+	}
 }

@@ -1,61 +1,62 @@
 ﻿@inject IUserContactService userContactService
 
 <div class="modal fade" id="deleteUserContact-@UserContactId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <EditForm Model="@UserContactDto" OnValidSubmit="@Delete">
-                <InputNumber hidden @bind-Value="UserContactDto!.Id" />
-                <DataAnnotationsValidator />
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<EditForm Model="@UserContactDto" OnValidSubmit="@Delete">
+				<InputNumber hidden @bind-Value="UserContactDto!.Id" />
+				<DataAnnotationsValidator />
 
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Excluir Colaborador</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="staticBackdropLabel">Excluir Colaborador</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
 
-                    <div class="row g-3">
-                        <div class="col-12">
-                            <p>Tipo: @UserContactDto.Type</p>
-                            <p>Número: @UserContactDto.Number</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Excluir</button>
-                </div>
-            </EditForm>
-        </div>
-    </div>
+					<div class="row g-3">
+						<div class="col-12">
+							<p>Tipo: @UserContactDto.Type</p>
+							<p>Número: @UserContactDto.Number</p>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+					<button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Excluir</button>
+				</div>
+			</EditForm>
+		</div>
+	</div>
 </div>
 
 @code {
-    [Parameter]
-    public EventCallback DataUpdated { get; set; }
+	[Parameter]
+	public EventCallback DataUpdated { get; set; }
 
-    private UserContactDto? UserContactDto { get; set; } = new();
+	private UserContactDto? UserContactDto { get; set; } = new();
 
-    [Parameter]
-    public int UserContactId { get; set; }
+	[Parameter]
+	public int UserContactId { get; set; }
 
 
-    protected override async Task OnInitializedAsync()
-    {
-        UserContactDto = await userContactService.GetById(UserContactId);
-        await base.OnInitializedAsync();
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		var userContact = await userContactService.GetById(UserContactId);
+		UserContactDto = userContact.Value;
+		await base.OnInitializedAsync();
+	}
 
-    private async Task Delete()
-    {
-        if (UserContactDto is not null)
-        {
-            await userContactService.Delete(UserContactId);
-            await UpdateData();
-        }
-    }
+	private async Task Delete()
+	{
+		if (UserContactDto is not null)
+		{
+			await userContactService.Delete(UserContactId);
+			await UpdateData();
+		}
+	}
 
-    private async Task UpdateData()
-    {
-        await DataUpdated.InvokeAsync(null);
-    }
+	private async Task UpdateData()
+	{
+		await DataUpdated.InvokeAsync(null);
+	}
 }

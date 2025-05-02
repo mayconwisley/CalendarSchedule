@@ -1,61 +1,62 @@
 ﻿@inject IScheduleUserService scheduleUserService
 @inject IUserService userService
 <div class="modal fade" id="tableScheduleUser-@ScheduleId" tabindex="-1" aria-labelledby="tableScheduleLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="tableScheduleLabel">Consulta do dia - <strong>@UserDto!.Name</strong> </h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="border">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Gestor</th>
-                                <th>Descrição</th>
-                                <th>Remoto</th>
-                                <th>Confirmada</th>
-                                <th>Particular</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (ScheduleDto is not null)
-                            {
-                                <tr>
-                                    <td>@ScheduleDto.Id</td>
-                                  @*   <td>@ScheduleDto.ManagerId</td> *@
-                                    <td>@ScheduleDto.Description</td>
-                                    <td>@(ScheduleDto.MeetingType ? "Sim" : "Não")</td>
-                                    <td>@(ScheduleDto.StatusSchedule ? "Sim" : "Não")</td>
-                                    <td>@(ScheduleDto.Particular ? "Sim" : "Não")</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-            </div>
-        </div>
-    </div>
+	<div class="modal-dialog modal-xl">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="tableScheduleLabel">Consulta do dia - <strong>@UserDto!.Name</strong> </h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="border">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>Id</th>
+								<th>Gestor</th>
+								<th>Descrição</th>
+								<th>Remoto</th>
+								<th>Confirmada</th>
+								<th>Particular</th>
+							</tr>
+						</thead>
+						<tbody>
+							@if (ScheduleDto is not null)
+							{
+								<tr>
+									<td>@ScheduleDto.Id</td>
+								  @*   <td>@ScheduleDto.ManagerId</td> *@
+									<td>@ScheduleDto.Description</td>
+									<td>@(ScheduleDto.MeetingType ? "Sim" : "Não")</td>
+									<td>@(ScheduleDto.StatusSchedule ? "Sim" : "Não")</td>
+									<td>@(ScheduleDto.Particular ? "Sim" : "Não")</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 
 @code {
-    private ScheduleDto? ScheduleDto { get; set; } = new();
-    private UserDto? UserDto { get; set; } = new();
+	private ScheduleDto? ScheduleDto { get; set; } = new();
+	private UserDto? UserDto { get; set; } = new();
 
-    [Parameter]
-    public int UserId { get; set; }
-    [Parameter]
-    public int ScheduleId { get; set; }
-    protected override async Task OnInitializedAsync()
-    {
-        //ScheduleDto = await scheduleUserService.GetById(ScheduleId);
-        UserDto = await userService.GetById(UserId);
-        StateHasChanged();
-    }
+	[Parameter]
+	public int UserId { get; set; }
+	[Parameter]
+	public int ScheduleId { get; set; }
+	protected override async Task OnInitializedAsync()
+	{
+		//ScheduleDto = await scheduleUserService.GetById(ScheduleId);
+		var user = await userService.GetById(UserId);
+		UserDto = user.Value;
+		StateHasChanged();
+	}
 }

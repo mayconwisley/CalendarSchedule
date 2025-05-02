@@ -6,69 +6,71 @@
 
 <h1>Consulta Contato - @UserDto.Id - @UserDto.Name </h1>
 <div class="border">
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Tipo</th>
-                <th>Número</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (UserContactView is not null)
-            {
-                var userContacts = UserContactView.UserContactsDto;
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Tipo</th>
+				<th>Número</th>
+				<th>Ações</th>
+			</tr>
+		</thead>
+		<tbody>
+			@if (UserContactView is not null)
+			{
+				var userContacts = UserContactView.Data;
 
-                if (userContacts is not null)
-                {
-                    @foreach (var userContactDto in userContacts)
-                    {
-                        <tr>
-                            <td>@userContactDto.Id</td>
-                            <td>@userContactDto.Type</td>
-                            <td>@userContactDto.Number</td>
-                            <td>
-                                <NavLink href=@($"/UserContactEdit/{@userContactDto.Id}") class="btn btn-info">
-                                    Editar
-                                </NavLink>
-                                <button data-bs-toggle="modal" data-bs-target="#deleteUserContact-@userContactDto.Id" class="btn btn-danger">
-                                    Excluir
-                                </button>
-                                <DeleteUserContactModal UserContactId="@userContactDto.Id" DataUpdated="@(() => DataUpdate())" />
-                            </td>
-                        </tr>
-                    }
-                }
-            }
-        </tbody>
-    </table>
-    <NavLink href=@($"/User") class="btn btn-info">
-        Voltar
-    </NavLink>
+				if (userContacts is not null)
+				{
+					@foreach (var userContactDto in userContacts)
+					{
+						<tr>
+							<td>@userContactDto.Id</td>
+							<td>@userContactDto.Type</td>
+							<td>@userContactDto.Number</td>
+							<td>
+								<NavLink href=@($"/UserContactEdit/{@userContactDto.Id}") class="btn btn-info">
+									Editar
+								</NavLink>
+								<button data-bs-toggle="modal" data-bs-target="#deleteUserContact-@userContactDto.Id" class="btn btn-danger">
+									Excluir
+								</button>
+								<DeleteUserContactModal UserContactId="@userContactDto.Id" DataUpdated="@(() => DataUpdate())" />
+							</td>
+						</tr>
+					}
+				}
+			}
+		</tbody>
+	</table>
+	<NavLink href=@($"/User") class="btn btn-info">
+		Voltar
+	</NavLink>
 </div>
 
 @code {
 
-    [Parameter]
-    public Action? DataUpdated { get; set; }
+	[Parameter]
+	public Action? DataUpdated { get; set; }
 
-    [Parameter]
-    public UserContactView? UserContactView { get; set; } = new();
+	[Parameter]
+	public PagedResultView<UserContactDto>? UserContactView { get; set; } = new();
 
-    [Parameter]
-    public string UserId { get; set; } = string.Empty;
+	[Parameter]
+	public string UserId { get; set; } = string.Empty;
 
-    UserDto UserDto { get; set; } = new();
-    protected async override Task OnInitializedAsync()
-    {
-        await DataUpdate();
-    }
+	UserDto UserDto { get; set; } = new();
+	protected async override Task OnInitializedAsync()
+	{
+		await DataUpdate();
+	}
 
-    private async Task DataUpdate()
-    {
-        UserContactView = await userContactService.GetByUserId(1, 10, int.Parse(UserId));
-        UserDto = await userService.GetById(int.Parse(UserId));
-        StateHasChanged();
-    }
+	private async Task DataUpdate()
+	{
+		var userContact = await userContactService.GetByUserId(1, 10, int.Parse(UserId));
+		UserContactView = userContact.Value;
+		var user = await userService.GetById(int.Parse(UserId));
+		UserDto = user.Value;
+		StateHasChanged();
+	}
 }

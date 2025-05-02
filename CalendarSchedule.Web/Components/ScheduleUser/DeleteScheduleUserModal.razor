@@ -2,60 +2,60 @@
 
 @if (ScheduleUserDto!.ScheduleDto is not null)
 {
-    <div class="modal fade" id="deleteScheduleUser-@ScheduleId-@UserId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Excluir Colaborador da Agenda</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row g-3">
-                        <div class="col-12">
-                            <p>Colaborador: @(ScheduleUserDto!.UserDto!.Name)</p>
+	<div class="modal fade" id="deleteScheduleUser-@ScheduleId-@UserId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="staticBackdropLabel">Excluir Colaborador da Agenda</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="row g-3">
+						<div class="col-12">
+							<p>Colaborador: @(ScheduleUserDto!.UserDto!.Name)</p>
 
-                            @if (ScheduleUserDto.ScheduleDto.ClientDto != null)
-                            {
-                                <p>@ScheduleUserDto.ScheduleDto.ClientDto.Name</p>
-                            }
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="submit" onclick="@(() => Delete())" class="btn btn-danger" data-bs-dismiss="modal">Excluir</button>
-                </div>
-            </div>
-        </div>
-    </div>
+							@if (ScheduleUserDto.ScheduleDto.ClientDto != null)
+							{
+								<p>@ScheduleUserDto.ScheduleDto.ClientDto.Name</p>
+							}
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+					<button type="submit" onclick="@(() => Delete())" class="btn btn-danger" data-bs-dismiss="modal">Excluir</button>
+				</div>
+			</div>
+		</div>
+	</div>
 }
 @code {
-    [Parameter]
-    public EventCallback DataUpdated { get; set; }
+	[Parameter]
+	public EventCallback DataUpdated { get; set; }
 
-    private ScheduleUserDto? ScheduleUserDto { get; set; }
+	private ScheduleUserDto? ScheduleUserDto { get; set; }
 
-    [Parameter]
-    public int ScheduleId { get; set; }
-    [Parameter]
-    public int UserId { get; set; }
+	[Parameter]
+	public int ScheduleId { get; set; }
+	[Parameter]
+	public int UserId { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        ScheduleUserDto = new();
-        ScheduleUserDto = await scheduleUserService.GetById(ScheduleId, UserId);
-        StateHasChanged();
-    }
-    private async Task Delete()
-    {
-        if (ScheduleUserDto is not null)
-        {
-            await scheduleUserService.Delete(ScheduleId, UserId);
-            await UpdateData();
-        }
-    }
-    private async Task UpdateData()
-    {
-        await DataUpdated.InvokeAsync(null);
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		var scheduleUser = await scheduleUserService.GetById(ScheduleId, UserId);
+		ScheduleUserDto = scheduleUser.Value;
+		StateHasChanged();
+	}
+	private async Task Delete()
+	{
+		if (ScheduleUserDto is not null)
+		{
+			await scheduleUserService.Delete(ScheduleId, UserId);
+			await UpdateData();
+		}
+	}
+	private async Task UpdateData()
+	{
+		await DataUpdated.InvokeAsync(null);
+	}
 }

@@ -1,62 +1,63 @@
 ﻿@inject IClientResponsibleService clientResponsibleService
 
 <div class="border mt-2">
-    <table class="table table-striped align-middle">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nome</th>
-                <th>Email</th>
-                <th>Descrição</th>
-                <th>Cargo</th>
-                <th class="text-center">Ativo</th>
-                <th class="text-center">Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (ClientResponsibleView is not null)
-            {
-                var clientsReponsible = ClientResponsibleView.ClientsResponsibleDto;
+	<table class="table table-striped align-middle">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Nome</th>
+				<th>Email</th>
+				<th>Descrição</th>
+				<th>Cargo</th>
+				<th class="text-center">Ativo</th>
+				<th class="text-center">Ações</th>
+			</tr>
+		</thead>
+		<tbody>
+			@if (ClientResponsibleView is not null)
+			{
+				var clientsReponsible = ClientResponsibleView.Data;
 
-                if (clientsReponsible is not null)
-                {
-                    @foreach (var clientReponsible in clientsReponsible)
-                    {
-                        <tr>
-                            <td>@clientReponsible.Id</td>
-                            <td>@clientReponsible.Name</td>
-                            <td>@clientReponsible.Email</td>
-                            <td>@clientReponsible.Description</td>
-                            <td>@clientReponsible.Position</td>
-                            <td class="text-center">
-                                @(clientReponsible.Active ? "Sim" : "Não")
-                            </td>
-                            <td class="text-center">
-                                <NavLink href=@($"ClientResponsibleEdit/{clientReponsible.Id}") class="btn btn-info">
-                                    Editar
-                                </NavLink>
+				if (clientsReponsible is not null)
+				{
+					@foreach (var clientReponsible in clientsReponsible)
+					{
+						<tr>
+							<td>@clientReponsible.Id</td>
+							<td>@clientReponsible.Name</td>
+							<td>@clientReponsible.Email</td>
+							<td>@clientReponsible.Description</td>
+							<td>@clientReponsible.Position</td>
+							<td class="text-center">
+								@(clientReponsible.Active ? "Sim" : "Não")
+							</td>
+							<td class="text-center">
+								<NavLink href=@($"ClientResponsibleEdit/{clientReponsible.Id}") class="btn btn-info">
+									Editar
+								</NavLink>
 
-                                <button data-bs-toggle="modal" data-bs-target="#deleteClientResponsible-@clientReponsible.Id" class="btn btn-danger">
-                                    Excluir
-                                </button>
-                                <DeleteClientResponsibleModal ClientResponsibleId="@clientReponsible.Id" DataUpdated="@(() => DataUpdated())" />
-                            </td>
-                        </tr>
+								<button data-bs-toggle="modal" data-bs-target="#deleteClientResponsible-@clientReponsible.Id" class="btn btn-danger">
+									Excluir
+								</button>
+								<DeleteClientResponsibleModal ClientResponsibleId="@clientReponsible.Id" DataUpdated="@(() => DataUpdated())" />
+							</td>
+						</tr>
 
-                    }
-                }
-            }
+					}
+				}
+			}
 
-        </tbody>
-    </table>
+		</tbody>
+	</table>
 </div>
 
 @code {
-    [Parameter]
-    public ClientResponsibleView? ClientResponsibleView { get; set; }
-    private async void DataUpdated()
-    {
-        ClientResponsibleView = await clientResponsibleService.GetAll();
-        StateHasChanged();
-    }
+	[Parameter]
+	public PagedResultView<ClientResponsibleDto>? ClientResponsibleView { get; set; }
+	private async void DataUpdated()
+	{
+		var clientResponsible = await clientResponsibleService.GetAll();
+		ClientResponsibleView = clientResponsible.Value;    
+		StateHasChanged();
+	}
 }

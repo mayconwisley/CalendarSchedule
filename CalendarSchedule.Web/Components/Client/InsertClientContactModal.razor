@@ -23,10 +23,10 @@
                         <div class="col-12">
                             <label for="inResponsible" class="form-label">Responsável</label>
                             <InputSelect class="form-select" id="inResponsible" @bind-Value="ClientContactCreateDto!.ClientResponsibleId">
-                                @if (ClientResponsibleView?.ClientsResponsibleDto is not null)
+                                @if (ClientResponsibleView?.Data is not null)
                                 {
                                     <option value="0">Selecione uma Opção</option>
-                                    @foreach (var responsible in ClientResponsibleView.ClientsResponsibleDto)
+                                    @foreach (var responsible in ClientResponsibleView.Data)
                                     {
                                         <option value="@responsible.Id"> @responsible.Name</option>
                                     }
@@ -64,12 +64,12 @@
     public string? ClientName { get; set; }
 
     private ClientContactCreateDto? ClientContactCreateDto { get; set; }
-    private ClientResponsibleView ClientResponsibleView { get; set; } = new();
+    private PagedResultView<ClientResponsibleDto> ClientResponsibleView { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        ClientContactCreateDto ??= new();
-        ClientResponsibleView = await clientResponsibleService.GetAll();
+        var client = await clientResponsibleService.GetAll();
+        ClientResponsibleView = client.Value;
     }
 
     private async Task Create()

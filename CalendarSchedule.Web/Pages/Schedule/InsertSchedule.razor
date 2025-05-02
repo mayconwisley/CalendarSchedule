@@ -35,10 +35,10 @@
             <div class="col-12">
                 <label for="inClient" class="form-label">Cliente</label>
                 <InputSelect class="form-select" id="inClient" @bind-Value="ScheduleCreateDto!.ClientId">
-                    @if (ClientView?.ClientsDto is not null)
+                    @if (ClientView?.Data is not null)
                     {
                         <option value="0">Selecione uma Opção</option>
-                        @foreach (var client in ClientView.ClientsDto)
+                        @foreach (var client in ClientView.Data)
                         {
                             <option value="@client.Id"> @client.Name</option>
                         }
@@ -73,14 +73,14 @@
     [Parameter]
     public Action? DataUpdated { get; set; }
     private ScheduleCreateDto? ScheduleCreateDto { get; set; }
-    private ClientView? ClientView { get; set; } = new();
+    private PagedResultView<ClientDto>? ClientView { get; set; };
 
     private bool particular = false;
 
     protected override async Task OnInitializedAsync()
     {
-        ScheduleCreateDto = new();
-        ClientView = await clientService.GetAll();
+        var client = await clientService.GetAll();
+        ClientView = client.Value;
         await base.OnInitializedAsync();
     }
 

@@ -19,7 +19,7 @@
         <tbody>
             @if (ClientView is not null)
             {
-                var clients = ClientView.ClientsDto;
+                var clients = ClientView.Data;
 
                 if (clients is not null)
                 {
@@ -79,7 +79,7 @@
 
 @code {
     [Parameter]
-    public ClientView? ClientView { get; set; }
+    public PagedResultView<ClientDto>? ClientView { get; set; }
     [Parameter]
     public EventCallback DataUpdated { get; set; }
 

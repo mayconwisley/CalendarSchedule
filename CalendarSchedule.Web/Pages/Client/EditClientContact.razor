@@ -5,75 +5,77 @@
 
 @if (ClientContactDto is not null)
 {
-    <div>
-        <h1>Editar Contato Cliente</h1>
-        <EditForm Model="@ClientContactDto" OnValidSubmit="@Edit">
-            <InputNumber hidden @bind-Value="ClientContactDto!.Id" />
-            <DataAnnotationsValidator />
-            <div class="row g-3">
-                <div class="col-12">
-                    <label class="form-label">Cliente: </label>
-                    <span>@ClientContactId - @ClientDto!.Name</span>
-                </div>
-                <div class="col-12">
-                    <label class="form-label">Responsável: </label>
-                    <span>@ClientContactDto.ClientResponsibleId - @ClientResponsibleDto!.Name</span>
-                </div>
-                <div class="col-6">
-                    <label for="inType" class="form-label">Tipo</label>
-                    <InputText class="form-control" id="inType" @bind-Value="ClientContactDto!.Type" placeholder="Tipo" />
-                    <ValidationMessage For="@(() => ClientContactDto.Type)" />
-                </div>
-                <div class="col-6">
-                    <label for="inNumber" class="form-label">Número</label>
-                    <InputText class="form-control" id="inNumber" @bind-Value="ClientContactDto!.Number" placeholder="Número" />
-                    <ValidationMessage For="@(() => ClientContactDto.Number)" />
-                </div>
+	<div>
+		<h1>Editar Contato Cliente</h1>
+		<EditForm Model="@ClientContactDto" OnValidSubmit="@Edit">
+			<InputNumber hidden @bind-Value="ClientContactDto!.Id" />
+			<DataAnnotationsValidator />
+			<div class="row g-3">
+				<div class="col-12">
+					<label class="form-label">Cliente: </label>
+					<span>@ClientContactId - @ClientDto!.Name</span>
+				</div>
+				<div class="col-12">
+					<label class="form-label">Responsável: </label>
+					<span>@ClientContactDto.ClientResponsibleId - @ClientResponsibleDto!.Name</span>
+				</div>
+				<div class="col-6">
+					<label for="inType" class="form-label">Tipo</label>
+					<InputText class="form-control" id="inType" @bind-Value="ClientContactDto!.Type" placeholder="Tipo" />
+					<ValidationMessage For="@(() => ClientContactDto.Type)" />
+				</div>
+				<div class="col-6">
+					<label for="inNumber" class="form-label">Número</label>
+					<InputText class="form-control" id="inNumber" @bind-Value="ClientContactDto!.Number" placeholder="Número" />
+					<ValidationMessage For="@(() => ClientContactDto.Number)" />
+				</div>
 
-            </div>
-            <button type="submit" class="btn btn-primary">Salvar</button>
-            <NavLink href=@($"/Client") class="btn btn-info">Voltar</NavLink>
-        </EditForm>
-    </div>
+			</div>
+			<button type="submit" class="btn btn-primary">Salvar</button>
+			<NavLink href=@($"/Client") class="btn btn-info">Voltar</NavLink>
+		</EditForm>
+	</div>
 }
 @code {
-    [Parameter]
-    public EventCallback DataUpdated { get; set; }
-    [Parameter]
-    public string ClientContactId { get; set; } = string.Empty;
+	[Parameter]
+	public EventCallback DataUpdated { get; set; }
+	[Parameter]
+	public string ClientContactId { get; set; } = string.Empty;
 
-    private ClientContactCreateDto? ClientContactCreateDto { get; set; }
-    private ClientContactDto? ClientContactDto { get; set; } = new();
-    private ClientResponsibleDto? ClientResponsibleDto { get; set; } = new();
-    private ClientDto? ClientDto { get; set; } = new();
-    protected override async Task OnInitializedAsync()
-    {
-        ClientContactDto = await clientContactService.GetById(int.Parse(ClientContactId));
-        ClientResponsibleDto = ClientContactDto.ClientResponsibleDto;
-        ClientDto = ClientContactDto.ClientDto;
-    }
+	private ClientContactCreateDto? ClientContactCreateDto { get; set; }
+	private ClientContactUpdateDto? ClientContactUpdateDto { get; set; }
+	private ClientContactDto? ClientContactDto { get; set; } = new();
+	private ClientResponsibleDto? ClientResponsibleDto { get; set; } = new();
+	private ClientDto? ClientDto { get; set; } = new();
+	protected override async Task OnInitializedAsync()
+	{
+		var clientContact = await clientContactService.GetById(int.Parse(ClientContactId));
+		ClientContactDto = clientContact.Value;
+		ClientResponsibleDto = ClientContactDto.ClientResponsibleDto;
+		ClientDto = ClientContactDto.ClientDto;
+	}
 
-    private async Task Edit()
-    {
-        ClientContactCreateDto = new()
-            {
-                Id = ClientContactDto!.Id,
-                Number = ClientContactDto.Number,
-                Type = ClientContactDto.Type,
-                ClientId = ClientContactDto.ClientId,
-                ClientResponsibleId = ClientContactDto.ClientResponsibleId
-            };
+	private async Task Edit()
+	{
+		ClientContactUpdateDto = new()
+			{
+				Id = ClientContactDto!.Id,
+				Number = ClientContactDto.Number,
+				Type = ClientContactDto.Type,
+				ClientId = ClientContactDto.ClientId,
+				ClientResponsibleId = ClientContactDto.ClientResponsibleId
+			};
 
-        if (ClientContactCreateDto is not null)
-        {
-            await clientContactService.Update(ClientContactCreateDto);
-            await UpdateData();
-        }
-        navigationManager.NavigateTo("/Client");
-    }
+		if (ClientContactUpdateDto is not null)
+		{
+			await clientContactService.Update(ClientContactUpdateDto);
+			await UpdateData();
+		}
+		navigationManager.NavigateTo("/Client");
+	}
 
-    private async Task UpdateData()
-    {
-        await DataUpdated.InvokeAsync(null);
-    }
+	private async Task UpdateData()
+	{
+		await DataUpdated.InvokeAsync(null);
+	}
 }

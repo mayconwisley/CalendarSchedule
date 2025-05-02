@@ -5,7 +5,7 @@
     {
         @for (int i = 0; i < ScheduleUserDtosList.Count(); i++)
         {
-            var currentSchedule = ScheduleUserDtosList[i]
+            var currentSchedule = ScheduleUserDtosList[i].Data
                          .Where(w => w.ScheduleDto!.DateStart.Date == CurrenteDate.Date)
                          .ToList();
             @if (currentSchedule.Any())
@@ -44,7 +44,7 @@
     [Parameter]
     public DateTime CurrenteDate { get; set; }
     List<string> UserDtos { get; set; } = [];
-    private List<IEnumerable<ScheduleUserDto>> ScheduleUserDtosList { get; set; } = [];
+    private List<PagedResultView<ScheduleUserDto>>? ScheduleUserDtosList { get; set; }
     protected async override Task OnParametersSetAsync()
     {
         ScheduleUserDtosList.Clear();
@@ -54,7 +54,8 @@
         {
             foreach (var item in scheduleUserList)
             {
-                ScheduleUserDtosList.Add(await scheduleUserService.GetByScheduleId(item.ScheduleId));
+                var scheduleUser = await scheduleUserService.GetByScheduleId(item.ScheduleId);
+                ScheduleUserDtosList.Add(scheduleUser.Value);
             }
         }
     }
@@ -64,7 +65,7 @@
 
         if (schedule is not null)
         {
-            var scheduleId = schedule
+            var scheduleId = schedule.Value.Data
                             .Where(w => w.ScheduleDto!.DateStart.Date == CurrenteDate.Date)
                             .GroupBy(g => g.ScheduleId)
                             .Select(s => new ScheduleUserDto

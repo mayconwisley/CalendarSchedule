@@ -1,60 +1,61 @@
 ﻿@inject IClientResponsibleService clientResponsibleService
 
 <div class="modal fade" id="deleteClientResponsible-@ClientResponsibleId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <EditForm Model="@ClientResponsibleDto" OnValidSubmit="@Delete">
-                <InputNumber hidden @bind-Value="ClientResponsibleDto!.Id" />
-                <DataAnnotationsValidator />
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<EditForm Model="@ClientResponsibleDto" OnValidSubmit="@Delete">
+				<InputNumber hidden @bind-Value="ClientResponsibleDto!.Id" />
+				<DataAnnotationsValidator />
 
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Excluir Responsável</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="staticBackdropLabel">Excluir Responsável</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
 
-                    <div class="row g-3">
-                        <div class="col-12">
-                            <p>Reponsável: @ClientResponsibleDto.Name</p>
-                            <p>E-mail: @ClientResponsibleDto.Email</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Excluir</button>
-                </div>
-            </EditForm>
-        </div>
-    </div>
+					<div class="row g-3">
+						<div class="col-12">
+							<p>Reponsável: @ClientResponsibleDto.Name</p>
+							<p>E-mail: @ClientResponsibleDto.Email</p>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+					<button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Excluir</button>
+				</div>
+			</EditForm>
+		</div>
+	</div>
 </div>
 
 @code {
-    [Parameter]
-    public Action? DataUpdated { get; set; }
+	[Parameter]
+	public Action? DataUpdated { get; set; }
 
-    private ClientResponsibleDto? ClientResponsibleDto { get; set; } = new();
+	private ClientResponsibleDto? ClientResponsibleDto { get; set; } = new();
 
-    [Parameter]
-    public int ClientResponsibleId { get; set; }
+	[Parameter]
+	public int ClientResponsibleId { get; set; }
 
 
-    protected override async Task OnInitializedAsync()
-    {
-        ClientResponsibleDto = await clientResponsibleService.GetById(ClientResponsibleId);
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		var result = await clientResponsibleService.GetById(ClientResponsibleId);
+		ClientResponsibleDto = result.Value;
+	}
 
-    private async Task Delete()
-    {
-        if (ClientResponsibleDto is not null)
-        {
-            var room = await clientResponsibleService.Delete(ClientResponsibleId);
-            UpdateData();
-        }
-    }
+	private async Task Delete()
+	{
+		if (ClientResponsibleDto is not null)
+		{
+			var room = await clientResponsibleService.Delete(ClientResponsibleId);
+			UpdateData();
+		}
+	}
 
-    private void UpdateData()
-    {
-        DataUpdated?.Invoke();
-    }
+	private void UpdateData()
+	{
+		DataUpdated?.Invoke();
+	}
 }

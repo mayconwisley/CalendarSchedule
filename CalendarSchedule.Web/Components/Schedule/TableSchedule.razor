@@ -13,9 +13,9 @@
         <tbody>
             @if (ScheduleUserView is not null)
             {
-                if (ScheduleUserView.ScheduleUsersDto is not null)
+                if (ScheduleUserView.Data is not null)
                 {
-                    @foreach (var schedule in ScheduleUserView.ScheduleUsersDto)
+                    @foreach (var schedule in ScheduleUserView.Data)
                     {
                         <tr>
                             <td>@schedule.UserDto!.Name</td>
@@ -45,7 +45,7 @@
 @code {
 
     [Parameter]
-    public ScheduleUserView? ScheduleUserView { get; set; }
+    public PagedResultView<ScheduleUserDto>? ScheduleUserView { get; set; }
 
     [Parameter]
     public EventCallback DataUpdated { get; set; }

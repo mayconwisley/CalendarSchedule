@@ -44,13 +44,15 @@
 
     protected override async Task OnInitializedAsync()
     {
-        UserContactDto = await userContactService.GetById(int.Parse(UserContactId));
+        var result = await userContactService.GetById(int.Parse(UserContactId));
+        UserContactDto = result.Value;
+
         UserDto = UserContactDto.UserDto!;
     }
 
     private async Task Edit()
     {
-        UserContactCreateDto = new()
+        UserContactDto = new()
             {
                 Id = UserContactDto!.Id,
                 Number = UserContactDto.Number,
@@ -58,9 +60,9 @@
                 UserId = UserContactDto!.UserDto!.Id
             };
 
-        if (UserContactCreateDto is not null)
+        if (UserContactDto is not null)
         {
-            await userContactService.Update(UserContactCreateDto);
+            await userContactService.Update(UserContactDto);
             await UpdateData();
         }
         navigationManager.NavigateTo("/User");

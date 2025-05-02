@@ -10,152 +10,153 @@
 <MensageError Message="@ErrorMensage" />
 
 <div class="border my-2">
-    <EditForm Model="@ScheduleUserCreateDto" OnValidSubmit="@Create">
-        <DataAnnotationsValidator />
-        <div class="row g-3 align-items-center mt-1">
+	<EditForm Model="@ScheduleUserCreateDto" OnValidSubmit="@Create">
+		<DataAnnotationsValidator />
+		<div class="row g-3 align-items-center mt-1">
 
-            <div class="col-9">
-                <InputSelect class="form-select" id="inUser" @bind-Value="ScheduleUserCreateDto!.UserId">
-                    @if (UserView?.UsersDto is not null)
-                    {
-                        <option value="0">Selecione uma Opção</option>
-                        @foreach (var user in UserView!.UsersDto)
-                        {
-                            <option value="@user.Id"> @user.Name</option>
-                        }
-                    }
-                </InputSelect>
-                <ValidationMessage For="@(() => ScheduleUserCreateDto.UserId)" />
-            </div>
-            <div class="col-3">
-                @if (Particular == true)
-                {
-                    <button type="button" @onclick="@(() => AddUser(ScheduleUserCreateDto.UserId))" class="btn btn-primary">
-                        Adicionar
-                    </button>
-                }
-            </div>
+			<div class="col-9">
+				<InputSelect class="form-select" id="inUser" @bind-Value="ScheduleUserCreateDto!.UserId">
+					@if (UserView?.Data is not null)
+					{
+						<option value="0">Selecione uma Opção</option>
+						@foreach (var user in UserView!.Data)
+						{
+							<option value="@user.Id"> @user.Name</option>
+						}
+					}
+				</InputSelect>
+				<ValidationMessage For="@(() => ScheduleUserCreateDto.UserId)" />
+			</div>
+			<div class="col-3">
+				@if (Particular == true)
+				{
+					<button type="button" @onclick="@(() => AddUser(ScheduleUserCreateDto.UserId))" class="btn btn-primary">
+						Adicionar
+					</button>
+				}
+			</div>
 
-        </div>
-        <table class="table table-striped align-middle mt-3">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Colaborador</th>
-                    <th class="text-center">Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (UserIdList is not null)
-                {
-                    @foreach (var item in UserIdList)
-                    {
-                        <tr>
-                            <td>@item.Key</td>
-                            <td>@item.Value</td>
-                            <td class="text-center">
-                                <button data-bs-toggle="modal" @onclick="@(() => RemoveUser(item.Key))" class="btn btn-info">
-                                    Remover
-                                </button>
-                            </td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
-        <div class="my-1">
-            @if (UserIdList!.Count > 0)
-            {
-                <button type="submit" class="btn btn-primary">
-                    Salvar
-                </button>
-            }
-            <NavLink href="Schedule" class="mx-1 btn btn-info">
-                Voltar
-            </NavLink>
-        </div>
-    </EditForm>
+		</div>
+		<table class="table table-striped align-middle mt-3">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Colaborador</th>
+					<th class="text-center">Ações</th>
+				</tr>
+			</thead>
+			<tbody>
+				@if (UserIdList is not null)
+				{
+					@foreach (var item in UserIdList)
+					{
+						<tr>
+							<td>@item.Key</td>
+							<td>@item.Value</td>
+							<td class="text-center">
+								<button data-bs-toggle="modal" @onclick="@(() => RemoveUser(item.Key))" class="btn btn-info">
+									Remover
+								</button>
+							</td>
+						</tr>
+					}
+				}
+			</tbody>
+		</table>
+		<div class="my-1">
+			@if (UserIdList!.Count > 0)
+			{
+				<button type="submit" class="btn btn-primary">
+					Salvar
+				</button>
+			}
+			<NavLink href="Schedule" class="mx-1 btn btn-info">
+				Voltar
+			</NavLink>
+		</div>
+	</EditForm>
 </div>
 
 @code {
-    [Parameter]
-    public Action? DataUpdated { get; set; }
-    [Parameter]
-    public string ScheduleId { get; set; } = string.Empty;
-    private string ErrorMensage { get; set; } = string.Empty;
-    private ScheduleUserCreateDto? ScheduleUserCreateDto { get; set; }
-    private UserView? UserView { get; set; } = new();
-    private IDictionary<int, string> UserIdList = new Dictionary<int, string>();
-    private bool Particular { get; set; } = true;
+	[Parameter]
+	public Action? DataUpdated { get; set; }
+	[Parameter]
+	public string ScheduleId { get; set; } = string.Empty;
+	private string ErrorMensage { get; set; } = string.Empty;
+	private ScheduleUserCreateDto? ScheduleUserCreateDto { get; set; }
+	private PagedResultView<UserDto>? UserView { get; set; }
+	private IDictionary<int, string> UserIdList = new Dictionary<int, string>();
+	private bool Particular { get; set; } = true;
 
 
-    protected override async Task OnInitializedAsync()
-    {
-        ScheduleUserCreateDto = new();
-        UserView = await userService.GetAll();
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		var user = await userService.GetAll();
+		UserView = user.Value;
+	}
 
-    private async Task AddUser(int userId)
-    {
-        if (scheduleShareService.ScheduleCreateDto!.Particular)
-        {
-            Particular = false;
-        }
+	private async Task AddUser(int userId)
+	{
+		if (scheduleShareService.ScheduleCreateDto!.Particular)
+		{
+			Particular = false;
+		}
 
-        var userDto = await userService.GetById(userId);
-        UserIdList.Add(userDto.Id, userDto.Name!);
-    }
+		var userDto = await userService.GetById(userId);
+		UserIdList.Add(userDto.Value.Id, userDto.Value.Name!);
+	}
 
-    private async Task RemoveUser(int userId)
-    {
-        await Task.FromResult(UserIdList.Remove(userId));
-        Particular = true;
-    }
+	private async Task RemoveUser(int userId)
+	{
+		await Task.FromResult(UserIdList.Remove(userId));
+		Particular = true;
+	}
 
-    private async Task Create()
-    {
-        ScheduleDto scheduleDto = new();
-        if (scheduleShareService.ScheduleCreateDto is not null)
-        {
-            try
-            {
-                scheduleDto = await scheduleService.Create(scheduleShareService.ScheduleCreateDto);
-            }
-            catch (Exception ex)
-            {
-                ErrorMensage = ex.Message;
-                return;
-            }
-        }
+	private async Task Create()
+	{
+		ScheduleDto scheduleDto = new();
+		if (scheduleShareService.ScheduleCreateDto is not null)
+		{
+			try
+			{
+				var schedule = await scheduleService.Create(scheduleShareService.ScheduleCreateDto);
+				scheduleDto = schedule.Value;
+			}
+			catch (Exception ex)
+			{
+				ErrorMensage = ex.Message;
+				return;
+			}
+		}
 
-        if (ScheduleUserCreateDto is not null)
-        {
-            try
-            {
-                foreach (var item in UserIdList)
-                {
-                    ScheduleUserCreateDto = new()
-                        {
-                            UserId = item.Key,
-                            ScheduleId = scheduleDto.Id
-                        };
-                    await scheduleUserService.Create(ScheduleUserCreateDto);
-                }
-                UpdateData();
-                ScheduleUserCreateDto = new();
-            }
-            catch (Exception ex)
-            {
-                ErrorMensage = ex.Message;
-                return;
-            }
-        }
-        navigationManager.NavigateTo("/Schedule");
-        StateHasChanged();
-    }
+		if (ScheduleUserCreateDto is not null)
+		{
+			try
+			{
+				foreach (var item in UserIdList)
+				{
+					ScheduleUserCreateDto = new()
+						{
+							UserId = item.Key,
+							ScheduleId = scheduleDto.Id
+						};
+					await scheduleUserService.Create(ScheduleUserCreateDto);
+				}
+				UpdateData();
+				ScheduleUserCreateDto = new();
+			}
+			catch (Exception ex)
+			{
+				ErrorMensage = ex.Message;
+				return;
+			}
+		}
+		navigationManager.NavigateTo("/Schedule");
+		StateHasChanged();
+	}
 
-    private void UpdateData()
-    {
-        DataUpdated?.Invoke();
-    }
+	private void UpdateData()
+	{
+		DataUpdated?.Invoke();
+	}
 }

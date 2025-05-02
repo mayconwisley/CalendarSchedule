@@ -6,38 +6,40 @@
 
 <h3>Cadastro Agenda do Colaborador</h3>
 <NavLink href="ScheduleCreate" class="btn btn-info">
-    Nova Agenda
+	Nova Agenda
 </NavLink>
 
 @if (scheduleUserView is null)
 {
-    <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
-    </div>
+	<div class="spinner-border" role="status">
+		<span class="visually-hidden">Loading...</span>
+	</div>
 }
 else
 {
-    <TableSchedule ScheduleUserView="@scheduleUserView" DataUpdated="@DataUpdated" />
+	<TableSchedule ScheduleUserView="@scheduleUserView" DataUpdated="@DataUpdated" />
 
-    <PaginationTable PageCurrent="@ReceberPagina"
-                     TotalData="@scheduleUserView.TotalData"
-                     Page="@scheduleUserView.Page"
-                     TotalPage="@scheduleUserView.TotalPage" />
+	<PaginationTable PageCurrent="@ReceberPagina"
+					 TotalData="@scheduleUserView.TotalData"
+					 Page="@scheduleUserView.Page"
+					 TotalPage="@scheduleUserView.TotalPage" />
 }
 
 @code {
-    private ScheduleUserView? scheduleUserView;
-    protected override async Task OnInitializedAsync()
-    {
-        await DataUpdated();
-    }
-    private async Task DataUpdated()
-    {
-        scheduleUserView = await scheduleUserService.GetAll();
-        StateHasChanged();
-    }
-    private async Task ReceberPagina(int pageCurrent)
-    {
-        scheduleUserView = await scheduleUserService.GetAll(pageCurrent);
-    }
+	private PagedResultView<ScheduleUserDto>? scheduleUserView;
+	protected override async Task OnInitializedAsync()
+	{
+		await DataUpdated();
+	}
+	private async Task DataUpdated()
+	{
+		var result = await scheduleUserService.GetAll();
+		scheduleUserView = result.Value;
+		StateHasChanged();
+	}
+	private async Task ReceberPagina(int pageCurrent)
+	{
+		var result = await scheduleUserService.GetAll(pageCurrent);
+		scheduleUserView = result.Value;
+	}
 }

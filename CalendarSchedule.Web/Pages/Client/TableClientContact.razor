@@ -6,82 +6,83 @@
 
 @if (ClientContactView is not null)
 {
-    var clientContacts = ClientContactView.ClientContactsDto;
+	var clientContacts = ClientContactView.Data;
 
-    if (clientContacts is not null)
-    {
-        var clientName = clientContacts
-                        .Where(w => w.ClientId == int.Parse(ClientId))
-                        .Select(s => s.ClientDto!.Name)
-                        .FirstOrDefault();
+	if (clientContacts is not null)
+	{
+		var clientName = clientContacts
+						.Where(w => w.ClientId == int.Parse(ClientId))
+						.Select(s => s.ClientDto!.Name)
+						.FirstOrDefault();
 
-        <h1>Cliente: @clientName </h1>
-    }
-    <div class="border">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Tipo</th>
-                    <th>Número</th>
-                    <th>Responsável</th>
-                    <th>Cargo</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (ClientContactView is not null)
-                {
-                    if (clientContacts is not null)
-                    {
-                        @foreach (var clientContactDto in clientContacts)
-                        {
-                            <tr>
-                                <td>@clientContactDto.Id</td>
-                                <td>@clientContactDto.Type</td>
-                                <td>@clientContactDto.Number</td>
-                                <td>@clientContactDto.ClientResponsibleDto!.Name</td>
-                                <td>@clientContactDto.ClientResponsibleDto!.Position</td>
-                                <td>
-                                    <NavLink href=@($"/ClientContactEdit/{@clientContactDto.Id}") class="btn btn-info">
-                                        Editar
-                                    </NavLink>
-                                    <button data-bs-toggle="modal" data-bs-target="#deleteUserContact-@clientContactDto.Id" class="btn btn-danger">
-                                        Excluir
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                    }
-                }
-            </tbody>
-        </table>
-        <NavLink href=@($"/Client") class="btn btn-info">
-            Voltar
-        </NavLink>
-    </div>
+		<h1>Cliente: @clientName </h1>
+	}
+	<div class="border">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Tipo</th>
+					<th>Número</th>
+					<th>Responsável</th>
+					<th>Cargo</th>
+					<th>Ações</th>
+				</tr>
+			</thead>
+			<tbody>
+				@if (ClientContactView is not null)
+				{
+					if (clientContacts is not null)
+					{
+						@foreach (var clientContactDto in clientContacts)
+						{
+							<tr>
+								<td>@clientContactDto.Id</td>
+								<td>@clientContactDto.Type</td>
+								<td>@clientContactDto.Number</td>
+								<td>@clientContactDto.ClientResponsibleDto!.Name</td>
+								<td>@clientContactDto.ClientResponsibleDto!.Position</td>
+								<td>
+									<NavLink href=@($"/ClientContactEdit/{@clientContactDto.Id}") class="btn btn-info">
+										Editar
+									</NavLink>
+									<button data-bs-toggle="modal" data-bs-target="#deleteUserContact-@clientContactDto.Id" class="btn btn-danger">
+										Excluir
+									</button>
+								</td>
+							</tr>
+						}
+					}
+				}
+			</tbody>
+		</table>
+		<NavLink href=@($"/Client") class="btn btn-info">
+			Voltar
+		</NavLink>
+	</div>
 
 }
 
 @code {
 
-    [Parameter]
-    public Action? DataUpdated { get; set; }
+	[Parameter]
+	public Action? DataUpdated { get; set; }
 
-    [Parameter]
-    public ClientContactView? ClientContactView { get; set; } = new();
+	[Parameter]
+	public PagedResultView<ClientContactDto>? ClientContactView { get; set; } = new();
 
-    [Parameter]
-    public string ClientId { get; set; } = string.Empty;
+	[Parameter]
+	public string ClientId { get; set; } = string.Empty;
 
-    protected async override Task OnInitializedAsync()
-    {
-        await DataUpdate();
-    }
+	protected async override Task OnInitializedAsync()
+	{
+		await DataUpdate();
+	}
 
-    private async Task DataUpdate()
-    {
-        ClientContactView = await clientContactService.GetByClientId(1, 10, int.Parse(ClientId));
-        StateHasChanged();
-    }
+	private async Task DataUpdate()
+	{
+		var clientContact = await clientContactService.GetByClientId(1, 10, int.Parse(ClientId)); 
+		ClientContactView = clientContact.Value;
+		StateHasChanged();
+	}
 }

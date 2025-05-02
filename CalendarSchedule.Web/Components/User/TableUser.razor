@@ -69,7 +69,8 @@
 
     private async Task DataUpdated()
     {
-        PagedResult = await userService.GetAll();
+        var user = await userService.GetAll();
+        PagedResult = user.Value;
         StateHasChanged();
     }
 }

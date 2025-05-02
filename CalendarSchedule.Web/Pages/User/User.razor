@@ -7,57 +7,61 @@
 
 <h3>Cadastro de Colaborador</h3>
 <NavLink href="UserCreate" class="btn btn-info">
-    Novo Colaborador
+	Novo Colaborador
 </NavLink>
 
 @if (userView is null)
 {
-    <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
-    </div>
+	<div class="spinner-border" role="status">
+		<span class="visually-hidden">Loading...</span>
+	</div>
 }
 else
 {
-    <TableUser UserView="@userView" />
-    <PaginationTable PageCurrent="@ReceberPagina"
-                     TotalData="@userView.TotalData"
-                     Page="@userView.Page"
-                     TotalPage="@userView.TotalPage" />
-    @* <InsertUserModal DataUpdated="@(() => DataUpdated())" /> *@
+	<TableUser UserView="@userView" />
+	<PaginationTable PageCurrent="@ReceberPagina"
+	TotalData="@userView.TotalData"
+	Page="@userView.Page"
+	TotalPage="@userView.TotalPage" />
+	@* <InsertUserModal DataUpdated="@(() => DataUpdated())" /> *@
 }
 
 @code {
-    private UserView? userView;
-    private LoginDto? LoginDto { get; set; } = new();
+	private PagedResultView<UserDto>? userView;
+	private LoginDto? LoginDto { get; set; } = new();
 
-    protected override async Task OnInitializedAsync()
-    {
-        var token = await tokenStorageService.GetToken(LoginDto!);
-        if (token.Bearer is null)
-        {
-            await tokenStorageService.RemoverToken();
-            navigationManager.NavigateTo("/Login", true);
-        }
-        var user = await userStorageService.GetUserSession();
-        if (user.Manager == false)
-        {
-            navigationManager.NavigateTo("/", true);
-        }
+	protected override async Task OnInitializedAsync()
+	{
+		var token = await tokenStorageService.GetToken(LoginDto!);
+		if (token.IsFailure)
+		{
+			await tokenStorageService.RemoverToken();
+			navigationManager.NavigateTo("/Login", true);
+		}
+		var user = await userStorageService.GetUserSession();
+		if (user.Value.Manager == false)
+		{
+			navigationManager.NavigateTo("/", true);
+		}
 
-        if (token.Bearer is not null)
-        {
-            userView = await userService.GetAll();
-        }
-    }
+		if (token.IsSuccess)
+		{
+			var usert = await userService.GetAll();
+			userView = usert.Value;
+		}
+	}
 
-    private async void DataUpdated()
-    {
-        userView = await userService.GetAll();
-        StateHasChanged();
-    }
-    private async Task ReceberPagina(int pageCurrent)
-    {
-        userView = await userService.GetAll(pageCurrent);
+	private async void DataUpdated()
+	{
+		var user = await userService.GetAll();
 
-    }
+		userView = user.Value;
+		StateHasChanged();
+	}
+	private async Task ReceberPagina(int pageCurrent)
+	{
+		var user = await userService.GetAll(pageCurrent);
+		userView = user.Value;
+
+	}
 }

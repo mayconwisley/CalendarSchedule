@@ -41,7 +41,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        UserContactDto = await userContactService.GetById(UserContactId);
+        var userContact = await userContactService.GetById(UserContactId);
+        UserContactDto = userContact.Value;
         await base.OnInitializedAsync();
     }
 
