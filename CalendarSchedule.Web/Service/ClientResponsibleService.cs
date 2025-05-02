@@ -1,5 +1,6 @@
 ﻿using CalendarSchedule.Models.Abstractions;
 using CalendarSchedule.Models.Dtos;
+using CalendarSchedule.Web.Models;
 using CalendarSchedule.Web.Service.Interface;
 using System.Net;
 using System.Net.Http.Headers;
@@ -28,14 +29,11 @@ public class ClientResponsibleService : IClientResponsibleService
 		try
 		{
 			var token = await _tokenStorageService.GetToken();
-
-			if (token.Bearer is null)
-			{
-				return new();
-			}
+			if (token.IsFailure)
+				return Result.Failure<ClientResponsibleDto>(token.Error);
 
 			using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-			httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+			httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Value.Bearer);
 
 			StringContent stringContent = new(JsonSerializer.Serialize(clientResponsibleCreateDto), Encoding.UTF8, "application/json");
 
@@ -70,14 +68,11 @@ public class ClientResponsibleService : IClientResponsibleService
 		try
 		{
 			var token = await _tokenStorageService.GetToken();
-
-			if (token.Bearer is null)
-			{
-				return new();
-			}
+			if (token.IsFailure)
+				return Result.Failure<bool>(token.Error);
 
 			using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-			httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+			httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Value.Bearer);
 
 			using var response = await httpClient.DeleteAsync($"{apiEndPoint}/{id}");
 
@@ -93,18 +88,16 @@ public class ClientResponsibleService : IClientResponsibleService
 		}
 	}
 
-	public async Task<Result<PagedResult<ClientResponsibleDto>>> GetAll(int page = 1, int size = 10, string search = "")
+	public async Task<Result<PagedResultView<ClientResponsibleDto>>> GetAll(int page = 1, int size = 10, string search = "")
 	{
 		try
 		{
-			//var token = await _tokenStorageService.GetToken();
+			var token = await _tokenStorageService.GetToken();
+			if (token.IsFailure)
+				return Result.Failure<PagedResultView<ClientResponsibleDto>>(token.Error);
 
-			//if (token.Bearer is null)
-			//{
-			//    return new();
-			//}
 			using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-			//httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+			//httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Value.Bearer);
 
 			using var response = await httpClient.GetAsync($"{apiEndPoint}/All?page={page}&size={size}&search={search}");
 
@@ -134,15 +127,12 @@ public class ClientResponsibleService : IClientResponsibleService
 	{
 		try
 		{
-			//var token = await _tokenStorageService.GetToken();
-
-			//if (token.Bearer is null)
-			//{
-			//    return new();
-			//}
+			var token = await _tokenStorageService.GetToken();
+			if (token.IsFailure)
+				return Result.Failure<ClientResponsibleDto>(token.Error);
 
 			using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-			//httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+			//httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Value.Bearer);
 
 			using var response = await httpClient.GetAsync($"{apiEndPoint}/{id}");
 
@@ -167,23 +157,20 @@ public class ClientResponsibleService : IClientResponsibleService
 		}
 	}
 
-	public async Task<Result<ClientResponsibleDto>> Update(ClientResponsibleCreateDto clientResponsibleCreateDto)
+	public async Task<Result<ClientResponsibleDto>> Update(ClientResponsibleDto clientResponsibleDto)
 	{
 		try
 		{
 			var token = await _tokenStorageService.GetToken();
-
-			if (token.Bearer is null)
-			{
-				return new();
-			}
+			if (token.IsFailure)
+				return Result.Failure<ClientResponsibleDto>(token.Error);
 
 			using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-			httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+			httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Value.Bearer);
 
-			StringContent stringContent = new StringContent(JsonSerializer.Serialize(clientResponsibleCreateDto), Encoding.UTF8, "application/json");
+			StringContent stringContent = new StringContent(JsonSerializer.Serialize(clientResponsibleDto), Encoding.UTF8, "application/json");
 
-			using (var response = await httpClient.PutAsync($"{apiEndPoint}/{clientResponsibleCreateDto.Id}", stringContent))
+			using (var response = await httpClient.PutAsync($"{apiEndPoint}/{clientResponsibleDto.Id}", stringContent))
 			{
 				if (response.IsSuccessStatusCode)
 				{
