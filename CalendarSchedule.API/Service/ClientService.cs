@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using CalendarSchedule.API.Abstractions;
+using CalendarSchedule.Models.Abstractions;
 using CalendarSchedule.API.MappingDto.ClientDtos;
 using CalendarSchedule.API.Repository.Interface;
 using CalendarSchedule.API.Service.Interface;

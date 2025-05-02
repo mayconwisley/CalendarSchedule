@@ -3,14 +3,17 @@
 @inject IUserStorageService userStorageService
 @inject NavigationManager navigationManager
 
-<EditForm Model="@LoginDto" OnValidSubmit="Log_in" class="formulario-login">
+<EditForm EditContext="@editContext" OnValidSubmit="Log_in" class="formulario-login">
     <h2>Login</h2>
     <DataAnnotationsValidator />
+    <ValidationSummary />
     <div>
         <InputText @bind-Value="LoginDto!.Username" type="text" placeholder="Usuário" />
+        <ValidationMessage For="@(() => LoginDto.Username)" />
     </div>
     <div>
         <InputText @bind-Value="LoginDto!.Password" type="password" placeholder="Senha" />
+        <ValidationMessage For="@(() => LoginDto.Password)" />
     </div>
     <div>
         <button class="btnLogin">Entrar</button>
@@ -18,39 +21,35 @@
 </EditForm>
 
 @code {
-    private LoginDto? LoginDto { get; set; } = new();
-    protected override async Task OnInitializedAsync()
+    private LoginDto LoginDto { get; set; } = new();
+    private EditContext? editContext;
+    private ValidationMessageStore? messageStore;
+    protected override void OnInitialized()
     {
-        try
-        {
-            var token = await tokenStorageService.GetToken(LoginDto!);
-            if (token.Bearer is null)
-            {
-                await tokenStorageService.RemoverToken();
-            }
-
-            if (token.Bearer is not null)
-            {
-                navigationManager.NavigateTo("/Schedule", true);
-            }
-            await base.OnInitializedAsync();
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        editContext = new EditContext(LoginDto);
+        messageStore = new ValidationMessageStore(editContext);
     }
 
     private async Task Log_in()
     {
-        if (LoginDto is not null)
+        messageStore?.Clear(); // Limpa mensagens anteriores
+
+        var token = await tokenStorageService.GetToken(LoginDto);
+
+        if (token.IsFailure)
         {
-            var token = await tokenStorageService.GetToken(LoginDto);
-            var user = await userStorageService.GetUserSession(LoginDto);
-            if (token.Bearer is not null)
-            {
-                navigationManager.NavigateTo("/Schedule", true);
-            }
+            // Exibe erro no ValidationSummary
+            messageStore?.Add(() => LoginDto.Username, new[]
+            { 
+                token.Error.StatusCode.ToString(), 
+                token.Error.Code, 
+                token.Error.Message 
+            });
+            editContext?.NotifyValidationStateChanged();
+            return;
         }
+
+        var user = await userStorageService.GetUserSession(LoginDto);
+        navigationManager.NavigateTo("/Schedule", true);
     }
 }

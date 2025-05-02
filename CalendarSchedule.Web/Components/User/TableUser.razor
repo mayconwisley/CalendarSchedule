@@ -15,9 +15,9 @@
             </tr>
         </thead>
         <tbody>
-            @if (UserView is not null)
+            @if (PagedResult is not null)
             {
-                var users = UserView.UsersDto;
+                var users = PagedResult.Data;
 
                 if (users is not null)
                 {
@@ -28,10 +28,10 @@
                             <td>@user.Name</td>
                             <td>@user.Description</td>
                             <td class="text-center">
-                                @(user.Manager ? "Sim" : "Não")
+                                @(user.Manager == true ? "Sim" : "Não")
                             </td>
                             <td class="text-center">
-                                @(user.Active ? "Sim" : "Não")
+                                @(user.Active == true ? "Sim" : "Não")
                             </td>
                             <td>@user.Username</td>
                             <td>
@@ -65,11 +65,11 @@
 
 @code {
     [Parameter]
-    public UserView? UserView { get; set; }
+    public PagedResultView<UserDto>? PagedResult { get; set; }
 
     private async Task DataUpdated()
     {
-        UserView = await userService.GetAll();
+        PagedResult = await userService.GetAll();
         StateHasChanged();
     }
 }

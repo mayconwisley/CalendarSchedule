@@ -1,7 +1,7 @@
-﻿using CalendarSchedule.Models.Dtos;
+﻿using CalendarSchedule.Models.Abstractions;
+using CalendarSchedule.Models.Dtos;
 using CalendarSchedule.Web.Models;
 using CalendarSchedule.Web.Service.Interface;
-using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
@@ -11,223 +11,225 @@ namespace CalendarSchedule.Web.Service;
 
 public class ClientContactService : IClientContactService
 {
-    private readonly IHttpClientFactory _httpClientFactory;
-    private readonly ITokenStorageService _tokenStorageService;
-    private readonly JsonSerializerOptions _serializerOptions;
+	private readonly IHttpClientFactory _httpClientFactory;
+	private readonly ITokenStorageService _tokenStorageService;
+	private readonly JsonSerializerOptions _serializerOptions;
 
-    private const string apiEndPoint = "api/ClientContact";
+	private const string apiEndPoint = "api/ClientContact";
 
-    public ClientContactService(IHttpClientFactory httpClientFactory, ITokenStorageService tokenStorageService)
-    {
-        _httpClientFactory = httpClientFactory;
-        _tokenStorageService = tokenStorageService;
-        _serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-    }
+	public ClientContactService(IHttpClientFactory httpClientFactory, ITokenStorageService tokenStorageService)
+	{
+		_httpClientFactory = httpClientFactory;
+		_tokenStorageService = tokenStorageService;
+		_serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+	}
 
-    public async Task<ClientContactDto> Create(ClientContactCreateDto clientContactCreateDto)
-    {
-        try
-        {
-            var token = await _tokenStorageService.GetToken();
-            if (token.Bearer is null)
-            {
-                return new();
-            }
+	public async Task<Result<ClientContactDto>> Create(ClientContactCreateDto clientContactCreateDto)
+	{
+		try
+		{
+			var token = await _tokenStorageService.GetToken();
+			if (token.IsFailure)
+				return Result.Failure<ClientContactDto>(token.Error);
 
-            using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+			using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+			httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Value.Bearer);
 
-            StringContent stringContent = new(JsonSerializer.Serialize(clientContactCreateDto), Encoding.UTF8, "application/json");
+			StringContent stringContent = new(JsonSerializer.Serialize(clientContactCreateDto), Encoding.UTF8, "application/json");
 
-            using (var response = await httpClient.PostAsync(apiEndPoint, stringContent))
-            {
-                if (response.IsSuccessStatusCode)
-                {
-                    using Stream resApi = await response.Content.ReadAsStreamAsync();
-                    var clientContact = await JsonSerializer.DeserializeAsync<ClientContactDto>(resApi, _serializerOptions);
+			using var response = await httpClient.PostAsync(apiEndPoint, stringContent);
+			if (response.IsSuccessStatusCode)
+			{
+				using Stream resApi = await response.Content.ReadAsStreamAsync();
+				var clientContact = await JsonSerializer.DeserializeAsync<ClientContactDto>(resApi, _serializerOptions);
 
-                    if (clientContact is not null)
-                    {
-                        return clientContact;
-                    }
-                }
-            }
-            return new();
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
+				if (clientContact is null)
+					return Result.Failure<ClientContactDto>(Error.NotFound("Cliente Contact Nulo"));
 
-    public async Task<bool> Delete(int id)
-    {
-        try
-        {
-            var token = await _tokenStorageService.GetToken();
-            if (token.Bearer is null)
-            {
-                return new();
-            }
+				return Result.Success(clientContact);
 
-            using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+			}
+			else
+			{
+				using Stream resApi = await response.Content.ReadAsStreamAsync();
+				var error = await JsonSerializer.DeserializeAsync<Error>(resApi, _serializerOptions);
+				if (error is null)
+					return Result.Failure<ClientContactDto>(Error.NotFound("Cliente Contact Nulo"));
+				return Result.Failure<ClientContactDto>(error);
+			}
+		}
+		catch (Exception ex)
+		{
+			return Result.Failure<ClientContactDto>(Error.Internal($"Erro interno: {ex.Message}"));
+		}
+	}
 
-            using var response = await httpClient.DeleteAsync($"{apiEndPoint}/{id}");
-            if (response.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            return false;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
+	public async Task<Result<bool>> Delete(int id)
+	{
+		try
+		{
+			var token = await _tokenStorageService.GetToken();
+			if (token.IsFailure)
+				return Result.Failure<bool>(token.Error);
 
-    public async Task<ClientContactView> GetAll(int page = 1, int size = 10, string search = "")
-    {
-        try
-        {
-            //var token = await _tokenStorageService.GetToken();
+			using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+			httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Value.Bearer);
 
-            //if (token.Bearer is null)
-            //{
-            //    return new();
-            //}
+			using var response = await httpClient.DeleteAsync($"{apiEndPoint}/{id}");
+			if (response.IsSuccessStatusCode)
+				return Result.Success(true);
 
-            using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
-            using var response = await httpClient.GetAsync($"{apiEndPoint}/All?page={page}&size={size}&search={search}");
+			return Result.Failure<bool>(Error.BadRequest("false"));
+		}
+		catch (Exception ex)
+		{
+			return Result.Failure<bool>(Error.Internal($"Erro interno: {ex.Message}"));
+		}
+	}
 
-            if (response.IsSuccessStatusCode)
-            {
-                ClientContactView? clientContactView = await response.Content.ReadFromJsonAsync<ClientContactView>(_serializerOptions);
-                return clientContactView ??= new();
-            }
-            else
-            {
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return new();
-                }
-                response.EnsureSuccessStatusCode();
-                return new();
-            }
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
+	public async Task<Result<PagedResultView<ClientContactDto>>> GetAll(int page = 1, int size = 10, string search = "")
+	{
+		try
+		{
+			var token = await _tokenStorageService.GetToken();
+			if (token.IsFailure)
+				return Result.Failure<PagedResultView<ClientContactDto>>(token.Error);
 
-    public async Task<ClientContactDto> GetById(int id)
-    {
-        try
-        {
-            //var token = await _tokenStorageService.GetToken();
 
-            //if (token.Bearer is null)
-            //{
-            //    return new();
-            //}
+			using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+			//httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+			using var response = await httpClient.GetAsync($"{apiEndPoint}/All?page={page}&size={size}&search={search}");
 
-            using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
-            using var response = await httpClient.GetAsync($"{apiEndPoint}/{id}");
+			if (response.IsSuccessStatusCode)
+			{
+				var clientContactView = await response.Content.ReadFromJsonAsync<PagedResultView<ClientContactDto>>(_serializerOptions);
+				if (clientContactView is null)
+					return Result.Failure<PagedResultView<ClientContactDto>>(Error.NotFound("Cliente Contact Nulo"));
 
-            if (response.IsSuccessStatusCode)
-            {
-                var clientContactDto = await response.Content.ReadFromJsonAsync<ClientContactDto>(_serializerOptions);
-                return clientContactDto ??= new();
-            }
-            else
-            {
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return new();
-                }
-                response.EnsureSuccessStatusCode();
-            }
-            return new();
-        }
-        catch (Exception)
-        {
+				return Result.Success(clientContactView);
+			}
+			else
+			{
+				using Stream resApi = await response.Content.ReadAsStreamAsync();
+				var error = await JsonSerializer.DeserializeAsync<Error>(resApi, _serializerOptions);
+				if (error is null)
+					return Result.Failure<PagedResultView<ClientContactDto>>(Error.NotFound("Token não gerado"));
 
-            throw;
-        }
-    }
+				return Result.Failure<PagedResultView<ClientContactDto>>(error);
+			}
+		}
+		catch (Exception ex)
+		{
+			return Result.Failure<PagedResultView<ClientContactDto>>(Error.Internal($"Erro interno: {ex.Message}"));
+		}
+	}
 
-    public async Task<ClientContactView> GetByClientId(int page = 1, int size = 10, int userId = 0)
-    {
-        try
-        {
-            //var token = await _tokenStorageService.GetToken();
+	public async Task<Result<ClientContactDto>> GetById(int id)
+	{
+		try
+		{
+			var token = await _tokenStorageService.GetToken();
+			if (token.IsFailure)
+				return Result.Failure<ClientContactDto>(token.Error);
 
-            //if (token.Bearer is null)
-            //{
-            //    return new();
-            //}
+			using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+			//httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+			using var response = await httpClient.GetAsync($"{apiEndPoint}/{id}");
 
-            using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
-            using var response = await httpClient.GetAsync($"{apiEndPoint}/ContactByClientId/{userId}");
+			if (response.IsSuccessStatusCode)
+			{
+				var clientContactDto = await response.Content.ReadFromJsonAsync<ClientContactDto>(_serializerOptions);
+				if (clientContactDto is null)
+					return Result.Failure<ClientContactDto>(Error.NotFound("Cliente Contact Nulo"));
 
-            if (response.IsSuccessStatusCode)
-            {
-                var clientContactDtos = await response.Content.ReadFromJsonAsync<ClientContactView>(_serializerOptions);
-                return clientContactDtos ??= new();
-            }
-            else
-            {
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return new();
-                }
-                response.EnsureSuccessStatusCode();
-                return new();
-            }
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
+				return Result.Success(clientContactDto);
+			}
+			else
+			{
+				using Stream resApi = await response.Content.ReadAsStreamAsync();
+				var error = await JsonSerializer.DeserializeAsync<Error>(resApi, _serializerOptions);
+				if (error is null)
+					return Result.Failure<ClientContactDto>(Error.NotFound("Token não gerado"));
+				return Result.Failure<ClientContactDto>(error);
+			}
+		}
+		catch (Exception ex)
+		{
+			return Result.Failure<ClientContactDto>(Error.Internal($"Erro interno: {ex.Message}"));
+		}
+	}
 
-    public async Task<ClientContactDto> Update(ClientContactCreateDto clientContactCreateDto)
-    {
-        try
-        {
-            var token = await _tokenStorageService.GetToken();
+	public async Task<Result<PagedResultView<ClientContactDto>>> GetByClientId(int page = 1, int size = 10, int userId = 0)
+	{
+		try
+		{
+			var token = await _tokenStorageService.GetToken();
+			if (token.IsFailure)
+				return Result.Failure<PagedResultView<ClientContactDto>>(token.Error);
 
-            if (token.Bearer is null)
-            {
-                return new();
-            }
+			using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+			//httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+			using var response = await httpClient.GetAsync($"{apiEndPoint}/ContactByClientId/{userId}");
 
-            using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Bearer);
+			if (response.IsSuccessStatusCode)
+			{
+				var clientContactDtos = await response.Content.ReadFromJsonAsync<PagedResultView<ClientContactDto>>(_serializerOptions);
+				if (clientContactDtos is null)
+					return Result.Failure<PagedResultView<ClientContactDto>>(Error.NotFound("Cliente Contact Nulo"));
 
-            StringContent stringContent = new(JsonSerializer.Serialize(clientContactCreateDto), Encoding.UTF8, "application/json");
-            using (var response = await httpClient.PutAsync($"{apiEndPoint}/{clientContactCreateDto.Id}", stringContent))
-            {
-                if (response.IsSuccessStatusCode)
-                {
-                    using Stream resApi = await response.Content.ReadAsStreamAsync();
-                    var clientContactDto = await JsonSerializer.DeserializeAsync<ClientContactDto>(resApi, _serializerOptions);
-                    if (clientContactDto is not null)
-                    {
-                        return clientContactDto;
-                    }
-                }
-            }
-            return new();
-        }
-        catch (Exception)
-        {
+				return Result.Success(clientContactDtos);
+			}
+			else
+			{
+				using Stream resApi = await response.Content.ReadAsStreamAsync();
+				var error = await JsonSerializer.DeserializeAsync<Error>(resApi, _serializerOptions);
+				if (error is null)
+					return Result.Failure<PagedResultView<ClientContactDto>>(Error.NotFound("Token não gerado"));
+				return Result.Failure<PagedResultView<ClientContactDto>>(error);
+			}
+		}
+		catch (Exception ex)
+		{
+			return Result.Failure<PagedResultView<ClientContactDto>>(Error.Internal($"Erro interno: {ex.Message}"));
+		}
+	}
 
-            throw;
-        }
-    }
+	public async Task<Result<ClientContactDto>> Update(ClientContactUpdateDto clientContactUpdateDto)
+	{
+		try
+		{
+			var token = await _tokenStorageService.GetToken();
+			if (token.IsFailure)
+				return Result.Failure<ClientContactDto>(token.Error);
+
+			using var httpClient = _httpClientFactory.CreateClient("ConexaoApi");
+			httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Value.Bearer);
+
+			StringContent stringContent = new(JsonSerializer.Serialize(clientContactUpdateDto), Encoding.UTF8, "application/json");
+			using (var response = await httpClient.PutAsync($"{apiEndPoint}/{clientContactUpdateDto.Id}", stringContent))
+			{
+				if (response.IsSuccessStatusCode)
+				{
+					using Stream resApi = await response.Content.ReadAsStreamAsync();
+					var clientContactDto = await JsonSerializer.DeserializeAsync<ClientContactDto>(resApi, _serializerOptions);
+					if (clientContactDto is null)
+						return Result.Failure<ClientContactDto>(Error.NotFound("Cliente Contact Nulo"));
+
+					return Result.Success(clientContactDto);
+				}
+				else
+				{
+					using Stream resApi = await response.Content.ReadAsStreamAsync();
+					var error = await JsonSerializer.DeserializeAsync<Error>(resApi, _serializerOptions);
+					if (error is null)
+						return Result.Failure<ClientContactDto>(Error.NotFound("Token não gerado"));
+					return Result.Failure<ClientContactDto>(error);
+				}
+			}
+		}
+		catch (Exception ex)
+		{
+			return Result.Failure<ClientContactDto>(Error.Internal($"Erro interno: {ex.Message}"));
+		}
+	}
 }

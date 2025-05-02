@@ -1,4 +1,4 @@
-﻿using CalendarSchedule.API.Abstractions;
+﻿using CalendarSchedule.Models.Abstractions;
 using CalendarSchedule.API.MappingDto.ScheduleUserDtos;
 using CalendarSchedule.API.Repository.Interface;
 using CalendarSchedule.API.Service.Interface;

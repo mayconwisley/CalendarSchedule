@@ -1,4 +1,4 @@
-﻿using CalendarSchedule.API.Abstractions;
+﻿using CalendarSchedule.Models.Abstractions;
 using CalendarSchedule.API.Service.Interface;
 using CalendarSchedule.Models.Dtos;
 using Microsoft.AspNetCore.Authorization;

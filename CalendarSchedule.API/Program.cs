@@ -1,6 +1,6 @@
 using System.Text;
 using System.Text.Json.Serialization;
-using CalendarSchedule.API.Abstractions;
+using CalendarSchedule.Models.Abstractions;
 using CalendarSchedule.API.Data;
 using CalendarSchedule.API.Repository;
 using CalendarSchedule.API.Repository.Interface;
