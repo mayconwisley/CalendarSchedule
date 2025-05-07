@@ -39,8 +39,8 @@
 											@foreach (var schedule in scheuduleDtos)
 											{
 												<tr>
-													<td>@schedule.UserId</td>
-													<td>@schedule.UserDto!.Name</td>
+													<td>@schedule.UserDto?.Id</td>
+													<td>@schedule.UserDto?.Name</td>
 													<td>@schedule.ScheduleDto!.Description</td>
 													<td>@schedule.ScheduleDto!.DateStart.ToString("dd/MM/yyyy HH:mm")</td>
 													<td>@schedule.ScheduleDto!.DateFinal.ToString("dd/MM/yyyy HH:mm")</td>
@@ -67,7 +67,6 @@
 										<th>Remoto</th>
 										<th>Reservada</th>
 										<th>Particular</th>
-
 									</tr>
 								</thead>
 								<tbody>
@@ -80,8 +79,8 @@
 											@foreach (var schedule in scheuduleDtos)
 											{
 												<tr>
-													<td>@schedule.UserId</td>
-													<td>@schedule.UserDto!.Name</td>
+													<td>@schedule.UserDto?.Id</td>
+													<td>@schedule.UserDto?.Name</td>
 													<td>@schedule.ScheduleDto!.ClientDto!.Name</td>
 													<td>@(schedule.ScheduleDto.ClientDto.Prospection ? "Sim" : "Não")</td>
 													<td>@schedule.ScheduleDto!.Description</td>
@@ -122,6 +121,5 @@
 		{
 			ScheduleUserDtos = scheduleUser.Value;
 		}
-		//StateHasChanged();
 	}
 }

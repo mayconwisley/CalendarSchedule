@@ -3,53 +3,50 @@
 @inject IUserStorageService userStorageService
 @inject NavigationManager navigationManager
 
+
+
 <EditForm EditContext="@editContext" OnValidSubmit="Log_in" class="formulario-login">
-    <h2>Login</h2>
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <div>
-        <InputText @bind-Value="LoginDto!.Username" type="text" placeholder="Usuário" />
-        <ValidationMessage For="@(() => LoginDto.Username)" />
-    </div>
-    <div>
-        <InputText @bind-Value="LoginDto!.Password" type="password" placeholder="Senha" />
-        <ValidationMessage For="@(() => LoginDto.Password)" />
-    </div>
-    <div>
-        <button class="btnLogin">Entrar</button>
-    </div>
+	@if (!string.IsNullOrEmpty(errorMessage))
+	{
+		<MensageError Message="@errorMessage" />
+	}
+	<h2>Login</h2>
+	<DataAnnotationsValidator />
+	<div>
+		<InputText @bind-Value="LoginDto!.Username" type="text" placeholder="Usuário" />
+		<ValidationMessage For="@(() => LoginDto.Username)" />
+	</div>
+	<div>
+		<InputText @bind-Value="LoginDto!.Password" type="password" placeholder="Senha" />
+		<ValidationMessage For="@(() => LoginDto.Password)" />
+	</div>
+	<div>
+		<button class="btnLogin">Entrar</button>
+	</div>
 </EditForm>
 
 @code {
-    private LoginDto LoginDto { get; set; } = new();
-    private EditContext? editContext;
-    private ValidationMessageStore? messageStore;
-    protected override void OnInitialized()
-    {
-        editContext = new EditContext(LoginDto);
-        messageStore = new ValidationMessageStore(editContext);
-    }
+	private LoginDto LoginDto { get; set; } = new();
+	private EditContext? editContext;
+	private string? errorMessage;
 
-    private async Task Log_in()
-    {
-        messageStore?.Clear(); // Limpa mensagens anteriores
+	protected override void OnInitialized()
+	{
+		editContext = new EditContext(LoginDto);
+	}
 
-        var token = await tokenStorageService.GetToken(LoginDto);
+	private async Task Log_in()
+	{
 
-        if (token.IsFailure)
-        {
-            // Exibe erro no ValidationSummary
-            messageStore?.Add(() => LoginDto.Username, new[]
-            { 
-                token.Error.StatusCode.ToString(), 
-                token.Error.Code, 
-                token.Error.Message 
-            });
-            editContext?.NotifyValidationStateChanged();
-            return;
-        }
+		var token = await tokenStorageService.GetToken(LoginDto);
 
-        var user = await userStorageService.GetUserSession(LoginDto);
-        navigationManager.NavigateTo("/Schedule", true);
-    }
+		if (token.IsFailure)
+		{
+			errorMessage = token.Error.Message;
+			return;
+		}
+
+		var user = await userStorageService.GetUserSession(LoginDto);
+		navigationManager.NavigateTo("/Schedule", true);
+	}
 }
