@@ -1,76 +1,74 @@
-﻿@using System.Globalization
-@inject IUserService userService
+﻿<div class="border mt-2">
+	<table class="table table-striped align-middle">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Nome</th>
+				<th>Descrição</th>
+				<th class="text-center">Gestor</th>
+				<th class="text-center">Ativo</th>
+				<th>Usuário</th>
+				<th>Ações</th>
+			</tr>
+		</thead>
+		<tbody>
+			@if (UserView is not null)
+			{
+				var users = UserView.Data;
 
-<div class="border mt-2">
-    <table class="table table-striped align-middle">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nome</th>
-                <th>Descrição</th>
-                <th class="text-center">Gestor</th>
-                <th class="text-center">Ativo</th>
-                <th>Usuário</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (PagedResult is not null)
-            {
-                var users = PagedResult.Data;
+				if (users is not null)
+				{
+					@foreach (var user in users)
+					{
+						<tr>
+							<td>@user.Id</td>
+							<td>@user.Name</td>
+							<td>@user.Description</td>
+							<td class="text-center">
+								@(user.Manager == true ? "Sim" : "Não")
+							</td>
+							<td class="text-center">
+								@(user.Active == true ? "Sim" : "Não")
+							</td>
+							<td>@user.Username</td>
+							<td>
 
-                if (users is not null)
-                {
-                    @foreach (var user in users)
-                    {
-                        <tr>
-                            <td>@user.Id</td>
-                            <td>@user.Name</td>
-                            <td>@user.Description</td>
-                            <td class="text-center">
-                                @(user.Manager == true ? "Sim" : "Não")
-                            </td>
-                            <td class="text-center">
-                                @(user.Active == true ? "Sim" : "Não")
-                            </td>
-                            <td>@user.Username</td>
-                            <td>
-
-                                <NavLink href=@($"UserEdit/{user.Id}") class="btn btn-info">
-                                    Editar
-                                </NavLink>
+								<NavLink href=@($"/user/edit/{user.Id}") class="btn btn-info">
+									Editar
+								</NavLink>
 
 
-                                <button data-bs-toggle="modal" data-bs-target="#newContactUser-@user.Id" class="btn btn-info">
-                                    Add Contato
-                                </button>
-                                <InsertUserContactModal UserId="@user.Id" UserName="@user.Name" DataUpdated="@DataUpdated" />
+								<button data-bs-toggle="modal" data-bs-target="#newContactUser-@user.Id" class="btn btn-info">
+									Add Contato
+								</button>
+								<InsertUserContactModal UserId="@user.Id" UserName="@user.Name" DataUpdated="@(() => DataUpdate())" />
 
-                                <NavLink href=@($"/DetailsUserContact/{user.Id}") class="btn btn-info">
-                                    Detalhe
-                                </NavLink>
+								<NavLink href=@($"/DetailsUserContact/{user.Id}") class="btn btn-info">
+									Detalhe
+								</NavLink>
 
-                                <button data-bs-toggle="modal" data-bs-target="#deleteUser-@user.Id" class="btn btn-danger">
-                                    Excluir
-                                </button>
-                                <DeleteUserModal UserId="@user.Id" DataUpdated="@(() => DataUpdated())" />
-                            </td>
-                        </tr>
-                    }
-                }
-            }
-        </tbody>
-    </table>
+								<button data-bs-toggle="modal" data-bs-target="#deleteUser-@user.Id" class="btn btn-danger">
+									Excluir
+								</button>
+								<DeleteUserModal UserId="@user.Id" DataUpdated="@(() => DataUpdate())" />
+							</td>
+						</tr>
+					}
+				}
+			}
+		</tbody>
+	</table>
 </div>
 
 @code {
-    [Parameter]
-    public PagedResultView<UserDto>? PagedResult { get; set; }
+	[Parameter]
+	public PagedResultView<UserDto>? UserView { get; set; }
 
-    private async Task DataUpdated()
-    {
-        var user = await userService.GetAll();
-        PagedResult = user.Value;
-        StateHasChanged();
-    }
+	[Parameter]
+	public EventCallback DataUpdated { get; set; }
+
+	private async Task DataUpdate()
+	{
+		await DataUpdated.InvokeAsync(null);
+	}
 }

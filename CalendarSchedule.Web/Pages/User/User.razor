@@ -1,4 +1,4 @@
-﻿@page "/User"
+﻿@page "/user"
 @layout NewLayout
 @inject ITokenStorageService tokenStorageService
 @inject IUserStorageService userStorageService
@@ -19,10 +19,11 @@
 else
 {
 	<TableUser UserView="@userView" />
+
 	<PaginationTable PageCurrent="@ReceberPagina"
-	TotalData="@userView.TotalData"
-	Page="@userView.Page"
-	TotalPage="@userView.TotalPage" />
+					 TotalData="@userView.TotalData"
+					 Page="@userView.Page"
+					 TotalPage="@userView.TotalPage" />
 	@* <InsertUserModal DataUpdated="@(() => DataUpdated())" /> *@
 }
 
@@ -56,7 +57,7 @@ else
 		var user = await userService.GetAll();
 
 		userView = user.Value;
-		StateHasChanged();
+		//StateHasChanged();
 	}
 	private async Task ReceberPagina(int pageCurrent)
 	{
