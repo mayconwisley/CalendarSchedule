@@ -41,7 +41,7 @@
 								<button data-bs-toggle="modal" data-bs-target="#newContactUser-@user.Id" class="btn btn-info">
 									Add Contato
 								</button>
-								<InsertUserContactModal UserId="@user.Id" UserName="@user.Name" DataUpdated="@(() => DataUpdate())" />
+								<InsertUserContactModal UserId="@user.Id" UserName="@user.Name" DataUpdated="DataUpdate" />
 
 								<NavLink href=@($"/DetailsUserContact/{user.Id}") class="btn btn-info">
 									Detalhe
@@ -50,7 +50,7 @@
 								<button data-bs-toggle="modal" data-bs-target="#deleteUser-@user.Id" class="btn btn-danger">
 									Excluir
 								</button>
-								<DeleteUserModal UserId="@user.Id" DataUpdated="@(() => DataUpdate())" />
+								<DeleteUserModal UserId="@user.Id" DataUpdated="DataUpdate" />
 							</td>
 						</tr>
 					}
@@ -70,5 +70,6 @@
 	private async Task DataUpdate()
 	{
 		await DataUpdated.InvokeAsync(null);
+
 	}
 }

@@ -6,5 +6,5 @@ public class UserContact
 	public string Type { get; set; } = string.Empty;
 	public string Number { get; set; } = string.Empty;
 	public int UserId { get; set; }
-	public User User { get; set; } = new();
+	public User? User { get; set; }
 }

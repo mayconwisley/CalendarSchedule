@@ -6,9 +6,9 @@
 @inject NavigationManager navigationManager
 
 <h3>Cadastro de Colaborador</h3>
-<NavLink href="UserCreate" class="btn btn-info">
+<button class="btn btn-info" @onclick="NovoColaborador">
 	Novo Colaborador
-</NavLink>
+</button>
 
 @if (userView is null)
 {
@@ -18,12 +18,12 @@
 }
 else
 {
-	<TableUser UserView="@userView" />
+	<TableUser DataUpdated="DataUpdated" UserView="@userView" />
 
 	<PaginationTable PageCurrent="@ReceberPagina"
-					 TotalData="@userView.TotalData"
-					 Page="@userView.Page"
-					 TotalPage="@userView.TotalPage" />
+	TotalData="@userView.TotalData"
+	Page="@userView.Page"
+	TotalPage="@userView.TotalPage" />
 	@* <InsertUserModal DataUpdated="@(() => DataUpdated())" /> *@
 }
 
@@ -37,27 +37,32 @@ else
 		if (token.IsFailure)
 		{
 			await tokenStorageService.RemoverToken();
-			navigationManager.NavigateTo("/Login", true);
+			navigationManager.NavigateTo("/Login");
 		}
 		var user = await userStorageService.GetUserSession();
 		if (user.Value.Manager == false)
 		{
-			navigationManager.NavigateTo("/", true);
+			navigationManager.NavigateTo("/");
 		}
 
 		if (token.IsSuccess)
 		{
-			var usert = await userService.GetAll();
-			userView = usert.Value;
+			await DataUpdated();
 		}
 	}
-
-	private async void DataUpdated()
+	private void NovoColaborador()
+	{
+		navigationManager.NavigateTo("/UserCreate");
+	}
+	private async Task DataUpdated()
 	{
 		var user = await userService.GetAll();
+		if(user.IsSuccess)
+		{
+			userView = user.Value;
 
-		userView = user.Value;
-		//StateHasChanged();
+		}
+		StateHasChanged();
 	}
 	private async Task ReceberPagina(int pageCurrent)
 	{

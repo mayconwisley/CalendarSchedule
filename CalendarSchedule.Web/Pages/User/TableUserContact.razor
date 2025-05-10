@@ -1,51 +1,59 @@
-﻿@page "/DetailsUserContact/{UserId}"
+﻿@page "/DetailsUserContact/{UserId:int}"
 
 @using System.Globalization
 @inject IUserContactService userContactService
 @inject IUserService userService
+@inject NavigationManager navigationManager
 
 <h1>Consulta Contato - @UserDto.Id - @UserDto.Name </h1>
 <div class="border">
-	<table class="table table-striped">
-		<thead>
-			<tr>
-				<th>Id</th>
-				<th>Tipo</th>
-				<th>Número</th>
-				<th>Ações</th>
-			</tr>
-		</thead>
-		<tbody>
-			@if (UserContactView is not null)
-			{
-				var userContacts = UserContactView.Data;
-
-				if (userContacts is not null)
+	@if (isContact == false)
+	{
+		<MensageError Message="@messageError" />
+	}
+	else
+	{
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Tipo</th>
+					<th>Número</th>
+					<th>Ações</th>
+				</tr>
+			</thead>
+			<tbody>
+				@if (UserContactView is not null)
 				{
-					@foreach (var userContactDto in userContacts)
+					var userContacts = UserContactView.Data;
+
+					if (userContacts is not null)
 					{
-						<tr>
-							<td>@userContactDto.Id</td>
-							<td>@userContactDto.Type</td>
-							<td>@userContactDto.Number</td>
-							<td>
-								<NavLink href=@($"/UserContactEdit/{@userContactDto.Id}") class="btn btn-info">
-									Editar
-								</NavLink>
-								<button data-bs-toggle="modal" data-bs-target="#deleteUserContact-@userContactDto.Id" class="btn btn-danger">
-									Excluir
-								</button>
-								<DeleteUserContactModal UserContactId="@userContactDto.Id" DataUpdated="@(() => DataUpdate())" />
-							</td>
-						</tr>
+						@foreach (var userContactDto in userContacts)
+						{
+							<tr>
+								<td>@userContactDto.Id</td>
+								<td>@userContactDto.Type</td>
+								<td>@userContactDto.Number</td>
+								<td>
+									<NavLink href=@($"/UserContactEdit/{@userContactDto.Id}") class="btn btn-info">
+										Editar
+									</NavLink>
+									<button data-bs-toggle="modal" data-bs-target="#deleteUserContact-@userContactDto.Id" class="btn btn-danger">
+										Excluir
+									</button>
+									<DeleteUserContactModal UserContactId="@userContactDto.Id" DataUpdated="@(() => DataUpdate())" />
+								</td>
+							</tr>
+						}
 					}
 				}
-			}
-		</tbody>
-	</table>
-	<NavLink href=@($"/User") class="btn btn-info">
+			</tbody>
+		</table>
+	}
+	<button class="btn btn-info" @onclick="Voltar">
 		Voltar
-	</NavLink>
+	</button>
 </div>
 
 @code {
@@ -54,23 +62,40 @@
 	public Action? DataUpdated { get; set; }
 
 	[Parameter]
-	public PagedResultView<UserContactDto>? UserContactView { get; set; } = new();
+	public PagedResultView<UserContactDto> UserContactView { get; set; } = new();
 
 	[Parameter]
-	public string UserId { get; set; } = string.Empty;
+	public int UserId { get; set; }
 
-	UserDto UserDto { get; set; } = new();
+	private UserDto UserDto { get; set; } = new();
+	private bool isContact = true;
+	private string? messageError;
+
 	protected async override Task OnInitializedAsync()
 	{
 		await DataUpdate();
 	}
-
+	private void Voltar()
+	{
+		navigationManager.NavigateTo("/user");
+	}
 	private async Task DataUpdate()
 	{
-		var userContact = await userContactService.GetByUserId(1, 10, int.Parse(UserId));
-		UserContactView = userContact.Value;
-		var user = await userService.GetById(int.Parse(UserId));
-		UserDto = user.Value;
-		StateHasChanged();
+		var userContact = await userContactService.GetByUserId(1, 10, UserId);
+		if (userContact.IsSuccess)
+		{
+			UserContactView = userContact.Value;
+		}
+		else
+		{
+			messageError = userContact.Error.Message;
+			isContact = false;
+		}
+
+		var user = await userService.GetById(UserId);
+		if (user.IsSuccess)
+		{
+			UserDto = user.Value;
+		}
 	}
 }

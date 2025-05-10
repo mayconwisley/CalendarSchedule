@@ -1,118 +1,133 @@
 ﻿@using System.Globalization
-
+@inject NavigationManager navigationManager
+@inject ITokenStorageService tokenStorageService
 @{
-    CultureInfo cultureInfo = new("pt-BR");
-    DateTime dateStartMonth = new DateTime(competence.Year, competence.Month, 1);
-    DateTime dateEndMonth = new DateTime(competence.Year, competence.Month, DateTime.DaysInMonth(competence.Year, competence.Month));
+	CultureInfo cultureInfo = new("pt-BR");
+	DateTime dateStartMonth = new DateTime(competence.Year, competence.Month, 1);
+	DateTime dateEndMonth = new DateTime(competence.Year, competence.Month, DateTime.DaysInMonth(competence.Year, competence.Month));
 }
 
 <div class="teste">
-    <div class="calendario">
-        <div class="desc-mes">
-            <div class="titulo">
-                <p>Agenda JS Maringá</p>
-            </div>
-            <nav>
-                <ul class="pagination">
-                    <li class="page-room">
-                        <button class="page-link pn-mes" @onclick="PreviousMonth">
-                            <span aria-hidden="true">&laquo;</span>
-                        </button>
-                    </li>
-                    <li class="page-room nome-mes">
-                        <p class="page-link">@competence.ToString("MMMM/yyyy", cultureInfo)</p>
-                    </li>
-                    <li class="page-room">
-                        <button class="page-link pn-mes" @onclick="NextMonth">
-                            <span aria-hidden="true">&raquo;</span>
-                        </button>
-                    </li>
-                </ul>
-            </nav>
-            <div>
-                <button class="btn btn-outline-info" @onclick="CompetenceCurrent"> @DateTime.Now.ToString("dd/MM/yyyy") </button>
-            </div>
-            <div>
-                <NavLink class="nav-link" href="Login" Match="NavLinkMatch.Prefix">Menu</NavLink>
-            </div>
-        </div>
-        <div class="dia-semana">
-            <div>Domingo</div>
-            <div>Segunda-feira</div>
-            <div>Terça-feira</div>
-            <div>Quarta-feira</div>
-            <div>Quinta-feira</div>
-            <div>Sexta-feira</div>
-            <div>Sábado</div>
-        </div>
-        <div class="centro-mes">
-            <div class="dia-mes">
+	<div class="calendario">
+		<div class="desc-mes">
+			<div class="titulo">
+				<p>Agenda JS Maringá</p>
+			</div>
+			<nav>
+				<ul class="pagination">
+					<li class="page-room">
+						<button class="page-link pn-mes" @onclick="PreviousMonth">
+							<span aria-hidden="true">&laquo;</span>
+						</button>
+					</li>
+					<li class="page-room nome-mes">
+						<p class="page-link">@competence.ToString("MMMM/yyyy", cultureInfo)</p>
+					</li>
+					<li class="page-room">
+						<button class="page-link pn-mes" @onclick="NextMonth">
+							<span aria-hidden="true">&raquo;</span>
+						</button>
+					</li>
+				</ul>
+			</nav>
+			<div>
+				<button class="btn btn-outline-info" @onclick="CompetenceCurrent"> @DateTime.Now.ToString("dd/MM/yyyy") </button>
+			</div>
+			<div>
+				<button class="nav-link" @onclick="Login">Menu</button>
+			</div>
+		</div>
+		<div class="dia-semana">
+			<div>Domingo</div>
+			<div>Segunda-feira</div>
+			<div>Terça-feira</div>
+			<div>Quarta-feira</div>
+			<div>Quinta-feira</div>
+			<div>Sexta-feira</div>
+			<div>Sábado</div>
+		</div>
+		<div class="centro-mes">
+			<div class="dia-mes">
 
-                @for (int i = 0; i < dateEndMonth.Day; i++)
-                {
-                    DateTime currentDate = dateStartMonth.AddDays(i);
-                    int numWeek = ((int)currentDate.DayOfWeek);
-                    bool isToday = currentDate.Date == DateTime.Now.Date;
+				@for (int i = 0; i < dateEndMonth.Day; i++)
+				{
+					DateTime currentDate = dateStartMonth.AddDays(i);
+					int numWeek = ((int)currentDate.DayOfWeek);
+					bool isToday = currentDate.Date == DateTime.Now.Date;
 
 
-                    @if (@currentDate.Day == 1)
-                    {
-                        @for (int y = 0; y < numWeek; y++)
-                        {
-                            <div class="vazio"></div>
-                        }
-                    }
-                    <div class="@GetDayClass(numWeek, isToday)">
-                        <div class="DiaDireita">
-                            <b>@currentDate.Day</b>
-                        </div>
+					@if (@currentDate.Day == 1)
+					{
+						@for (int y = 0; y < numWeek; y++)
+						{
+							<div class="vazio"></div>
+						}
+					}
+					<div class="@GetDayClass(numWeek, isToday)">
+						<div class="DiaDireita">
+							<b>@currentDate.Day</b>
+						</div>
 
-                        <CalendarUser CurrenteDate="@currentDate" />
+						<CalendarUser CurrenteDate="@currentDate" />
 
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
 </div>
 
 @code {
 
-    DateTime competence = DateTime.Now.Date;
-    protected override void OnInitialized()
-    {
-        LoadDataMonth(competence);
-    }
-    private void CompetenceCurrent()
-    {
-        competence = DateTime.Now.Date;
-        LoadDataMonth(competence);
-    }
-    private void LoadDataMonth(DateTime competence)
-    {
-        DateTime dateStartMonth = new DateTime(competence.Year, competence.Month, 1);
-        DateTime dateEndMonth = new DateTime(competence.Year, competence.Month, DateTime.DaysInMonth(competence.Year, competence.Month));
-    }
-    private void NextMonth()
-    {
-        DateTime competenceAdd = competence.AddMonths(1);
-        competence = competenceAdd;
-        LoadDataMonth(competence);
-    }
-    private void PreviousMonth()
-    {
-        DateTime competenceRemove = competence.AddMonths(-1);
-        competence = competenceRemove;
-        LoadDataMonth(competence);
-    }
-    private string GetDayClass(int dayOfWeek, bool isToday)
-    {
-        return dayOfWeek switch
-        {
-            0 => isToday ? "dia-atual dia" : "domingo dia",
-            6 => isToday ? "dia-atual dia" : "sabado dia",
-            _ => isToday ? "dia-atual dia" : "dia"
-        };
-    }
+	DateTime competence = DateTime.Now.Date;
+	protected override void OnInitialized()
+	{
+		LoadDataMonth(competence);
+	}
+	private void CompetenceCurrent()
+	{
+		competence = DateTime.Now.Date;
+		LoadDataMonth(competence);
+	}
+	private void LoadDataMonth(DateTime competence)
+	{
+		DateTime dateStartMonth = new DateTime(competence.Year, competence.Month, 1);
+		DateTime dateEndMonth = new DateTime(competence.Year, competence.Month, DateTime.DaysInMonth(competence.Year, competence.Month));
+	}
+	private void NextMonth()
+	{
+		DateTime competenceAdd = competence.AddMonths(1);
+		competence = competenceAdd;
+		LoadDataMonth(competence);
+	}
+	private void PreviousMonth()
+	{
+		DateTime competenceRemove = competence.AddMonths(-1);
+		competence = competenceRemove;
+		LoadDataMonth(competence);
+	}
+	private string GetDayClass(int dayOfWeek, bool isToday)
+	{
+		return dayOfWeek switch
+		{
+			0 => isToday ? "dia-atual dia" : "domingo dia",
+			6 => isToday ? "dia-atual dia" : "sabado dia",
+			_ => isToday ? "dia-atual dia" : "dia"
+		};
+	}
+	private async Task Login()
+	{
+		var token = await tokenStorageService.GetToken();
+		if (token.IsFailure)
+		{
+			await tokenStorageService.RemoverToken();
+			navigationManager.NavigateTo("/Login");
+		}
+		else
+		{
+			navigationManager.NavigateTo("Schedule");
+		}
+
+	}
 
 }

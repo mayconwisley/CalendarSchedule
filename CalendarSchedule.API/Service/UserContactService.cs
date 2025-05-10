@@ -1,7 +1,7 @@
-﻿using CalendarSchedule.Models.Abstractions;
-using CalendarSchedule.API.MappingDto.UserContatctDto;
+﻿using CalendarSchedule.API.MappingDto.UserContatctDto;
 using CalendarSchedule.API.Repository.Interface;
 using CalendarSchedule.API.Service.Interface;
+using CalendarSchedule.Models.Abstractions;
 using CalendarSchedule.Models.Dtos;
 
 namespace CalendarSchedule.API.Service;
@@ -32,19 +32,19 @@ public class UserContactService(IUserContactRepository _userContactRepository) :
 	{
 		var userContacts = await _userContactRepository.GetAll(page, size, search);
 		if (!userContacts.Any())
-			return Result.Failure<PagedResult<UserContactDto>>(Error.NotFound("Não encontrado"));
+			return Result.Failure<PagedResult<UserContactDto>>(Error.NotFound("Contato não encontrado"));
 
 		var totalUserContact = await _userContactRepository.TotalUserContact(search);
 		if (totalUserContact <= 0)
 			return Result.Failure<PagedResult<UserContactDto>>(Error.NotFound("Nenhum contato encontrado"));
 
 		decimal totalData = totalUserContact;
-		decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
+		decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling(totalData / size);
 		if (size == 1)
 			totalPage = totalData;
 
 		var dto = userContacts.ConvertUserContactsToDto();
-		var usercContactDto = new PagedResult<UserContactDto>(dto, page, size, totalPage, totalUserContact);
+		var usercContactDto = new PagedResult<UserContactDto>(dto, totalData, page, totalPage, size);
 
 		return Result.Success(usercContactDto);
 	}
@@ -62,7 +62,7 @@ public class UserContactService(IUserContactRepository _userContactRepository) :
 	{
 		var userContacts = await _userContactRepository.GetByUserId(page, size, userId);
 		if (!userContacts.Any())
-			return Result.Failure<PagedResult<UserContactDto>>(Error.NotFound("Não encontrado"));
+			return Result.Failure<PagedResult<UserContactDto>>(Error.NotFound("Contato não encontrado"));
 
 
 		var totalUserContact = await _userContactRepository.TotalUserContact(userId.ToString());
@@ -70,12 +70,12 @@ public class UserContactService(IUserContactRepository _userContactRepository) :
 			return Result.Failure<PagedResult<UserContactDto>>(Error.NotFound("Nenhum contato encontrado"));
 
 		decimal totalData = totalUserContact;
-		decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
+		decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling(totalData / size);
 		if (size == 1)
 			totalPage = totalData;
 
 		var dto = userContacts.ConvertUserContactsToDto();
-		var userContactDto = new PagedResult<UserContactDto>(dto, page, size, totalPage, totalUserContact);
+		var userContactDto = new PagedResult<UserContactDto>(dto, totalData, page, totalPage, size);
 
 		return Result.Success(userContactDto);
 	}

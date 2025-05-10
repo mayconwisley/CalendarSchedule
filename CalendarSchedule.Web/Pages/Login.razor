@@ -3,8 +3,6 @@
 @inject IUserStorageService userStorageService
 @inject NavigationManager navigationManager
 
-
-
 <EditForm EditContext="@editContext" OnValidSubmit="Log_in" class="formulario-login">
 	@if (!string.IsNullOrEmpty(errorMessage))
 	{
@@ -47,6 +45,6 @@
 		}
 
 		var user = await userStorageService.GetUserSession(LoginDto);
-		navigationManager.NavigateTo("/Schedule", true);
+		navigationManager.NavigateTo("/Schedule");
 	}
 }
