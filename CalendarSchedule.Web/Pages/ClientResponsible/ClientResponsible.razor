@@ -5,9 +5,9 @@
 @inject NavigationManager navigationManager
 
 <h3>Cadastro Responsável</h3>
-<NavLink href="ClientResponsibleCreate" class="btn btn-info">
+<button @onclick="NovoResponsavel" class="btn btn-info">
 	Novo Responsável
-</NavLink>
+</button>
 
 @if (clientResponsibleView is null)
 {
@@ -33,7 +33,7 @@ else
 		if (token.IsFailure)
 		{
 			await tokenStorageService.RemoverToken();
-			navigationManager.NavigateTo("/Login", true);
+			navigationManager.NavigateTo("/Login");
 		}
 
 		if (token.IsSuccess)
@@ -53,5 +53,9 @@ else
 		var clientResponsible = await clientResponsibleService.GetAll(pageCurrent);
 		clientResponsibleView = clientResponsible.Value;
 
+	}
+	private void NovoResponsavel()
+	{
+		navigationManager.NavigateTo("/ClientResponsibleCreate");
 	}
 }

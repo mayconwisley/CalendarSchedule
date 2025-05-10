@@ -7,9 +7,9 @@
 @inject NavigationManager navigationManager
 
 <h3>Cadastro Agenda do Colaborador</h3>
-<NavLink href="ScheduleCreate" class="btn btn-info">
+<button @onclick="NovaAgenda" class="btn btn-info">
 	Nova Agenda
-</NavLink>
+</button>
 
 @if (scheduleUserView is null)
 {
@@ -51,5 +51,9 @@ else
 	{
 		var result = await scheduleUserService.GetAll(pageCurrent);
 		scheduleUserView = result.Value;
+	}
+	private void NovaAgenda()
+	{
+		navigationManager.NavigateTo("/ScheduleCreate");
 	}
 }

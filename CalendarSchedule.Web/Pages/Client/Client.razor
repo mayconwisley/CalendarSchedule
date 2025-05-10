@@ -5,9 +5,9 @@
 @inject NavigationManager navigationManager
 
 <h3>Cadastro de Cliente</h3>
-<NavLink href="ClientCreate" class="btn btn-info">
+<button @onclick="NovoCliente" class="btn btn-info">
 	Novo Cliente
-</NavLink>
+</button>
 
 @if (clientView is null)
 {
@@ -19,9 +19,9 @@ else
 {
 	<TableClient ClientView="@clientView" DataUpdated="@DataUpdated" />
 	<PaginationTable PageCurrent="@ReceberPagina"
-	TotalData="@clientView.TotalData"
-	Page="@clientView.Page"
-	TotalPage="@clientView.TotalPage" />
+					 TotalData="@clientView.TotalData"
+					 Page="@clientView.Page"
+					 TotalPage="@clientView.TotalPage" />
 }
 
 @code {
@@ -55,7 +55,7 @@ else
 
 		StateHasChanged();
 	}
-   
+
 	private async Task ReceberPagina(int pageCurrent)
 	{
 		var client = await clientService.GetAll(pageCurrent);
@@ -65,5 +65,9 @@ else
 			return;
 		}
 		clientView = client.Value;
+	}
+	private void NovoCliente()
+	{
+		navigationManager.NavigateTo("/ClientCreate");
 	}
 }
