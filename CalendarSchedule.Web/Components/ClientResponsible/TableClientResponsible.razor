@@ -1,5 +1,5 @@
 ﻿@inject IClientResponsibleService clientResponsibleService
-
+@inject NavigationManager navigationManager
 <div class="border mt-2">
 	<table class="table table-striped align-middle">
 		<thead>
@@ -32,9 +32,9 @@
 								@(clientReponsible.Active ? "Sim" : "Não")
 							</td>
 							<td class="text-center">
-								<NavLink href=@($"ClientResponsibleEdit/{clientReponsible.Id}") class="btn btn-info">
+								<button @onclick="() => Editar(clientReponsible.Id)" class="btn btn-info">
 									Editar
-								</NavLink>
+								</button>
 
 								<button data-bs-toggle="modal" data-bs-target="#deleteClientResponsible-@clientReponsible.Id" class="btn btn-danger">
 									Excluir
@@ -57,7 +57,11 @@
 	private async void DataUpdated()
 	{
 		var clientResponsible = await clientResponsibleService.GetAll();
-		ClientResponsibleView = clientResponsible.Value;    
+		ClientResponsibleView = clientResponsible.Value;
 		StateHasChanged();
+	}
+	private void Editar(int id)
+	{
+		navigationManager.NavigateTo($"client/responsible/edit/{id}");
 	}
 }

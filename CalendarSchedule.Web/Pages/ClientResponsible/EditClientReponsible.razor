@@ -1,86 +1,97 @@
-﻿@page "/ClientResponsibleEdit/{ClientResponsibleId}"
+﻿@page "/client/responsible/edit/{ClientResponsibleId:int}"
 
 @inject IClientResponsibleService clientResponsibleService
 @inject NavigationManager navigationManager
 
 <h1>Editar Reponsável do Cliente</h1>
-<EditForm Model="@ClientResponsibleDto" OnValidSubmit="Edit">
+<EditForm Model="@clientResponsibleDto" OnValidSubmit="Edit">
+	@if (!string.IsNullOrEmpty(errorMessage))
+	{
+		<MensageError Message="@errorMessage" />
+	}
 	<DataAnnotationsValidator />
-	<InputNumber hidden @bind-Value="ClientResponsibleDto!.Id" />
+	<InputNumber hidden @bind-Value="clientResponsibleDto!.Id" />
 	<div class="row g-3">
 		<div class="col-12">
 			<label for="inNome" class="form-label">Nome</label>
-			<InputText class="form-control" id="inNome" @bind-Value="ClientResponsibleDto!.Name" placeholder="Nome" />
-			<ValidationMessage For="@(() => ClientResponsibleDto.Name)" />
+			<InputText class="form-control" id="inNome" @bind-Value="clientResponsibleDto!.Name" placeholder="Nome" />
+			<ValidationMessage For="@(() => clientResponsibleDto.Name)" />
 		</div>
 
 		<div class="col-6">
 			<label for="inEmail" class="form-label">E-mail</label>
-			<InputText class="form-control" id="inEmail" @bind-Value="ClientResponsibleDto!.Email" placeholder="E-mail" />
-			<ValidationMessage For="@(() => ClientResponsibleDto.Email)" />
+			<InputText class="form-control" id="inEmail" @bind-Value="clientResponsibleDto!.Email" placeholder="E-mail" />
+			<ValidationMessage For="@(() => clientResponsibleDto.Email)" />
 
 
 		</div>
 		<div class="col-6">
 			<label for="inPosition" class="form-label">Cargo</label>
-			<InputText class="form-control" id="inPosition" @bind-Value="ClientResponsibleDto!.Position" placeholder="Cargo" />
+			<InputText class="form-control" id="inPosition" @bind-Value="clientResponsibleDto!.Position" placeholder="Cargo" />
 		</div>
 		<div class="col-12">
 			<label for="inDescription" class="form-label">Descrição</label>
-			<InputText class="form-control" id="inDescription" @bind-Value="ClientResponsibleDto!.Description" placeholder="Descrição" />
+			<InputText class="form-control" id="inDescription" @bind-Value="clientResponsibleDto!.Description" placeholder="Descrição" />
 		</div>
 		<div class="col-6">
 			<div class="form-check">
-				<InputCheckbox class="form-check-input" id="inActive" @bind-Value="ClientResponsibleDto!.Active" />
+				<InputCheckbox class="form-check-input" id="inActive" @bind-Value="clientResponsibleDto!.Active" />
 				<label for="inActive" class="form-label">Ativo</label>
 			</div>
 		</div>
 	</div>
-	<button type="submit" class="btn btn-primary">Salvar</button>
-	<NavLink href="ClientResponsible" class="btn btn-info">
-		Voltar
-	</NavLink>
+	<div class="mt-4 d-flex gap-2">
+		<button type="submit" class="btn btn-primary" disabled="@isSubmitting">
+			@((isSubmitting) ? "Salvando..." : "Salvar")
+		</button>
+		<button type="button" @onclick="Voltar" class="btn btn-info">Voltar</button>
+	</div>
 </EditForm>
 
 @code {
+
 	[Parameter]
-	public Action? DataUpdated { get; set; }
-	[Parameter]
-	public string ClientResponsibleId { get; set; } = string.Empty;
-		
-	private ClientResponsibleDto? ClientResponsibleDto { get; set; } = new();
+	public int ClientResponsibleId { get; set; }
+	private string? errorMessage;
+	private bool isSubmitting = false;
+
+	private ClientResponsibleDto clientResponsibleDto = new();
 
 	protected override async Task OnInitializedAsync()
 	{
-		var clientResponsible = await clientResponsibleService.GetById(int.Parse(ClientResponsibleId));
-		ClientResponsibleDto = clientResponsible.Value;
+		var clientResponsible = await clientResponsibleService.GetById(ClientResponsibleId);
+		if (clientResponsible.IsSuccess)
+			clientResponsibleDto = clientResponsible.Value;
+		else
+			errorMessage = $"Não foi possível carregar o usuário: {clientResponsible.Error.Message}";
 	}
 
 	private async Task Edit()
 	{
-		ClientResponsibleDto = new()
-			{
-				Id = ClientResponsibleDto!.Id,
-				Name = ClientResponsibleDto.Name,
-				Email = ClientResponsibleDto.Email,
-				Description = ClientResponsibleDto.Description,
-				Position = ClientResponsibleDto.Position,
-				Active = ClientResponsibleDto.Active
-			};
-
-
-		if (ClientResponsibleDto is not null)
+		isSubmitting = true;
+		errorMessage = null;
+		try
 		{
-			await clientResponsibleService.Update(ClientResponsibleDto);
-			UpdateData();
-			ClientResponsibleDto = new();
+			var clientResponsible = await clientResponsibleService.Update(clientResponsibleDto);
+			if (clientResponsible.IsFailure)
+			{
+				errorMessage = clientResponsible.Error.Message;
+				return;
+			}
+			navigationManager.NavigateTo("/client/responsible");
 		}
-		navigationManager.NavigateTo("/ClientResponsible");
-		StateHasChanged();
-	}
+		catch (Exception ex)
+		{
+			errorMessage = $"Erro inesperado ao salvar usuário: {ex.Message}";
+		}
+		finally
+		{
+			isSubmitting = false;
+		}
 
-	private void UpdateData()
+	}
+	private void Voltar()
 	{
-		DataUpdated?.Invoke();
+		navigationManager.NavigateTo("/client/responsible");
 	}
 }

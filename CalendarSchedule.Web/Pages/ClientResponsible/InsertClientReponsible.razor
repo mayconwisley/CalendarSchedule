@@ -1,73 +1,86 @@
-﻿@page "/ClientResponsibleCreate"
+﻿@page "/client/responsible/create"
 
 @inject IClientResponsibleService clientResponsibleService
 @inject NavigationManager navigationManager
 
 <h1>Cadastro Reponsável do Cliente</h1>
-<EditForm Model="@ClientResponsibleCreateDto" OnValidSubmit="Create">
-    <DataAnnotationsValidator />
+<EditForm Model="@clientResponsibleCreateDto" OnValidSubmit="Create">
+	@if (!string.IsNullOrEmpty(errorMessage))
+	{
+		<MensageError Message="@errorMessage" />
+	}
+	<DataAnnotationsValidator />
 
-    <div class="row g-3">
-        <div class="col-12">
-            <label for="inNome" class="form-label">Nome</label>
-            <InputText class="form-control" id="inNome" @bind-Value="ClientResponsibleCreateDto!.Name" placeholder="Nome" />
-            <ValidationMessage For="@(() => ClientResponsibleCreateDto.Name)" />
-        </div>
+	<div class="row g-3">
+		<div class="col-12">
+			<label for="inNome" class="form-label">Nome</label>
+			<InputText class="form-control" id="inNome" @bind-Value="clientResponsibleCreateDto!.Name" placeholder="Nome" />
+			<ValidationMessage For="@(() => clientResponsibleCreateDto.Name)" />
+		</div>
 
-        <div class="col-6">
-            <label for="inEmail" class="form-label">E-mail</label>
-            <InputText class="form-control" id="inEmail" @bind-Value="ClientResponsibleCreateDto!.Email" placeholder="E-mail" />
-            <ValidationMessage For="@(() => ClientResponsibleCreateDto.Email)" />
+		<div class="col-6">
+			<label for="inEmail" class="form-label">E-mail</label>
+			<InputText class="form-control" id="inEmail" @bind-Value="clientResponsibleCreateDto!.Email" placeholder="E-mail" />
+			<ValidationMessage For="@(() => clientResponsibleCreateDto.Email)" />
 
 
-        </div>
-        <div class="col-6">
-            <label for="inPosition" class="form-label">Cargo</label>
-            <InputText class="form-control" id="inPosition" @bind-Value="ClientResponsibleCreateDto!.Position" placeholder="Cargo" />
-        </div>
-        <div class="col-12">
-            <label for="inDescription" class="form-label">Descrição</label>
-            <InputText class="form-control" id="inDescription" @bind-Value="ClientResponsibleCreateDto!.Description" placeholder="Descrição" />
-        </div>
-        <div class="col-6">
-            <div class="form-check">
-                <InputCheckbox class="form-check-input" id="inActive" @bind-Value="ClientResponsibleCreateDto!.Active" />
-                <label for="inActive" class="form-label">Ativo</label>
-            </div>
-        </div>
-    </div>
-    <button type="submit" class="btn btn-primary">Salvar</button>
-    <NavLink href="ClientResponsible" class="btn btn-info">
-        Voltar
-    </NavLink>
+		</div>
+		<div class="col-6">
+			<label for="inPosition" class="form-label">Cargo</label>
+			<InputText class="form-control" id="inPosition" @bind-Value="clientResponsibleCreateDto!.Position" placeholder="Cargo" />
+		</div>
+		<div class="col-12">
+			<label for="inDescription" class="form-label">Descrição</label>
+			<InputText class="form-control" id="inDescription" @bind-Value="clientResponsibleCreateDto!.Description" placeholder="Descrição" />
+		</div>
+		<div class="col-6">
+			<div class="form-check">
+				<InputCheckbox class="form-check-input" id="inActive" @bind-Value="clientResponsibleCreateDto!.Active" />
+				<label for="inActive" class="form-label">Ativo</label>
+			</div>
+		</div>
+	</div>
+	<div class="mt-4 d-flex gap-2">
+		<button type="submit" class="btn btn-primary" disabled="@isSubmitting">
+			@((isSubmitting) ? "Salvando..." : "Salvar")
+		</button>
+		<button type="button" @onclick="Voltar" class="btn btn-info">Voltar</button>
+	</div>
 </EditForm>
 
 @code {
-    [Parameter]
-    public Action? DataUpdated { get; set; }
+	private ClientResponsibleCreateDto clientResponsibleCreateDto = new();
+	private string? errorMessage;
+	private bool isSubmitting = false;
 
-    private ClientResponsibleCreateDto? ClientResponsibleCreateDto { get; set; }
+	private async Task Create()
+	{
+		isSubmitting = true;
+		errorMessage = null;
 
-    protected override async Task OnInitializedAsync()
-    {
-        ClientResponsibleCreateDto ??= new();
-        await base.OnInitializedAsync();
-    }
+		try
+		{
+			var clientResponsible = await clientResponsibleService.Create(clientResponsibleCreateDto);
+			if (clientResponsible.IsFailure)
+			{
+				errorMessage = clientResponsible.Error.Message;
+				return;
+			}
+			navigationManager.NavigateTo("/client/responsible");
 
-    private async Task Create()
-    {
-        if (ClientResponsibleCreateDto is not null)
-        {
-            await clientResponsibleService.Create(ClientResponsibleCreateDto);
-            UpdateData();
-            ClientResponsibleCreateDto = new();
-        }
-        navigationManager.NavigateTo("/ClientResponsible");
-        StateHasChanged();
-    }
-
-    private void UpdateData()
-    {
-        DataUpdated?.Invoke();
-    }
+		}
+		catch (Exception ex)
+		{
+			errorMessage = $"Erro inesperado ao salvar usuário: {ex.Message}";
+		}
+		finally
+		{
+			isSubmitting = false;
+		}
+		
+	}
+	private void Voltar()
+	{
+		navigationManager.NavigateTo("/client/responsible");
+	}
 }

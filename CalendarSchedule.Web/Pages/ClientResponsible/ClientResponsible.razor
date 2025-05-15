@@ -1,4 +1,4 @@
-﻿@page "/ClientResponsible"
+﻿@page "/client/responsible"
 @layout NewLayout
 @inject ITokenStorageService tokenStorageService
 @inject IClientResponsibleService clientResponsibleService
@@ -33,7 +33,7 @@ else
 		if (token.IsFailure)
 		{
 			await tokenStorageService.RemoverToken();
-			navigationManager.NavigateTo("/Login");
+			navigationManager.NavigateTo("/login");
 		}
 
 		if (token.IsSuccess)
@@ -56,6 +56,6 @@ else
 	}
 	private void NovoResponsavel()
 	{
-		navigationManager.NavigateTo("/ClientResponsibleCreate");
+		navigationManager.NavigateTo("/client/responsible/create");
 	}
 }
