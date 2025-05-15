@@ -164,9 +164,7 @@ app.Use(async (context, next) =>
 			break;
 	}
 });
-app.UseCors(policy => policy.WithOrigins("https://localhost:7296",
-										 "http://192.168.0.102:5051",
-										 "http://localhost:5051")
+app.UseCors(policy => policy.WithOrigins("https://localhost:7296")
 	.AllowAnyMethod()
 	.AllowAnyHeader()
 	.WithHeaders(HeaderNames.ContentType)

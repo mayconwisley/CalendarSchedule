@@ -5,13 +5,18 @@
 
 @if (UserDto is null)
 {
-
+	<MensageError Message="@errorMessage" />
 }
 else
 {
 	<h1>Editar Colaborador</h1>
 	<EditForm Model="@UserDto" OnValidSubmit="@Edit">
+		@if (!string.IsNullOrEmpty(errorMessage))
+		{
+			<MensageError Message="@errorMessage" />
+		}
 		<DataAnnotationsValidator />
+		<ValidationSummary />
 
 		<div class="row g-3">
 			<div class="col-12">
@@ -47,23 +52,21 @@ else
 				</div>
 			</div>
 		</div>
-
-
-		<button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
-		<NavLink href="User" class="btn btn-info">
-			Voltar
-		</NavLink>
-
+		<div class="mt-4 d-flex gap-2">
+			<button type="submit" class="btn btn-primary" disabled="@isSubmitting">
+				@((isSubmitting) ? "Salvando..." : "Salvar")
+			</button>
+			<button type="button" @onclick="Voltar" class="btn btn-info">Voltar</button>
+		</div>
 	</EditForm>
 }
 @code {
-	[Parameter]
-	public EventCallback DataUpdated { get; set; }
 
 	[Parameter]
 	public int UserId { get; set; }
-
-	private UserDto? UserDto;
+	private string? errorMessage;
+	private UserDto UserDto = new();
+	private bool isSubmitting = false;
 
 	private bool ManagerValue
 	{
@@ -90,30 +93,52 @@ else
 		if (user.IsSuccess)
 			UserDto = user.Value;
 		else
-			navigationManager.NavigateTo("/user");
+			errorMessage = $"Não foi possível carregar o usuário: {user.Error.Message}";
 
+	}
+	private void Voltar()
+	{
+		navigationManager.NavigateTo("/user");
 	}
 
 	private async Task Edit()
 	{
-		var userUpdateDto = new UserUpdateDto
+		isSubmitting = true;
+		errorMessage = null;
+
+		try
+		{
+			if (UserDto is null)
+				return;
+
+			var userUpdateDto = new UserUpdateDto
 			{
-				Id = UserDto!.Id,
+				Id = UserId,
 				Name = UserDto.Name!,
 				Username = UserDto.Username,
-				Password = UserDto.Password,
-				Description = UserDto.Description,
 				Manager = UserDto.Manager,
-				Active = UserDto.Active
+				Active = UserDto.Active,
+				Password = string.IsNullOrWhiteSpace(UserDto.Password) ? null : UserDto.Password,
+				Description = string.IsNullOrWhiteSpace(UserDto.Description) ? null : UserDto.Description
 			};
 
-		var room = await userService.Update(userUpdateDto);
-		await UpdateData();
-		navigationManager.NavigateTo("/user");
-	}
+			var user = await userService.Update(userUpdateDto);
 
-	private async Task UpdateData()
-	{
-		await DataUpdated.InvokeAsync(null);
+			if (user.IsFailure)
+			{
+				errorMessage = user.Error.Message;
+				return;
+			}
+
+			navigationManager.NavigateTo("/user");
+		}
+		catch (Exception ex)
+		{
+			errorMessage = $"Erro inesperado ao salvar usuário: {ex.Message}";
+		}
+		finally
+		{
+			isSubmitting = false;
+		}
 	}
 }

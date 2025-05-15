@@ -1,75 +1,97 @@
-﻿@page "/UserContactEdit/{UserContactId}"
+﻿@page "/user/contact/edit/{UserContactId:int}"
 
 @inject IUserContactService userContactService
 @inject NavigationManager navigationManager
+@if (UserContactDto is null)
+{
+	<MensageError Message="@errorMessage" />
+}
+else
+{
+	<div>
+		<h1>Editar Contato Colaborador</h1>
+		<EditForm Model="@UserContactDto" OnValidSubmit="@Edit">
+			@if (!string.IsNullOrEmpty(errorMessage))
+			{
+				<MensageError Message="@errorMessage" />
+			}
+			<DataAnnotationsValidator />
+			<ValidationSummary />
+			<div class="row g-3">
+				<div class="col-12">
+					<label for="inColaborador" class="form-label">Colaborador: </label>
+					<span>@UserDto.Id - @UserDto.Username</span>
+				</div>
+				<div class="col-6">
+					<label for="inType" class="form-label">Tipo</label>
+					<InputText class="form-control" id="inType" @bind-Value="UserContactDto.Type" placeholder="Tipo" />
+					<ValidationMessage For="@(() => UserContactDto.Type)" />
+				</div>
+				<div class="col-6">
+					<label for="inNumber" class="form-label">Número</label>
+					<InputText class="form-control" id="inNumber" @bind-Value="UserContactDto.Number" placeholder="Número" />
+					<ValidationMessage For="@(() => UserContactDto.Number)" />
+				</div>
 
-<div>
-    <h1>Editar Contato Colaborador</h1>
-    <EditForm Model="@UserContactDto" OnValidSubmit="@Edit">
-        <InputNumber hidden @bind-Value="UserContactDto!.Id" />
-        <DataAnnotationsValidator />
-        <div class="row g-3">
-            <div class="col-12">
-                <label for="inColaborador" class="form-label">Colaborador: </label>
-                <span>@UserDto.Id - @UserDto.Username</span>
-            </div>
-            <div class="col-6">
-                <label for="inType" class="form-label">Tipo</label>
-                <InputText class="form-control" id="inType" @bind-Value="UserContactDto.Type" placeholder="Tipo" />
-                <ValidationMessage For="@(() => UserContactDto.Type)" />
-            </div>
-
-            <div class="col-6">
-                <label for="inNumber" class="form-label">Número</label>
-                <InputText class="form-control" id="inNumber" @bind-Value="UserContactDto.Number" placeholder="Número" />
-                <ValidationMessage For="@(() => UserContactDto.Number)" />
-            </div>
-
-        </div>
-        <button type="submit" class="btn btn-primary">Salvar</button>
-        <NavLink href=@($"/User") class="btn btn-info">Voltar</NavLink>
-    </EditForm>
-
-
-</div>
+			</div>
+			<div class="mt-4 d-flex gap-2">
+				<button type="submit" class="btn btn-primary" disabled="@isSubmitting">
+					@((isSubmitting) ? "Salvando..." : "Salvar")
+				</button>
+				<button type="button" @onclick="Voltar" class="btn btn-info">Voltar</button>
+			</div>
+		</EditForm>
+	</div>
+}
 @code {
-    [Parameter]
-    public EventCallback DataUpdated { get; set; }
-    [Parameter]
-    public string UserContactId { get; set; } = string.Empty;
 
-    private UserContactCreateDto? UserContactCreateDto { get; set; }
-    private UserContactDto? UserContactDto { get; set; } = new();
-    private UserDto UserDto { get; set; } = new();
+	[Parameter]
+	public int UserContactId { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        var result = await userContactService.GetById(int.Parse(UserContactId));
-        UserContactDto = result.Value;
+	private UserContactDto UserContactDto { get; set; } = new();
+	private UserDto UserDto { get; set; } = new();
+	private string? errorMessage;
+	private bool isSubmitting = false;
 
-        UserDto = UserContactDto.UserDto!;
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		var result = await userContactService.GetById(UserContactId);
+		if (result.IsFailure)
+		{
+			errorMessage = result.Error.Message;
+			return;
+		}
+		UserContactDto = result.Value;
+		UserContactDto.UserId = UserContactId;
+		UserDto = UserContactDto.UserDto!;
+	}
 
-    private async Task Edit()
-    {
-        UserContactDto = new()
-            {
-                Id = UserContactDto!.Id,
-                Number = UserContactDto.Number,
-                Type = UserContactDto.Type,
-                UserId = UserContactDto!.UserDto!.Id
-            };
+	private async Task Edit()
+	{
+		isSubmitting = true;
+		errorMessage = null;
 
-        if (UserContactDto is not null)
-        {
-            await userContactService.Update(UserContactDto);
-            await UpdateData();
-        }
-        navigationManager.NavigateTo("/User");
-    }
-
-    private async Task UpdateData()
-    {
-        await DataUpdated.InvokeAsync(null);
-    }
+		try
+		{
+			var userContact = await userContactService.Update(UserContactDto);
+			if (userContact.IsFailure)
+			{
+				errorMessage = userContact.Error.Message;
+				return;
+			}
+			navigationManager.NavigateTo($"/user/details/{UserDto.Id}");
+		}
+		catch (Exception ex)
+		{
+			errorMessage = $"Erro inesperado ao salvar usuário: {ex.Message}";
+		}
+		finally
+		{
+			isSubmitting = false;
+		}
+	}
+	private void Voltar()
+	{
+		navigationManager.NavigateTo($"/user/details/{UserDto.Id}");
+	}
 }

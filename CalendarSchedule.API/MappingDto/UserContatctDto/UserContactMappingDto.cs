@@ -54,15 +54,6 @@ public static class UserContactContactMappingDto
 			}
 		};
 	}
-	public static UserContactCreateDto ConvertUserContactCreateToDto(this UserContact userContact)
-	{
-		return new UserContactCreateDto
-		{
-			Number = userContact.Number,
-			Type = userContact.Type,
-			UserId = userContact.UserId,
-		};
-	}
 	public static UserContact ConvertDtoToUserContactCreate(this UserContactCreateDto userContactCreateDto)
 	{
 		return new UserContact
@@ -70,6 +61,16 @@ public static class UserContactContactMappingDto
 			Number = userContactCreateDto.Number,
 			Type = userContactCreateDto.Type,
 			UserId = userContactCreateDto.UserId
+		};
+	}
+	public static UserContact ConvertDtoToUserContactUpdate(this UserContactUpdateDto userContactUpdateDto)
+	{
+		return new UserContact
+		{
+			Id = userContactUpdateDto.Id,
+			Number = userContactUpdateDto.Number,
+			Type = userContactUpdateDto.Type,
+			UserId = userContactUpdateDto.UserId
 		};
 	}
 }

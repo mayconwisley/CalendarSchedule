@@ -89,9 +89,9 @@ public class UserContactService(IUserContactRepository _userContactRepository) :
 		return Result.Success(totalUserContact);
 	}
 
-	public async Task<Result<UserContactDto>> Update(UserContactDto userContactDto)
+	public async Task<Result<UserContactDto>> Update(UserContactUpdateDto userContactUpdateDto)
 	{
-		var userContact = await _userContactRepository.Update(userContactDto.ConvertDtoToUserContact());
+		var userContact = await _userContactRepository.Update(userContactUpdateDto.ConvertDtoToUserContactUpdate());
 		if (userContact is null)
 			return Result.Failure<UserContactDto>(Error.NotFound("Contato não encontrado"));
 

@@ -1,80 +1,92 @@
-﻿@page "/UserCreate"
+﻿@page "/user/create"
 
 @inject IUserService userService
 @inject NavigationManager navigationManager
-<h1>Cadastro de Colaborador</h1>
+<div class="mb-4">
+	<h1>Cadastro de Colaborador</h1>
+</div>
 <EditForm Model="@UserCreateDto" OnValidSubmit="Create">
-    <DataAnnotationsValidator />
+	@if (!string.IsNullOrEmpty(errorMessage))
+	{
+		<MensageError Message="@errorMessage" />
+	}
+	<DataAnnotationsValidator />
+	<ValidationSummary />
 
-    <div class="row g-3">
-        <div class="col-12">
-            <label for="inNome" class="form-label">Nome</label>
-            <InputText class="form-control" id="inNome" @bind-Value="UserCreateDto!.Name" placeholder="Nome" />
-            <ValidationMessage For="@(() => UserCreateDto.Name)" />
-        </div>
+	<div class="row g-3">
+		<div class="col-12">
+			<label for="inNome" class="form-label">Nome</label>
+			<InputText class="form-control" id="inNome" @bind-Value="UserCreateDto.Name" placeholder="Nome" />
+			<ValidationMessage For="@(() => UserCreateDto.Name)" />
+		</div>
 
-        <div class="col-6">
-            <label for="inUsername" class="form-label">Usuário</label>
-            <InputText class="form-control" id="inUsername" @bind-Value="UserCreateDto!.Username" placeholder="Usuário" />
-            <ValidationMessage For="@(() => UserCreateDto.Username)" />
+		<div class="col-6">
+			<label for="inUsername" class="form-label">Usuário</label>
+			<InputText class="form-control" id="inUsername" @bind-Value="UserCreateDto.Username" placeholder="Usuário" />
+			<ValidationMessage For="@(() => UserCreateDto.Username)" />
 
 
-        </div>
-        <div class="col-6">
-            <label for="inPassword" class="form-label">Senha</label>
-            <InputText type="password" class="form-control" id="inPassword" @bind-Value="UserCreateDto!.Password" placeholder="Senha" />
-            <ValidationMessage For="@(() => UserCreateDto.Password)" />
-        </div>
+		</div>
+		<div class="col-6">
+			<label for="inPassword" class="form-label">Senha</label>
+			<InputText type="password" class="form-control" id="inPassword" @bind-Value="UserCreateDto.Password" placeholder="Senha" />
+			<ValidationMessage For="@(() => UserCreateDto.Password)" />
+		</div>
 
-        <div class="col-12">
-            <label for="inDescription" class="form-label">Descrição</label>
-            <InputText class="form-control" id="inDescription" @bind-Value="UserCreateDto!.Description" placeholder="Descrição" />
-        </div>
-        <div class="col-6">
-            <div class="form-check">
-                <InputCheckbox class="form-check-input" id="inManager" @bind-Value="UserCreateDto!.Manager" />
-                <label for="inManager" class="form-label">Gestor</label>
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="form-check">
-                <InputCheckbox class="form-check-input" id="inActive" @bind-Value="UserCreateDto!.Active" />
-                <label for="inActive" class="form-label">Ativo</label>
-            </div>
-        </div>
-    </div>
-    <button type="submit" class="btn btn-primary">Salvar</button>
-    <NavLink href="User" class="btn btn-info">
-        Voltar
-    </NavLink>
+		<div class="col-12">
+			<label for="inDescription" class="form-label">Descrição</label>
+			<InputText class="form-control" id="inDescription" @bind-Value="UserCreateDto.Description" placeholder="Descrição" />
+		</div>
+		<div class="col-6">
+			<div class="form-check">
+				<InputCheckbox class="form-check-input" id="inManager" @bind-Value="UserCreateDto.Manager" />
+				<label for="inManager" class="form-check-label">Gestor</label>
+			</div>
+		</div>
+		<div class="col-6">
+			<div class="form-check">
+				<InputCheckbox class="form-check-input" id="inActive" @bind-Value="UserCreateDto.Active" />
+				<label for="inActive" class="form-check-label">Ativo</label>
+			</div>
+		</div>
+	</div>
+	<div class="mt-4 d-flex gap-2">
+		<button type="submit" class="btn btn-primary" disabled="@isSubmitting">
+			@((isSubmitting) ? "Salvando..." : "Salvar")
+		</button>
+		<button type="button" @onclick="Voltar" class="btn btn-info">Voltar</button>
+	</div>
 </EditForm>
 
 @code {
-    [Parameter]
-    public Action? DataUpdated { get; set; }
-
-    private UserCreateDto? UserCreateDto { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        UserCreateDto ??= new();
-        await base.OnInitializedAsync();
-    }
-
-    private async Task Create()
-    {
-        if (UserCreateDto is not null)
-        {
-            var user = await userService.Create(UserCreateDto);
-            UpdateData();
-            UserCreateDto = new();
-        }
-        navigationManager.NavigateTo("/User");
-        StateHasChanged();
-    }
-
-    private void UpdateData()
-    {
-        DataUpdated?.Invoke();
-    }
+	private UserCreateDto UserCreateDto { get; set; } = new();
+	private string? errorMessage;
+	private bool isSubmitting = false;
+	private async Task Create()
+	{
+		isSubmitting = true;
+		errorMessage = null;
+		try
+		{
+			var user = await userService.Create(UserCreateDto);
+			if (user.IsFailure)
+			{
+				errorMessage = user.Error.Message;
+				return;
+			}
+			navigationManager.NavigateTo("/user");
+		}
+		catch (Exception ex)
+		{
+			errorMessage = $"Erro inesperado ao salvar usuário: {ex.Message}";
+		}
+		finally
+		{
+			isSubmitting = false;
+		}
+	}
+	private void Voltar()
+	{
+		navigationManager.NavigateTo("/user");
+	}
 }

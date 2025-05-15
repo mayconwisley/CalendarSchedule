@@ -1,4 +1,4 @@
-﻿@page "/DetailsUserContact/{UserId:int}"
+﻿@page "/user/details/{UserId:int}"
 
 @using System.Globalization
 @inject IUserContactService userContactService
@@ -36,9 +36,9 @@
 								<td>@userContactDto.Type</td>
 								<td>@userContactDto.Number</td>
 								<td>
-									<NavLink href=@($"/UserContactEdit/{@userContactDto.Id}") class="btn btn-info">
+									<button @onclick="() => Editar(userContactDto.Id)" class="btn btn-info">
 										Editar
-									</NavLink>
+									</button>
 									<button data-bs-toggle="modal" data-bs-target="#deleteUserContact-@userContactDto.Id" class="btn btn-danger">
 										Excluir
 									</button>
@@ -78,6 +78,10 @@
 	private void Voltar()
 	{
 		navigationManager.NavigateTo("/user");
+	}
+	private void Editar(int id)
+	{
+		navigationManager.NavigateTo($"/user/contact/edit/{id}");
 	}
 	private async Task DataUpdate()
 	{

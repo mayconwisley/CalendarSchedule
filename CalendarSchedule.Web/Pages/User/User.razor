@@ -24,7 +24,6 @@ else
 	TotalData="@userView.TotalData"
 	Page="@userView.Page"
 	TotalPage="@userView.TotalPage" />
-	@* <InsertUserModal DataUpdated="@(() => DataUpdated())" /> *@
 }
 
 @code {
@@ -41,33 +40,25 @@ else
 		}
 		var user = await userStorageService.GetUserSession();
 		if (user.Value.Manager == false)
-		{
 			navigationManager.NavigateTo("/");
-		}
 
 		if (token.IsSuccess)
-		{
 			await DataUpdated();
-		}
 	}
 	private void NovoColaborador()
 	{
-		navigationManager.NavigateTo("/UserCreate");
+		navigationManager.NavigateTo("/user/create");
 	}
 	private async Task DataUpdated()
 	{
 		var user = await userService.GetAll();
 		if(user.IsSuccess)
-		{
 			userView = user.Value;
-
-		}
 		StateHasChanged();
 	}
 	private async Task ReceberPagina(int pageCurrent)
 	{
 		var user = await userService.GetAll(pageCurrent);
 		userView = user.Value;
-
 	}
 }

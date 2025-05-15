@@ -1,4 +1,6 @@
-﻿<div class="border mt-2">
+﻿@inject NavigationManager navigationManager
+
+<div class="border mt-2">
 	<table class="table table-striped align-middle">
 		<thead>
 			<tr>
@@ -33,19 +35,18 @@
 							<td>@user.Username</td>
 							<td>
 
-								<NavLink href=@($"/user/edit/{user.Id}") class="btn btn-info">
+								<button @onclick="() => Editar(user.Id)" class="btn btn-info">
 									Editar
-								</NavLink>
-
+								</button>
 
 								<button data-bs-toggle="modal" data-bs-target="#newContactUser-@user.Id" class="btn btn-info">
 									Add Contato
 								</button>
 								<InsertUserContactModal UserId="@user.Id" UserName="@user.Name" DataUpdated="DataUpdate" />
 
-								<NavLink href=@($"/DetailsUserContact/{user.Id}") class="btn btn-info">
+								<button @onclick="() => Detalhe(user.Id)" class="btn btn-info">
 									Detalhe
-								</NavLink>
+								</button>
 
 								<button data-bs-toggle="modal" data-bs-target="#deleteUser-@user.Id" class="btn btn-danger">
 									Excluir
@@ -71,5 +72,17 @@
 	{
 		await DataUpdated.InvokeAsync(null);
 
+	}
+	private void Editar(int id)
+	{
+		if (UserView is null)
+			return;
+		navigationManager.NavigateTo($"/user/edit/{id}");
+	}
+	private void Detalhe(int id)
+	{
+		if (UserView is null)
+			return;
+		navigationManager.NavigateTo($"/user/details/{id}");
 	}
 }
