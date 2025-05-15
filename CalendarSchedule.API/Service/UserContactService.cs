@@ -32,11 +32,11 @@ public class UserContactService(IUserContactRepository _userContactRepository) :
 	{
 		var userContacts = await _userContactRepository.GetAll(page, size, search);
 		if (!userContacts.Any())
-			return Result.Failure<PagedResult<UserContactDto>>(Error.NotFound("Contato não encontrado"));
+			return Result.Failure<PagedResult<UserContactDto>>(Error.NotFound("Contatos não encontrado"));
 
 		var totalUserContact = await _userContactRepository.TotalUserContact(search);
 		if (totalUserContact <= 0)
-			return Result.Failure<PagedResult<UserContactDto>>(Error.NotFound("Nenhum contato encontrado"));
+			return Result.Failure<PagedResult<UserContactDto>>(Error.NotFound("Contatos não encontrado"));
 
 		decimal totalData = totalUserContact;
 		decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling(totalData / size);

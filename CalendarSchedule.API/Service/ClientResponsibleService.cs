@@ -33,13 +33,13 @@ public class ClientResponsibleService(IClientResponsibleRepository _clientRespon
 	{
 		var clientResponsibles = await _clientResponsibleRepository.GetAll(page, size, search);
 		if (clientResponsibles is null)
-			return Result.Failure<PagedResult<ClientResponsibleDto>>(Error.NotFound("Cliente responsavel não encontrado"));
+			return Result.Failure<PagedResult<ClientResponsibleDto>>(Error.NotFound("Responsaveis não encontrado"));
 
 		var totalClientResponsible = await _clientResponsibleRepository.TotalClientResponsible(search);
 		if (totalClientResponsible <= 0)
-			return Result.Failure<PagedResult<ClientResponsibleDto>>(Error.NotFound("Nenhum cliente responsavel encontrado"));
+			return Result.Failure<PagedResult<ClientResponsibleDto>>(Error.NotFound("Responsaveis não encontrado"));
 		decimal totalData = totalClientResponsible;
-		decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
+		decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling(totalData / size);
 		if (size == 1)
 			totalPage = totalData;
 

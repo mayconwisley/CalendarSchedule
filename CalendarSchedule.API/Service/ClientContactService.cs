@@ -35,14 +35,14 @@ public class ClientContactService(IClientContactRepository _clientContactReposit
 	{
 		var clientContacts = await _clientContactRepository.GetAll(page, size, search);
 		if (clientContacts is null)
-			return Result.Failure<PagedResult<ClientContactDto>>(Error.NotFound("Nenhum contato encontrado"));
+			return Result.Failure<PagedResult<ClientContactDto>>(Error.NotFound("Contatos não encontrado"));
 
 		var totalClientContact = await _clientContactRepository.TotalClientContact(search);
 		if (totalClientContact <= 0)
-			return Result.Failure<PagedResult<ClientContactDto>>(Error.NotFound("Nenhum contato encontrado"));
+			return Result.Failure<PagedResult<ClientContactDto>>(Error.NotFound("Contatos não encontrado"));
 
 		decimal totalData = totalClientContact;
-		decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
+		decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling(totalData / size);
 		if (size == 1)
 			totalPage = totalData;
 
@@ -63,7 +63,7 @@ public class ClientContactService(IClientContactRepository _clientContactReposit
 			return Result.Failure<PagedResult<ClientContactDto>>(Error.NotFound("Nenhum contato encontrado"));
 
 		decimal totalData = totalClientContact;
-		decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
+		decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling(totalData / size);
 
 		if (size == 1)
 			totalPage = totalData;

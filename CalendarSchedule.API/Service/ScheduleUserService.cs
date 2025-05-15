@@ -1,7 +1,7 @@
-﻿using CalendarSchedule.Models.Abstractions;
-using CalendarSchedule.API.MappingDto.ScheduleUserDtos;
+﻿using CalendarSchedule.API.MappingDto.ScheduleUserDtos;
 using CalendarSchedule.API.Repository.Interface;
 using CalendarSchedule.API.Service.Interface;
+using CalendarSchedule.Models.Abstractions;
 using CalendarSchedule.Models.Dtos;
 
 namespace CalendarSchedule.API.Service;
@@ -29,14 +29,14 @@ public class ScheduleUserService(IScheduleUserRepository _scheduleUserRepository
 	{
 		var scheduleUserDtos = await _scheduleUserRepository.GetAll(page, size, search);
 		if (scheduleUserDtos is null)
-			return Result.Failure<PagedResult<ScheduleUserDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+			return Result.Failure<PagedResult<ScheduleUserDto>>(Error.NotFound("Agendamentos não encontrado"));
 
 		var totalScheduleUser = await TotalScheduleUser(search);
 		if (totalScheduleUser.Value <= 0)
-			return Result.Failure<PagedResult<ScheduleUserDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+			return Result.Failure<PagedResult<ScheduleUserDto>>(Error.NotFound("Agendamentos não encontrado"));
 
 		decimal totalData = totalScheduleUser.Value;
-		decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
+		decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling(totalData / size);
 		if (size == 1)
 			totalPage = totalData;
 
@@ -53,14 +53,14 @@ public class ScheduleUserService(IScheduleUserRepository _scheduleUserRepository
 
 		var scheduleUserDtos = await _scheduleUserRepository.GetByDatePeriod(page, size, search, dtDateStart, dtDateEnd);
 		if (scheduleUserDtos is null)
-			return Result.Failure<PagedResult<ScheduleUserDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+			return Result.Failure<PagedResult<ScheduleUserDto>>(Error.NotFound("Agendamentos não encontrado"));
 
 		var totalScheduleUser = await TotalScheduleUser(dtDateStart, dtDateEnd, search);
 		if (totalScheduleUser.Value <= 0)
-			return Result.Failure<PagedResult<ScheduleUserDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+			return Result.Failure<PagedResult<ScheduleUserDto>>(Error.NotFound("Agendamentos não encontrado"));
 
 		decimal totalData = totalScheduleUser.Value;
-		decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
+		decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling(totalData / size);
 		if (size == 1)
 			totalPage = totalData;
 
@@ -76,13 +76,13 @@ public class ScheduleUserService(IScheduleUserRepository _scheduleUserRepository
 
 		var scheduleUserDtos = await _scheduleUserRepository.GetByDateStart(page, size, search, dtDateStart);
 		if (scheduleUserDtos is null)
-			return Result.Failure<PagedResult<ScheduleUserDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+			return Result.Failure<PagedResult<ScheduleUserDto>>(Error.NotFound("Agendamentos não encontrado"));
 
 		var totalScheduleUser = await TotalScheduleUser(dtDateStart, search);
 		if (totalScheduleUser.Value <= 0)
-			return Result.Failure<PagedResult<ScheduleUserDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+			return Result.Failure<PagedResult<ScheduleUserDto>>(Error.NotFound("Agendamentos não encontrado"));
 		decimal totalData = totalScheduleUser.Value;
-		decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
+		decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling(totalData / size);
 		if (size == 1)
 			totalPage = totalData;
 
@@ -105,14 +105,14 @@ public class ScheduleUserService(IScheduleUserRepository _scheduleUserRepository
 	{
 		var scheduleUserDtos = await _scheduleUserRepository.GetByScheduleId(page, size, search, scheduleId);
 		if (scheduleUserDtos is null)
-			return Result.Failure<PagedResult<ScheduleUserDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+			return Result.Failure<PagedResult<ScheduleUserDto>>(Error.NotFound("Agendamentos nãoencontrado"));
 
 		var totalScheduleUser = await TotalScheduleUser(scheduleId, search);
 		if (totalScheduleUser.Value <= 0)
-			return Result.Failure<PagedResult<ScheduleUserDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+			return Result.Failure<PagedResult<ScheduleUserDto>>(Error.NotFound("Agendamentos não encontrado"));
 
 		decimal totalData = totalScheduleUser.Value;
-		decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
+		decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling(totalData / size);
 
 		if (size == 1)
 			totalPage = totalData;

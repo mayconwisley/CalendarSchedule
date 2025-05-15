@@ -1,7 +1,7 @@
-﻿using CalendarSchedule.Models.Abstractions;
-using CalendarSchedule.API.MappingDto.ScheduleDtos;
+﻿using CalendarSchedule.API.MappingDto.ScheduleDtos;
 using CalendarSchedule.API.Repository.Interface;
 using CalendarSchedule.API.Service.Interface;
+using CalendarSchedule.Models.Abstractions;
 using CalendarSchedule.Models.Dtos;
 
 namespace CalendarSchedule.API.Service;
@@ -62,14 +62,14 @@ public class ScheduleService(IScheduleRepository _scheduleUserRepository, IClien
 	{
 		var scheduleEntity = await _scheduleUserRepository.GetAll(page, size, search);
 		if (scheduleEntity is null)
-			return Result.Failure<PagedResult<ScheduleDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+			return Result.Failure<PagedResult<ScheduleDto>>(Error.NotFound("Agendamentos não encontrado"));
 
 		var totalSchedule = await _scheduleUserRepository.TotalSchedules(search);
 		if (totalSchedule <= 0)
-			return Result.Failure<PagedResult<ScheduleDto>>(Error.NotFound("Nenhum agendamento encontrado"));
+			return Result.Failure<PagedResult<ScheduleDto>>(Error.NotFound("Agendamentos não encontrado"));
 
 		decimal totalData = totalSchedule;
-		decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling((totalData / size));
+		decimal totalPage = (totalData / size) <= 0 ? 1 : Math.Ceiling(totalData / size);
 		if (size == 1)
 			totalPage = totalData;
 

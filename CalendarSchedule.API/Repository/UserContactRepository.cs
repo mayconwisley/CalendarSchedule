@@ -32,6 +32,9 @@ public class UserContactRepository(ScheduleContext scheduleContext) : IUserConta
 		var userContacts =
 		await _scheduleContext.UserContacts
 			  .Include(i => i.User)
+			  .Where(w => w.Type.Contains(search) ||
+								 w.Number.Contains(search) ||
+								 w.User.Name.Contains(search))
 			  .OrderBy(o => o!.User!.Name)
 			  .Skip((page - 1) * size)
 			  .Take(size)
@@ -66,7 +69,10 @@ public class UserContactRepository(ScheduleContext scheduleContext) : IUserConta
 	{
 		var totalUserContact =
 		await _scheduleContext.UserContacts
-			 .CountAsync(w => w.UserId.Equals(int.Parse(search)));
+			 .Include(i => i.User)
+			 .CountAsync(w => w.Type.Contains(search) ||
+								 w.Number.Contains(search) ||
+								 w.User.Name.Contains(search));
 		return totalUserContact;
 	}
 

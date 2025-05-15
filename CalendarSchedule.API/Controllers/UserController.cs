@@ -16,12 +16,20 @@ public class UserController(IUserService _userService) : ControllerBase
 	[Route("All")]
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResult<UserDto>))]
 	[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
+	[ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(Error))]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Error))]
 	public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
 	{
 		var dto = await _userService.GetAll(page, size, search);
 		if (dto.IsFailure)
-			return NotFound(dto.Error);
-
+		{
+			return dto.Error.StatusCode switch
+			{
+				HttpStatusCode.NotFound => NotFound(dto.Error),
+				HttpStatusCode.UnprocessableEntity => UnprocessableEntity(dto.Error),
+				_ => StatusCode(StatusCodes.Status500InternalServerError, dto.Error)
+			};
+		}
 		var users = dto.Value;
 		return Ok(users);
 	}
@@ -31,11 +39,21 @@ public class UserController(IUserService _userService) : ControllerBase
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResult<UserDto>))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
 	[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
+	[ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(Error))]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Error))]
 	public async Task<IActionResult> GetManagerAll([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "")
 	{
 		var dto = await _userService.GetManagerAll(page, size, search);
 		if (dto.IsFailure)
-			return NotFound(dto.Error);
+		{
+			return dto.Error.StatusCode switch
+			{
+				HttpStatusCode.BadRequest => BadRequest(dto.Error),
+				HttpStatusCode.NotFound => NotFound(dto.Error),
+				HttpStatusCode.UnprocessableEntity => UnprocessableEntity(dto.Error),
+				_ => StatusCode(StatusCodes.Status500InternalServerError, dto.Error)
+			};
+		}
 
 		var users = dto.Value;
 		return Ok(users);
@@ -46,11 +64,22 @@ public class UserController(IUserService _userService) : ControllerBase
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResult<UserDto>))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
 	[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
+	[ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(Error))]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Error))]
 	public async Task<IActionResult> GetManagerAllByUserCurrent([FromQuery] int page = 1, [FromQuery] int size = 10, [FromQuery] string search = "", [FromQuery] string username = "")
 	{
 		var dto = await _userService.GetManagerAllByUserCurrent(page, size, search, username);
 		if (dto.IsFailure)
-			return NotFound(dto.Error);
+		{
+			return dto.Error.StatusCode switch
+			{
+				HttpStatusCode.BadRequest => BadRequest(dto.Error),
+				HttpStatusCode.NotFound => NotFound(dto.Error),
+				HttpStatusCode.UnprocessableEntity => UnprocessableEntity(dto.Error),
+				_ => StatusCode(StatusCodes.Status500InternalServerError, dto.Error)
+			};
+		}
+
 
 		var users = dto.Value;
 		return Ok(users);
@@ -60,6 +89,8 @@ public class UserController(IUserService _userService) : ControllerBase
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
 	[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
+	[ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(Error))]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Error))]
 	public async Task<IActionResult> GetById(int id)
 	{
 		if (id <= 0)
@@ -70,7 +101,16 @@ public class UserController(IUserService _userService) : ControllerBase
 
 		var dto = await _userService.GetById(id);
 		if (dto.IsFailure)
-			return NotFound(dto.Error);
+		{
+			return dto.Error.StatusCode switch
+			{
+				HttpStatusCode.BadRequest => BadRequest(dto.Error),
+				HttpStatusCode.NotFound => NotFound(dto.Error),
+				HttpStatusCode.UnprocessableEntity => UnprocessableEntity(dto.Error),
+				_ => StatusCode(StatusCodes.Status500InternalServerError, dto.Error)
+			};
+		}
+
 
 		var user = dto.Value;
 		return Ok(user);
@@ -80,6 +120,8 @@ public class UserController(IUserService _userService) : ControllerBase
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
 	[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
+	[ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(Error))]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Error))]
 	public async Task<IActionResult> GetManagerUsername(string username)
 	{
 		if (string.IsNullOrEmpty(username))
@@ -90,7 +132,15 @@ public class UserController(IUserService _userService) : ControllerBase
 
 		var dto = await _userService.GetManagerUsername(username);
 		if (dto.IsFailure)
-			return NotFound(dto.Error);
+		{
+			return dto.Error.StatusCode switch
+			{
+				HttpStatusCode.BadRequest => BadRequest(dto.Error),
+				HttpStatusCode.NotFound => NotFound(dto.Error),
+				HttpStatusCode.UnprocessableEntity => UnprocessableEntity(dto.Error),
+				_ => StatusCode(StatusCodes.Status500InternalServerError, dto.Error)
+			};
+		}
 
 		var user = dto.Value;
 		return Ok(user);
@@ -103,6 +153,7 @@ public class UserController(IUserService _userService) : ControllerBase
 	[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
 	[ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(Error))]
+	[ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(Error))]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Error))]
 	public async Task<IActionResult> Post([FromBody] UserCreateDto userCreateDto)
 	{
@@ -118,9 +169,10 @@ public class UserController(IUserService _userService) : ControllerBase
 		{
 			return dto.Error.StatusCode switch
 			{
-				HttpStatusCode.NotFound => NotFound(dto.Error),
 				HttpStatusCode.BadRequest => BadRequest(dto.Error),
+				HttpStatusCode.NotFound => NotFound(dto.Error),
 				HttpStatusCode.Conflict => Conflict(dto.Error),
+				HttpStatusCode.UnprocessableEntity => UnprocessableEntity(dto.Error),
 				_ => StatusCode(StatusCodes.Status500InternalServerError, dto.Error)
 			};
 		}
@@ -137,6 +189,7 @@ public class UserController(IUserService _userService) : ControllerBase
 	[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
 	[ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(Error))]
+	[ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(Error))]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Error))]
 	public async Task<IActionResult> Put(int id, [FromBody] UserUpdateDto userUpdateDto)
 	{
@@ -161,9 +214,10 @@ public class UserController(IUserService _userService) : ControllerBase
 		{
 			return dto.Error.StatusCode switch
 			{
-				HttpStatusCode.NotFound => NotFound(dto.Error),
 				HttpStatusCode.BadRequest => BadRequest(dto.Error),
+				HttpStatusCode.NotFound => NotFound(dto.Error),
 				HttpStatusCode.Conflict => Conflict(dto.Error),
+				HttpStatusCode.UnprocessableEntity => UnprocessableEntity(dto.Error),
 				_ => StatusCode(StatusCodes.Status500InternalServerError, dto.Error)
 			};
 		}
@@ -177,6 +231,7 @@ public class UserController(IUserService _userService) : ControllerBase
 	[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
 	[ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(Error))]
+	[ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(Error))]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Error))]
 	public async Task<IActionResult> Patch(int id, [FromBody] UserUpdateDto userUpdateDto)
 	{
@@ -201,9 +256,10 @@ public class UserController(IUserService _userService) : ControllerBase
 		{
 			return dto.Error.StatusCode switch
 			{
-				HttpStatusCode.NotFound => NotFound(dto.Error),
 				HttpStatusCode.BadRequest => BadRequest(dto.Error),
+				HttpStatusCode.NotFound => NotFound(dto.Error),
 				HttpStatusCode.Conflict => Conflict(dto.Error),
+				HttpStatusCode.UnprocessableEntity => UnprocessableEntity(dto.Error),
 				_ => StatusCode(StatusCodes.Status500InternalServerError, dto.Error)
 			};
 		}
@@ -217,6 +273,7 @@ public class UserController(IUserService _userService) : ControllerBase
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
 	[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Error))]
+	[ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(Error))]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Error))]
 	public async Task<ActionResult<UserDto>> Delete(int id)
 	{
@@ -231,8 +288,9 @@ public class UserController(IUserService _userService) : ControllerBase
 		{
 			return dto.Error.StatusCode switch
 			{
-				HttpStatusCode.NotFound => NotFound(dto.Error),
 				HttpStatusCode.BadRequest => BadRequest(dto.Error),
+				HttpStatusCode.NotFound => NotFound(dto.Error),
+				HttpStatusCode.UnprocessableEntity => UnprocessableEntity(dto.Error),
 				_ => StatusCode(StatusCodes.Status500InternalServerError, dto.Error)
 			};
 		}
