@@ -21,9 +21,9 @@ else
 	<TableUser DataUpdated="DataUpdated" UserView="@userView" />
 
 	<PaginationTable PageCurrent="@ReceberPagina"
-	TotalData="@userView.TotalData"
-	Page="@userView.Page"
-	TotalPage="@userView.TotalPage" />
+					 TotalData="@userView.TotalData"
+					 Page="@userView.Page"
+					 TotalPage="@userView.TotalPage" />
 }
 
 @code {
@@ -52,7 +52,7 @@ else
 	private async Task DataUpdated()
 	{
 		var user = await userService.GetAll();
-		if(user.IsSuccess)
+		if (user.IsSuccess)
 			userView = user.Value;
 		StateHasChanged();
 	}

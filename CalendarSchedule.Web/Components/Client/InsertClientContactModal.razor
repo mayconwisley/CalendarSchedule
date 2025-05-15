@@ -1,89 +1,113 @@
 ﻿@inject IClientContactService clientContactService
 @inject IClientService clientService
 @inject IClientResponsibleService clientResponsibleService
+@inject NavigationManager navigationManager
 
 <div class="modal fade" id="newContactClient-@ClientId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <EditForm Model="@ClientContactCreateDto" OnValidSubmit="Create">
-                @{
-                    ClientContactCreateDto!.ClientId = @ClientId;
-                }
-                <DataAnnotationsValidator />
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Contato Cliente</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row g-3">
-                        <div class="col-12">
-                            <label for="inColaborador" class="form-label">Cliente: </label>
-                            <span>@ClientId - @ClientName</span>
-                        </div>
-                        <div class="col-12">
-                            <label for="inResponsible" class="form-label">Responsável</label>
-                            <InputSelect class="form-select" id="inResponsible" @bind-Value="ClientContactCreateDto!.ClientResponsibleId">
-                                @if (ClientResponsibleView?.Data is not null)
-                                {
-                                    <option value="0">Selecione uma Opção</option>
-                                    @foreach (var responsible in ClientResponsibleView.Data)
-                                    {
-                                        <option value="@responsible.Id"> @responsible.Name</option>
-                                    }
-                                }
-                            </InputSelect>
-                            <ValidationMessage For="@(() => ClientContactCreateDto.ClientResponsibleId)" />
-                        </div>
-                        <div class="col-6">
-                            <label for="inType" class="form-label">Tipo</label>
-                            <InputText class="form-control" id="inType" @bind-Value="ClientContactCreateDto!.Type" placeholder="Tipo" />
-                            <ValidationMessage For="@(() => ClientContactCreateDto.Type)" />
-                        </div>
-                        <div class="col-6">
-                            <label for="inNumber" class="form-label">Número</label>
-                            <InputText class="form-control" id="inNumber" @bind-Value="ClientContactCreateDto!.Number" placeholder="Número" />
-                            <ValidationMessage For="@(() => ClientContactCreateDto.Number)" />
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
-                </div>
-            </EditForm>
-        </div>
-    </div>
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<EditForm Model="@clientContactCreateDto" OnValidSubmit="Create">
+				@{
+					clientContactCreateDto!.ClientId = @ClientId;
+				}
+				<DataAnnotationsValidator />
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="staticBackdropLabel">Contato Cliente</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="row g-3">
+						<div class="col-12">
+							<label for="inColaborador" class="form-label">Cliente: </label>
+							<span>@ClientId - @ClientName</span>
+						</div>
+						<div class="col-12">
+							<label for="inResponsible" class="form-label">Responsável</label>
+							<InputSelect class="form-select" id="inResponsible" @bind-Value="clientContactCreateDto!.ClientResponsibleId">
+								@if (clientResponsibleView?.Data is not null)
+								{
+									<option value="0">Selecione uma Opção</option>
+									@foreach (var responsible in clientResponsibleView.Data)
+									{
+										<option value="@responsible.Id"> @responsible.Name</option>
+									}
+								}
+							</InputSelect>
+							<ValidationMessage For="@(() => clientContactCreateDto.ClientResponsibleId)" />
+						</div>
+						<div class="col-6">
+							<label for="inType" class="form-label">Tipo</label>
+							<InputText class="form-control" id="inType" @bind-Value="clientContactCreateDto!.Type" placeholder="Tipo" />
+							<ValidationMessage For="@(() => clientContactCreateDto.Type)" />
+						</div>
+						<div class="col-6">
+							<label for="inNumber" class="form-label">Número</label>
+							<InputText class="form-control" id="inNumber" @bind-Value="clientContactCreateDto!.Number" placeholder="Número" />
+							<ValidationMessage For="@(() => clientContactCreateDto.Number)" />
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
+				</div>
+			</EditForm>
+		</div>
+	</div>
 </div>
 
 @code {
-    [Parameter]
-    public EventCallback DataUpdated { get; set; }
+	[Parameter]
+	public EventCallback<int> DataUpdated { get; set; }
 
-    [Parameter]
-    public int ClientId { get; set; }
-    [Parameter]
-    public string? ClientName { get; set; }
+	[Parameter]
+	public int ClientId { get; set; }
+	[Parameter]
+	public string? ClientName { get; set; }
 
-    private ClientContactCreateDto? ClientContactCreateDto { get; set; }
-    private PagedResultView<ClientResponsibleDto> ClientResponsibleView { get; set; } = new();
+	private ClientContactCreateDto clientContactCreateDto = new();
+	private PagedResultView<ClientResponsibleDto> clientResponsibleView = new();
+	private string? errorMessage;
+	private bool isSubmitting = false;
 
-    protected override async Task OnInitializedAsync()
-    {
-        var client = await clientResponsibleService.GetAll();
-        ClientResponsibleView = client.Value;
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		var client = await clientResponsibleService.GetAll();
+		if (client.IsFailure)
+		{
+			errorMessage = client.Error.Message;
+			return;
+		}
 
-    private async Task Create()
-    {
-        if (ClientContactCreateDto is not null)
-        {
-            await clientContactService.Create(ClientContactCreateDto);
-            await UpdateData();
-            ClientContactCreateDto = new();
-        }
-    }
+		clientResponsibleView = client.Value;
+	}
 
-    private async Task UpdateData()
-    {
-        await DataUpdated.InvokeAsync(null);
-    }
+	private async Task Create()
+	{
+		isSubmitting = true;
+		errorMessage = null;
+		try
+		{
+			var clientContact = await clientContactService.Create(clientContactCreateDto);
+			if (clientContact.IsFailure)
+			{
+				errorMessage = clientContact.Error.Message;
+				return;
+			}
+			await UpdateData();
+		}
+		catch (Exception ex)
+		{
+			errorMessage = $"Erro inesperado ao salvar usuário: {ex.Message}";
+		}
+		finally
+		{
+			isSubmitting = false;
+		}
+		
+	}
+
+	private async Task UpdateData()
+	{
+		await DataUpdated.InvokeAsync(ClientId);
+	}
 }

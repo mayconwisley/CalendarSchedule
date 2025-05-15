@@ -32,9 +32,9 @@ public class UserContactRepository(ScheduleContext scheduleContext) : IUserConta
 		var userContacts =
 		await _scheduleContext.UserContacts
 			  .Include(i => i.User)
+			  .OrderBy(o => o!.User!.Name)
 			  .Skip((page - 1) * size)
 			  .Take(size)
-			  .OrderBy(o => o!.User!.Name)
 			  .ToListAsync();
 		return userContacts;
 	}
@@ -55,9 +55,9 @@ public class UserContactRepository(ScheduleContext scheduleContext) : IUserConta
 		await _scheduleContext.UserContacts
 				.Include(i => i.User)
 				.Where(w => w.UserId.Equals(userId))
+				.OrderBy(o => o!.User!.Name)
 				.Skip((page - 1) * size)
 				.Take(size)
-				.OrderBy(o => o!.User!.Name)
 				.ToListAsync();
 		return userContacts;
 	}

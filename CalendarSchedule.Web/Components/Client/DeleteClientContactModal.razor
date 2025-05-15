@@ -1,22 +1,26 @@
-﻿@inject IUserContactService userContactService
+﻿@inject IClientContactService clientContactService
 
-<div class="modal fade" id="deleteUserContact-@UserContactId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="deleteClientContact-@UserContactId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <EditForm Model="@UserContactDto" OnValidSubmit="@Delete">
-                <InputNumber hidden @bind-Value="UserContactDto!.Id" />
+            <EditForm Model="@clientContactDto" OnValidSubmit="@Delete">
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <MensageError Message="@errorMessage" />
+                }
+                <InputNumber hidden @bind-Value="clientContactDto!.Id" />
                 <DataAnnotationsValidator />
 
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Excluir Colaborador</h1>
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Excluir Contato</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
 
                     <div class="row g-3">
                         <div class="col-12">
-                            <p>Tipo: @UserContactDto.Type</p>
-                            <p>Número: @UserContactDto.Number</p>
+                            <p>Tipo: @clientContactDto.Type</p>
+                            <p>Número: @clientContactDto.Number</p>
                         </div>
                     </div>
                 </div>
@@ -33,24 +37,28 @@
     [Parameter]
     public EventCallback DataUpdated { get; set; }
 
-    private UserContactDto? UserContactDto { get; set; } = new();
+    private ClientContactDto clientContactDto = new();
 
     [Parameter]
     public int UserContactId { get; set; }
-
+    private string? errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
-        var userContact = await userContactService.GetById(UserContactId);
-        UserContactDto = userContact.Value;
-        await base.OnInitializedAsync();
+        var clientContact = await clientContactService.GetById(UserContactId);
+        if (clientContact.IsFailure)
+        {
+            errorMessage = clientContact.Error.Message;
+            return;
+        }
+        clientContactDto = clientContact.Value;
     }
 
     private async Task Delete()
     {
-        if (UserContactDto is not null)
+        if (clientContactDto is not null)
         {
-            await userContactService.Delete(UserContactId);
+            await clientContactService.Delete(UserContactId);
             await UpdateData();
         }
     }

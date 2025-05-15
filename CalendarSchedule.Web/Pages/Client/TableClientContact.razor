@@ -1,17 +1,21 @@
-﻿@page "/DetailsClientContact/{ClientId}"
+﻿@page "/client/details/contact/{ClientId:int}"
 
 @using System.Globalization
 @inject IClientContactService clientContactService
+@inject NavigationManager navigationManager
 
-
-@if (ClientContactView is not null)
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+	<MensageError Message="@errorMessage" />
+	<button type="button" @onclick="Voltar" class="btn btn-info">Voltar</button>
+}
+else
 {
 	var clientContacts = ClientContactView.Data;
-
 	if (clientContacts is not null)
 	{
 		var clientName = clientContacts
-						.Where(w => w.ClientId == int.Parse(ClientId))
+						.Where(w => w.ClientDto.Id == ClientId)
 						.Select(s => s.ClientDto!.Name)
 						.FirstOrDefault();
 
@@ -39,16 +43,35 @@
 							<tr>
 								<td>@clientContactDto.Id</td>
 								<td>@clientContactDto.Type</td>
-								<td>@clientContactDto.Number</td>
+								@{
+									string tel = clientContactDto.Number!
+									.Replace("-", "")
+									.Replace("(", "")
+									.Replace(")", "")
+									.Replace(" ", "");
+									string tel1 = string.Empty;
+									string apiTel = string.Empty;
+									if (tel.Length == 10)
+									{
+										tel1 = decimal.Parse(tel).ToString("(##) ####-####");
+									}
+									else
+									{
+										tel1 = decimal.Parse(tel).ToString("(##) # ####-####");
+										apiTel = $@"https://api.whatsapp.com/send?phone=55{tel}";
+									}
+								}
+								<td><a href="@apiTel" target="_blank">@tel1</a></td>
 								<td>@clientContactDto.ClientResponsibleDto!.Name</td>
 								<td>@clientContactDto.ClientResponsibleDto!.Position</td>
 								<td>
-									<NavLink href=@($"/ClientContactEdit/{@clientContactDto.Id}") class="btn btn-info">
+									<button @onclick="() => Editar(clientContactDto.Id)" class="btn btn-info">
 										Editar
-									</NavLink>
-									<button data-bs-toggle="modal" data-bs-target="#deleteUserContact-@clientContactDto.Id" class="btn btn-danger">
+									</button>
+									<button data-bs-toggle="modal" data-bs-target="#deleteClientContact-@clientContactDto.Id" class="btn btn-danger">
 										Excluir
 									</button>
+									<DeleteClientContactModal UserContactId="clientContactDto.Id" DataUpdated="DataUpdate" />
 								</td>
 							</tr>
 						}
@@ -56,33 +79,52 @@
 				}
 			</tbody>
 		</table>
-		<NavLink href=@($"/Client") class="btn btn-info">
-			Voltar
-		</NavLink>
+		<button type="button" @onclick="Voltar" class="btn btn-info">Voltar</button>
 	</div>
-
 }
 
 @code {
 
 	[Parameter]
-	public Action? DataUpdated { get; set; }
+	public PagedResultView<ClientContactDto> ClientContactView { get; set; } = new();
 
 	[Parameter]
-	public PagedResultView<ClientContactDto>? ClientContactView { get; set; } = new();
-
+	public int ClientId { get; set; }
 	[Parameter]
-	public string ClientId { get; set; } = string.Empty;
+	public EventCallback DataUpdated { get; set; }
+
+	private string? errorMessage;
 
 	protected async override Task OnInitializedAsync()
 	{
 		await DataUpdate();
 	}
-
 	private async Task DataUpdate()
 	{
-		var clientContact = await clientContactService.GetByClientId(1, 10, int.Parse(ClientId)); 
+		var clientContact = await clientContactService.GetByClientId(1, 10, ClientId);
+		if (clientContact.IsFailure)
+		{
+			errorMessage = clientContact.Error.Message;
+			return;
+		}
+
+		if (clientContact.Value.Data.Count() == 0)
+		{
+			navigationManager.NavigateTo("/client");
+		}
+
 		ClientContactView = clientContact.Value;
-		StateHasChanged();
+
+	}
+	private void Editar(int id)
+	{
+		if (ClientContactView is null)
+			return;
+
+		navigationManager.NavigateTo($"/client/contact/edit/{id}");
+	}
+	private void Voltar()
+	{
+		navigationManager.NavigateTo("/client");
 	}
 }

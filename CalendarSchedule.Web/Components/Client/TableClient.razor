@@ -1,90 +1,134 @@
-﻿<div class="border mt-2">
-    <table class="table table-striped align-middle">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nome</th>
-                <th>Telefone</th>
-                <th>Estado</th>
-                <th>Cidade</th>
-                <th>Rua</th>
-                <th>Numero</th>
-                <th>Jardim</th>
-                <th>Descrição</th>
-                <th class="text-center">Prospecção</th>
-                <th class="text-center">Ativo</th>
-                <th class="text-center">Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (ClientView is not null)
-            {
-                var clients = ClientView.Data;
+﻿@inject NavigationManager navigationManager
+@inject IClientContactService clientContactService
+<div class="border mt-2">
+	<table class="table table-striped align-middle">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Nome</th>
+				<th>Telefone</th>
+				<th>Estado</th>
+				<th>Cidade</th>
+				<th>Rua</th>
+				<th>Numero</th>
+				<th>Jardim</th>
+				<th>Descrição</th>
+				<th class="text-center">Prospecção</th>
+				<th class="text-center">Ativo</th>
+				<th class="text-center">Ações</th>
+			</tr>
+		</thead>
+		<tbody>
+			@if (ClientView is not null)
+			{
+				var clients = ClientView.Data;
 
-                if (clients is not null)
-                {
-                    @foreach (var client in clients)
-                    {
-                        <tr>
-                            <td>@client.Id</td>
-                            <td>@client.Name</td>
-                            @{
-                                string tel = client.Telephone!
-                                .Replace("-", "")
-                                .Replace("(", "")
-                                .Replace(")", "")
-                                .Replace(" ", "");
-                                string tel1 = decimal.Parse(tel).ToString("(##) ####-####");
-                                string apiTel = $@"https://api.whatsapp.com/send?phone=55{tel}";
-                            }
-                            <td><a href="@apiTel" target="_blank">@tel1</a></td>
-                            <td>@client.State</td>
-                            <td>@client.City</td>
-                            <td>@client.Road</td>
-                            <td>@client.Number</td>
-                            <td>@client.Garden</td>
-                            <td>@client.Description</td>
-                            <td class="text-center">
-                                @(client.Prospection ? "Sim" : "Não")
-                            </td>
-                            <td class="text-center">
-                                @(client.Active ? "Sim" : "Não")
-                            </td>
-                            <td>
-                                <NavLink href=@($"ClientEdit/{client.Id}") class="btn btn-info">
-                                    Editar
-                                </NavLink>
-                                <button data-bs-toggle="modal" data-bs-target="#newContactClient-@client.Id" class="btn btn-info">
-                                    Contato
-                                </button>
-                                <InsertClientContactModal ClientId="@client.Id" ClientName="@client.Name" DataUpdated="@(() => DataUpdate())" />
+				if (clients is not null)
+				{
+					@foreach (var client in clients)
+					{
+						<tr>
+							<td>@client.Id</td>
+							<td>@client.Name</td>
+							@{
+								string tel = client.Telephone!
+								.Replace("-", "")
+								.Replace("(", "")
+								.Replace(")", "")
+								.Replace(" ", "");
+								string tel1 = string.Empty;
+								string apiTel = string.Empty;
+								if (tel.Length == 10)
+								{
+									tel1 = decimal.Parse(tel).ToString("(##) ####-####");
+								}
+								else
+								{
+									tel1 = decimal.Parse(tel).ToString("(##) # ####-####");
+									apiTel = $@"https://api.whatsapp.com/send?phone=55{tel}";
+								}
+							}
+							<td><a href="@apiTel" target="_blank">@tel1</a></td>
+							<td>@client.State</td>
+							<td>@client.City</td>
+							<td>@client.Road</td>
+							<td>@client.Number</td>
+							<td>@client.Garden</td>
+							<td>@client.Description</td>
+							<td class="text-center">
+								@(client.Prospection ? "Sim" : "Não")
+							</td>
+							<td class="text-center">
+								@(client.Active ? "Sim" : "Não")
+							</td>
+							<td>
+								<button @onclick="() => Editar(client.Id)" class="btn btn-info">
+									Editar
+								</button>
+								<button data-bs-toggle="modal" data-bs-target="#newContactClient-@client.Id" class="btn btn-info">
+									Contato
+								</button>
+								<InsertClientContactModal ClientId="@client.Id" ClientName="@client.Name" DataUpdated="() => DataUpdate(client.Id)" />
 
-                                <NavLink href=@($"DetailsClientContact/{client.Id}") class="btn btn-info">
-                                    Detalhe
-                                </NavLink>
-                                <button data-bs-toggle="modal" data-bs-target="#deleteClient-@client.Id" class="btn btn-danger">
-                                    Excluir
-                                </button>
-                                <DeleteClientModal ClientId="@client.Id" DataUpdated="@(() => DataUpdate())" />
-                            </td>
-                        </tr>
+								<button @onclick="() => Detalhe(client.Id)" class="btn btn-info" disabled="@(clienteTemContato.TryGetValue(client.Id, out var temContato) ? !temContato : true)">
+									Detalhe
+								</button>
 
-                    }
-                }
-            }
+								<button data-bs-toggle="modal" data-bs-target="#deleteClient-@client.Id" class="btn btn-danger">
+									Excluir
+								</button>
+								<DeleteClientModal ClientId="@client.Id" DataUpdated="() => DataUpdate(client.Id)" />
+							</td>
+						</tr>
 
-        </tbody>
-    </table>
+					}
+				}
+			}
+
+		</tbody>
+	</table>
 </div>
 
 @code {
-    [Parameter]
-    public PagedResultView<ClientDto>? ClientView { get; set; }
-    [Parameter]
-    public EventCallback DataUpdated { get; set; }
+	[Parameter]
+	public PagedResultView<ClientDto> ClientView { get; set; } = new();
+	[Parameter]
+	public EventCallback DataUpdated { get; set; }
+	private string? errorMessage;
+	private bool isDetalhe = false;
 
-    private async Task DataUpdate()
-    {
-        await DataUpdated.InvokeAsync(null);
-    }
+	private Dictionary<int, bool> clienteTemContato = new();
+
+	protected override async Task OnParametersSetAsync()
+	{
+		if (ClientView?.Data is not null)
+		{
+			foreach (var client in ClientView.Data)
+			{
+				if (!clienteTemContato.ContainsKey(client.Id))
+				{
+					await DataUpdate(client.Id);
+				}
+			}
+		}
+	}
+	private async Task DataUpdate(int clientId)
+	{
+		var result = await clientContactService.GetByClientId(1, 1, clientId);
+		clienteTemContato[clientId] = result.IsSuccess && result.Value.Data!.Any();
+	}
+	private void Editar(int id)
+	{
+		if (ClientView is null)
+			return;
+
+		navigationManager.NavigateTo($"/client/edit/{id}");
+	}
+	private void Detalhe(int id)
+	{
+		if (ClientView is null)
+			return;
+		navigationManager.NavigateTo($"client/details/contact/{id}");
+	}
+
 }

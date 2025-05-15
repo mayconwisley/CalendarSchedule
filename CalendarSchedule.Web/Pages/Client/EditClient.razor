@@ -1,10 +1,14 @@
-﻿@page "/ClientEdit/{ClientId}"
+﻿@page "/client/edit/{ClientId:int}"
 
 @inject IClientService clientService
 @inject NavigationManager navigationManager
 <h1>Editar Cliente</h1>
 
 <EditForm Model="@ClientDto" OnValidSubmit="@Edit">
+	@if (!string.IsNullOrEmpty(errorMessage))
+	{
+		<MensageError Message="@errorMessage" />
+	}
 	<InputNumber hidden @bind-Value="ClientDto!.Id" />
 	<DataAnnotationsValidator />
 
@@ -63,38 +67,57 @@
 			</div>
 		</div>
 	</div>
-	<button type="submit" class="btn btn-primary">Salvar</button>
-	<NavLink href="Client" class="btn btn-info">Voltar</NavLink>
+	<div class="mt-4 d-flex gap-2">
+		<button type="submit" class="btn btn-primary" disabled="@isSubmitting">
+			@((isSubmitting) ? "Salvando..." : "Salvar")
+		</button>
+		<button type="button" @onclick="Voltar" class="btn btn-info">Voltar</button>
+	</div>
 </EditForm>
 
 @code {
-	[Parameter]
-	public Action? DataUpdated { get; set; }
 
-	private ClientDto? ClientDto { get; set; } = new();
+	private ClientDto ClientDto { get; set; } = new();
 
 	[Parameter]
-	public string ClientId { get; set; } = string.Empty;
+	public int ClientId { get; set; }
+	private string? errorMessage;
+	private bool isSubmitting = false;
 
 	protected override async Task OnInitializedAsync()
 	{
-		var client = await clientService.GetById(int.Parse(ClientId));
+		var client = await clientService.GetById(ClientId);
 		ClientDto = client.Value;
 	}
 
 	private async Task Edit()
 	{
-		if (ClientDto is not null)
+		isSubmitting = true;
+		errorMessage = null;
+
+		try
 		{
 			var room = await clientService.Update(ClientDto);
-			UpdateData();
+			if (room.IsFailure)
+			{
+				errorMessage = room.Error.Message;
+				return;
+			}
+			navigationManager.NavigateTo("/client");
 		}
-		navigationManager.NavigateTo("/Client");
-		StateHasChanged();
+		catch (Exception ex)
+		{
+
+			errorMessage = $"Erro inesperado ao salvar cliente: {ex.Message}";
+		}
+		finally
+		{
+			isSubmitting = false;
+		}
+	}
+	private void Voltar()
+	{
+		navigationManager.NavigateTo("/client");
 	}
 
-	private void UpdateData()
-	{
-		DataUpdated?.Invoke();
-	}
 }

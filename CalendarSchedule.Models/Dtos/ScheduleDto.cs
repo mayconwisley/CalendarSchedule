@@ -5,7 +5,7 @@ namespace CalendarSchedule.Models.Dtos;
 public class ScheduleDto
 {
 	public int Id { get; set; }
-	public string? Description { get; set; }
+	public string? Description { get; set; } = string.Empty;
 	public DateTime DateStart { get; set; } = DateTime.Now;
 	public DateTime DateFinal { get; set; } = DateTime.Now.AddHours(1);
 	public bool MeetingType { get; set; } = false;

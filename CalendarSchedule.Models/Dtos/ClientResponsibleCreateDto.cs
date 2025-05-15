@@ -4,21 +4,21 @@ namespace CalendarSchedule.Models.Dtos;
 
 public class ClientResponsibleCreateDto
 {
-    [Required]
-    [MaxLength(150)]
-    public string? Name { get; set; }
+	[Required(ErrorMessage = "Nome obrigatório")]
+	[MaxLength(150)]
+	public string Name { get; set; } = string.Empty;
 
-    [Required]
-    [MaxLength(150)]
-    public string? Email { get; set; }
+	[Required(ErrorMessage = "E-mail obrigatório")]
+	[MaxLength(150)]
+	public string Email { get; set; } = string.Empty;
 
-    [MaxLength(500)]
-    public string? Description { get; set; }
+	[MaxLength(500)]
+	public string? Description { get; set; } = string.Empty;
 
-    [Required]
-    [MaxLength(150)]
-    public string? Position { get; set; }
+	[Required(ErrorMessage = "Cargo obrigatório")]
+	[MaxLength(150)]
+	public string Position { get; set; } = string.Empty;
 
-    [Required]
-    public bool Active { get; set; } = true;
+	[Required]
+	public bool Active { get; set; } = true;
 }

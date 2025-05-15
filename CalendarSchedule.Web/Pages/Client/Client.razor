@@ -1,4 +1,4 @@
-﻿@page "/Client"
+﻿@page "/client"
 @layout NewLayout
 @inject ITokenStorageService tokenStorageService
 @inject IClientService clientService
@@ -17,16 +17,24 @@
 }
 else
 {
-	<TableClient ClientView="@clientView" DataUpdated="@DataUpdated" />
-	<PaginationTable PageCurrent="@ReceberPagina"
-					 TotalData="@clientView.TotalData"
-					 Page="@clientView.Page"
-					 TotalPage="@clientView.TotalPage" />
+	@if (!string.IsNullOrEmpty(errorMessage))
+	{
+		<MensageError Message="@errorMessage" />
+	}
+	else
+	{
+		<TableClient ClientView="@clientView" DataUpdated="@DataUpdated" />
+		<PaginationTable PageCurrent="@ReceberPagina"
+						 TotalData="@clientView.TotalData"
+						 Page="@clientView.Page"
+						 TotalPage="@clientView.TotalPage" />
+	}
 }
 
 @code {
 	private PagedResultView<ClientDto>? clientView;
 	private LoginDto? LoginDto { get; set; } = new();
+	private string? errorMessage;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -34,7 +42,7 @@ else
 		if (token.IsFailure)
 		{
 			await tokenStorageService.RemoverToken();
-			navigationManager.NavigateTo("/Login", true);
+			navigationManager.NavigateTo("/Login");
 		}
 
 		if (token.IsSuccess)
@@ -48,7 +56,7 @@ else
 		var client = await clientService.GetAll();
 		if (client.IsFailure)
 		{
-			await tokenStorageService.RemoverToken();
+			errorMessage = client.Error.Message;
 			return;
 		}
 		clientView = client.Value;
@@ -68,6 +76,6 @@ else
 	}
 	private void NovoCliente()
 	{
-		navigationManager.NavigateTo("/ClientCreate");
+		navigationManager.NavigateTo("/client/create");
 	}
 }

@@ -1,81 +1,108 @@
-﻿@page "/ClientContactEdit/{ClientContactId}"
+﻿@page "/client/contact/edit/{ClientContactId:int}"
 
 @inject IClientContactService clientContactService
 @inject NavigationManager navigationManager
 
-@if (ClientContactDto is not null)
+@if (clientContactDto is not null)
 {
 	<div>
 		<h1>Editar Contato Cliente</h1>
-		<EditForm Model="@ClientContactDto" OnValidSubmit="@Edit">
-			<InputNumber hidden @bind-Value="ClientContactDto!.Id" />
+		<EditForm Model="@clientContactDto" OnValidSubmit="@Edit">
+			@if (!string.IsNullOrEmpty(errorMessage))
+			{
+				<MensageError Message="@errorMessage" />
+			}
 			<DataAnnotationsValidator />
 			<div class="row g-3">
 				<div class="col-12">
 					<label class="form-label">Cliente: </label>
-					<span>@ClientContactId - @ClientDto!.Name</span>
+					<span>@ClientContactId - @clientDto!.Name</span>
 				</div>
 				<div class="col-12">
 					<label class="form-label">Responsável: </label>
-					<span>@ClientContactDto.ClientResponsibleId - @ClientResponsibleDto!.Name</span>
+					<span>@clientResponsibleDto.Id - @clientResponsibleDto.Name</span>
 				</div>
 				<div class="col-6">
 					<label for="inType" class="form-label">Tipo</label>
-					<InputText class="form-control" id="inType" @bind-Value="ClientContactDto!.Type" placeholder="Tipo" />
-					<ValidationMessage For="@(() => ClientContactDto.Type)" />
+					<InputText class="form-control" id="inType" @bind-Value="clientContactDto!.Type" placeholder="Tipo" />
+					<ValidationMessage For="@(() => clientContactDto.Type)" />
 				</div>
 				<div class="col-6">
 					<label for="inNumber" class="form-label">Número</label>
-					<InputText class="form-control" id="inNumber" @bind-Value="ClientContactDto!.Number" placeholder="Número" />
-					<ValidationMessage For="@(() => ClientContactDto.Number)" />
+					<InputText class="form-control" id="inNumber" @bind-Value="clientContactDto!.Number" placeholder="Número" />
+					<ValidationMessage For="@(() => clientContactDto.Number)" />
 				</div>
 
 			</div>
-			<button type="submit" class="btn btn-primary">Salvar</button>
-			<NavLink href=@($"/Client") class="btn btn-info">Voltar</NavLink>
+			<div class="mt-4 d-flex gap-2">
+				<button type="submit" class="btn btn-primary" disabled="@isSubmitting">
+					@((isSubmitting) ? "Salvando..." : "Salvar")
+				</button>
+				<button type="button" @onclick="() => Voltar(clientDto.Id)" class="btn btn-info">Voltar</button>
+			</div>
 		</EditForm>
 	</div>
 }
 @code {
-	[Parameter]
-	public EventCallback DataUpdated { get; set; }
-	[Parameter]
-	public string ClientContactId { get; set; } = string.Empty;
 
-	private ClientContactCreateDto? ClientContactCreateDto { get; set; }
-	private ClientContactUpdateDto? ClientContactUpdateDto { get; set; }
-	private ClientContactDto? ClientContactDto { get; set; } = new();
-	private ClientResponsibleDto? ClientResponsibleDto { get; set; } = new();
-	private ClientDto? ClientDto { get; set; } = new();
+	[Parameter]
+	public int ClientContactId { get; set; }
+		
+	private ClientContactDto clientContactDto  = new();
+	private ClientResponsibleDto clientResponsibleDto = new();
+	private ClientDto clientDto  = new();
+	private string? errorMessage;
+	private bool isSubmitting = false;
+
 	protected override async Task OnInitializedAsync()
 	{
-		var clientContact = await clientContactService.GetById(int.Parse(ClientContactId));
-		ClientContactDto = clientContact.Value;
-		ClientResponsibleDto = ClientContactDto.ClientResponsibleDto;
-		ClientDto = ClientContactDto.ClientDto;
+		var clientContact = await clientContactService.GetById(ClientContactId);
+		if (clientContact.IsFailure)
+		{
+			errorMessage = clientContact.Error.Message;
+			return;
+		}
+		clientContactDto = clientContact.Value;
+		clientResponsibleDto = clientContactDto.ClientResponsibleDto!;
+		clientDto = clientContactDto.ClientDto!;
 	}
 
 	private async Task Edit()
 	{
-		ClientContactUpdateDto = new()
+		isSubmitting = true;
+		errorMessage = null;
+
+		try
+		{
+			var clientContactUpdateDto = new ClientContactUpdateDto()
 			{
-				Id = ClientContactDto!.Id,
-				Number = ClientContactDto.Number,
-				Type = ClientContactDto.Type,
-				ClientId = ClientContactDto.ClientId,
-				ClientResponsibleId = ClientContactDto.ClientResponsibleId
+				Id = clientContactDto!.Id,
+				Number = clientContactDto.Number,
+				Type = clientContactDto.Type,
+				ClientId = clientContactDto.ClientDto!.Id,
+				ClientResponsibleId = clientContactDto.ClientResponsibleDto!.Id,
+				
 			};
 
-		if (ClientContactUpdateDto is not null)
-		{
-			await clientContactService.Update(ClientContactUpdateDto);
-			await UpdateData();
+			var clientContact = await clientContactService.Update(clientContactUpdateDto);
+			if (clientContact.IsFailure)
+			{
+				errorMessage = clientContact.Error.Message;
+				return;
+			}
+			navigationManager.NavigateTo($"/client/details/contact/{clientDto.Id}");
 		}
-		navigationManager.NavigateTo("/Client");
+		catch (Exception ex)
+		{
+			errorMessage = $"Erro inesperado ao salvar contato cliente: {ex.Message}";
+		}
+		finally
+		{
+			isSubmitting = false;
+		}
 	}
-
-	private async Task UpdateData()
+	private void Voltar(int id)
 	{
-		await DataUpdated.InvokeAsync(null);
+		navigationManager.NavigateTo($"/client/details/contact/{id}");
 	}
 }
