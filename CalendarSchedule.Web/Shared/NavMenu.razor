@@ -35,12 +35,13 @@
     private UserSessionDto? UserSessionDto;
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var userSession = await userStorageService.GetUserSession();
-        UserSessionDto = userSession.Value;
-
-        await base.OnInitializedAsync();
+        if (firstRender)
+        {
+            var userSession = await userStorageService.GetUserSession();
+            UserSessionDto = userSession.Value;
+        }
     }
 
     private void ToggleNavMenu()

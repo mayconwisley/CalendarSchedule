@@ -36,18 +36,21 @@ else
 	private LoginDto? LoginDto { get; set; } = new();
 	private string? errorMessage;
 
-	protected override async Task OnInitializedAsync()
+	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		var token = await tokenStorageService.GetToken(LoginDto!);
-		if (token.IsFailure)
+		if (firstRender)
 		{
-			await tokenStorageService.RemoverToken();
-			navigationManager.NavigateTo("/Login");
-		}
+			var token = await tokenStorageService.GetToken(LoginDto!);
+			if (token.IsFailure)
+			{
+				await tokenStorageService.RemoverToken();
+				navigationManager.NavigateTo("/Login");
+			}
 
-		if (token.IsSuccess)
-		{
-			await DataUpdated();
+			if (token.IsSuccess)
+			{
+				await DataUpdated();
+			}
 		}
 	}
 

@@ -27,18 +27,22 @@ else
 @code {
 	private PagedResultView<ClientResponsibleDto>? clientResponsibleView;
 	private LoginDto? LoginDto { get; set; } = new();
-	protected override async Task OnInitializedAsync()
-	{
-		var token = await tokenStorageService.GetToken(LoginDto!);
-		if (token.IsFailure)
-		{
-			await tokenStorageService.RemoverToken();
-			navigationManager.NavigateTo("/login");
-		}
 
-		if (token.IsSuccess)
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
 		{
-			await DataUpdated();
+			var token = await tokenStorageService.GetToken(LoginDto!);
+			if (token.IsFailure)
+			{
+				await tokenStorageService.RemoverToken();
+				navigationManager.NavigateTo("/login");
+			}
+
+			if (token.IsSuccess)
+			{
+				await DataUpdated();
+			}
 		}
 	}
 

@@ -1,4 +1,5 @@
 ﻿@inject IScheduleUserService scheduleUserService
+@rendermode InteractiveServer
 
 @if (ScheduleUserDto!.ScheduleDto is not null)
 {
@@ -33,7 +34,7 @@
 	[Parameter]
 	public EventCallback DataUpdated { get; set; }
 
-	private ScheduleUserDto? ScheduleUserDto { get; set; }
+	private ScheduleUserDto? ScheduleUserDto { get; set; } = new();
 
 	[Parameter]
 	public int ScheduleId { get; set; }

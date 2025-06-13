@@ -2,49 +2,50 @@
 @inject ITokenStorageService tokenStorageService
 @inject IUserStorageService userStorageService
 @inject NavigationManager navigationManager
+@rendermode InteractiveServer
 
-<EditForm EditContext="@editContext" OnValidSubmit="Log_in" class="formulario-login">
-	@if (!string.IsNullOrEmpty(errorMessage))
-	{
-		<MensageError Message="@errorMessage" />
-	}
-	<h2>Login</h2>
-	<DataAnnotationsValidator />
-	<div>
-		<InputText @bind-Value="LoginDto!.Username" type="text" placeholder="Usuário" />
-		<ValidationMessage For="@(() => LoginDto.Username)" />
-	</div>
-	<div>
-		<InputText @bind-Value="LoginDto!.Password" type="password" placeholder="Senha" />
-		<ValidationMessage For="@(() => LoginDto.Password)" />
-	</div>
-	<div>
-		<button class="btnLogin">Entrar</button>
-	</div>
+<EditForm EditContext="@editContext" OnValidSubmit="Log_in" FormName="LoginForm" class="formulario-login">
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <MensageError Message="@errorMessage" />
+    }
+    <h2>Login</h2>
+    <DataAnnotationsValidator />
+    <div>
+        <InputText @bind-Value="LoginDto!.Username" type="text" placeholder="Usuário" />
+        <ValidationMessage For="@(() => LoginDto.Username)" />
+    </div>
+    <div>
+        <InputText @bind-Value="LoginDto!.Password" type="password" placeholder="Senha" />
+        <ValidationMessage For="@(() => LoginDto.Password)" />
+    </div>
+    <div>
+        <button class="btnLogin">Entrar</button>
+    </div>
 </EditForm>
 
 @code {
-	private LoginDto LoginDto { get; set; } = new();
-	private EditContext? editContext;
-	private string? errorMessage;
+    private LoginDto LoginDto { get; set; } = new();
+    private EditContext? editContext;
+    private string? errorMessage;
 
-	protected override void OnInitialized()
-	{
-		editContext = new EditContext(LoginDto);
-	}
+    protected override void OnInitialized()
+    {
+        editContext = new EditContext(LoginDto);
+    }
 
-	private async Task Log_in()
-	{
+    private async Task Log_in()
+    {
 
-		var token = await tokenStorageService.GetToken(LoginDto);
+        var token = await tokenStorageService.GetToken(LoginDto);
 
-		if (token.IsFailure)
-		{
-			errorMessage = token.Error.Message;
-			return;
-		}
+        if (token.IsFailure)
+        {
+            errorMessage = token.Error.Message;
+            return;
+        }
 
-		var user = await userStorageService.GetUserSession(LoginDto);
-		navigationManager.NavigateTo("/Schedule");
-	}
+        var user = await userStorageService.GetUserSession(LoginDto);
+        navigationManager.NavigateTo("/Schedule");
+    }
 }

@@ -1,5 +1,7 @@
 ﻿@inject IScheduleUserService scheduleUserService
-@if (ScheduleUserDto!.ScheduleDto is not null)
+@rendermode InteractiveServer
+
+@if (scheduleUserDto.ScheduleDto is not null)
 {
 	<div class="modal fade" id="tableScheduleUserDatail-@ScheduleId-@UserId" tabindex="-1" aria-labelledby="tableScheduleLabel" aria-hidden="true">
 		<div class="modal-dialog modal-xl">
@@ -10,7 +12,7 @@
 				</div>
 				<div class="modal-body">
 					<div class="border">
-						@if (ScheduleUserDto.ScheduleDto.Particular)
+						@if (scheduleUserDto.ScheduleDto.Particular)
 						{
 							<table class="table table-striped">
 								<thead>
@@ -21,12 +23,12 @@
 									</tr>
 								</thead>
 								<tbody>
-									@if (ScheduleUserDto is not null)
+									@if (scheduleUserDto is not null)
 									{
 										<tr>
-											<td>@ScheduleUserDto.ScheduleId</td>
-											<td>@ScheduleUserDto.UserId</td>
-											<td>@(ScheduleUserDto.ScheduleDto.Particular ? "Sim" : "Não")</td>
+											<td>@scheduleUserDto.ScheduleId</td>
+											<td>@scheduleUserDto.UserId</td>
+											<td>@(scheduleUserDto.ScheduleDto.Particular ? "Sim" : "Não")</td>
 										</tr>
 									}
 								</tbody>
@@ -47,16 +49,16 @@
 									</tr>
 								</thead>
 								<tbody>
-									@if (ScheduleUserDto is not null)
+									@if (scheduleUserDto is not null)
 									{
 										<tr>
-											<td>@ScheduleUserDto.ScheduleId</td>
-											<td>@ScheduleUserDto.UserId</td>
-											<td>@(ScheduleUserDto.ScheduleDto.MeetingType ? "Sim" : "Não")</td>
-											<td>@(ScheduleUserDto.ScheduleDto.StatusSchedule ? "Sim" : "Não")</td>
-											<td>@(ScheduleUserDto.ScheduleDto.Particular ? "Sim" : "Não")</td>
-											<td>@(ScheduleUserDto.ScheduleDto.ClientDto!.Prospection ? "Sim" : "Não")</td>
-											<td>@(ScheduleUserDto.ScheduleDto.ClientDto == null ? "" : ScheduleUserDto.ScheduleDto.ClientDto.City)</td>
+											<td>@scheduleUserDto.ScheduleId</td>
+											<td>@scheduleUserDto.UserId</td>
+											<td>@(scheduleUserDto.ScheduleDto.MeetingType ? "Sim" : "Não")</td>
+											<td>@(scheduleUserDto.ScheduleDto.StatusSchedule ? "Sim" : "Não")</td>
+											<td>@(scheduleUserDto.ScheduleDto.Particular ? "Sim" : "Não")</td>
+											<td>@(scheduleUserDto.ScheduleDto.ClientDto!.Prospection ? "Sim" : "Não")</td>
+											<td>@(scheduleUserDto.ScheduleDto.ClientDto == null ? "" : scheduleUserDto.ScheduleDto.ClientDto.City)</td>
 										</tr>
 									}
 								</tbody>
@@ -72,17 +74,20 @@
 	</div>
 }
 @code {
-	private ScheduleUserDto? ScheduleUserDto { get; set; }
+	private ScheduleUserDto? scheduleUserDto = new();
 
 	[Parameter]
 	public int ScheduleId { get; set; }
 	[Parameter]
 	public int UserId { get; set; }
 
-	protected override async Task OnInitializedAsync()
+	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		var scheduleUser = await scheduleUserService.GetById(ScheduleId, UserId);
-		ScheduleUserDto = scheduleUser.Value;
-		StateHasChanged();
+		if (firstRender)
+		{
+			var scheduleUser = await scheduleUserService.GetById(ScheduleId, UserId);
+			scheduleUserDto = scheduleUser.Value;
+			StateHasChanged();
+		}
 	}
 }
