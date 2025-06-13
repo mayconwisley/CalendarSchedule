@@ -1,40 +1,45 @@
 ﻿@using CalendarSchedule.Models.Abstractions
 @inject IScheduleUserService scheduleUserService
 
-@if (ScheduleUserDtosList is not null)
-{    @if (ScheduleUserDtosList.Count() != 0)
-	{
-		@for (int i = 0; i < ScheduleUserDtosList.Count(); i++)
-		{
-			var currentSchedule = ScheduleUserDtosList[i].Data!
-							.Where(w => w.ScheduleDto!.DateStart.Date == CurrenteDate.Date)
-							.ToList();
-			@if (currentSchedule.Any())
-			{
-				var scheduleId = currentSchedule
-									.Select(s => s.ScheduleDto!.Id)
-									.FirstOrDefault();
-				var hourStart = currentSchedule
-									.Select(s => s.ScheduleDto!.DateStart)
-									.FirstOrDefault();
-				var hourFinal = currentSchedule
-									.Select(s => s.ScheduleDto!.DateFinal)
-									.FirstOrDefault();
-				UserDtos.Clear();
-				<a href="#" data-bs-toggle="modal" data-bs-target="#tableScheduleUser-@scheduleId-@CurrenteDate.ToString("ddMMyyyy")" class="calenderUser">
+@attribute [StreamRendering]
+@if (ScheduleUserDtosList is null)
+{
+	<p>Carregando...</p>
+}
 
-					@foreach (var item in currentSchedule)
-					{
-						string? userDisplay = item.ScheduleDto!.Particular ? $"{item.UserDto!.Name} - Particular" : item.UserDto!.Name;
-						UserDtos.Add(userDisplay!);
-					}
-					@{
-						UserDtos.Add($"{hourStart:HH:mm} - {hourFinal:HH:mm}");
-					}
-					@string.Join(", ", UserDtos)
-				</a>
-				<TableScheduleUserModal ScheduleId="scheduleId" DateSelected="@CurrenteDate" />
-			}
+
+@if (ScheduleUserDtosList!.Count() != 0)
+{
+	@for (int i = 0; i < ScheduleUserDtosList!.Count(); i++)
+	{
+		var currentSchedule = ScheduleUserDtosList[i].Data!
+						.Where(w => w.ScheduleDto!.DateStart.Date == CurrenteDate.Date)
+						.ToList();
+		@if (currentSchedule.Any())
+		{
+			var scheduleId = currentSchedule
+								.Select(s => s.ScheduleDto!.Id)
+								.FirstOrDefault();
+			var hourStart = currentSchedule
+								.Select(s => s.ScheduleDto!.DateStart)
+								.FirstOrDefault();
+			var hourFinal = currentSchedule
+								.Select(s => s.ScheduleDto!.DateFinal)
+								.FirstOrDefault();
+			UserDtos.Clear();
+			<a href="#" data-bs-toggle="modal" data-bs-target="#tableScheduleUser-@scheduleId-@CurrenteDate.ToString("ddMMyyyy")" class="calenderUser">
+
+				@foreach (var item in currentSchedule)
+				{
+					string? userDisplay = item.ScheduleDto!.Particular ? $"{item.UserDto!.Name} - Particular" : item.UserDto!.Name;
+					UserDtos.Add(userDisplay!);
+				}
+				@{
+					UserDtos.Add($"{hourStart:HH:mm} - {hourFinal:HH:mm}");
+				}
+				@string.Join(", ", UserDtos)
+			</a>
+			<TableScheduleUserModal ScheduleId="scheduleId" DateSelected="@CurrenteDate" />
 		}
 	}
 }

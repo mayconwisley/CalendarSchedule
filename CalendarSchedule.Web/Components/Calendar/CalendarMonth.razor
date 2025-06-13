@@ -1,6 +1,8 @@
 ﻿@using System.Globalization
 @inject NavigationManager navigationManager
 @inject ITokenStorageService tokenStorageService
+@rendermode InteractiveServer
+
 @{
 	CultureInfo cultureInfo = new("pt-BR");
 	DateTime dateStartMonth = new DateTime(competence.Year, competence.Month, 1);

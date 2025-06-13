@@ -1,38 +1,38 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
-    <IsPublishable>True</IsPublishable>
+	<TargetFramework>net9.0</TargetFramework>
+	<Nullable>enable</Nullable>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<IsPublishable>True</IsPublishable>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <RunAOTCompilation>False</RunAOTCompilation>
+	<RunAOTCompilation>False</RunAOTCompilation>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <RunAOTCompilation>False</RunAOTCompilation>
+	<RunAOTCompilation>False</RunAOTCompilation>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Blazored.SessionStorage" Version="2.4.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.10" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.10" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
+    <Compile Remove="wwwroot\js\**" />
+    <Content Remove="wwwroot\js\**" />
+    <EmbeddedResource Remove="wwwroot\js\**" />
+    <None Remove="wwwroot\js\**" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="wwwroot\js\" />
+	<PackageReference Include="Blazored.SessionStorage" Version="2.4.0" />
+	
+	<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.6" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CalendarSchedule.Models\CalendarSchedule.Models.csproj" />
-    <ProjectReference Include="..\CalendarSchedule.Models\CalendarSchedule.Models.csproj" />
+	<ProjectReference Include="..\CalendarSchedule.Models\CalendarSchedule.Models.csproj" />
+	<ProjectReference Include="..\CalendarSchedule.Models\CalendarSchedule.Models.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <UpToDateCheckInput Remove="Components\Calendar\CalendarUser.razor" />
+	<UpToDateCheckInput Remove="Components\Calendar\CalendarUser.razor" />
   </ItemGroup>
   <ItemGroup>
-    <_ContentIncludedByDefault Remove="Components\Calendar\CalendarUser.razor" />
+	<_ContentIncludedByDefault Remove="Components\Calendar\CalendarUser.razor" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Components\Calendar\CalendarUser.razor" />
+	<None Include="Components\Calendar\CalendarUser.razor" />
   </ItemGroup>
-
 </Project>
